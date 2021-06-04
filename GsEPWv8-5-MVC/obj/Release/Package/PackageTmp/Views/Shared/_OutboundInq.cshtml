@@ -1,0 +1,2721 @@
+﻿<div>
+    @model GsEPWv8_5_MVC.Model.OutboundInqModel
+
+@{
+    var Ordercount = Model.LstOutboundInqdetail.Count;
+}
+@Html.HiddenFor(model => model.l_int_Aloc_Summary_Count)
+@Html.HiddenFor(model => model.screentitle)
+<!-- /.box-header -->
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style="width:105px;"></td>
+            <td style="width:105px;"></td>
+            @*<td>
+                <button type="button" id="btnClose" class="btn-Close">Close</button>
+            </td>*@
+        </tr>
+    </table>
+</div>
+<div class="box box-primary">
+    <div class="row">
+    </div>
+    <br />
+    <table id="OutboundInqgrid" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">Sel</th>
+                <th class="grid_header_backcolor">Batch ID</th>
+                <th class="grid_header_backcolor">SR#</th>
+                <th class="grid_header_backcolor">SR Dt</th>
+                <th class="grid_header_backcolor">Status</th>
+                <th class="grid_header_backcolor">AlocDocID</th>
+                <th class="grid_header_backcolor">AlocDt</th>
+                <th class="grid_header_backcolor">VasId</th>
+                @if ((Model.IS3RDUSER != "yes") && (Session["UserType"].ToString().Trim() != "4PL-USER"))
+                {
+                    <th class="grid_header_backcolor">Vas Bill Status</th>
+                }
+                <th class="grid_header_backcolor">ShipDocID</th>
+                <th class="grid_header_backcolor">ShipDt</th>
+                <th class="grid_header_backcolor">Cust PO</th>
+
+                <th class="grid_header_backcolor">Ref No</th>
+                <th class="grid_header_backcolor">Route/Load#</th>
+                <th class="grid_header_backcolor">LoadPick Date</th>
+                <th class="grid_header_backcolor">Customer Name</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (int i = 0; i < Model.LstOutboundInqdetail.Count; i++)
+            {
+                var cmpid = @Model.LstOutboundInqdetail[i].cmp_id;
+                var docid = @Model.LstOutboundInqdetail[i].so_num;
+                var l_str_staus = @Model.LstOutboundInqdetail[i].status.Trim();
+
+                int count = @Model.LstOutboundInqdetail[i].upload_file_count;
+                var l_str_vas_bill_status = (@Model.LstOutboundInqdetail[i].vas_bill_status == null || @Model.LstOutboundInqdetail[i].vas_bill_status == "") ? string.Empty : @Model.LstOutboundInqdetail[i].vas_bill_status.Trim();
+                <tr class="row-select">
+                    <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.LstOutboundInqdetail[i].so_num" data-doc-id="@Model.LstOutboundInqdetail[i].so_num"  data-status="@Model.LstOutboundInqdetail[i].status"
+                                                          data-id1="@Model.LstOutboundInqdetail[i].ship_doc_id" data-id2="@Model.LstOutboundInqdetail[i].quote_num" data-id3="@Model.LstOutboundInqdetail[i].aloc_doc_id" /></td>
+                    <td style="font-size:12px;width: 20px; color:black; font-weight:bold;">
+                        @Model.LstOutboundInqdetail[i].quote_num
+
+                    </td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">
+
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="javascript:void(0);" class="anchorShipreqDetail" style="text-decoration:underline; color:#034af3;" data-id2="@Model.LstOutboundInqdetail[i].status" data-id1="@Model.LstOutboundInqdetail[i].quote_num" data-id="@Model.LstOutboundInqdetail[i].so_num">@Model.LstOutboundInqdetail[i].so_num</a>
+                                </td>
+                                <td>
+
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #ffd400;" class="Outbounddocupld" data-id="@Model.LstOutboundInqdetail[i].quote_num" data-id1="@Model.LstOutboundInqdetail[i].so_num"><span class="glyphicon glyphicon-file" style="font-size: 18px;"></span></a>
+                                </td>
+                                <td>
+                                    @if (count > 0)
+                                    {
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color: orange;" class="Outbounddocupld" data-id="@Model.LstOutboundInqdetail[i].quote_num" data-id1="@Model.LstOutboundInqdetail[i].so_num">(@count)</a>
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color: blue;" class="ob_doc_send" data-id="@Model.LstOutboundInqdetail[i].quote_num" data-id1="@Model.LstOutboundInqdetail[i].so_num" data-id2="@Model.LstOutboundInqdetail[i].cust_name" data-id3="@Model.LstOutboundInqdetail[i].cust_ordr_num"><span class="glyphicon glyphicon-envelope" style="font-size: 14px;"></span></a>
+                                    }
+                                </td>
+
+                                @if (@Model.LstOutboundInqdetail[i].status.Trim() == "O")
+                                {
+                                    <td>
+                                        <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="ShipreqEditDetail" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id="@Model.LstOutboundInqdetail[i].so_num" data-id2="@Model.LstOutboundInqdetail[i].quote_num"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b></b></a>
+                                    </td>
+                                        <td>
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="ShipreqDeleteDetail" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id="@Model.LstOutboundInqdetail[i].so_num"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                        </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                        <td></td>
+                                }
+
+                            </tr>
+                        </table>
+                    </td>
+
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqdetail[i].so_dt
+                    </td>
+                    @if (@Model.LstOutboundInqdetail[i].status.Trim() == "O")
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;">OPEN</td>
+                    }
+                    else if (@Model.LstOutboundInqdetail[i].status.Trim() == "P")
+                    {
+                        if (@Model.LstOutboundInqdetail[i].Shipstatus == "" || @Model.LstOutboundInqdetail[i].Shipstatus == null)
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">ALOC POST</td>
+                        }
+                        else
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">SHIPPED</td>
+                        }
+                    }
+                    else if (@Model.LstOutboundInqdetail[i].status.Trim() == "A")
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;">ALOC</td>
+                    }
+                    else if (@Model.LstOutboundInqdetail[i].status.Trim() == "S")
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;">SHIP</td>
+                    }
+                    else if (@Model.LstOutboundInqdetail[i].status.Trim() == "B")
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;">B/O</td>
+                    }
+                    else
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;">N/A</td>
+                    }
+                    @if (Model.LstOutboundInqdetail[i].aloc_doc_id == "" || Model.LstOutboundInqdetail[i].aloc_doc_id == null)
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;">
+                            @Model.LstOutboundInqdetail[i].aloc_doc_id
+                            @if ((Model.is_company_user == "Y")|| (Session["UserType"].ToString().Trim() == "4PL-USER"))
+                            {
+
+                                <a href="javascript:void(0);" class="btn btn-primary small ShipreqAlocdtl" style="color: white;margin-left:115px;height: 17px;width: 44px;border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;margin-top:8%;" data-id="@Model.LstOutboundInqdetail[i].so_num" data-id1="@Model.LstOutboundInqdetail[i].quote_num">Aloc</a>
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <table>
+                                <tr>
+                                    <td style="font-size:12px; color:black; font-weight:bold;">
+                                        <a href="javascript:void(0);" class="AlocViewDetail" style="text-decoration:underline; color:#034af3;" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id2="@Model.LstOutboundInqdetail[i].so_num" data-id="@Model.LstOutboundInqdetail[i].aloc_doc_id" data-id3="@Model.LstOutboundInqdetail[i].quote_num">@Model.LstOutboundInqdetail[i].aloc_doc_id</a>
+                                    </td>
+
+                                    @if ((Model.is_company_user == "Y") || (Session["UserType"].ToString().Trim() == "4PL-USER"))
+                                    {
+                                        if (@Model.LstOutboundInqdetail[i].status.Trim() == "A")
+                                        {
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="AlocEditDetail" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id2="@Model.LstOutboundInqdetail[i].so_num" data-id3="@Model.LstOutboundInqdetail[i].status" data-id4="@Model.LstOutboundInqdetail[i].quote_num" data-id="@Model.LstOutboundInqdetail[i].aloc_doc_id" data-id5="@Model.LstOutboundInqdetail[i].so_dt" data2><span class="glyphicon glyphicon-pencil" style="font-size: 12px;"></span></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="AlocDeleteDetail" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id2="@Model.LstOutboundInqdetail[i].so_num" data-id="@Model.LstOutboundInqdetail[i].aloc_doc_id" data-id4="@Model.LstOutboundInqdetail[i].quote_num" data-id5="@Model.LstOutboundInqdetail[i].so_dt" data2><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;font-size:12px;" class="ShipreqPost" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id="@Model.LstOutboundInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundInqdetail[i].status" data-id3="@Model.LstOutboundInqdetail[i].aloc_dt"><span style="font-size: 18px;"></span><b>Post</b></a>
+                                            </td>
+                                        }
+                                        else if (@Model.LstOutboundInqdetail[i].status.Trim() == "B")
+                                        {
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="AlocEditDetail" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id2="@Model.LstOutboundInqdetail[i].so_num" data-id3="@Model.LstOutboundInqdetail[i].status" data-id4="@Model.LstOutboundInqdetail[i].quote_num" data-id="@Model.LstOutboundInqdetail[i].aloc_doc_id" data-id5="@Model.LstOutboundInqdetail[i].so_dt" data2><span class="glyphicon glyphicon-pencil" style="font-size: 12px;"></span></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="AlocDeleteDetail" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id2="@Model.LstOutboundInqdetail[i].so_num" data-id="@Model.LstOutboundInqdetail[i].aloc_doc_id" data-id4="@Model.LstOutboundInqdetail[i].quote_num" data2><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;font-size:12px;" class="ShipreqPost" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id="@Model.LstOutboundInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundInqdetail[i].status" data-id3="@Model.LstOutboundInqdetail[i].aloc_dt"><span style="font-size: 18px;"></span><b>Post</b></a>
+                                            </td>
+                                        }
+                                        else if (@Model.LstOutboundInqdetail[i].status.Trim() == "P")
+                                        {
+                                            if (@Model.LstOutboundInqdetail[i].Shipstatus == "" || @Model.LstOutboundInqdetail[i].Shipstatus == null)
+                                            {
+                                                <td>
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: red;font-size:12px;" class="ShipreqUnPost" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id="@Model.LstOutboundInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundInqdetail[i].status" data-id3="@Model.LstOutboundInqdetail[i].ship_doc_id"><span style="font-size: 18px;"></span><b>Unpost</b></a>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqdetail[i].aloc_dt</td>
+
+
+
+
+                    @if ((Model.IS3RDUSER != "yes") && (Session["UserType"].ToString().Trim() != "4PL-USER"))
+                    {
+                        if (Model.LstOutboundInqdetail[i].VasId == "" || Model.LstOutboundInqdetail[i].VasId == null)
+                            {
+                                <td style="font-size:12px; color:black; font-weight:bold;">
+                                    @if (Model.is_company_user == "Y")
+                                    {
+                                        <a href="javascript:void(0);" class="btn btn-primary small NewVasEntry" style="color: white;margin-left:115px;height: 17px;width: 44px;border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;margin-top:8%;" data-id="@Model.LstOutboundInqdetail[i].so_num">VAS</a>
+                                    }
+                                </td>
+                            }
+                        else
+                        {
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="VasDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.LstOutboundInqdetail[i].VasId">@Model.LstOutboundInqdetail[i].VasId </a></td>
+                                       @if (Model.is_company_user == "Y")
+                                       {
+                                         <td>
+                                            @if (@Model.LstOutboundInqdetail[i].Vasstatus == "P")
+                                            {
+                                                <a></a>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="VasEdit" data-id="@Model.LstOutboundInqdetail[i].VasId" data-id1="@Model.LstOutboundInqdetail[i].cust_id" data-id2="@Model.LstOutboundInqdetail[i].Status"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b></b></a>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (@Model.LstOutboundInqdetail[i].Vasstatus == "P")
+                                            {
+                                                <a></a>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="VasDelete" data-id="@Model.LstOutboundInqdetail[i].VasId" data-id1="@Model.LstOutboundInqdetail[i].vas_bill_status"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                            }
+                                        </td>
+                                        if (@Model.LstOutboundInqdetail[i].Vasstatus == "O")
+                                        {
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasPost" data-id="@Model.LstOutboundInqdetail[i].VasId"><span style="font-size: 18px;"></span><b>Post</b></a>
+                                            </td>
+                                        }
+                                        if (@Model.LstOutboundInqdetail[i].Vasstatus == "P")
+                                        {
+                                            <td>
+                                                @if (@Model.LstOutboundInqdetail[i].Vasstatus == "P")
+                                                {
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasUnPost" data-id="@Model.LstOutboundInqdetail[i].VasId"><span style="font-size: 18px;"></span><b>Unpost</b></a>
+                                                }
+                                                else
+                                                {
+                                                    <a></a>
+                                                }
+                                            </td>
+                                        }
+                                       }
+                                      
+                                    </tr>
+                                </table>
+                            </td>
+                        }
+
+
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align :left;">
+                            @if (@l_str_vas_bill_status == "BILL")
+                            {
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasBillStatus" data-id="@Model.LstOutboundInqdetail[i].cmp_id" data-id1="@Model.LstOutboundInqdetail[i].VasId" data-id2="@Model.LstOutboundInqdetail[i].VasDate"><span style="font-size: 18px;"></span><b>@Model.LstOutboundInqdetail[i].vas_bill_status</b></a>
+
+                            }
+                            else if (@l_str_vas_bill_status == "TEMP")
+                            {
+
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasBillStatusInq" data-id="@Model.LstOutboundInqdetail[i].cmp_id" data-id1="@Model.LstOutboundInqdetail[i].VasId" data-id2="@Model.LstOutboundInqdetail[i].VasDate" data-id3="@Model.LstOutboundInqdetail[i].bill_doc_id"><span style="font-size: 18px;"></span><b>@Model.LstOutboundInqdetail[i].bill_doc_id</b></a>
+
+                            }
+                            else if (@l_str_vas_bill_status == "")
+                            {
+                                <a></a>
+                            }
+                        </td>
+
+
+                    }
+
+                    else
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="VasDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.LstOutboundInqdetail[i].VasId">@Model.LstOutboundInqdetail[i].VasId </a></td>
+                        
+
+                    }
+
+
+
+
+            @if ((Model.is_company_user == "Y") || (Session["UserType"].ToString().Trim() == "4PL-USER"))
+            { 
+                    <td style="font-size:12px; color:black; font-weight:bold;">
+                        @if (Model.LstOutboundInqdetail[i].ship_doc_id == "" || Model.LstOutboundInqdetail[i].ship_doc_id == null)
+                        {
+                            <a href="javascript:void(0);" class="ShippingDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.LstOutboundInqdetail[i].ship_doc_id">@Model.LstOutboundInqdetail[i].ship_doc_id</a>
+                        }
+                        else
+                        {
+                            if (@Model.LstOutboundInqdetail[i].Shipstatus == "" || @Model.LstOutboundInqdetail[i].Shipstatus == null)
+                            {
+                                <a href="javascript:void(0);" class="ShippingDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.LstOutboundInqdetail[i].ship_doc_id">@Model.LstOutboundInqdetail[i].ship_doc_id</a>
+                                <a href="javascript:void(0);" class="btn btn-primary small Shippingpostdtl" style="color: white;margin-left:115px;height: 17px;width: 44px;border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;margin-top:-18%;" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id="@Model.LstOutboundInqdetail[i].ship_doc_id" data-id2="@Model.LstOutboundInqdetail[i].Shipstatus" data-id3="@Model.LstOutboundInqdetail[i].ship_dt" data-id4="@Model.LstOutboundInqdetail[i].cust_ordr_num" data-id5="@Model.LstOutboundInqdetail[i].ordr_num" data-id6="@Model.LstOutboundInqdetail[i].cust_name" >Post</a>
+                            }
+                            else
+                            {
+                                <a href="javascript:void(0);" class="ShippingDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.LstOutboundInqdetail[i].ship_doc_id">@Model.LstOutboundInqdetail[i].ship_doc_id</a>
+                                <a href="javascript:void(0);" class="btn btn-primary small ShippingUnpostdtl" style="color: white;margin-left:115px;height: 17px;width: 44px;border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;margin-top:-18%;" data-id1="@Model.LstOutboundInqdetail[i].cmp_id" data-id="@Model.LstOutboundInqdetail[i].ship_doc_id" data-id2="@Model.LstOutboundInqdetail[i].Shipstatus" data-id3="@Model.LstOutboundInqdetail[i].ship_dt">UnPost</a>
+
+                            }
+                        }
+                    </td>
+            }
+            else
+            {
+                <td style="font-size:12px; color:black; font-weight:bold;">
+                    @if (Model.LstOutboundInqdetail[i].ship_doc_id == "" || Model.LstOutboundInqdetail[i].ship_doc_id == null)
+                    {
+                        <a href="javascript:void(0);" class="ShippingDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.LstOutboundInqdetail[i].ship_doc_id">@Model.LstOutboundInqdetail[i].ship_doc_id</a>
+                    }
+                   
+                </td>
+            }
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqdetail[i].ship_dt</td>
+                    <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstOutboundInqdetail[i].cust_ordr_num</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.LstOutboundInqdetail[i].ordr_num</td>
+                @if ((Model.is_company_user == "Y") || (Session["UserType"].ToString().Trim() == "4PL-USER"))
+                {
+                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left;">
+                        @if (Model.LstOutboundInqdetail[i].load_doc_id == "" || Model.LstOutboundInqdetail[i].load_doc_id == null)
+                        {
+                            <a></a>
+                        }
+                        else
+                        {
+                            <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="ViewLoadEntry" data-id="@Model.LstOutboundInqdetail[i].cmp_id" data-id1="@Model.LstOutboundInqdetail[i].so_num" data-id2="@Model.LstOutboundInqdetail[i].load_number" data-id3="@Model.LstOutboundInqdetail[i].load_doc_id"><span style="font-size: 18px;"></span><b>@Model.LstOutboundInqdetail[i].load_number</b></a>
+                            <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="SRLoadDelete" data-id="@Model.LstOutboundInqdetail[i].cmp_id" data-id1="@Model.LstOutboundInqdetail[i].so_num" data-id2="@Model.LstOutboundInqdetail[i].load_number" data-id3="@Model.LstOutboundInqdetail[i].load_doc_id"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span></a>
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left;">
+                        @if (Model.LstOutboundInqdetail[i].load_doc_id == "" || Model.LstOutboundInqdetail[i].load_doc_id == null)
+                        {
+                            <a></a>
+                        }
+                        else
+                        {
+                            <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="ViewLoadEntry" data-id="@Model.LstOutboundInqdetail[i].cmp_id" data-id1="@Model.LstOutboundInqdetail[i].so_num" data-id2="@Model.LstOutboundInqdetail[i].load_number" data-id3="@Model.LstOutboundInqdetail[i].load_doc_id"><span style="font-size: 18px;"></span><b>@Model.LstOutboundInqdetail[i].load_number</b></a>
+                            
+                        }
+                    </td>
+                }
+
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqdetail[i].load_pick_dt</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqdetail[i].cust_name</td>
+
+               
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+<center>
+    <div id='myModal' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 241%; left:-368px;">
+                <div id='myModalContent' style="width: 100%; height:663px;"></div>
+            </div>
+        </div>
+    </div>
+</center>
+
+<center>
+    <div id='myModalLoadView' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 200%; left:-280px;">
+                <div id='myModalLoadViewContent' style="width: 100%; height:1000px;"></div>
+            </div>
+        </div>
+    </div>
+</center>
+
+
+<div id='myModalAdd' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 250%; left: -430px;">
+                <div id='myModalContentAdd' style="width: 100%;height:3000px;"></div>
+
+            </div>
+        </center>
+    </div>
+
+</div>
+
+<div id='VasBill' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 198%; ">
+                <div id='ContentVasBill' style="width: 1140px;height: 655px;"></div>
+            </div>
+        </center>
+    </div>
+</div>
+<div id='myModalPost' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%; left:-365px;">
+            <div id='myModalContentPost' style="width: 100%; height: 952px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalView' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%; left:-430px;">
+            <div id='myModalContentView' style="width: 100%; height: 1152px;"></div>
+        </div>
+    </div>
+</div>
+<div id='myModalShipreqAloc' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%; left:-430px;">
+            <div id='myModalShipReqAlocContent' style="width: 100%; height: 952px;"></div>
+        </div>
+    </div>
+</div>
+<div id='myModalEdit' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%; left:-430px;">
+            <div id='myModalContentEdit' style="width: 100%; height: 952px;"></div>
+        </div>
+    </div>
+</div>
+<div id='myModaldelete' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%; left:-430px;">
+            <div id='myModalContentdelete' style="width: 100%; height: 952px;"></div>
+        </div>
+    </div>
+</div>
+    <div id='myModalEmailAlert' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 250%; left:-400px;">
+                <div id='myModalEmailAlertContent' style="width: 100%; height: 950px;"></div>
+            </div>
+        </div>
+
+    </div>
+<div id='VasModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myVASContent' style="width: 100%; height: 952px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<div id='myModalVasEdit' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 200%;left:-280px; ">
+                <div id='myModalVAsContentEdit' style="width: 1136px;height: 3000px;"></div>
+            </div>
+        </center>
+    </div>
+</div>
+
+<div id='myModalDel' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 200%;left: -280px; ">
+                <div id='myModalContentDel' style="width: 1136px;height: 855px;"></div>
+            </div>
+        </center>
+    </div>
+</div>
+<script>
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackViewsURL = '/VasInquiry/VasDetail';
+
+    $(function () {
+        $('#OutboundInqgrid tbody').on('click', '.VasDetail', function () { //CR2018-04-07-001 Added by Nithya
+        
+            debugger
+            $("#ajaxloading").show();
+            var $buttonClicked = $(this);
+            var VasId = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackViewsURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "VasId": VasId, "cmp_id": cmp_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxloading").hide();
+                    $('#myVASContent').html(data);
+                    $('#VasModal').modal(options);
+                    $('#VasModal').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    $("#ajaxloading").hide();
+                    //alert("Dynamic content load failed.");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackPostURL = '/OutboundInq/ShipReqPost';
+    $(function () {
+        //$(".ShipreqPost").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.ShipreqPost', function () { //CR2018-04-07-001 Added by Nithya
+
+            debugger
+            var $buttonClicked = $(this);
+            var CmpId = $buttonClicked.attr('data-id1');
+            var AlocDocId = $buttonClicked.attr('data-id');
+            var p_str_status = $buttonClicked.attr('data-id2');
+            var p_str_AlocDt = $buttonClicked.attr('data-id3');//CR2018-03-07-001 Added By Nithya
+            debugger
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            if (p_str_status != "O" && p_str_status != "P") {
+                var options = { "backdrop": "static", keyboard: true };
+                var windowHeight = $(window).height();
+                var windowWidth = $(window).width();
+                var boxHeight = $('.modal-content').height();
+                var boxWidth = $('.modal').width();
+                var boxContent = $('.modal-content').width();
+                debugger
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackPostURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "CmpId": CmpId, "AlocDocId": AlocDocId, "p_str_AlocDt": p_str_AlocDt },
+                    datatype: "json",
+
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContentPost').html(data);
+                        $('#myModalPost').modal(options);
+                        $('#myModalPost').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+            else if (p_str_status == "O") {
+                $("#ajaxLoading").hide();
+                swal("Please Enter the Allocation Number")
+            }
+            else {
+                $("#ajaxLoading").hide();
+                swal("Allocation already Posted")
+            }
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackUnPostURL = '/OutboundInq/ShipRequestUnPost';         //CR_3PL_MVC_BL_2018_0312_001 Modified By SONIYA
+    $(function () {
+        //$(".ShipreqUnPost").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.ShipreqUnPost', function () { //CR2018-04-07-001 Added by Nithya
+
+            debugger
+            var $buttonClicked = $(this);
+            var CmpId = $buttonClicked.attr('data-id1');
+            var AlocDocId = $buttonClicked.attr('data-id');
+            var p_str_status = $buttonClicked.attr('data-id2');
+            var p_str_shipdocId = $buttonClicked.attr('data-id3');
+            debugger
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            //if (p_str_status != "O" && p_str_status != "P") {
+            var options = { "backdrop": "static", keyboard: true };
+            var windowHeight = $(window).height();
+            var windowWidth = $(window).width();
+            var boxHeight = $('.modal-content').height();
+            var boxWidth = $('.modal').width();
+            var boxContent = $('.modal-content').width();
+            debugger
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackUnPostURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "CmpId": CmpId, "AlocDocId": AlocDocId, "p_str_shipdocId": p_str_shipdocId },
+                datatype: "json",
+
+                success: function (data) {
+                    $('#myModalContentPost').html(data);
+                    $('#myModalPost').modal(options);
+                    $('#myModalPost').modal('show');
+                    $("#ajaxLoading").hide();
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+            //}
+            //else if (p_str_status == "O") {
+            //    swal("Please Enter the Allocation Number")
+            //}
+            //else {
+            //    swal("Allocation already Posted")
+            //}
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackViewURL = '/OutboundInq/Views';
+    var TeamDetailPostBackEditURL = '/OutboundInq/Edit';
+    var TeamDetailPostBackDeleteURL = '/OutboundInq/Delete';
+    $(function () {
+        //$(".ShipreqDeleteDetail").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.ShipreqDeleteDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id1');
+            var so_num = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackDeleteURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "so_num": so_num },
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContentView').html(data);
+                    $('#myModalView').modal(options);
+                    $('#myModalView').modal('show');
+                    $("#ajaxLoading").hide();
+                    $(document).ready(function () {
+                        $("#childtabss-1 :input").attr("disabled", true);
+                    });
+                    $(document).ready(function () {
+                        $("#SRDetailSec :input").attr("disabled", true);
+                    });
+                    $(document).ready(function () {
+                        $("#GridSREntry_wrapper :input").attr("disabled", true);
+                    });
+                    $(document).ready(function () {
+                        $("#GridSREntry :input").attr("disabled", true);
+                    });
+                    $(document).ready(function () {
+                        $("#dimension :input").attr("disabled", true);
+                    });
+
+                    $(document).ready(function () {
+                        $("#Upload :input").attr("disabled", true);
+                    });
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        //$(".ShipreqViewDetail").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.ShipreqViewDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id1');
+            var so_num = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackViewURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "so_num": so_num },
+                datatype: "json",
+                success: function (data) {
+
+                    $('#myModalContentView').html(data);
+                    $('#myModalView').modal(options);
+                    $('#myModalView').modal('show');
+                    $(document).ready(function () {
+                        $("#childtabss-1 :input").attr("disabled", true);
+                    });
+                    $(document).ready(function () {
+                        $("#SRDetailSec :input").attr("disabled", true);
+                    });
+                    $(document).ready(function () {
+                        $("#GridSREntry_wrapper :input").attr("disabled", true);
+                    });
+                    $(document).ready(function () {
+                        $("#GridSREntry :input").attr("disabled", true);
+                    });
+                    $(document).ready(function () {
+                        $("#dimension :input").attr("disabled", true);
+                    });
+
+                    $(document).ready(function () {
+                        $("#Upload :input").attr("disabled", true);
+                    });
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        //$(".ShipreqEditDetail").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.ShipreqEditDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id1');
+            var so_num = $buttonClicked.attr('data-id');
+            var batchId = $buttonClicked.attr('data-id2');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackEditURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "so_num": so_num, "Batchid": batchId },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+
+                    $('#myModalContentView').html(data);
+                    $('#myModalView').modal(options);
+                    $('#myModalView').modal('show');
+                    $("#ajaxLoading").hide();
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+    
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackURL = '/OutboundInq/ShipReqDetail';
+    $(function () {
+        $('#OutboundInqgrid tbody').on('click', '.anchorShipreqDetail', function () { 
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var batchId = $buttonClicked.attr('data-id1');
+            var Status = $buttonClicked.attr('data-id2');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();
+            var p_str_color = $('#obItmcolor').val();
+            var p_str_size = $('#obItmsize').val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "Id": id, "cmp_id": cmp_id, "batchId": batchId },
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                    $("#ajaxLoading").hide();
+                },
+                error: function () {
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackAddURL = '/VasInquiry/Add';
+    $(function () {
+        //$(".NewVasEntry").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.NewVasEntry', function () { //CR2018-04-07-001 Added by Nithya
+            debugger;
+            var cmpid = $('#cmp_id').val();
+            var $buttonClicked = $(this);
+            var Sonum = $buttonClicked.attr('data-id');
+            var p_str_screen_title = $('#screenTitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackAddURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "Sonum": Sonum, "p_str_scn_id": p_str_screen_title },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentAdd').html(data);
+                    $('#myModalAdd').modal(options);
+                    $('#myModalAdd').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+
+    });
+
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackAlocViewURL = '/OutboundInq/AlocViews';
+    var TeamDetailPostBackAlocDeleteURL = '/OutboundInq/AlocDelete';
+    var urlAlocEdit = '/OBAllocation/OBAllocationEdit';
+    $(function () {
+        //$(".AlocDeleteDetail").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.AlocDeleteDetail', function () { //CR2018-04-07-001 Added by Nithya
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id1');
+            var aloc_num = $buttonClicked.attr('data-id');
+            var so_num = $buttonClicked.attr('data-id2');
+            var batch_num = $buttonClicked.attr('data-id4');
+           
+
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackAlocDeleteURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "aloc_num": aloc_num, "so_num": so_num, "batch_num": batch_num },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentView').html(data);
+                    $('#myModalView').modal(options);
+                    $('#myModalView').modal('show');
+                    $(document).ready(function () {
+                        $("#childtabss-1 :input").attr("disabled", true);
+                    });
+
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        //$(".AlocViewDetail").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.AlocViewDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id1');
+            var aloc_num = $buttonClicked.attr('data-id');
+            var so_num = $buttonClicked.attr('data-id2');
+            var batch_num = $buttonClicked.attr('data-id3');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackAlocViewURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "aloc_num": aloc_num, "so_num": so_num, "batch_num": batch_num },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentView').html(data);
+                    $('#myModalView').modal(options);
+                    $('#myModalView').modal('show');
+                    $(document).ready(function () {
+                        $("#childtabss-1 :input").attr("disabled", true);
+                    });
+                 
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        //$(".AlocEditDetail").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.AlocEditDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id1');
+            var aloc_num = $buttonClicked.attr('data-id');
+            var so_num = $buttonClicked.attr('data-id2');
+            var status = $buttonClicked.attr('data-id3');
+            var batch_num = $buttonClicked.attr('data-id4');
+            var pstrSrDt = $buttonClicked.attr('data-id5');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();
+            var p_str_color = $('#obItmcolor').val();
+            var p_str_size = $('#obItmsize').val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+
+
+            $.ajax({
+                type: "GET",
+                url: urlAlocEdit,
+                contentType: "application/json; charset=utf-8",
+                data: { "pstrCmpId": cmpid, "pstrAlocDocId": aloc_num, "pstrSrNum": so_num, "pstrSrDt": pstrSrDt },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentEdit').html(data);
+                    $('#myModalEdit').modal(options);
+                    $('#myModalEdit').modal('show');
+                    $(document).ready(function () {
+                        $("#childtabss-1 :input").attr("disabled", true);
+                    });
+                   
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    $(function () {
+        $('#example1').DataTable()
+        $('#OutboundInqgrid').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "pageLength": 50,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            "sScrollY": "460px",
+            "sScrollX": "100%",
+        })
+    })
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").click(function () {
+
+        if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+            $("#chkAll").prop("checked", true);
+        }
+        else {
+            $("#chkAll").prop("checked", false);
+        }
+
+    });
+
+    $("input[name='tblcheckbox']").on('change', function () {
+        $("input[name='tblcheckbox']").not(this).prop('checked', false);
+    });
+    function GetRes() {
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var var_name = $("input[name='radio1']:checked").val();
+        if (var_name == "GridSummary") {
+            var p_str_cmpid = $('#cmp_id').val();
+            var p_str_radio = var_name;
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+            $.ajax({
+                url: '@Url.Action("GetShipReqRptDtls", "OutboundInq")',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    SelectedID: SelectdID, p_str_cmpid: p_str_cmpid, p_str_radio: p_str_radio, p_str_so_num_frm: p_str_so_num_frm, p_str_so_num_To: p_str_so_num_To, p_str_so_dt_frm: p_str_so_dt_frm,
+                    p_str_so_dt_to: p_str_so_dt_to, p_str_CustPO: p_str_CustPO, p_str_AlocId: p_str_AlocId, p_str_Store: p_str_Store, p_str_batch_id: p_str_batch_id, p_str_status: p_str_status,
+                    p_str_shipdtFm: p_str_shipdtFm, p_str_shipdtTo: p_str_shipdtTo
+                },//'collections='+SelectedRow,
+                cache: false,
+                success: function (data) {
+                    if (data > 0) {
+                        $("input[name='tblcheckbox']").prop("checked", false);
+                        window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectedID)
+
+                    }
+
+                }
+            });
+        }
+        else if (var_name == "OutboundSummary") {
+            var p_str_cmpid = $('#cmp_id').val();
+            var p_str_radio = var_name;
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+            $.ajax({
+                url: '@Url.Action("GetShipReqRptDtls", "OutboundInq")',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    SelectedID: SelectdID, p_str_cmpid: p_str_cmpid, p_str_radio: p_str_radio, p_str_so_num_frm: p_str_so_num_frm, p_str_so_num_To: p_str_so_num_To, p_str_so_dt_frm: p_str_so_dt_frm,
+                    p_str_so_dt_to: p_str_so_dt_to, p_str_CustPO: p_str_CustPO, p_str_AlocId: p_str_AlocId, p_str_Store: p_str_Store, p_str_batch_id: p_str_batch_id, p_str_status: p_str_status,
+                    p_str_shipdtFm: p_str_shipdtFm, p_str_shipdtTo: p_str_shipdtTo
+                },//'collections='+SelectedRow,
+                cache: false,
+                success: function (data) {
+                    if (data > 0) {
+                        $("input[name='tblcheckbox']").prop("checked", false);
+                        window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectedID)
+
+                    }
+
+                }
+            });
+        }
+        else if (var_name == "GridShipAck") {
+            var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+            if (numberOfCheckboxes == 0) {
+
+                //not2("Please select the Record to Print.");
+                sweetAlert("", "Please select the Record to Print.", "");
+            }
+
+            else {
+                $("input[name='tblcheckbox']:checked").each(function () {
+                    var check = $(this);
+                    if (check.is(':checked')) {
+                        checkboxIDArray.push(check.attr('id'));
+                        SelectedRow.push(check.val());
+
+                    }
+                });
+                var Count = $("input[name='tblcheckbox']:checked").length;
+                if (Count > 0) {
+                    var SelectdID = '';
+                    $.each(SelectedRow, function (i, v) {
+
+                        if (SelectdID == '')
+                            SelectdID = v;
+                        else
+                            SelectdID = SelectdID + ',' + v;
+
+                    });
+                    var var_name = $("input[name='radio1']:checked").val();
+                    var p_str_cmpid = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_so_NumFm = $('#so_numFm').val();
+                    var p_str_so_NumTo = $('#so_numTo').val();
+                    var p_str_batch_id = $('#quote_num').val();
+
+                    window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+                    $.ajax({
+                        url: '@Url.Action("GetShipReqRpt", "OutboundInq")',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            SelectedID: SelectdID, p_str_cmpid: p_str_cmpid, p_str_radio: p_str_radio, p_str_so_NumFm: p_str_so_NumFm, p_str_so_NumTo: p_str_so_NumTo, p_str_batch_id: p_str_batch_id
+
+                        },//'collections='+SelectedRow,
+                        cache: false,
+                        success: function (data) {
+                            if (data > 0) {
+                                $("input[name='tblcheckbox']").prop("checked", false);
+                                window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectedID)
+                            }
+                            $("#report_selection").val('');
+                        }
+                    });
+
+                }
+                else {
+
+                    $("input:checkbox").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            this.checked = !this.checked;
+                        }
+                    });
+
+                }
+
+            }
+
+        }
+        else if (var_name == "PickTickByStyle") {
+            var quote_num = $('#quote_num').val();
+            if (quote_num == "") {
+                //not2("Please Select The Batch_Id.")
+                sweetAlert("", "Please Select The Batch_Id.", "");
+                $('#quote_num').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                if (numberOfCheckboxes == 0) {
+
+                    //not2("Please select the Record to Print.");
+                    sweetAlert("", "Please select the Record to Print.", "");
+                }
+
+                else {
+                    $("input[name='tblcheckbox']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    var Count = $("input[name='tblcheckbox']:checked").length;
+                    if (Count > 0) {
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+
+                        });
+                        var var_name = $("input[name='radio1']:checked").val();
+                        var p_str_cmpid = $('#cmp_id').val();
+                        var p_str_radio = var_name;
+                        var p_str_so_NumFm = $('#so_numFm').val();
+                        var p_str_so_NumTo = $('#so_numTo').val();
+                        var p_str_batch_id = $('#quote_num').val();
+                        $.ajax({
+                            url: '@Url.Action("GetShipReqRpt", "OutboundInq")',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                SelectedID: SelectdID, p_str_cmpid: p_str_cmpid, p_str_radio: p_str_radio, p_str_so_NumFm: p_str_so_NumFm, p_str_so_NumTo: p_str_so_NumTo, p_str_batch_id: p_str_batch_id
+
+                            },//'collections='+SelectedRow,
+                            cache: false,
+                            success: function (data) {
+                                if (data != 0) {
+                                    $("input[name='tblcheckbox']").prop("checked", false);
+                                    window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+                                }
+                                else if (data == 0) {
+                                    //not2("No open Allocation Record Exist");
+                                    sweetAlert("", "No open Allocation Record Exist.", "");
+                                }
+                                $("#report_selection").val('');
+                            }
+                        });
+
+                    }
+                    else {
+
+                        $("input:checkbox").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                this.checked = !this.checked;
+                            }
+                        });
+
+                    }
+
+                }
+            }
+        }
+        else if (var_name == "PickTickByLoc") {
+            var quote_num = $('#quote_num').val();
+            if (quote_num == "") {
+                //not2("Please Select The Batch_Id.")
+                sweetAlert("", "Please Select The Batch_Id.", "");
+                $('#quote_num').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                if (numberOfCheckboxes == 0) {
+
+                    //not2("Please select the Record to Print.");
+                    sweetAlert("", "Please select the Record to Print.", "");
+                }
+
+                else {
+                    $("input[name='tblcheckbox']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    var Count = $("input[name='tblcheckbox']:checked").length;
+                    if (Count > 0) {
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+
+                        });
+                        var var_name = $("input[name='radio1']:checked").val();
+                        var p_str_cmpid = $('#cmp_id').val();
+                        var p_str_radio = var_name;
+                        var p_str_so_NumFm = $('#so_numFm').val();
+                        var p_str_so_NumTo = $('#so_numTo').val();
+                        var p_str_batch_id = $('#quote_num').val();
+                        $.ajax({
+                            url: '@Url.Action("GetShipReqRpt", "OutboundInq")',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {
+                                SelectedID: SelectdID, p_str_cmpid: p_str_cmpid, p_str_radio: p_str_radio, p_str_so_NumFm: p_str_so_NumFm, p_str_so_NumTo: p_str_so_NumTo, p_str_batch_id: p_str_batch_id
+
+                            },//'collections='+SelectedRow,
+                            cache: false,
+                            success: function (data) {
+                                if (data > 0) {
+                                    $("input[name='tblcheckbox']").prop("checked", false);
+                                    window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+
+                                }
+                                else if (data == 0) {
+                                    //not2("No open Allocation Record Exist");
+                                    sweetAlert("", "No open Allocation Record Exist.", "");
+                                }
+                                $("#report_selection").val('');
+                            }
+                        });
+
+                    }
+                    else {
+
+                        $("input:checkbox").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                this.checked = !this.checked;
+                            }
+                        });
+
+                    }
+
+                }
+            }
+        }
+    }
+</script>
+<script type="text/javascript">
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackShipdocidURL = '/OutboundShipInq/ShippingDetail';
+    $(function () {
+        //$(".ShippingDetail").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.ShippingDetail', function () { //CR2018-04-07-001 Added by Nithya
+            var $buttonClicked = $(this);
+            var shipdocid = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackShipdocidURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "shipdocid": shipdocid, "cmp_id": cmp_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+
+
+
+<script type="text/javascript">
+
+    var tmpPostBackUrlViewLoadEntry = '/OutboundInq/ViewLoadEntry';
+    $(function () {
+        debugger;
+        $('#OutboundInqgrid tbody').on('click', '.ViewLoadEntry', function () {
+            var $buttonClicked = $(this);
+            var p_str_cmp_id = $buttonClicked.attr('data-id');
+            var p_str_so_num = $buttonClicked.attr('data-id1');
+            var p_str_load_number = $buttonClicked.attr('data-id2');
+            var p_str_load_doc_id = $buttonClicked.attr('data-id3');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: tmpPostBackUrlViewLoadEntry,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_load_doc_id": p_str_load_doc_id,
+                    "p_str_load_number": p_str_load_number, "p_str_so_num": p_str_so_num
+                },
+                datatype: "json",
+                success: function (data) {
+                    $('#ModalclsLoadEntry').html(data);
+                    $('#ModalLoadEntry').modal(options);
+                    $('#ModalLoadEntry').modal('show');
+                    $("#ajaxLoading").hide();
+                },
+                error: function () {
+
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModalLoadView').modal('hide');
+        });
+    });
+</script>
+
+<script type="text/javascript">
+
+    var tmpPostBackUrlSRLoadDelete = '/OutboundInq/SRLoadDelete';
+    $(function () {
+        debugger;
+        $('#OutboundInqgrid tbody').on('click', '.SRLoadDelete', function () {
+            var $buttonClicked = $(this);
+            var p_str_cmp_id = $buttonClicked.attr('data-id');
+            var p_str_load_number = $buttonClicked.attr('data-id2');
+            var p_str_load_doc_id = $buttonClicked.attr('data-id3');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: tmpPostBackUrlSRLoadDelete,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_load_doc_id": p_str_load_doc_id,
+                    "p_str_load_number": p_str_load_number
+                },
+                datatype: "json",
+                success: function (data) {
+                    $('#ModalclsLoadEntry').html(data);
+                    $('#ModalLoadEntry').modal(options);
+                    $('#ModalLoadEntry').modal('show');
+                    $("#ajaxLoading").hide();
+                },
+                error: function () {
+
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModalLoadView').modal('hide');
+        });
+    });
+</script>
+<script>
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackShipstockverifyAlocURL = '/OutboundInq/StockVerify';
+    //$(".ShipreqAlocdtl").click(function () {
+    $('#OutboundInqgrid tbody').on('click', '.ShipreqAlocdtl', function () { //CR2018-04-07-001 Added by Nithya
+        debugger;
+        var $buttonClicked = $(this);
+        var SelectedRow = [];
+        var SelectedRow1 = [];
+        var checkboxIDArray = [];
+        var checkboxIDArray1 = [];
+        var cmpid = $('#cmp_id').val();
+        var p_str_screen_title = $('#screenTitle').val();
+        var p_str_so_numfrm = $('#so_numFm').val();
+        var p_str_so_numTo = $('#so_numTo').val();
+        var p_str_batchid = $('#quote_num').val();
+
+        var $buttonClicked = $(this);
+        var id = $buttonClicked.attr('data-id');
+        var batchId = $buttonClicked.attr('data-id1');
+
+        var options = { "backdrop": "static", keyboard: true };
+
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_so_num_frm = $('#so_numFm').val();
+        var p_str_so_num_To = $('#so_numTo').val();
+        var p_str_so_dt_frm = $('#so_dtFm').val();
+        var p_str_so_dt_to = $('#so_dtTo').val();
+        var p_str_CustPO = $('#cust_ordr_num').val();
+        var p_str_AlocId = $('#aloc_doc_id').val();
+        var p_str_Store = $('#store_id').val();
+        var p_str_batch_id = $('#quote_num').val();
+        var p_str_status = $('#status').val();
+        var p_str_shipdtFm = $('#ShipdtFm').val();
+        var p_str_shipdtTo = $('#ShipdtTo').val();
+        var p_str_cust_name = $('#cust_name').val();
+        var p_str_screen_title = $('#screenTitle').val();
+        var p_str_Style = $('#obItmdtl').val();
+        var p_str_color = $('#obItmcolor').val();
+        var p_str_size = $('#obItmsize').val();
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                "p_str_Store": p_str_Store,
+                "p_str_batch_id": p_str_batch_id,
+                "p_str_shipdtFm": p_str_shipdtFm,
+                "p_str_shipdtTo": p_str_shipdtTo,
+                "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#ajaxLoading").hide();
+            return false;
+        }
+        //if (p_str_batchid == "" && p_str_so_numfrm == "") {
+        //    swal("", "Please enter Batch Id or Ship request range.", "");
+        //    $('body,html').animate({ scrollTop: 0 }, 0);
+        //    er = 1;
+        //    $("#ajaxLoading").hide();
+        //    return false;
+        //}
+        var p_str_so_numfrm = id;
+        var p_str_so_numTo = id;
+        var p_str_batchid = batchId;
+        var P_str_screen_MOde = "A";
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackShipstockverifyAlocURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmp_id": cmpid, "p_str_screen_title": p_str_screen_title, "p_str_Sonum": p_str_so_numfrm, "p_str_batchId": p_str_batchid, "P_str_SoNumFm": p_str_so_numfrm, "P_str_SoNumTo": p_str_so_numTo, "P_str_screen_MOde": P_str_screen_MOde },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                if (data == 1) {
+                    sweetAlert("", "No open SR# found for the selection", "");
+                    $("#ajaxLoading").hide();
+                }
+                else {
+                    $('#myModalShipStockverifycontent').html(data);
+                    $('#myModalShipStockverify').modal(options);
+                    $('#myModalShipStockverify').modal('show');
+                    $("#ajaxLoading").hide();
+
+                    //$("#btnobAllocation").show();
+
+                    //$("#btnAllocation").css("pointer-events", "none");
+                    //$(document).ready(function () {
+                    //    var x = document.getElementById("btnAllocation");
+                    //    x.style.display = "block";
+                    //});
+                }
+
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+
+
+    var p_str_cmp_id = $("#cmp_id").val();
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailOutboundfileURL = '/DocumentUpload/LoadOutboundDocuments';
+
+    $(function () {
+        //$(".Outboundfile").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.Outbounddocupld', function () {
+            var $buttonClicked = $(this);
+            var quotenum = $buttonClicked.attr('data-id');
+            var Sonum = $buttonClicked.attr('data-id1');
+            var options = { "backdrop": "static", keyboard: true };
+            var screentitle = $('#screentitle').val();
+
+            $("#ajaxLoading").show();
+            debugger
+            $.ajax({
+                type: "GET",
+                url: TeamDetailOutboundfileURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_cmp_id": p_str_cmp_id, "p_str_doc_id": Sonum,"p_str_doc_sub_type": '',"p_int_doc_count":0  },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+
+                    $('#myModalINdocupldContent').html(data);
+                    $('#myModalINdocupld').modal(options);
+                    $('#myModalINdocupld').modal('show');
+
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+
+
+
+        $('#OutboundInqgrid tbody').on('click', '.ob_doc_send', function () {
+            var $buttonClicked = $(this);
+            UrlEmailDocuments = '/DocumentUpload/EmailDocuments';
+            var p_str_doc_id = $buttonClicked.attr('data-id1');
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_cntr_id = '';
+            var p_str_cust_name = $buttonClicked.attr('data-id2');
+            var p_str_cust_po_num = $buttonClicked.attr('data-id3');
+            var options = { "backdrop": "static", keyboard: true };
+            var screentitle = $('#screentitle').val();
+
+            $("#ajaxLoading").show();
+            debugger
+            $.ajax({
+                type: "GET",
+                url: UrlEmailDocuments,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_cmp_id": p_str_cmp_id, "p_str_doc_id": p_str_doc_id, "p_str_cntr_id": p_str_cntr_id, "p_str_cust_name": p_str_cust_name, "p_str_cust_po_num": p_str_cust_po_num },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalEmailAlertContent').html(data);
+                    $('#myModalEmailAlert').modal(options);
+                    $('#myModalEmailAlert').modal('show');
+
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+
+
+
+
+    });
+
+
+</script>
+<script type="text/javascript">
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackShipPostURL = '/OutboundShipInq/ShipPost';
+    $(function () {
+        //$(".Shippingpostdtl").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.Shippingpostdtl', function () { 
+            debugger
+            var $buttonClicked = $(this);
+            var CmpId = $buttonClicked.attr('data-id1');
+            var ShipDocId = $buttonClicked.attr('data-id');
+            var ShipPostdt = $buttonClicked.attr('data-id2');
+            var Shipdt = $buttonClicked.attr('data-id3');
+            var p_cust_ordr_num = $buttonClicked.attr('data-id4');
+            var p_ordr_num = $buttonClicked.attr('data-id5');
+            var p_cust_name = $buttonClicked.attr('data-id6');
+            var screentitle = $('#screentitle').val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();
+            var p_str_color = $('#obItmcolor').val();
+            var p_str_size = $('#obItmsize').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            debugger
+            if (ShipPostdt == "") {
+                var options = { "backdrop": "static", keyboard: true };
+                var windowHeight = $(window).height();
+                var windowWidth = $(window).width();
+                var boxHeight = $('.modal-content').height();
+                var boxWidth = $('.modal').width();
+                var boxContent = $('.modal-content').width();
+
+                debugger
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackShipPostURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "CmpId": CmpId, "ShipDocId": ShipDocId, "Shipdt": Shipdt, "screentitle": screentitle,
+                        "p_cust_ordr_num": p_cust_ordr_num, "p_ordr_num": p_ordr_num, "p_cust_name": p_cust_name
+                    },
+                    datatype: "json",
+
+                    success: function (data) {
+                        $('#myModalContentPost').html(data);
+                        $('#myModalPost').modal(options);
+                        $('#myModalPost').modal('show');
+                        $("#ajaxLoading").hide();
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+            else {
+                swal("", "BOL# already posted", "")
+            }
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+<script type="text/javascript">
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackvasEditURL = '/VasInquiry/Edit';
+    $(function () {
+        //$(".VasEdit").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.VasEdit', function () { //CR2018-04-07-001 Added by Nithya
+
+            debugger
+            var $buttonClicked = $(this);
+            var VasId = $buttonClicked.attr('data-id');
+            var CmpId = $("#cmp_id").val();
+            var gridstatus = $buttonClicked.attr('data-id2');
+            var p_str_scn_id = $('#screentitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var $buttonClicked = $(this);
+            var screentitle = $('#screentitle').val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackvasEditURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "VasId": VasId, "CmpId": CmpId, "p_str_scn_id": p_str_scn_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalVAsContentEdit').html(data);
+                    $('#myModalVasEdit').modal(options);
+                    $('#myModalVasEdit').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    //alert("Dynamic content load failed.");
+                }
+            });
+
+
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackvasDelURL = '/VasInquiry/Delete';
+    $(function () {
+        debugger
+        //$(".VasDelete").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.VasDelete', function () { //CR2018-04-07-001 Added by Nithya
+
+            debugger
+            var $buttonClicked = $(this);
+            var p_str_vas_id = $buttonClicked.attr('data-id');
+            var p_str_vas_bill_status = $buttonClicked.attr('data-id1');
+            var p_str_scn_id = $('#screentitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var screentitle = $('#screentitle').val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackvasDelURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_vas_id": p_str_vas_id, "cmp_id": cmp_id, "p_str_vas_bill_status": p_str_vas_bill_status, "p_str_scn_id": p_str_scn_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentDel').html(data);
+                    $('#myModalDel').modal(options);
+                    $('#myModalDel').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    //alert("Dynamic content load failed.");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackvasPostURL = '/VasInquiry/Post';
+    $(function () {
+        //$(".VasPost").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.VasPost', function () {
+
+            var $buttonClicked = $(this);
+            var VasId = $buttonClicked.attr('data-id');
+            var p_str_scn_id = $('#screentitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var screentitle = $('#screentitle').val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackvasPostURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "VasId": VasId, "cmp_id": cmp_id, "p_str_scn_id": p_str_scn_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentDel').html(data);
+                    $('#myModalDel').modal(options);
+                    $('#myModalDel').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    //alert("Dynamic content load failed.");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    var p_str_cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackVasUnPostURL = '/VasInquiry/UnPost';
+    $(function () {
+        //$(".VasUnPost").click(function () {
+        $('#OutboundInqgrid tbody').on('click', '.VasUnPost', function () { //CR2018-04-07-001 Added by Nithya
+
+            var $buttonClicked = $(this);
+            var p_str_vas_id = $buttonClicked.attr('data-id');
+            var p_str_bill_doc_id = $buttonClicked.attr('data-id1');
+            var p_str_scn_id = $('#screentitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var screentitle = $('#screentitle').val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackVasUnPostURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_vas_id": p_str_vas_id, "p_str_cmp_id": p_str_cmp_id, "p_str_bill_doc_id": p_str_bill_doc_id, "p_str_scn_id": p_str_scn_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentDel').html(data);
+                    $('#myModalDel').modal(options);
+                    $('#myModalDel').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    //alert("Dynamic content load failed.");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+<script type="text/javascript">
+    var cmp_id = $("#cmp_id").val();
+    var VASDetailPostBackAddURL = '/BillingInquiry/LoadGenerateVASBillDetail';
+    $('#OutboundInqgrid tbody').on('click', '.VasBillStatus', function () {//CR2018-18-07-001 Added by Nithya
+        debugger;
+        var $buttonClicked = $(this);
+        var p_str_cmpid = $('#cmp_id').val();
+        var p_str_vasid = $buttonClicked.attr('data-id1');
+        var p_str_vasdt = $buttonClicked.attr('data-id2');
+        var p_str_screentitle = $('#screentitle').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        var screentitle = $('#screentitle').val();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_so_num_frm = $('#so_numFm').val();
+        var p_str_so_num_To = $('#so_numTo').val();
+        var p_str_so_dt_frm = $('#so_dtFm').val();
+        var p_str_so_dt_to = $('#so_dtTo').val();
+        var p_str_CustPO = $('#cust_ordr_num').val();
+        var p_str_AlocId = $('#aloc_doc_id').val();
+        var p_str_Store = $('#store_id').val();
+        var p_str_batch_id = $('#quote_num').val();
+        var p_str_status = $('#status').val();
+        var p_str_shipdtFm = $('#ShipdtFm').val();
+        var p_str_shipdtTo = $('#ShipdtTo').val();
+        var p_str_cust_name = $('#cust_name').val();
+        var p_str_screen_title = $('#screenTitle').val();
+        var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                "p_str_Store": p_str_Store,
+                "p_str_batch_id": p_str_batch_id,
+                "p_str_shipdtFm": p_str_shipdtFm,
+                "p_str_shipdtTo": p_str_shipdtTo,
+                "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+            },
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+            },
+        });
+        $.ajax({
+            type: "GET",
+            url: VASDetailPostBackAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmpid": p_str_cmpid, "p_str_vasid": p_str_vasid, "p_str_vasdt": p_str_vasdt, "p_str_screentitle": p_str_screentitle },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#ContentVasBill').html(data);
+                $('#VasBill').modal(options);
+                $('#VasBill').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var VASBillDetailInq = '/BillingInquiry/GetSearchVASBillInqDtls';
+    $('#OutboundInqgrid tbody').on('click', '.VasBillStatusInq', function () {//CR2018-18-07-001 Added by Nithya
+        debugger;
+        var $buttonClicked = $(this);
+        var p_str_cmpid = $('#cmp_id').val();
+        var p_str_vasid = $buttonClicked.attr('data-id1');
+        var p_str_vasdt = $buttonClicked.attr('data-id2');
+        var p_str_screentitle = $('#screentitle').val();
+        var screentitle = $('#screentitle').val();
+        var p_str_cust_id = "";
+        var p_str_print_dt = "";
+        var p_str_vas_bill_pd_fm = $buttonClicked.attr('data-id3');;
+        var p_str_vas_bill_pd_to = "";
+        var options = { "backdrop": "static", keyboard: true };
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_so_num_frm = $('#so_numFm').val();
+        var p_str_so_num_To = $('#so_numTo').val();
+        var p_str_so_dt_frm = $('#so_dtFm').val();
+        var p_str_so_dt_to = $('#so_dtTo').val();
+        var p_str_CustPO = $('#cust_ordr_num').val();
+        var p_str_AlocId = $('#aloc_doc_id').val();
+        var p_str_Store = $('#store_id').val();
+        var p_str_batch_id = $('#quote_num').val();
+        var p_str_status = $('#status').val();
+        var p_str_shipdtFm = $('#ShipdtFm').val();
+        var p_str_shipdtTo = $('#ShipdtTo').val();
+        var p_str_cust_name = $('#cust_name').val();
+        var p_str_screen_title = $('#screenTitle').val();
+        var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                "p_str_Store": p_str_Store,
+                "p_str_batch_id": p_str_batch_id,
+                "p_str_shipdtFm": p_str_shipdtFm,
+                "p_str_shipdtTo": p_str_shipdtTo,
+                "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+            },
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+            },
+        });
+        $.ajax({
+            type: "GET",
+            url: VASBillDetailInq,
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmpid": p_str_cmpid, "p_str_cust_id": p_str_cust_id, "p_str_print_dt": p_str_print_dt, "p_str_vas_bill_pd_fm": p_str_vas_bill_pd_fm, "p_str_vas_bill_pd_to": p_str_vas_bill_pd_to, "p_str_vas_id": p_str_vasid, "p_str_vas_dt": p_str_vasdt, "p_str_screentitle": p_str_screentitle },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#ContentVasBill').html(data);
+                $('#VasBill').modal(options);
+                $('#VasBill').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+    });
+
+    $("#btnUpdateVas").click(function () {
+        debugger
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_vas_id = $('#vas_id').val();
+        var p_str_vas_dt = $('#ship_dt').val();
+        var p_str_so_num = $('#Vassonum').val();
+        var p_str_whs_id = $('#new_whs_id').val();
+        var p_str_ship_to_id = $('#ship_to_id').val();
+        var p_str_cust_po_num = $('#cust_po_num').val();
+        var p_str_cust_po_dt = $('#cust_po_dt').val();
+        var p_str_note = $('#notes').val();
+        var p_str_check_value = $('#two').val();
+        var objVASHdr = {};
+        objVASHdr.cmp_id = $('#new_cmp_id').val();
+        objVASHdr.vas_id = $('#new_whs_id').val();
+        objVASHdr.vas_dt = $('#ship_dt').val();
+        objVASHdr.so_num = $('#Vassonum').val();
+        objVASHdr.whs_id = $('#VaswhsId').val();
+        objVASHdr.ship_to_id = $('#ship_to_id').val();
+        objVASHdr.cust_po_num = $('#cust_po_num').val();
+        objVASHdr.cust_po_dt = $('#cust_po_dt').val();
+        objVASHdr.note = $('#notes').val();
+        var VASHdr = new Array();
+        VASHdr.push(objVASHdr);
+        var numberOfCheckboxes = $("input[name='attribute1']:checked").length;
+        if (numberOfCheckboxes == 0) {
+            swal("", "No Item Added.", "");
+            return false;
+        }
+        $("#ajaxloading").show();
+        var VasdtlCount = $("#Count_Values").val();
+        var ItemDetails = new Array();
+        for (var i = 0; i < VasdtlCount; i++) {
+
+            var l_int_qty = $("#qty_" + i).val();
+            var l_dec_price = $("#price_" + i).val();
+            var l_dec_Amount = $("#amt_" + i).val();
+            var l_str_itmnum = $("#itmnum_" + i).val();
+            var l_str_note = $("#Note_" + i).val();
+            var l_str_itnname = $("#itm_name_" + i).val();
+            var l_str_priceuom = $("#price_uom_" + i).val();
+            if (l_int_qty == "") {
+                l_int_qty = 0;
+            }
+            else if (l_int_qty == undefined) {
+                l_int_qty = 0;
+            }
+            if (l_dec_price == "") {
+                l_dec_price = 0;
+            }
+            else if (l_dec_price == undefined) {
+                l_dec_price = 0;
+            }
+            if (l_int_qty != 0) {
+                var ItemDetail = {};
+                ItemDetail.qty = l_int_qty;
+                ItemDetail.list_price = l_dec_price;
+                ItemDetail.amt = l_dec_Amount;
+                ItemDetail.itm_num = l_str_itmnum;
+                ItemDetail.notes = l_str_note;
+                ItemDetail.itm_name = l_str_itnname;
+                ItemDetail.price_uom = l_str_priceuom;
+                ItemDetails.push(ItemDetail);
+            }
+        }
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/VasInquiry/UpdateVasEntry")',
+                data: JSON.stringify({ ItemDetails: ItemDetails, VASHdr: VASHdr }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    debugger
+                    if (e > 0) {
+                        swal({
+                            title: "",
+                            text: "No Records to Save",       //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        });
+                    }
+                    else {
+                        debugger
+                        swal({
+                            title: "",
+                            text: "VASId " + p_str_vas_id + " Updated successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                        //swal("", "Your record Added successfully.", "");
+                        function () {
+                            debugger
+                            setTimeout(function () {
+                                var p_str_screen_title = $('#screentitle').val();
+                                var p_str_cmpid = $('#new_cmp_id').val();
+                                var p_str_vasid = $('#vas_id').val();
+                                var SelectedID = p_str_vasid;
+                                var type = "PDF";
+                                var var_name = "Vas Post Report";
+                                var p_str_radio = var_name;
+                                window.open('VAsShowReport?SelectedID=' + SelectedID + '&p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&type=' + type, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectedID)
+                                debugger
+
+                                $('#myModalEdit').modal('hide');
+                                if (p_str_screen_title == "OBInquiry" || p_str_screen_title == "OBVisibility") {
+                                    $.ajax({
+                                        type: "get",
+                                        url: "/OutboundInq/GetOutboundInqDtl",
+                                        data: {
+                                            "p_str_cmp_id": p_str_cmp_id,
+                                            "p_str_so_num": so_num
+                                        },
+                                        datatype: 'html',
+                                        success: function (e) {
+                                            debugger
+                                            $("#ajaxloading").hide();
+                                            $('#showgrid').html("");
+                                            $('#showgrid').html(e);
+                                        },
+                                    })
+                                }
+                                else {
+                                    $.ajax({
+                                        type: "get",
+                                        url: "/VasInquiry/VasInquiryDtl",             //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                                        data: {
+                                            "p_str_cmp_id": p_str_cmpid,
+                                            "p_str_vas_id": p_str_vasid,
+                                        },
+                                        datatype: 'html',
+                                        success: function (e) {
+                                            debugger
+                                            $("#ajaxloading").hide();
+                                            $('#showgrid').html("");
+                                            $('#showgrid').html(e);
+                                        },
+                                    })
+                                }
+
+
+                            });
+                        });
+
+                    }
+                },
+
+            })
+        }
+
+    });
+</script>
+<script type="text/javascript">
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackShipUnPostURL = '/OutboundShipInq/ShipUnPost';
+    $(function () {
+        $('#OutboundInqgrid tbody').on('click', '.ShippingUnpostdtl', function () {
+            debugger
+            var $buttonClicked = $(this);
+            var CmpId = $buttonClicked.attr('data-id1');
+            var ShipDocId = $buttonClicked.attr('data-id');
+            var ShipPostdt = $buttonClicked.attr('data-id2');
+            var Shipdt = $buttonClicked.attr('data-id3');
+            var screentitle = $('#screentitle').val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_so_num_frm = $('#so_numFm').val();
+            var p_str_so_num_To = $('#so_numTo').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_CustPO = $('#cust_ordr_num').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Store = $('#store_id').val();
+            var p_str_batch_id = $('#quote_num').val();
+            var p_str_status = $('#status').val();
+            var p_str_shipdtFm = $('#ShipdtFm').val();
+            var p_str_shipdtTo = $('#ShipdtTo').val();
+            var p_str_cust_name = $('#cust_name').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Store": p_str_Store,
+                    "p_str_batch_id": p_str_batch_id,
+                    "p_str_shipdtFm": p_str_shipdtFm,
+                    "p_str_shipdtTo": p_str_shipdtTo,
+                    "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                    "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            debugger
+
+            var options = { "backdrop": "static", keyboard: true };
+            var windowHeight = $(window).height();
+            var windowWidth = $(window).width();
+            var boxHeight = $('.modal-content').height();
+            var boxWidth = $('.modal').width();
+            var boxContent = $('.modal-content').width();
+            debugger
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackShipUnPostURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "CmpId": CmpId, "ShipDocId": ShipDocId, "Shipdt": Shipdt, "screentitle": p_str_screen_title, "ShipPostdt": ShipPostdt },
+                datatype: "json",
+
+                success: function (data) {
+                    $('#myModalContentPost').html(data);
+                    $('#myModalPost').modal(options);
+                    $('#myModalPost').modal('show');
+                    $("#ajaxLoading").hide();
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+</div>

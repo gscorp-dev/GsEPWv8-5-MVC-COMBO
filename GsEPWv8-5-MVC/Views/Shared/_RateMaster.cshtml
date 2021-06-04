@@ -1,0 +1,549 @@
+﻿ @model GsEPWv8_5_MVC.Model.RateMasterModel
+@{
+    var Ordercount = Model.ListRateMaster.Count;
+}
+
+@Html.HiddenFor(model => model.itm_num)
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+
+            <td style="width:105px;"></td>
+            <td style="width:105px;"></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<div class="box-body">
+    <div class="row">
+        <div class="modal-body" style="background:Scroll; margin-top:-14px; margin-left:-10px;">
+            <div>
+                
+
+                <table id="example1" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+                    <thead class="grid_backcolor">
+                        <tr>
+                            <th class="grid_header_backcolor">Cust Id</th>
+                                @if (Session["IsCompanyUser"].ToString().Trim() == "Y")
+                                {
+                                 <th class="grid_header_backcolor"style="width: 3%;">Action</th>
+                                }
+                            <th class="grid_header_backcolor">Rate Id</th>
+                            <th class="grid_header_backcolor" style="width: 300px;">Rate Description</th>
+                            <th class="grid_header_backcolor">Rate Date</th>
+                            <th class="grid_header_backcolor">Status</th>
+                            <th class="grid_header_backcolor">Type</th>
+                            <th class="grid_header_backcolor">Category</th>
+                            <th class="grid_header_backcolor">List Price</th>
+                            <th class="grid_header_backcolor">UOM</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:white">
+                        @for (int i = 0; i < Model.ListRateMaster.Count; i++)
+                        {
+                            var list_price = (Model.ListRateMaster[i].list_price);  //CR-20180424-001   Added by Soniya
+                            var l_dec_ListPrice = list_price.ToString("F2");
+                            <tr id="@Model.ListRateMaster[i].cmp_id">
+                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListRateMaster[i].cmp_id</td>
+                            @if (Session["IsCompanyUser"].ToString().Trim() == "Y")
+                            {
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="RateEditDetail" data-id1="@Model.ListRateMaster[i].cmp_id" data-id="@Model.ListRateMaster[i].itm_num" data-id2="@Model.ListRateMaster[i].status" data-id3="@Model.ListRateMaster[i].type" data-id4="@Model.ListRateMaster[i].catg" data-id5="@Model.ListRateMaster[i].price_uom"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b></b></a>
+                                            </td>                                           
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="RateDeleteDetail" data-id1="@Model.ListRateMaster[i].cmp_id" data-id="@Model.ListRateMaster[i].itm_num" data-id2="@Model.ListRateMaster[i].type"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                            </td>                                                                                   
+                                        </tr>                                                                                
+                                    </table>
+                                </td>
+}
+                                <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="RateViewDetail" style="text-decoration:underline; color:#034af3;" data-id1="@Model.ListRateMaster[i].cmp_id" data-id="@Model.ListRateMaster[i].itm_num" >@Model.ListRateMaster[i].itm_num</a></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRateMaster[i].itm_name</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRateMaster[i].last_so_dt</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRateMaster[i].status</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRateMaster[i].type</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRateMaster[i].catg</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@l_dec_ListPrice</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRateMaster[i].price_uom</td>
+                            
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="footer" style="background-color:white;"></div>
+        </div>
+    </div>
+</div>
+
+
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 176%;left: -290px;border-radius: 8px; ">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel" style="color: white;font-weight: 800;">View RateDetails</h4>
+                    <button type="button" class="btn-Close" data-dismiss="modal" style="float:right; margin-top: -18px;">Close</button>
+                   
+                </div>
+                <div id='myModalContent' style="width: 1050px;height:289px;"></div>
+
+            </div>
+        </center>
+    </div>
+</div>
+
+<div id='myModalEdit' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 176%;left: -290px;border-radius: 8px; ">
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myModalLabel" style="color: white;font-weight: 800;">Edit RateDetails</h4>
+                    <button type="button" class="btn-Close" data-dismiss="modal" style="float:right; margin-top: -18px;">Close</button>
+                    <button type="button" id="btn_save" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 11px;background-color: #00c0ef;">Save</button>
+                </div>
+                <div id='myModalContentEdit' style="width: 1050px;height:350px;"></div>
+
+            </div>
+        </center>
+    </div>
+</div>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+
+    $("#btn_save").click(function () {
+        debugger;
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {          
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_catg = $('#catg').val();
+            var p_str_itm_num = $('#p_itm_num').val();
+            var p_str_list_price = $('#new_list_price').val();
+            var p_str_last_so_dt = $('#new_last_so_dt').val();
+            var p_str_type = $('#p_type').val();
+            var p_str_status = $('#status').val();
+            var p_str_itm_name = $('#p_itm_name').val();
+            var p_str_price_uom = $('#price_uom').val();
+            var p_bln_is_auto_ibs = $('#edit_is_auto_ibs').is(':checked');
+            var p_str_ibs_unit = $('#edit_ibs_unit').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/RateMaster/UpdateRateMaster")',
+                data: JSON.stringify({
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_itm_num": p_str_itm_num,
+                    "p_str_type": p_str_type,
+                    "p_str_catg": p_str_catg,
+                    "p_str_status": p_str_status, "p_str_itm_name": p_str_itm_name, "p_str_list_price": p_str_list_price, "p_str_price_uom": p_str_price_uom,
+                    "p_str_last_so_dt": p_str_last_so_dt, "p_bln_is_auto_ibs": p_bln_is_auto_ibs, "p_str_ibs_unit": p_str_ibs_unit
+                }),
+               
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (e) {
+                    if (e==true) {
+                        swal({
+                            title: "",
+                            text: "Your record updated successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                    function () {
+                        setTimeout(function () {
+                            debugger
+                            var p_str_cmp_id = $('#cmp_id').val();
+                            var p_str_type = $('#p_type').val();
+                            var p_str_rate_id_frm = $('#p_itm_num').val();
+                            var p_str_rate_id_to = $('#p_itm_num').val();
+                            $('#myModalEdit').modal('hide');
+                            $.ajax({
+                                type: "get",
+                                url: "/RateMaster/RateMasterDtl",
+                                data: {
+                                    "p_str_cmp_id": p_str_cmp_id,
+                                    "p_str_type": p_str_type,
+                                    "p_str_rate_id_frm": p_str_rate_id_frm
+
+                                },
+                                datatype: 'html',
+                                success: function (e) {
+                                    debugger                                                                  
+                                    $('#showgrid').html("");
+                                    $('#showgrid').html(e);                                    
+                                },
+                            })
+                          
+                        });
+                    });
+
+                    }
+                },
+
+            })
+        }
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackViewURL = '/RateMaster/Views';
+    var TeamDetailPostBackEditURL = '/RateMaster/Edit';
+    var TeamDetailPostBackDeleteURL = '/RateMaster/DeleteRateMaster';
+
+    $(function () {
+        $('#example1 tbody').on('click', '.RateDeleteDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+        //$(".RateDeleteDetail").click(function () {
+            debugger
+            var $buttonClicked = $(this);
+            var Itmnum = $buttonClicked.attr('data-id');
+            var cmpid = $buttonClicked.attr('data-id1');
+            var Type = $buttonClicked.attr('data-id2');
+            var options = { "backdrop": "static", keyboard: true };         
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_type = $('#type').val();
+            var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+            var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_type = $('#type').val();
+            var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+            var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/RateMaster/MASTER_INQ_HDR_DATA")',//CR-180421-001 Added By Nithya
+                data: {
+                    "p_str_cmp_id": cmpid, "p_str_type": p_str_type, "p_str_Rate_Id_Fm": p_str_Rate_Id_Fm, "p_str_Rate_Id_To": p_str_Rate_Id_To
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            sweetAlert({
+                title: "",
+                text: "Do you want to delete?",
+                type: "",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "No",
+                cancelButtonText: "Yes",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+                   function (isConfirm) {
+                       if (isConfirm) {
+                       }
+                       else {
+                         $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackDeleteURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "Itmnum": Itmnum, "cmpid": cmpid, "Type": Type },
+                datatype: "json",
+                success: function (getdata) {
+                    debugger
+                    if (getdata == 2) {
+                        swal({
+                            title: "",
+                            text: "Rate Id " + Itmnum + "In Use",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                    function () {
+                        setTimeout(function () {
+                            debugger
+
+                            var p_str_cmp_id = $('#cmp_id').val();
+                            var p_str_type = $('#ps_type').val();
+                            var p_str_rate_id_frm = $('#itm_num').val();
+                            var p_str_rate_id_to = $('#itm_num').val();
+                            $.ajax({
+                                type: "get",
+                                url: "/RateMaster/RateMasterDtl",
+                                data: {
+                                    "p_str_cmp_id": p_str_cmp_id,
+                                    "p_str_type": p_str_type,
+                                    "p_str_rate_id_frm": p_str_rate_id_frm
+
+                                },
+                                datatype: 'html',
+                                success: function (e) {
+                                    debugger
+                                    $('#showgrid').html("");
+                                    $('#showgrid').html(e);
+                                },
+                            })
+
+                        });
+                    });
+
+                    }
+                    if (getdata == 1) {
+                        swal({
+                            title: "",
+                            text: "Your record Deleted successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },                      
+                    function () {
+                        setTimeout(function () {
+                            debugger
+                         
+                            var p_str_cmp_id = $('#cmp_id').val();
+                            var p_str_type = $('#ps_type').val();
+                            var p_str_rate_id_frm = $('#itm_num').val();
+                            var p_str_rate_id_to = $('#itm_num').val();                          
+                            $.ajax({
+                                type: "get",
+                                url: "/RateMaster/RateMasterDtl",
+                                data: {
+                                    "p_str_cmp_id": p_str_cmp_id,
+                                    "p_str_type": p_str_type,
+                                    "p_str_rate_id_frm": p_str_rate_id_frm
+
+                                },
+                                datatype: 'html',
+                                success: function (e) {
+                                    debugger                                   
+                                    $('#showgrid').html("");
+                                    $('#showgrid').html(e);
+                                },
+                            })
+                          
+                        });
+                    });
+
+                    }                   
+                },
+            });
+          }
+        });
+
+        });
+        $('#example1 tbody').on('click', '.RateViewDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+        //$(".RateViewDetail").click(function () {
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id1');
+            var Itmnum = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackViewURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "Itmnum": Itmnum },
+                datatype: "json",
+                success: function (data) {
+
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $('#example1 tbody').on('click', '.RateEditDetail', function () { //CR2018-04-07-001 Added by Nithya
+        //$(".RateEditDetail").click(function () {           
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id1');
+            var Itmnum = $buttonClicked.attr('data-id');
+            var staus = $buttonClicked.attr('data-id2');
+            var Type = $buttonClicked.attr('data-id3');
+            var catg = $buttonClicked.attr('data-id4');
+            var uom = $buttonClicked.attr('data-id5');
+
+           
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_type = $('#type').val();
+            var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+            var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/RateMaster/MASTER_INQ_HDR_DATA")',//CR-180421-001 Added By Nithya
+                data: {
+                    "p_str_cmp_id": cmpid, "p_str_type": p_str_type, "p_str_Rate_Id_Fm": p_str_Rate_Id_Fm, "p_str_Rate_Id_To": p_str_Rate_Id_To
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackEditURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "Itmnum": Itmnum, "staus": staus, "Type": Type, "catg": catg, "uom": uom },
+                datatype: "json",
+                success: function (data) {//CR-180421-001 Added By Nithya
+                    debugger;                    
+                    $('#myModalContentEdit').html(data);
+                    $('#myModalEdit').modal(options);
+                    $('#myModalEdit').modal('show');
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    $(function () {
+        $("#btnSho").click(function () {
+            $('#myModal').modal('show');
+        });
+    })
+    $(function () {
+        $("#btnShow1").click(function () {
+            $('#myModal1').modal('show');
+        });
+    })
+
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#example1').DataTable({
+            "pageLength": 50,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        });
+        $('#example1_paginate').hide();
+    })
+    $("#example1 tr").not(':first').hover(
+function () {
+    $(this).css("background", "#dcf4ff");
+},
+function () {
+    $(this).css("background", "white");
+}
+);
+    $("#example2 tr").not(':first').hover(
+function () {
+    $(this).css("background", "#dcf4ff");
+},
+function () {
+    $(this).css("background", "white");
+}
+);
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "Dashboard")';
+    })
+    $("input[name=chkAll]").click(function () {
+        if ($(this).prop("checked") == true) {
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+    });
+    function GetRese() {
+        debugger;
+        var p_str_cmpid = $('#cmp_id').val();
+        var p_str_type = $('#type').val();
+        var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+        var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+        window.open('ShowReport?p_str_cmpid=' + p_str_cmpid + '&p_str_type=' + p_str_type + '&p_str_Rate_Id_Fm=' + p_str_Rate_Id_Fm + '&p_str_Rate_Id_To=' + p_str_Rate_Id_To, 'RateMaster', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?p_str_cmpid=' + p_str_cmpid)
+    }
+    $("#btnSearch").click(function () {
+        location.reload();
+    });
+
+    $('#example4').DataTable({
+        //"paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false
+    });
+    $("#btninquiry").click(function () {
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            not2("Please Select The Company.")
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_type = $('#type').val();
+            var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+            var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/RateMaster/GetRateMasterDetails")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_type": p_str_type,
+                    "p_str_Rate_Id_Fm": p_str_Rate_Id_Fm,
+                    "p_str_Rate_Id_To": p_str_Rate_Id_To,
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $('#showgrid').html("");
+                    $('#showgrid').html(e);
+
+                }
+            })
+        }
+    });
+    @*$("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Adminpage", "Home")';
+    })*@
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+            $(this).val("");
+        });
+    });
+</script>
+

@@ -1,0 +1,647 @@
+﻿@model GsEPWv8_5_MVC.Model.RateMasterModel
+@{
+    ViewBag.Title = "RateMaster";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var Ordercount = Model.ListRateMaster.Count;
+}
+<style>
+    div#ajaxLoadingratemaster {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+</style>
+<style>
+    fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+        width: 362px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+@using (Html.BeginForm("RateMaster", "RateMaster", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    @*<h3>Doc Entry & Visibility</h3>*@
+                    Rate Master
+
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoadingratemaster" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr>
+                                <td style="width: 8%;text-align: right;">
+                                    <label><b class="Lblmanual">Cmp Id </b></label>
+                                </td>
+                                <td style="width: 17%; padding-left: 1%;">
+                                    @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                        {
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                        }
+                                        else
+                                        {
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                        }
+                                </td>
+                                <td style="text-align: right; width: 10%;">
+                                    <label><b class="Lblmanual">Rate Type </b></label>
+                                </td>
+                                <td style="width: 15%; padding-left: 1%;">
+                                    @Html.DropDownListFor(model => model.type, new SelectList(Model.ListLookUpDtl, "name", "description"), "---Select All---", new { @class = "form-control txtlbl" })
+                                </td>
+                                <td style="width:10%;text-align: right;">
+                                    <label><b class="Lblmanual">RateId Frm</b></label>
+                                </td>
+                                <td style="width: 15%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.Rate_Id_Fm, new { @class = "form-control txtlbl", @maxlength = "50"})
+                                </td>
+                                <td style="width:10%;text-align:right; ">
+                                    <label><b class="Lblmanual">To</b></label>
+                                </td>
+                                <td style="width:15%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.Rate_Id_To, new { @class = "form-control txtlbl", @maxlength = "50"})
+                                </td>
+                            </tr>
+                            <tr>
+                                @*<td colspan="4"></td>*@
+                                <td style="padding-left: 30px;text-align:right;padding-top:10px; margin-left:0px" colspan="6">
+                                    <button type="button" id="btninquiry" class="btn_search" style="font-size:16px;">Search</button>
+                                    <button type="reset" id="btnClear" class="btn-Clear" style="font-size:16px;">Clear</button>
+                                    @if (Session["IsCompanyUser"].ToString().Trim() == "Y")
+                                    {<button type="button" id="btnNewEntryAdd" class="btn_NewEntry" onclick="">New Rate Entry</button>}
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                        <fieldset>
+                            <legend style="text-align:center">Report Selection</legend>
+                            <table style="margin-top:-30px;">
+                                <tr>
+                                    <td style="padding-left: 10px; font-size: 1.2em;"><input type="radio" value="RateMasterSummary" name="radio1" checked /><b>RateMaster Summary</b></td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <b style="color:blue;font-size: 12px;">Format</b>
+                                        <select id="Formatratemasterid" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right" data-toggle="dropdown">
+                                            <option>XLS</option>
+                                            <option>PDF</option>
+                                        </select>
+
+                                    </td>
+                                    <td>
+                                        <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                                        <select id="Modetratemasterid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                            <option>VIEW</option>
+                                            <option>EMAIL</option>
+                                        </select>
+
+                                    </td>
+                                    <td>
+                                        <button type="button" id="btnratemasterrpt" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+           </div>
+    </div>
+
+    <div id='myModalAdd' class='modal'>
+        <div class="modal-dialog">
+            <center>
+                <div class="modal-content" style="width: 200%;left: -290px;border-radius: 8px; ">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel" style="color: white;">New Rate Entry</h4>
+                        <button type="button" class="btn-Close" data-dismiss="modal" style="float:right; margin-top: -18px;">Close</button>
+                        <button type="button" id="btnnewentry" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 11px;background-color: #00c0ef;">Save</button>
+                    </div>
+                    <div id='myModalContentAdd' style="width: 1050px;height:350px;"></div>
+
+                </div>
+            </center>
+        </div>
+    </div>
+
+    <div id="showgrid" class="box-header" style="padding: 5px; ">
+        <div class="box-body">
+            
+            <table id="GrdRateMaster" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">Cust Id</th>
+                        @if (Session["IsCompanyUser"].ToString().Trim() == "Y")
+                        {
+                            <th class="grid_header_backcolor" style="width: 3%;">Action</th>
+                        }
+                        <th class="grid_header_backcolor">Rate Id</th>
+                        <th class="grid_header_backcolor" style="width: 300px;">Rate Description</th>
+                        <th class="grid_header_backcolor">Rate Date</th>
+                        <th class="grid_header_backcolor">Status</th>
+                        <th class="grid_header_backcolor">Type</th>
+                        <th class="grid_header_backcolor">Category</th>
+                        <th class="grid_header_backcolor">List Price</th>
+                        <th class="grid_header_backcolor">UOM</th>
+
+                    </tr>
+                </thead>
+                <tbody style="background-color:white">
+                    @for (int i = 0; i < Model.ListRateMaster.Count; i++)
+                    {
+                        <tr id="@Model.ListRateMaster[i].cmp_id">
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListRateMaster[i].cmp_id</td>
+                            @if (Session["IsCompanyUser"].ToString().Trim() == "Y")
+                            {
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="RateEditDetail" data-id1="@Model.ListRateMaster[i].cmp_id" data-id="@Model.ListRateMaster[i].itm_num" data-id2="@Model.ListRateMaster[i].status" data-id3="@Model.ListRateMaster[i].type" data-id4="@Model.ListRateMaster[i].catg" data-id5="@Model.ListRateMaster[i].price_uom"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b></b></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="RateDeleteDetail" data-id1="@Model.ListRateMaster[i].cmp_id" data-id="@Model.ListRateMaster[i].itm_num"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            }
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRateMaster[i].itm_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRateMaster[i].itm_name</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRateMaster[i].last_so_dt</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRateMaster[i].status</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRateMaster[i].type</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRateMaster[i].catg</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.ListRateMaster[i].list_price</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRateMaster[i].price_uom</td>
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+}
+<div id='myModalEmail' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalEmailContent' style="width: 100%; height: 650px;"></div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+    $('#GrdRateMaster').DataTable({
+        "paging": true,
+        "pageLength": 50,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        // "scrollY": "280px",
+        "scrollCollapse": true,
+        //true
+        //"sDom": 't',
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+    $("#btnnewentry").click(function () {
+        debugger
+        $("#ajaxLoadingratemaster").show();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_itm_num = $('#itm_num').val();
+        var p_str_type = $('#ps_type').val();
+        var p_str_catg = $('#catg').val();
+        var p_str_status = $('#status').val();
+        var p_str_itm_name = $('#ps_itm_name').val();
+        var p_str_list_price = $('#list_price').val();
+        var p_str_price_uom = $('#price_uom').val();
+        var p_str_last_so_dt = $('#last_so_dt').val();
+        var p_bln_is_auto_ibs = $('#add_is_auto_ibs').is(':checked');
+        var p_str_ibs_unit = $('#add_ibs_unit').val();
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_itm_num == "") {
+            swal("", "Please Enter the  Rate ID.", "");
+            $('#itm_num').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_itm_name == "") {
+            swal("", "Please Enter the Rate Desc.", "");
+            $('#ps_itm_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_list_price == "") {
+            swal("", "Please Enter the List Price.", "");
+            $('#list_price').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_price_uom == "") {
+            swal("", "Please Enter the UOM.", "");
+            $('#price_uom').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_last_so_dt == "") {
+            swal("", "Please Choose the Date.", "");
+            $('#last_so_dt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/RateMaster/NewRateMaster")',
+                data: JSON.stringify({
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_itm_num": p_str_itm_num,
+                    "p_str_type": p_str_type,
+                    "p_str_catg": p_str_catg,
+                    "p_str_status": p_str_status, "p_str_itm_name": p_str_itm_name, "p_str_list_price": p_str_list_price, "p_str_price_uom": p_str_price_uom,
+                    "p_str_last_so_dt": p_str_last_so_dt, "p_bln_is_auto_ibs": p_bln_is_auto_ibs, "p_str_ibs_unit": p_str_ibs_unit
+                }),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                timeout: 500,
+                success: function (e) {
+                    if (e == 0) {
+                        sweetAlert("", "Rate Id Already Exist.", "");
+                        $('#itm_num').focus();
+                    }
+                    else if (e != null) {
+                        swal({
+                            title: "",
+                            text: "Your record Added successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                          function () {
+                              setTimeout(function () {
+                                  var p_str_cmp_id = $('#cmp_id').val();
+                                  var p_str_type = $('#ps_type').val();
+                                  var p_str_rate_id_frm = $('#itm_num').val();
+                                  var p_str_rate_id_to = $('#itm_num').val();
+                                  $('#myModalAdd').modal('hide');
+                                  $.ajax({
+                                      type: "get",
+                                      url: "/RateMaster/RateMasterDtl",
+                                      data: {
+                                          "p_str_cmp_id": p_str_cmp_id,
+                                          "p_str_type": p_str_type,
+                                          "p_str_rate_id_frm": p_str_rate_id_frm
+
+                                      },
+                                      datatype: 'html',
+                                      success: function (e) {
+                                          debugger
+                                          $("#ajaxLoadingratemaster").hide();
+                                          $('#showgrid').html("");
+                                          $('#showgrid').html(e);
+                                      },
+                                  })
+
+                              });
+                          });
+
+                    }
+                },
+
+            })
+        }
+    });
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackAddURL = '/RateMaster/Add';
+
+    $("#btnNewEntryAdd").click(function () {
+        var $buttonClicked = $(this);
+        var cmpid = $("#cmp_id").val();
+        var Itmnum = $buttonClicked.attr('data-id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoadingratemaster").show();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_type = $('#type').val();
+        var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+        var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/RateMaster/MASTER_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": cmpid, "p_str_type": p_str_type, "p_str_Rate_Id_Fm": p_str_Rate_Id_Fm, "p_str_Rate_Id_To": p_str_Rate_Id_To
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "cmpid": cmpid, "Itmnum": Itmnum },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoadingratemaster").hide();
+                $('#myModalContentAdd').html(data);
+                $('#myModalAdd').modal(options);
+                $('#myModalAdd').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoadingratemaster").hide();
+            }
+        });
+    });
+    function GetRes() {
+        debugger;
+        var p_str_cmpid = $('#cmp_id').val();
+        window.open('ShowReport', 'RateMaster', 'ShowReport' + p_str_cmpid)
+    }
+    $("#btninquiry").click(function () {
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            not2("Please Select The Company.")
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_type = $('#type').val();
+            var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+            var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+
+            $("#ajaxLoadingratemaster").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/RateMaster/GetRateMasterDtls")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_type": p_str_type,
+                    "p_str_Rate_Id_Fm": p_str_Rate_Id_Fm,
+                    "p_str_Rate_Id_To": p_str_Rate_Id_To,
+
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoadingratemaster").hide();
+                    $('#showgrid').html("");
+                    $('#showgrid').html(e);
+
+                }
+
+            })
+        }
+    });
+    $("#btnClose").click(function () {
+
+        @*window.location.href = '@Url.Action("Dashboard", "DashBoard")';*@
+        // CR_3PL_MVC_COMMON_2018_0326_001
+        var p_str_cmp_id = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+        // CR_3PL_MVC_COMMON_2018_0326_001
+    })
+
+
+    $("#btnCloseecom").click(function () {
+
+       @*window.location.href = '@Url.Action("Dashboard", "DashBoard")';*@
+       // CR_3PL_MVC_COMMON_2018_0326_001
+       var p_str_cmp_id = $('#cmp_id').val();
+       var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+        // CR_3PL_MVC_COMMON_2018_0326_001
+    })
+
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+            $(this).val("");
+        });
+    });
+    $('#example').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true
+    });
+
+    $("#btnDashboard").click(function () {
+        @*window.location.href = '@Url.Action("Dashboard", "DashBoard")';*@
+        // CR_3PL_MVC_COMMON_2018_0326_001
+        var p_str_cmp_id = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+        // CR_3PL_MVC_COMMON_2018_0326_001
+    })
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+<script>
+    $("#btnratemasterrpt").click(function () {
+
+        debugger
+        var getli = $('#Formatratemasterid').find(":selected").text();
+        var getli2 = $('#Modetratemasterid').find(":selected").text();
+
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+            var p_str_cmpid = $('#cmp_id').val();
+            var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+            var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+            var p_str_Rate_Type = $('#type').val();
+            var p_str_report_selection_name = $("input[name='radio1']:checked").val();
+            if (p_str_report_selection_name == "RateMasterSummary") {
+                $("#ajaxLoadingratemaster").show();
+                window.open('ShowReport?p_str_cmpid=' + p_str_cmpid + '&p_str_Rate_Id_Fm=' + p_str_Rate_Id_Fm + '&p_str_Rate_Id_To=' + p_str_Rate_Id_To + '&p_str_Rate_Type=' + p_str_Rate_Type + '&p_str_report_selection_name=' + p_str_report_selection_name, 'RateMaster', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+                $("#ajaxLoadingratemaster").hide();
+            }
+        }
+
+        if (getli == 'XLS' && getli2 == 'VIEW') {
+            var ReportType = "EXCEL";
+            var ReportId = $("input[name='radio1']:checked").val();
+
+            if (ReportId == "RateMasterSummary") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_rate_id_fm = $('#Rate_Id_Fm').val();
+                var p_str_rate_id_to = $('#Rate_Id_To').val();
+                var p_str_rate_type = $('#type').val();
+
+                $("#ajaxLoading").show();
+                window.location.replace("/RateMaster/RateDetailReport?ReportType=" + ReportType + '&ReportId=' + ReportId + '&p_str_cmp_id=' + p_str_cmp_id
+                 + '&p_str_rate_type=' + p_str_rate_type + '&p_str_rate_id_fm=' + p_str_rate_id_fm + '&p_str_rate_id_fm=' + p_str_rate_id_fm)
+                $("#ajaxLoading").hide();
+
+            }
+        }
+
+
+        if (getli == 'PDF' && getli2 == 'EMAIL') {
+            var p_str_cmpid = $('#cmp_id').val();
+            var p_str_Rate_Id_Fm = $('#Rate_Id_Fm').val();
+            var p_str_Rate_Id_To = $('#Rate_Id_To').val();
+            var p_str_Rate_Type = $('#type').val();
+            var p_str_report_selection_name = $("input[name='radio1']:checked").val();
+            if (p_str_report_selection_name == "RateMasterSummary") {
+                var options = { "backdrop": "static", keyboard: true };
+                var TeamDetailPostemailBackURL = '/RateMaster/EmailShowReport';
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                $("#ajaxLoadingratemaster").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_cmpid": p_str_cmpid, "p_str_Rate_Id_Fm": p_str_Rate_Id_Fm, "p_str_Rate_Id_To": p_str_Rate_Id_To,
+                        "p_str_Rate_Type": p_str_Rate_Type, "p_str_report_selection_name": p_str_report_selection_name
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoadingratemaster").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoadingratemaster").hide();
+                    }
+                });
+            }
+        }
+
+    })
+
+</script>

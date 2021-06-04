@@ -1,0 +1,50 @@
+﻿@model GsEPWv8_5_MVC.Model.OBAlocPostInquiryModel
+@{
+
+}
+<div class="box-body">
+    <div>
+        <table id="GrdAlocList" class="table table-bordered table-striped" style="border:1px solid #121213;">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Select All <input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" /></th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Batch#</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Aloc#</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Aloc Date</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">SR#</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">SR Date</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:15%;">Customer</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cust Order#</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Order Number</th>
+                </tr>
+            </thead>
+
+            <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+                @for (int i = 0; i < Model.ListOBGetAlocOpenSummary.Count; i++)
+                {
+                    int line = i + 1;
+
+
+
+
+                    <tr style="background-color:white;">
+                        <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckboxAlocPost" type="checkbox" value="@Model.ListOBGetAlocOpenSummary[i].aloc_doc_id" /></td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetAlocOpenSummary[i].batch_num</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetAlocOpenSummary[i].aloc_doc_id</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetAlocOpenSummary[i].aloc_dt</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetAlocOpenSummary[i].so_num</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetAlocOpenSummary[i].so_dt</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetAlocOpenSummary[i].cust_name</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetAlocOpenSummary[i].cust_ordr_num</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetAlocOpenSummary[i].ordr_num</td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+

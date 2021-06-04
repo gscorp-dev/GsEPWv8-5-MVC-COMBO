@@ -1,0 +1,118 @@
+﻿@model GsEPWv8_5_MVC.Model.RateMasterModel
+@{
+
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+</style>
+<div class="box-body">
+    <div class="box-header">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                    <label><b class="Lblmanual">Cmp Id:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -52px;width:38%;">
+                    @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", placeholder = "CmpId", @maxlength = "50", @disabled = "true", @style = "width:81%;background-color:lightyellow;" })
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                    <label><b class="Lblmanual">Rate Type:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -28px;">
+                    @Html.TextBoxFor(model => model.type, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "width:175px;" })
+
+                </div>
+                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                    <label id="lblcatg"><b class="Lblmanual">Category:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.TextBoxFor(model => model.catg, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" , @style = "width:138px;" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-xs-12" style="margin-top: -8px;">
+                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                    <label><b class="Lblmanual">Status:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -28px;">
+                    @Html.TextBoxFor(model => model.status, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" , @style = "width:125px;" })
+                </div>
+                <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                    <label><b class="Lblmanual">Rate Id:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.TextBoxFor(model => model.itm_num, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;", @disabled = "true" })
+                </div>
+                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                    <label><b class="Lblmanual">Rate Desc:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.TextBoxFor(model => model.itm_name, new { @id = "text", @class = "form-control txtlbl", @maxlength = "80", @style = "width:200%",@disabled = "true" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-xs-12" style="margin-top: -8px;">
+                <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                    <label><b class="Lblmanual">List Price:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -22px;">
+                    @Html.TextBoxFor(model => model.list_price, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "width:250px;" })
+                </div>
+                <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;margin-left:70px;">
+                    <label><b class="Lblmanual">Price UoM:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -22px;">
+                    @Html.TextBoxFor(model => model.price_uom, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "width:250px;background-color:lightyellow;" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-xs-12" style="margin-top: -8px;">
+                <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 131px;margin-left:-10px;">
+                    <label><b class="Lblmanual">Rate Dt:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.TextBoxFor(model => model.last_so_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", @disabled = "true", @style = "width:180px;background-color:lightyellow;" })
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var p_str_catg = $('#catg').val();
+        if (p_str_catg != 'VAS')
+        {
+            document.getElementById('lblcatg').innerHTML = 'Bill For :';
+
+        }
+        else
+        {
+            document.getElementById('lblcatg').innerHTML = 'Category:';
+        }
+
+    });
+</script>

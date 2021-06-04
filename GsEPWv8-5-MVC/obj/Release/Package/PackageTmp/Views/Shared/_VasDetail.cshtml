@@ -1,0 +1,408 @@
+﻿@model GsEPWv8_5_MVC.Model.VasInquiryModel
+@{
+    var Ordercount = Model.ListVasInquiry.Count;
+    decimal l_dec_tot_bill_amnt = 0;
+    var tot_amnt="";
+
+}
+
+@for (int j = 0; j < Model.ListVasInquiry.Count(); j++)
+{
+    var bill_amt = (Model.ListVasInquiry[j].Shipamt);
+    decimal l_dec_bill_amnt = decimal.Parse(bill_amt);
+    if (l_dec_bill_amnt > 0)
+    {
+        l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+    }
+     tot_amnt = (l_dec_tot_bill_amnt.ToString("F2"));
+
+}
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+     div#ajaxLoadingvasdtl {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<center>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">VAS Detail INFO</h4>
+        <button type="button" style="margin-left: 88%; margin-top: -1%;" id="btnClose" class="btn-Close" data-dismiss="modal">Close</button>
+    </div>
+
+    <div id="ajaxLoadingvasdtl" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <center><label style="font-size:20px;"><b>VAS Detail</b></label></center>
+    <hr />
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-xs-11">
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;">
+                        <label><b class="Lblmanual">CmpId </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
+                        <label><b class="Lblmanual">ShipDocId </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.ship_doc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
+                        <label><b class="Lblmanual">VASDate </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.ship_dt, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-11">
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">Status </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.Status, new { @class = "form-control txtlbl", @maxlength = "50", @id = "vasStatus" })
+
+                    </div>
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
+                        <label><b class="Lblmanual">WhsId </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.whs_id, new { @class = "form-control txtlbl", @maxlength = "50", })
+                    </div>
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">ShipTo </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.ship_to, new { @class = "form-control txtlbl", @maxlength = "50", })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-11">
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">PONum </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.po_num, new { @class = "form-control txtlbl", @maxlength = "50", })
+
+                    </div>
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">ShipType </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.ship_type, new { @class = "form-control txtlbl", @maxlength = "50", })
+
+                    </div>
+                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">Notes </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.notes, new { @class = "form-control txtlbl", @maxlength = "200",@style= "width: 378%;" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-2" style="left:-21px">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                    Total Records:
+                </span>
+            </div>
+            <div class="col-xs-2" style="left:-120px">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </div>
+            <div class="col-xs-2" style="left:-21px">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                    Total Amount:
+                </span>
+            </div>
+            <div class="col-xs-2" style="left:-62px">
+                <label class="totalCount" style="text-align:right">
+                    @tot_amnt
+                </label>
+            </div>
+        </div>
+    </div>
+    @*<table>
+            <tr>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn-Email" type="button" style=" width:100px; text-align right;" id="btnEmail" data-toggle="dropdown">
+                            Email
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" id="btnEmailPDF" onclick="GetVasDetailEmailPDF('');">PDF</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="GetVasDetailEmailEXCEL('');">EXCEL</a></li>
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn-Print" type="button" id="btnPrint" style="width:105px;" data-toggle="dropdown">
+                            Print/View
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" id="btnPDF" onclick="GetVasDetailPDF('');">PDF</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="GetVasDetailECEL('');">EXCEL</a></li>
+                        </ul>
+                    </div>
+                </td>
+
+            </tr>
+        </table>*@
+    <div class="col-md-3 col-sm-3 col-xs-3" style="width:410px">
+        <div class="container" style="margin-left:789px; width:100%; margin-top:-178px">
+            <fieldset>
+                <legend style="text-align:center">Report Selection</legend>
+                <table>
+                    <tr>
+                        <td>
+                            <b style="color:blue;font-size: 12px;">Format</b>
+                            <select id="Formatvasdtlid" class="btn-Format" type="button" style="margin-left:6px;width:60px; text-align:right" data-toggle="dropdown">
+                                <option>PDF</option>
+                                <option>XLS</option>
+                            </select>
+
+                        </td>
+                        <td>
+                            <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                            <select id="Modevasdtlid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                <option>VIEW</option>
+                                <option>EMAIL</option>
+
+                            </select>
+
+
+                        </td>
+                        <td>
+
+                            <button type="button" id="btnvasdtlrpt" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                        </td>
+
+                    </tr>
+
+
+                </table>
+            </fieldset>
+        </div>
+
+    </div>
+
+    <br />
+</center>
+
+<div class="box">
+    <div id="table-Details">
+        @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+            <table id="GridVasDtl" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:10px;">Line#</th>
+                        <th class="grid_header_backcolor" style="width:10px;">ServiceId</th>
+                        @*<th class="grid_header_backcolor">Color</th>*@
+                        <th class="grid_header_backcolor" style="width:30px;">Description</th>
+                        <th class="grid_header_backcolor" style="width:10px;">Status</th>
+                        <th class="grid_header_backcolor" style="width:10px;">Qty</th>
+                        <th class="grid_header_backcolor" style="width:10px;">Rate</th>
+                        <th class="grid_header_backcolor" style="width:10px;">ShipUOM</th>
+                        <th class="grid_header_backcolor" style="width:10px;">TotalAmt</th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.ListVasInquiry.Count; i++)
+                    {
+                        var ShipAmt = decimal.Parse(Model.ListVasInquiry[i].Shipamt);
+                        var ship_qty = (Model.ListVasInquiry[i].ship_itm_price);
+                        var l_dec_ShipAmt = (ShipAmt.ToString("F2"));
+                        var l_dec_ship_price = (ship_qty.ToString("F2"));
+                        <tr style="background-color:white;">
+                            <td style="color:black; font-weight:bold;text-align:left;">@Model.ListVasInquiry[i].so_dtl_line</td>
+                            <td style="color:black; font-weight:bold;text-align:left;">@Model.ListVasInquiry[i].so_itm_num</td>
+                            @*<td style="color:black; font-weight:bold;text-align:left;">@Model.ListVasInquiry[i].so_itm_color</td>*@
+                            <td style="color:black; font-weight:bold;text-align:left;">@Model.ListVasInquiry[i].cust_itm_name</td>
+                            <td style="color:black; font-weight:bold;text-align:left;">@Model.ListVasInquiry[i].status</td>
+                            <td style="color:black; font-weight:bold;text-align:right;">@Model.ListVasInquiry[i].ship_qty</td>
+                            <td style="color:black; font-weight:bold;text-align:right;">@l_dec_ship_price</td>
+                            <td style="color:black; font-weight:bold;text-align:left;">@Model.ListVasInquiry[i].ship_Uom</td>
+                            <td style="color:black; font-weight:bold;text-align:right;">@l_dec_ShipAmt</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        @*</div>*@
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#GridVasDtl').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridVasDtl_paginate').hide();
+    })
+
+ 
+
+   
+</script>
+
+
+
+<script>
+    $("#btnvasdtlrpt").click(function () {
+
+           debugger
+           var getli = $('#Formatvasdtlid').find(":selected").text();
+           var getli2 = $('#Modevasdtlid').find(":selected").text();
+           if (getli == 'PDF' && getli2 == 'VIEW') {
+               var SelectedRow = [];
+               var checkboxIDArray = [];
+               var p_str_cmp_id = $('#cmp_id').val();
+               var p_str_Shipping_id = $('#ship_doc_id').val();
+               var p_str_status = $('#vasStatus').val();
+               $("#ajaxLoadingvasdtl").show();
+               window.open('ShowvasdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_Shipping_id=' + p_str_Shipping_id, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowvasdtlReport')
+               $("#ajaxLoadingvasdtl").hide();
+           }
+            if (getli == 'PDF' && getli2 == 'EMAIL')
+            {
+                var options = { "backdrop": "static", keyboard: true };
+                var TeamDetailPostemailBackURL = '/VasInquiry/EmailShowReport';
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var p_str_cmpid = $('#cmp_id').val();
+                var p_str_Shipping_id = $('#ship_doc_id').val();
+                var SelectdID = p_str_Shipping_id;
+                var p_str_Status = $('#vasStatus').val();
+                var var_name = "Vas Post Report";
+                var p_str_radio = var_name;
+                var type = "PDF";
+                var p_str_vas_id_fm = $('#vas_id_fm').val();
+                var p_str_vas_id_to = $('#vas_id_to').val();
+                var p_str_vas_date_fm = $('#vas_date_fm').val();
+                var p_str_vas_date_to = $('#vas_date_to').val();
+                var p_str_so_num = $('#so_num').val();
+                $("#ajaxLoadingvasdtl").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_cmp_id": p_str_cmpid, "p_str_radio": p_str_radio, "p_str_vas_id_fm": p_str_vas_id_fm,
+                        "p_str_vas_id_to": p_str_vas_id_to, "p_str_vas_date_fm": p_str_vas_date_fm, "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num,
+                        "p_str_Status": p_str_Status, "SelectdID": SelectdID, "type": type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoadingvasdtl").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoadingvasdtl").hide();
+                    }
+                });
+            }
+            if (getli == 'XLS' && getli2 == 'VIEW')
+            {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var p_str_cmp_id = $('#cmp_id').val();
+                var SelectdID = $('#ship_doc_id').val();
+                var p_str_status = $('#vasStatus').val();
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = "Vas Post Report";
+                var p_str_vas_id_fm = "";
+                var p_str_vas_id_to = "";
+                var p_str_vas_date_fm = "";
+                var p_str_vas_date_to = "";
+                var p_str_so_num = "";
+                var p_str_Status = "";
+                var SelectedID = $('#ship_doc_id').val();
+                var type = "Excel";
+                $("#ajaxLoadingvasdtl").show();
+                window.location.replace("/VasInquiry/ShowReport?p_str_cmp_id=" + p_str_cmp_id + '&p_str_radio=' + p_str_radio + '&p_str_vas_id_fm=' + p_str_vas_id_fm
+        + '&p_str_vas_id_to=' + p_str_vas_id_to + '&p_str_vas_date_fm=' + p_str_vas_date_fm + '&p_str_vas_date_to=' + p_str_vas_date_to + '&p_str_so_num=' + p_str_so_num
+        + '&p_str_Status=' + p_str_Status + '&SelectedID=' + SelectdID + '&type=' + type)
+                $("#ajaxLoadingvasdtl").hide();
+            }
+          if (getli == 'XLS' && getli2 == 'EMAIL')
+           {
+             var options = { "backdrop": "static", keyboard: true };
+            var TeamDetailPostemailBackURL = '/VasInquiry/EmailShowReport';
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var p_str_cmpid = $('#cmp_id').val();
+            var p_str_Shipping_id = $('#ship_doc_id').val();
+            var SelectdID = p_str_Shipping_id;
+            var p_str_Status = $('#vasStatus').val();
+            var var_name = "Vas Post Report";
+            var p_str_radio = var_name;
+            var type = "EXCEL";
+            var p_str_vas_id_fm = $('#vas_id_fm').val();
+            var p_str_vas_id_to = $('#vas_id_to').val();
+            var p_str_vas_date_fm = $('#vas_date_fm').val();
+            var p_str_vas_date_to = $('#vas_date_to').val();
+            var p_str_so_num = $('#so_num').val();
+            $("#ajaxLoadingvasdtl").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostemailBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmpid, "p_str_radio": p_str_radio, "p_str_vas_id_fm": p_str_vas_id_fm,
+                    "p_str_vas_id_to": p_str_vas_id_to, "p_str_vas_date_fm": p_str_vas_date_fm, "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num,
+                    "p_str_Status": p_str_Status, "SelectdID": SelectdID, "type": type
+                },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoadingvasdtl").hide();
+                    $('#myModalEmailContent').html(data);
+                    $('#myModalEmail').modal(options);
+                    $('#myModalEmail').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoadingvasdtl").hide();
+                }
+            });
+          }
+
+      })
+
+</script>

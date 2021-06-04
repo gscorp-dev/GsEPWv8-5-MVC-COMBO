@@ -1,0 +1,398 @@
+﻿@model GsEPWv8_5_MVC.Model.IBRcvdDataUpdateModel
+
+@{
+    ViewBag.Title = "IBRcvdDataUpdate";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+</style>
+
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/plugins/jQueryUI/jquery-ui.js"></script>
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+@*@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+    @Html.HiddenFor(model => model.screentitle)*@
+@using (Html.BeginForm("IBRcvdDataUpdate", "IBRcvdDataUpdate", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+
+                <td style="width: 60%" class="ScreenTitle">
+                    IB – RECEIVER Data UPDATE
+                    <input type="hidden" id="screenTitle" value="IBInquiry" />
+                </td>
+                }
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                        <tr>
+                            <td class="col-xs-1" align="right">
+                                <label><b class="Lblmanual">Cmp Id </b></label>
+                            </td>
+                            <td class="col-xs-2">
+                                @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                {
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompany, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl", id = "cmp_id" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompany, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl", id = "cmp_id" })
+                                }
+                            </td>
+
+                            <td class="col-xs-1" align="right">
+                                <label><b class="Lblmanual">IB DOC id </b></label>
+                            </td>
+                            <td class="col-xs-2">
+                                @Html.TextBoxFor(model => model.ib_doc_id, new { @class = "form-control txtlbl", @maxlength = "50", id = "ib_doc_id" })
+                            </td>
+                            <td class="col-xs-1" align="right">
+                                <label><b class="Lblmanual">Cont Id </b></label>
+                            </td>
+                            <td class="col-xs-2">
+                                @Html.TextBoxFor(model => model.cntr_id, new { @class = "form-control txtlbl", @maxlength = "50", id = "cont_id" })
+                            </td>
+                            <td class="col-xs-1" align="right">
+                                <button type="button" id="btnSearch" class="btn_search">Search</button>
+                            </td>
+                            <td class="col-xs-2" align="left">
+                                <button type="reset" id="btnClear" class="btn-Clear">Clear </button>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="showgrid" class="box-header" style="padding: 5px;border-radius: 5px;">
+        <hr class="break" />
+            <div class="container-fluid">
+                <div class="box-body">
+                    <table id="grd_ib_rcvd_data_update" class="table table-bordered table-striped" style="table-layout:fixed; width:100%;">
+
+                        <thead class="grid_backcolor">
+                            <tr>
+                                <th class="grid_header_backcolor col-xs-1"><input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" /> SelectAll </th>
+                                <th class="grid_header_backcolor col-xs-1">Item Code</th>
+                                <th class="grid_header_backcolor col-xs-2">Style</th>
+                                <th class="grid_header_backcolor col-xs-1">Color</th>
+                                <th class="grid_header_backcolor col-xs-1">Size</th>
+                                <th class="grid_header_backcolor col-xs-2">Item Name</th>
+                                <th class="grid_header_backcolor col-xs-1">Length</th>
+                                <th class="grid_header_backcolor col-xs-1">Width</th>
+                                <th class="grid_header_backcolor col-xs-1">Height</th>
+                                <th class="grid_header_backcolor col-xs-1">CalcCube</th>
+                                <th class="grid_header_backcolor col-xs-1">Cube</th>
+                                <th class="grid_header_backcolor col-xs-1">Weight</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody style="width:100%;">
+
+                            @for (int i = 0; i < Model.ListDocItemList.Count; i++)
+                            {
+
+                                var cmpid = @Model.ListDocItemList[i].cmp_id;
+
+                                <tr id="grdRow_@i" class="row-select" style="width:100%;">
+                                    <td class="col-xs-1" style="text-align:center">
+                                        <input class="checkbox" id="chkdd_@i" name="tblcheckboxItemCode" type="checkbox" value="@Model.ListDocItemList[i].itm_code" />
+                                    </td>
+
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_code, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "10", @id = "itm_code_" + i, @style = "background-color:white;" })
+                                    </td>
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_num, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "itm_num_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_color, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "itm_color_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_size, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "itm_size_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "75", @id = "itm_name_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].length, new { @class = "form-control txtlbl", @maxlength = "50", @id = "length_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].width, new { @class = "form-control txtlbl", @maxlength = "50", @id = "width_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].depth, new { @class = "form-control txtlbl", @maxlength = "50", @id = "depth_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        <a href="javascript:void(0);" class="btn btn-primary small btnCalcCube" style="color: white;height: 17px;width: 44px; border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;" data=@i>CalcCube</a>
+                                    </td>
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].cube, new { @class = "form-control txtlbl", @maxlength = "50", @id = "cube_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td class="col-xs-1" style="color:black; font-size:12px">
+                                        @Html.TextBoxFor(model => @Model.ListDocItemList[i].wgt, new { @class = "form-control txtlbl", @maxlength = "50", @id = "wgt_" + i, @style = "background-color:lightyellow;" })
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+}
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+    <script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+    <script src="~/Scripts/sweetalert.js"></script>
+    @{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+    <script type="text/javascript">
+        debugger
+        $("#btnDashboard").click(function () {
+            var p_str_cmpid = $('#cmp_id').val();
+            var url = '@Url.Action("Dashboard", "Dashboard")';
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+        })
+
+        $("#btnClose").click(function () {
+            debugger
+            var p_str_screentitle = $('#screentitle').val();
+            var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+
+            var url = '@Url.Action("Dashboard", "Dashboard")';
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+        })
+
+        $("#btnCloseecom").click(function () {
+            debugger
+            var p_str_screentitle = $('#screentitle').val();
+            var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+
+            var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+        })
+
+
+        $("#btnSearch").click(function () {
+            debugger
+            var cmp_id = $("#cmp_id").val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ib_doc_id = $('#ib_doc_id').val();
+            var p_str_cntr_id = $('#cont_id').val();
+
+            if (cmp_id == "") {
+                sweetAlert("", "Please select the Company Id", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            if (p_str_ib_doc_id == "" && p_str_cntr_id == '') {
+                sweetAlert("", "Please search with IB Doc Id or Container Id", "");
+                $('#ib_doc_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+            else {
+
+
+
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: "/IBRcvdDataUpdate/GetIBRcvdDataUpdate",
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_cntr_id": p_str_cntr_id
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+
+                        if (e == 2) {
+                            swal("", "Record Not Found.", "");
+                            $('#ib_doc_id').focus();
+                            $("#ajaxLoading").hide();
+                            $('body,html').animate({ scrollTop: 0 }, 0);
+                            er = 1;
+                            return false;
+                        }
+                        else {
+                            debugger
+                            $("#ajaxLoading").hide();
+                            $('#showgrid').html("");
+                            $('#showgrid').html(e);
+                        }
+                    },
+                })
+
+            }
+        });
+
+        $("btnClear").each(function () {
+            $(this).val("");
+        });
+
+        function change(el) {
+            if (el.value === "(Click to hide...)")
+                el.value = "(Click to show...)";
+            else
+                el.value = "(Click to hide...)";
+        }
+        $('#SelectAll').click(function (event) {
+            if (this.checked) {
+                // Iterate each checkbox
+                $(':checkbox').each(function () {
+                    this.checked = true;
+                });
+            } else {
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
+            }
+        });
+
+        $('#rcvd_dt').datetimepicker({
+            timepicker: false,
+            step: 15, format: 'm-d-Y'
+        });
+</script>
+

@@ -1,0 +1,254 @@
+﻿
+@model GsEPWv8_5_MVC.Model.OB940UploadFileModel
+
+@{
+    var Ordercount = Model.ListOB940UploadFileHdr.Count;
+    var l_int_error_count = Model.ListOB940InvalidData.Count;
+    var l_str_error_desc = Model.error_desc;
+    var l_str_allow_940_new_item = Model.allow_940_new_item;
+    
+
+
+    //var hdr_Ordercount = "0";
+    Int32 l_dbl_total_ctns = Model.ListOB940UploadFileDtl.Sum(item => item.ordr_ctns);
+    double l_dbl_total_cube = Model.ListOB940UploadFileDtl.Sum(item => (item.cube * item.ordr_ctns));
+    double l_dbl_total_weight = Model.ListOB940UploadFileDtl.Sum(item => (item.wgt * item.ordr_ctns));
+}
+
+<style>
+
+</style>
+
+<div id="SR940Partialshowgrid" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+
+    <div style="font-size:14px; color:red; font-weight:bold;">
+        940 File Upload Error Count:
+        <label id="l_str_error_count_hdr" style="text-align:left">
+            @l_int_error_count
+        </label>
+    </div>
+
+    <div>
+        <input type="hidden" value="@ViewBag.l_int_error_count" id="l_int_error_count_hdr" />
+        <input type="hidden" value="@ViewBag.l_str_error_desc" id="l_str_error_desc_hdr" />
+    </div>
+
+    <div class="gridSummary">
+        <table style="width:100%">
+            <tr>
+                <td style="width:20%;text-align:right">
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                        Total Records:
+                    </span>
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </td>
+                <td style="width:20%;text-align:right">
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                        Total Ctn(s):
+                    </span>
+                    <label class="totalCount" style="text-align:left">
+                        @l_dbl_total_ctns
+                    </label>
+                </td>
+                <td style="width:20%;text-align:right">
+
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                        Total Cube:
+                    </span>
+                    <label class="totalCount" style="text-align:left">
+                        @l_dbl_total_cube
+                    </label>
+
+                </td>
+                <td style="width:20%;text-align:right">
+
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                        Total Weight:
+                    </span>
+                    <label class="totalCount" style="text-align:left">
+                        @l_dbl_total_weight
+                    </label>
+                    </td>                
+
+                <td style="width:12%;text-align:right">
+                    @if (l_str_allow_940_new_item == "1")
+                    {
+                        <label for="chkAllowNewItem" style="font-size:12px;">
+                            <input type="checkbox" id="chkAllowNewItem" checked="checked" />
+                            Allow New Item
+                        </label>
+                    }
+                    else
+                    {
+                        <label for="chkAllowNewItem" style="font-size:12px;">
+                            <input type="checkbox" id="chkAllowNewItem" />
+                            Allow New Item
+                        </label>
+                    }
+
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div>
+
+    <div class="">
+
+        <table class="table table-bordered table-striped " style="border:1px solid #121213 ;width:100%" id="GridOB940Main">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor">Ref Num</th>
+                    <th class="grid_header_backcolor">Cust PO</th>
+                    <th class="grid_header_backcolor">Pick Line</th>
+                    <th class="grid_header_backcolor">Style</th>
+                    <th class="grid_header_backcolor">Color</th>
+                    <th class="grid_header_backcolor">Size</th>
+                    <th class="grid_header_backcolor">Cust SKU</th>
+                    <th class="grid_header_backcolor">Item Qty</th>
+                    <th class="grid_header_backcolor">Ctns</th>
+                    <th class="grid_header_backcolor">PPK</th>
+                    @*<th class="grid_header_backcolor">Cube</th>
+                    <th class="grid_header_backcolor">Wgt</th>*@
+                    <th class="grid_header_backcolor">Item Name</th>
+                    <th class="grid_header_backcolor">Header </th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (int i = 0; i < Model.ListOB940UploadFileDtl.Count; i++)
+                {
+                    var wgt = (Model.ListOB940UploadFileDtl[i].wgt);
+                    var cube = (Model.ListOB940UploadFileDtl[i].cube);
+
+                    var l_dec_wgt = wgt.ToString("F2");
+                    var l_dec_cube = cube.ToString("F3");
+                    <tr class="row-select">
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOB940UploadFileDtl[i].ref_num</td>
+
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOB940UploadFileDtl[i].cust_po_num</td>
+
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListOB940UploadFileDtl[i].pick_line_num</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOB940UploadFileDtl[i].itm_num</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOB940UploadFileDtl[i].itm_color</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOB940UploadFileDtl[i].itm_size</td>
+
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOB940UploadFileDtl[i].cust_sku</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align:right"> @Model.ListOB940UploadFileDtl[i].ordr_qty</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListOB940UploadFileDtl[i].ordr_ctns</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListOB940UploadFileDtl[i].ctn_qty</td>
+
+                        @*<td style="font-size:12px; color:black; font-weight:bold;text-align:right">@l_dec_cube</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@l_dec_wgt</td>*@
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOB940UploadFileDtl[i].itm_name</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOB940UploadFileDtl[i].header_data</td>
+
+
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div id="SR940Errorgrid" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+        <div style="font-size:14px; color:red; font-weight:bold;">
+            940 File Upload Error Summary:
+            <label id="l_str_error_count" style="text-align:left">
+                @l_int_error_count
+            </label>
+        </div>
+
+        <div>
+            <input type="hidden" value="@Model.allow_940_new_item" id="l_str_allow_940_new_item" />
+            <input type="hidden" value="@ViewBag.l_str_error_desc" id="l_str_error_desc" />
+            <input type="hidden" value="@ViewBag.l_int_error_count" id="l_int_error_count" />
+        </div>
+
+        <br />
+        <div>
+            <table class="table table-bordered table-striped " style="border:1px solid #121213 ;width:100%" id="GridEcomSR940Error">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:10%">Ref No</th>
+                        <th class="grid_header_backcolor" style="width:5%">Pick Line</th>
+                        <th class="grid_header_backcolor" style="width:50%">Line Data</th>
+                        <th class="grid_header_backcolor" style="width:35%">Error description</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @for (int i = 0; i < Model.ListOB940InvalidData.Count; i++)
+                    {
+
+
+                        <tr style="background-color:white;" class="row-select">
+                            <td style="font-size:13px; color:red; font-weight:bold; text-align:right ;width:10%">@Model.ListOB940InvalidData[i].ref_num</td>
+                            <td style="font-size:13px; color:red; font-weight:bold; width:5%">@Model.ListOB940InvalidData[i].pick_line_num</td>
+
+                            <td style="font-size:13px; color:red; font-weight:bold; width:50%">@Model.ListOB940InvalidData[i].line_data</td>
+                            <td style="font-size:13px; color:red; font-weight:bold; width:35%">@Model.ListOB940InvalidData[i].error_desc</td>
+
+                        </tr>
+
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+
+        $(function () {
+            $('#GridEcomSR940Main').DataTable({
+                "paging": true,
+                "pageLength": 50,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": false,
+                "info": true,
+                "autoWidth": true,
+                // "scrollY": "280px",
+                "scrollCollapse": true,
+                //true
+                //"sDom": 't',
+                "sScrollY": "360px",
+                "sScrollX": "99%",
+            })
+        })
+        $(function () {
+            $('#GridEcomSR940Error').DataTable({
+                "paging": false,
+             //   "lengthChange": true,
+                "searching": false,
+               "ordering": false,
+               "info": false,
+               // "autoWidth": true,
+                // "scrollY": "280px",
+                "scrollCollapse": true,
+                //true
+                //"sDom": 't',
+                "sScrollY": "360px",
+                "sScrollX": "99%",
+            })
+        })
+</script>
+
+
+
+
+

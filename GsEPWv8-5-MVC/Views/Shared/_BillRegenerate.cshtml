@@ -1,0 +1,498 @@
+﻿@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+@{
+    decimal l_dbl_tot_bill_amount = 0;
+    int l_int_tot_ctns = 0;
+    decimal l_dbl_tot_cube = 0;
+    int lintTotLines = Model.ListSaveSTRGBillDetails.Count;
+    for (int j = 0; j < Model.ListSaveSTRGBillDetails.Count; j++)
+    {
+        l_dbl_tot_bill_amount = l_dbl_tot_bill_amount + (Model.ListSaveSTRGBillDetails[j].TotAmount);
+        l_int_tot_ctns = l_int_tot_ctns + (Model.ListSaveSTRGBillDetails[j].TotalCtns);
+        l_dbl_tot_cube = l_dbl_tot_cube + (Model.ListSaveSTRGBillDetails[j].TotCube);
+    }
+    var l_str_tot_bill_amount = l_dbl_tot_bill_amount.ToString("F2");
+}
+
+
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+
+    .sweet-alert {
+        background-color: #8cd6f7; 
+        width: 478px;
+        padding: 17px;
+        border-radius: 5px;
+        text-align: center;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -256px;
+        margin-top: -200px;
+        overflow: hidden;
+        display: none;
+        z-index: 2000;
+    }
+
+    div#ajaxLoadingInout {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.js"></script>
+@Html.HiddenFor(model => model.DocumentdateFrom)
+@Html.HiddenFor(model => model.DocumentdateTo)
+@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+@Html.HiddenFor(model => model.screentitle)
+
+
+<center>
+    <div class="modal-header container-fluid">
+        <div class="row">         
+            <div class="col-xs-11"><h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Generate Inout Bill</h4></div>
+            <div class="col-xs-1">
+                <button type="button" id="cmdClose" class="btn-Close">Close</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+        </div>
+    </div>
+    <div id="ajaxLoadingInout" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                    <div class="row">
+                            <div class="col-xs-1" style="text-align: right;font-size:10px; margin-top:5px">
+                                <label><b class="Lblmanual">Cust of</b></label>
+                            </div>
+                            <div class="col-xs-5" style="text-align: left;font-size:10px; width:40%; margin-left: -1%;">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCustofCompanyPickDtl, "cust_of_cmpid", "cust_of_cmpname"), new { @id = "new_cust_of_cmp_id", @class = "form-control txtlbl" })
+                            </div>
+                            <div class="col-xs-1" style="font-size:10px; margin-top:5px">
+                                <label><b class="Lblmanual">Cust Id</b></label>
+                            </div>
+                            <div class="col-xs-5" style="text-align: left;font-size:10px;width:40%; margin-left: -1%;">
+                                @Html.DropDownListFor(model => model.cust_of_cmpid, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl" })
+                            </div>
+                    </div>              
+                    <br />
+                    <div class="row">
+                            <div class="col-xs-1" style="text-align: right;margin-top:5px;font-size:10px;">
+                                <label><b class="Lblmanual">Bill Doc Id</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: left;margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.BillDocId, new { @class = "form-control txtlbl", @maxlength = "10", @id = "bill_doc_id" })
+                            </div>
+                            <div class="col-xs-1" style="margin-top:5px;font-size:10px;">
+                                <label><b class="Lblmanual">Bill Doc Date</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: left;margin-left: -25px;">
+                                @Html.TextBoxFor(model => model.Billdocdt, "{0:MM/dd/yyyy}", new { @class = "form-control txtlbl", @maxlength = "10", @id = "bill_doc_dt" })
+                            </div>
+                            <div class="col-xs-1" style="margin-top:5px;font-size:10px;">
+                                <label><b class="Lblmanual">Bill From Dt</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: left; margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.bill_pd_fm, "{0:MM/dd/yyyy}", new { @class = "form-control txtlbl", @maxlength = "10", @id = "bill_from_dt" })
+                            </div>
+                            <div class="col-xs-1" style="margin-top:5px;font-size:10px;">
+                                <label><b class="Lblmanual">To</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: left;margin-left: -25px;">
+                                @Html.TextBoxFor(model => model.bill_pd_to, "{0:MM/dd/yyyy}", new { @class = "form-control txtlbl", @maxlength = "10", @id = "bill_to_dt" })
+                            </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                            <div class="col-xs-1" style="text-align: right;font-size:10px; margin-top:5px">
+                                <label><b class="Lblmanual">Bill Type</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: left;margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.RateType, new { @class = "form-control txtlbl", @maxlength = "20", @id = "bill_by_type" })
+                            </div>
+                            <div class="col-xs-9">     
+                                <button type="button" id="btn-search" class="btn_search">Search </button>                          
+                                <button type="reset" id="btnClear" class="btn-Clear">Clear </button>
+                                <button type="button" id="btnRegenerateInOutBill" class="btn_NewEntry">ReGenerate Inout Bill </button>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</center>
+<div id="ShowInOutBillGrid" class="box-header" style="padding: 5px; ">
+    <div class="box-body">
+        <div>
+            <table>
+                <tr>
+                    <td style="width: 15%; text-align:right">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Ctn(s):
+                        </span>
+                    </td>
+                    <td style="width: 15%;">
+                        <label class="totalCount" style="text-align:left">
+                            @l_int_tot_ctns
+                        </label>
+                    </td>
+                    <td style="width: 15%;text-align:right;">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Cube:
+                    </span>
+                    </td>
+                    <td style="width: 15%;text-align:left">
+                        <label class="totalCount" style="text-align:left">
+                            @l_dbl_tot_cube
+                        </label>
+                    </td>
+                    <td style="width: 25%;">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Invoice Amount (  Excluding IBS ):
+                        </span>
+                    </td>
+                    <td style="width:15%;">
+                        <label class="totalCount" style="text-align:left">
+                            $@l_str_tot_bill_amount
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div>
+            <table id="GrdBillRegenerate" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Exclude</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">IBDOC#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">IB Date</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cont ID</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Lot ID</th>
+                        <th style="display:none;"></th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cust PO</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Ctns</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cube</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:12%;">List Price</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:12%;">Total Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.ListSaveSTRGBillDetails.Count; i++)
+                    {
+                        var bill_amt = (Model.ListSaveSTRGBillDetails[i].TotAmount);
+                        decimal l_dec_bill_amnt = bill_amt;
+                        var tot_amnt = l_dec_bill_amnt.ToString("F2");
+                        var listprice = (Model.ListSaveSTRGBillDetails[i].list_price);
+                        decimal l_dec_list_price = listprice;
+                        var tot_list_price = l_dec_list_price.ToString("F2");
+                        <tr style="background-color:white;">
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblChkBoxRebill" type="checkbox" value="@Model.ListSaveSTRGBillDetails[i].lot_id" /></td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">
+                                <a href="javascript:void(0);" class="anchorlotDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.ListSaveSTRGBillDetails[i].lot_id" data-id1="@Model.ListSaveSTRGBillDetails[i].ib_doc_id">@Model.ListSaveSTRGBillDetails[i].ib_doc_id</a>
+                            </td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListSaveSTRGBillDetails[i].RcvdDate</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListSaveSTRGBillDetails[i].cont_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListSaveSTRGBillDetails[i].lot_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => Model.ListSaveSTRGBillDetails[i].lot_id, new { @id = "bl_lot_id_" + i, @rowId = @i })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListSaveSTRGBillDetails[i].po_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListSaveSTRGBillDetails[i].TotalCtns</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;width:60px;">@Model.ListSaveSTRGBillDetails[i].TotCube</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;width:60px;">@tot_list_price</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;width:60px;">@tot_amnt</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+@Html.Hidden("lintTotLines", lintTotLines)
+<br />
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 1050px; height: 650px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" style="margin-top: -38px;" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="load" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script>
+    debugger
+   
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+
+            $(this).val("");
+        });
+    });
+    $('#bill_doc_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm/d/Y'
+    });
+   
+    $('#bill_from_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm/d/Y'
+    });
+    $('#bill_to_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm/d/Y'
+    });
+    $("#cmdClose").click(function () {
+        debugger
+        var screentitle = $('#screentitle').val();
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_Bill_doc_id = $('#bill_doc_id').val();
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+          function (isConfirm) {
+              debugger
+              if (isConfirm) {
+
+              }
+
+              else {
+                  debugger
+                  
+                  $('#myModalBillRegGen').modal('hide');
+                 
+              }
+          }
+          )
+    });
+    debugger
+    
+    $(function () {
+        debugger
+        $('#new_cmp_id').change(function () {
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "BillingInquiry")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+
+    });
+
+</script>
+<script>
+    $("#btn-search").click(function (e) {
+        debugger
+        var UrlReGenerateBill = '/BillingInquiry/BillRegenerateSearch';
+        var $buttonClicked = $(this);
+
+        var p_str_cmp_id = $('#new_cust_of_cmp_id').val();
+        var p_str_cust_id = $('#new_cmp_id').val();
+        var p_str_bill_doc_id = $('#bill_doc_id').val();
+        var p_str_bill_doc_dt = $('#bill_doc_dt').val();
+        var p_str_bill_from_dt = $('#bill_from_dt').val();
+        var p_str_bill_to_dt = $('#bill_to_dt').val();
+        var p_str_bill_type = "INOUT";
+        var p_str_viewmode = "R";
+        var Type = "";
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/BillingInquiry/IB_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_bill_doc_id, "p_str_Bill_type": p_str_bill_type,
+                "p_str_doc_dt_Fr": p_str_bill_from_dt, "p_str_doc_dt_To": p_str_bill_to_dt,
+            },
+            dataType: "json",
+            success: function (e) {
+            },
+        });
+        $.ajax({
+            type: "GET",
+            url: UrlReGenerateBill,
+            datatype: 'html',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_cust_id": p_str_cust_id, "p_str_bill_doc_id": p_str_bill_doc_id, "p_str_bill_doc_dt": p_str_bill_doc_dt,
+                "p_str_bill_from_dt": p_str_bill_from_dt, "p_str_bill_to_dt": p_str_bill_to_dt, "p_str_bill_type": p_str_bill_type
+            },
+
+            datatype: "json",
+            success: function (data) {
+          
+                $('#ShowInOutBillGrid').html("");
+                $('#ShowInOutBillGrid').html(data);
+
+                //$('#ParShowInOutBillGrid').html("");
+                //$('#ParShowInOutBillGrid').html(data);
+                return true;
+            },
+            error: function () {
+                sweetAlert("", "Dynamic content load failed.", "");
+            }
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $('#GrdBillRegenerate').DataTable({
+            "pageLength": 500,
+            'paging': true,
+            'lengthChange': false,
+            'searching': true,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        });
+        $('#GrdBillRegenerate_paginate').hide();
+    })
+</script>
+<script>
+
+    $('#CheckinoutAll').click(function (event) {
+        if ($(this).is(":checked")) {
+            $('.checkbox').each(function () {
+                $(this).prop("checked", true);
+            });
+        }
+        else {
+            $('.checkbox').each(function () {
+                $(this).prop("checked", false);
+            });
+        }
+    });
+</script>
+
+<script>
+    $("#btnRegenerateInOutBill").click(function (e) {
+        debugger
+        $("#btnRegenerateInOutBill").hide();
+        var p_dt_bill_from_dt = $('#bill_from_dt').val();
+        var p_dt_bill_to_dt = $('#bill_to_dt').val();
+        var p_str_bill_as_of_dt = $('#bill_doc_dt').val();
+        var p_str_cust_id = $('#cust_of_cmpid').val();
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+
+
+                var p_str_cmp_id = $('#new_cust_of_cmp_id').val();
+                var plstLotId = new Array();
+
+                $("input[name='tblChkBoxRebill']").each(function () {
+                    var check = $(this);
+                    if (!check.is(':checked')) {
+                        var aryLotId = {};
+                        aryLotId.cmp_id = p_str_cmp_id;
+                        aryLotId.lot_id = check.val()
+                        plstLotId.push(aryLotId);
+                    }
+                });
+
+                var p_str_Bill_doc_id = $('#bill_doc_id').val();
+                var p_str_bill_as_of_dt = $('#bill_doc_dt').val();
+                var p_str_doc_dt_Fr = $('#bill_from_dt').val();
+                var p_str_doc_dt_To = $('#bill_to_dt').val();
+                var p_str_Bill_type = "INOUT";
+                var type = "PDF";
+                var p_str_rpt_status = "OPEN";
+                var p_str_print_dt = $('#bill_from_dt').val();
+                var p_str_cust_id = $('#new_cmp_id').val();
+                var p_str_bill_doc_type = "INOUT";
+                $("#ajaxLoadingInout").show();
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Content("~/BillingInquiry/SaveRegenerateInoutBill")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify( {
+                        "p_str_cust_id": p_str_cust_id, "plstLotId": plstLotId, "p_str_Bill_type": p_str_Bill_type,
+                        "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt,
+                        "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "p_str_cmp_id": p_str_cmp_id, "p_str_print_dt": p_str_print_dt
+                    }),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found For Generate Inout Bill.", "");
+                            $("#ajaxLoadingInout").hide();
+                            $("#btnRegenerateInOutBill").show();
+                            return false;
+                        }
+                        else {
+                            var p_str_bill_doc_id = JSON.parse(data);
+                            var p_str_cmp_id = $('#new_cmp_id').val();
+                            var p_str_bill_doc_type = "INOUT";
+                            sweetAlert("", "Inout Bill ReGenerated Successfully", "");
+                            var p_str_cmp_id = $('#new_cmp_id').val();
+                            var p_str_cust_id = $('#cust_of_cmpid').val();
+                            $.ajax({
+                                type: "GET",
+                                url: "/BillingInquiry/GetSearchConsolidateInoutInqDetails",
+                                data: {
+                                    "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt
+                                },
+                                dataType: 'html',
+                                success: function (e) {
+
+                                },
+                            })
+                            var p_str_cmp_id = $('#new_cmp_id').val();
+                            window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill_doc_id + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                 , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+                            $("#ajaxLoadingInout").hide();
+                            $('#myModalBillRegGen').modal('hide');
+                        }
+                    },
+                })
+
+          
+
+
+    });
+</script>

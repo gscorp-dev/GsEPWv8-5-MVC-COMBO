@@ -1,0 +1,271 @@
+﻿@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+
+@{
+    var Ordercount = Model.ListBillRcvdDetails.Count;
+    var l_int_inv_amt = string.Empty;
+}
+@*@for (int i = 0; i < Model.ListBillRcvdDetails.Count; i++)
+{
+    var l_dec_amt = (Model.ListBillRcvdDetails[i].bill_amt);
+    var l_dec_Amt = l_dec_amt.ToString("F2");
+    l_int_inv_amt = Convert.ToString(l_dec_amt);
+    l_int_inv_amt = l_int_inv_amt + l_dec_amt;
+}*@
+@Html.HiddenFor(model => model.tot_inv_strg_amnt, new { @id = "p_strr_cmpid" })
+
+<div class="box-body">
+    <div class="row">
+        <table>
+            <tr>
+                <td>
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Records:
+                    </span>
+                </td>
+                <td style="width: 10%;">
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </td>
+                <td>
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Invoice Amount:
+                    </span>
+                </td>
+                <td style="width: 35%;">
+                    <label class="totalCount" style="text-align:left">
+                        @Model.tot_inv_strg_amnt
+                    </label>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn-Email" type="button" style=" width:100px; text-align: right;" id="btnEmail" data-toggle="dropdown">
+                                        Email
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn-Print" type="button" id="btnPrint" style="width:105px;" data-toggle="dropdown">
+                                        Print/View
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                        @*CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report*@
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" id="btnPDF" onclick="BLStrgDetailPDF('');">PDF</a></li>
+                                        @*<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WORD</a></li>*@
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" id="btnExcel" onclick="BLStrgDetailExcel('');" href="#">EXCEL</a></li>
+                                        @*CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report*@
+                                     </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" id="btnClose" class="btn-Close" data-dismiss="modal">Close</button>
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    @*<div class="box" style="padding: 2px;">*@
+      
+            <table id="GrdStrgBillingInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        @*CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report*@
+
+                        <th class="grid_header_backcolor" style="font-size:11px;width:3%;">Print</th>
+                        @*CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report*@
+
+
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;display:none">CmpId</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;">CustId</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">BlDocId</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">BlDocDt</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:4%;">Status</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;">BlDtFm</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">BlDtTo</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">BillType</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Curr</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:11%;display:none">ShipVia</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6%;">ProdCost</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Tax</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Frgt</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;">BillAmt</th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.ListBillRcvdDetails.Count; i++)
+                    {
+                        int line = i + 1;
+                        var l_dec_amt = (Model.ListBillRcvdDetails[i].bill_amt);
+                        var l_dec_prod_cost = (Model.ListBillRcvdDetails[i].prod_cost);
+                        var l_dec_frgt = (Model.ListBillRcvdDetails[i].frgt_cost);
+                        var l_dec_tax = (Model.ListBillRcvdDetails[i].frgt_cost);
+                        var l_dec_Amt = l_dec_amt.ToString("F2");
+                        var l_dec_prodcost = l_dec_prod_cost.ToString("F2");
+                        var l_dec_frgt_cost = l_dec_frgt.ToString("F2");
+                        var l_dec_tax_pcnt = l_dec_tax.ToString("F2");
+                    <tr style="background-color:white;">
+                        @*CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report*@
+                        <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox3" type="checkbox" value="@Model.ListBillRcvdDetails[i].bill_doc_id" /></td>
+                        @*CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report*@
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none">@Model.ListBillRcvdDetails[i].cmp_id</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListBillRcvdDetails[i].Cust_ID</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListBillRcvdDetails[i].bill_doc_id</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListBillRcvdDetails[i].bill_doc_dt</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListBillRcvdDetails[i].Status</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListBillRcvdDetails[i].bill_pd_fm</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListBillRcvdDetails[i].bill_pd_to</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.ListBillRcvdDetails[i].bill_type</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListBillRcvdDetails[i].curr_code</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none">@Model.ListBillRcvdDetails[i].ship_via</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@l_dec_prodcost</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right;width:60px;">@l_dec_tax_pcnt</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right">@l_dec_frgt_cost</td>                  
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right">@l_dec_Amt</td>
+
+                    </tr>
+                    }
+                </tbody>
+            </table>
+          
+
+</div>
+<script>
+    $(function () {
+        $('#GrdStrgBillingInq').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GrdStrgBillingInq_paginate').hide();
+    })
+    //  CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report
+
+    function BLStrgDetailExcel() {
+        debugger
+
+        //var p_str_cmp_id = $('#cust_id').val();
+        //var p_str_ib_doc_id = $('#ibdocid').val();
+        //var p_str_bill_doc_type = "INOUT";
+        //var p_str_rpt_status = "OPEN";
+        //var p_str_cust_id = "";
+        var type = "Excel"
+        var p_str_radio = "BillDocument";
+        var p_str_cmp_id = $('#cust_id').val();
+        //var p_str_Bill_doc_id = $('#bill_doc_id').val();
+        var p_str_Bill_type = $('STRG').val();
+        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+
+
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+
+
+        var numberOfCheckboxes = $("input[name='tblcheckbox3']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            sweetAlert("", "Please select the Record to Print.", "");
+        }
+
+        else {
+            $("input[name='tblcheckbox3']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    SelectedRow.push(check.val());
+
+
+                }
+            });
+            var Count = $("input[name='tblcheckbox3']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == '')
+                        SelectdID = v;
+                    else
+                        SelectdID = SelectdID + ',' + v;
+                });
+
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                //var SelectdID = $('#bill_doc_id').val();
+                var p_str_Bill_doc_id = SelectdID;
+                window.location.replace("/BillingInquiry/ShowReport?p_str_radio=" + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+            + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type)
+
+
+            }
+        }
+    }
+    //  CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report
+
+    function BLStrgDetailPDF() {
+        debugger
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+      
+
+        var numberOfCheckboxes = $("input[name='tblcheckbox3']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            sweetAlert("", "Please select the Record to Print.", "");
+        }
+
+        else {
+            $("input[name='tblcheckbox3']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    SelectedRow.push(check.val());
+
+
+                }
+            });
+            var Count = $("input[name='tblcheckbox3']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == '')
+                        SelectdID = v;
+                    else
+                        SelectdID = SelectdID + ',' + v;
+                });
+          
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+
+                var p_str_cmp_id = $('#cust_id').val();
+                var p_str_bill_doc_ids = SelectdID;
+                var p_str_bill_doc_type = "STRG";
+                var p_str_rpt_status = "OPEN";
+
+                window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill_doc_ids + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                    , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+
+
+            }
+        }
+    }
+</script>

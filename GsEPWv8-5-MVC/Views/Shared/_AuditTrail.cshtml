@@ -1,0 +1,220 @@
+﻿
+@model GsEPWv8_5_MVC.Model.StockInquiryDtlModel
+@{
+    var dtlcount = Model.ListStockInquiryaudit.Count;
+}
+@*<div class="box-body">*@
+<div id="showgrid1" class="box-header" style="padding: 5px; ">
+    <br />
+    <div class="gridSummary" style="height:100%;">
+        <table>
+            <tr>
+                <td style="width:20%;text-align:center;">
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                        Total Records:
+                    </span>
+                    <label class="totalCount" style="text-align:left">
+                        @dtlcount
+                    </label>
+                </td>
+
+                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                    <label><b style="font-family: verdana;font-weight:200;">Rcvd Qty</b></label>
+                    @Html.TextBoxFor(model => model.Rcvd_Qty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                </td>
+
+                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                    <label><b style="font-family: verdana;font-weight:200;">Aloc Qty</b></label>
+                    @Html.TextBoxFor(model => model.Alocqty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                </td>
+
+                 <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                    <label><b style="font-family: verdana;font-weight:200;">Ship Qty</b></label>
+                    @Html.TextBoxFor(model => model.Ship_Qty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                </td>
+
+
+                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                    <label><b style="font-family: verdana;font-weight:200;">Stock Adj (-)</b></label>
+                    @Html.TextBoxFor(model => model.stk_adj_minus, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                </td>
+              
+
+                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                    <label><b style="font-family: verdana;font-weight:200;">Avl Qty</b></label>
+                    @Html.TextBoxFor(model => model.AvlQty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                </td>
+              
+            </tr>
+        </table>
+        <table>
+            <tr style="height:25px"></tr>
+            <tr style="width:100%">
+                <td style="width: 20%;font-size:12px;color:blue;font-weight: bold;text-align: right;padding-right: 10px;"></td>
+                <td style="width: 25%;font-size:12px;color:blue;font-weight: bold;text-align:right;padding-right: 50px;">
+                    Note:
+                </td>
+                <td style="width: 25%;font-size:12px;color:blue;font-weight: bold;text-align: center;padding-right: 10px;">
+                    Avail Qty(s) = (Rcved Qty + Stock Adj+) - ( Aloc Qty + Ship Qty + Adj Qty + Stock Adj- )
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+
+    
+
+</div>
+<div class="box box-primary">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-10 col-sm-10 col-xs-10" style="bottom: -24px;">
+                <div>
+                   
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-2" style="bottom: 0px;"></div>
+        </div>
+        <br />
+
+    </div>
+
+
+    <table id="example4" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">Style</th>
+                <th class="grid_header_backcolor">Color</th>
+                <th class="grid_header_backcolor">Size</th>
+                <th class="grid_header_backcolor">IBDocID</th>
+                <th class="grid_header_backcolor">ContID</th>
+                <th class="grid_header_backcolor">TranType</th>
+                <th class="grid_header_backcolor">DocDt</th>
+                <th class="grid_header_backcolor">SR#</th>
+                <th class="grid_header_backcolor">OB Doc Id</th>
+                <th class="grid_header_backcolor">LotID</th>
+                <th class="grid_header_backcolor">PoNum</th>
+                <th class="grid_header_backcolor">Whs</th>
+                <th class="grid_header_backcolor">Palet ID</th>
+                <th class="grid_header_backcolor">Ctns</th>
+                <th class="grid_header_backcolor">Qty</th>
+            </tr>
+        </thead>
+        <tbody style="background-color:white">
+            @for (int i = 0; i < Model.ListStockInquiryaudit.Count; i++)
+            {
+                int l_int_doc_count = @Model.ListStockInquiryaudit[i].upload_file_count;
+                <tr id="@Model.ListStockInquiryaudit[i].ib_doc_id ">
+
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">@Model.ListStockInquiryaudit[i].itm_num</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">@Model.ListStockInquiryaudit[i].itm_color</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">@Model.ListStockInquiryaudit[i].itm_size</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryaudit[i].ib_doc_id</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">@Model.ListStockInquiryaudit[i].cont_id</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">@Model.ListStockInquiryaudit[i].tran_type</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; text-align :left">@Model.ListStockInquiryaudit[i].doc_date</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">
+                        @Model.ListStockInquiryaudit[i].sr_no
+
+                    @if (l_int_doc_count > 0)
+                    {
+                        <a href="javascript:void(0);" style="text-decoration:underline; color: orange;" class="Outbounddocupld" data-id="@Model.ListStockInquiryaudit[i].cmp_id" data-id1="@Model.ListStockInquiryaudit[i].sr_no">(@l_int_doc_count)</a>
+
+                    }
+                </td>
+
+                <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">@Model.ListStockInquiryaudit[i].ob_doc_id</td>
+                <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; text-align :left">@Model.ListStockInquiryaudit[i].lot_id</td>
+                <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">@Model.ListStockInquiryaudit[i].po_num</td>
+                <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; text-align :left">@Model.ListStockInquiryaudit[i].whs_id</td>
+                <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;">@Model.ListStockInquiryaudit[i].palet_id</td>
+                <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; text-align :right">@Model.ListStockInquiryaudit[i].Avail_cnt</td>
+                <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; text-align :right">@Model.ListStockInquiryaudit[i].Avail_qty</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+    $("#example2").DataTable();
+    $('#example4').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        // "scrollY": "280px",
+        "scrollCollapse": true,
+        //true
+        //"sDom": 't',
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+    });
+
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    $("input[name=chkAll]").click(function () {
+        if ($(this).prop("checked") == true) {
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+    });
+
+</script>
+
+<script type="text/javascript">
+
+
+
+    var TeamDetailOutboundfileURL = '/DocumentUpload/LoadOutboundDocuments';
+
+    $(function () {
+        debugger
+        $('#example4 tbody').on('click', '.Outbounddocupld', function () {
+            var $buttonClicked = $(this);
+            var p_str_cmp_id = $buttonClicked.attr('data-id');
+            var p_str_sr_no = $buttonClicked.attr('data-id1');
+            var options = { "backdrop": "static", keyboard: true };
+             $("#ajaxLoading").show();
+
+            $.ajax({
+                type: "GET",
+                url: TeamDetailOutboundfileURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_cmp_id": p_str_cmp_id, "p_str_doc_id": p_str_sr_no },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+
+                    $('#myModalINdocupldContent').html(data);
+                    $('#myModalINdocupld').modal(options);
+                    $('#myModalINdocupld').modal('show');
+
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();
+                    swal("Dynamic content load failed.");
+                }
+            });
+          });
+
+    });
+
+
+</script>

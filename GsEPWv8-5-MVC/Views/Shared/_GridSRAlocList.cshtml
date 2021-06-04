@@ -1,0 +1,59 @@
+﻿@model GsEPWv8_5_MVC.Model.OBAllocationModel
+@{
+    var lSRCount = Model.ListOBGetSRSummary.Count;
+
+}
+<div id="divAlocGrid" class="box-header" style="padding: 5px; ">
+
+    <div class="box-body">
+        <div>
+            <table id="grdSRList" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:5%;">Select All <input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" /></th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Batch#</th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:10%;">SR#</th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:10%;">SR Date</th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:15%;">Customer</th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Cust Order#</th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Order Number</th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Ctns(s)</th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Weight</th>
+                        <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Cube</th>
+                    </tr>
+                </thead>
+
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+                    @for (int i = 0; i < Model.ListOBGetSRSummary.Count; i++)
+                    {
+                        int line = i + 1;
+
+                        var l_int_ctns = (Model.ListOBGetSRSummary[i].tot_ctns);
+                        var l_int_weight = (Model.ListOBGetSRSummary[i].tot_weight);
+                        var l_int_cube = (Model.ListOBGetSRSummary[i].tot_cube);
+
+                        <tr style="background-color:white;">
+
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckboxSRNum" type="checkbox" value="@Model.ListOBGetSRSummary[i].so_num" checked="checked" /></td>
+
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].batch_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].so_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].so_dt</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].cust_name</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].cust_ordr_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].ordr_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right;width:60px;">@Model.ListOBGetSRSummary[i].tot_ctns</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListOBGetSRSummary[i].tot_weight</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListOBGetSRSummary[i].tot_cube</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.Hidden("SRCount", lSRCount)
+        </div>
+    </div>
+</div>
+
+
+

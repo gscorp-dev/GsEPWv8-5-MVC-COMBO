@@ -1,0 +1,238 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InvStkAdjModel
+@{
+    var hdrcount = Model.ListInvStkAdjDetail.Count;
+}
+
+<br />
+<div class="gridSummary">
+    <table>
+        <tr>
+            <td style="width:25%;text-align:center;">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label id="lblhdrcount" class="totalCount" style="text-align:left">
+                    @hdrcount
+                </label>
+            </td>
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box box-primary">
+    <table id="StockAdjInq" class="table table-bordered table-striped"  style="border:1px solid #121213 ;table-layout:fixed">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Adj</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Merge</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">LocID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Style</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Color</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Size</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:17%;">Desc</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Lot#</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">PoNumber</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Ctn</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">PPK</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Qty</th>
+            </tr>
+        </thead>
+
+        <tbody style="background-color:white">
+            @for (int i = 0; i < Model.ListInvStkAdjDetail.Count; i++)
+            {
+                <tr>
+                    <td class="col-xs-1" style="color:black; font-size:12px">
+                        <a href="javascript:void(0);" class="btn btn-primary small StockAdj" style="color: white;height: 17px;width: 44px; border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;" 
+                           c_adj_str_cmp_id="@Model.ListInvStkAdjDetail[i].cmp_id" c_adj_str_loc_id="@Model.ListInvStkAdjDetail[i].loc_id"
+                            c_adj_str_itm_num="@Model.ListInvStkAdjDetail[i].itm_num" c_adj_str_itm_color="@Model.ListInvStkAdjDetail[i].itm_color"
+                           c_adj_str_itm_size="@Model.ListInvStkAdjDetail[i].itm_size" c_adj_str_itm_code="@Model.ListInvStkAdjDetail[i].itm_code"
+                           c_adj_str_itm_name="@Model.ListInvStkAdjDetail[i].itm_name" c_adj_str_lot_id="@Model.ListInvStkAdjDetail[i].lot_id" c_adj_str_po_num="@Model.ListInvStkAdjDetail[i].po_num"
+                           c_adj_str_avail_ctn="@Model.ListInvStkAdjDetail[i].avail_ctn" c_adj_str_itm_qty="@Model.ListInvStkAdjDetail[i].itm_qty"
+                            c_adj_str_avail_qty="@Model.ListInvStkAdjDetail[i].avail_qty" >ADJ</a>
+                    </td>
+
+                    <td class="col-xs-1" style="color:black; font-size:12px">
+                        <a href="javascript:void(0);" class="btn btn-primary small MergeCtn" style="color: white;height: 17px;width: 44px; border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;"
+                           c_mrg_str_cmp_id="@Model.ListInvStkAdjDetail[i].cmp_id" c_mrg_str_loc_id="@Model.ListInvStkAdjDetail[i].loc_id"
+                           c_mrg_str_itm_num="@Model.ListInvStkAdjDetail[i].itm_num" c_mrg_str_itm_color="@Model.ListInvStkAdjDetail[i].itm_color"
+                           c_mrg_str_itm_size="@Model.ListInvStkAdjDetail[i].itm_size" c_mrg_str_itm_code="@Model.ListInvStkAdjDetail[i].itm_code"
+                           c_mrg_str_itm_name="@Model.ListInvStkAdjDetail[i].itm_name" c_mrg_str_lot_id="@Model.ListInvStkAdjDetail[i].lot_id" c_mrg_str_po_num="@Model.ListInvStkAdjDetail[i].po_num">Merge</a>
+                    </td>
+
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListInvStkAdjDetail[i].loc_id</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListInvStkAdjDetail[i].itm_num</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListInvStkAdjDetail[i].itm_color</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListInvStkAdjDetail[i].itm_size</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListInvStkAdjDetail[i].itm_name</td>
+                    <td style="font-size:12px;color:black; font-weight:bold; font-family: verdana;">@Model.ListInvStkAdjDetail[i].lot_id</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListInvStkAdjDetail[i].po_num</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListInvStkAdjDetail[i].avail_ctn</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListInvStkAdjDetail[i].itm_qty</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListInvStkAdjDetail[i].avail_qty</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id='StockAdjModal' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 300%;left:-420px;">
+                <div id='StockAdjContent' style="width: 100%;height:680px;"></div>
+            </div>
+        </center>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+    $("#example1").DataTable();
+    $(function () {
+        $('#StockAdjInq').DataTable({
+            "pageLength": 50,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+
+    })
+
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+   
+    var IbsEntryURL = '/InvStkAdj/getStockAdj';
+    $(function () {
+        $('#StockAdjInq tbody').on('click', '.StockAdj', function () {
+            debugger
+            var $StockAdjButtonClicked = $(this);
+            var p_str_cmp_id = $StockAdjButtonClicked.attr('c_adj_str_cmp_id');
+            var p_str_loc_id = $StockAdjButtonClicked.attr('c_adj_str_loc_id');
+            var p_str_itm_num = $StockAdjButtonClicked.attr('c_adj_str_itm_num');
+            var p_str_itm_color = $StockAdjButtonClicked.attr('c_adj_str_itm_color');
+
+            var p_str_itm_size = $StockAdjButtonClicked.attr('c_adj_str_itm_size');
+            var p_str_itm_code = $StockAdjButtonClicked.attr('c_adj_str_itm_code');
+            var p_str_itm_name = $StockAdjButtonClicked.attr('c_adj_str_itm_name');
+            var p_str_lot_id = $StockAdjButtonClicked.attr('c_adj_str_lot_id');
+
+            var p_str_po_num = $StockAdjButtonClicked.attr('c_adj_str_po_num');
+            var p_int_avail_ctn = $StockAdjButtonClicked.attr('c_adj_str_avail_ctn');
+            var p_int_itm_qty = $StockAdjButtonClicked.attr('c_adj_str_itm_qty');
+            var p_int_avail_qty = $StockAdjButtonClicked.attr('c_adj_str_avail_qty');
+
+            var options = { "backdrop": "static", keyboard: true };
+            debugger
+            $("#ajaxLoading").show();
+            //getheadersectiondata();
+            $.ajax({
+                type: "GET",
+                url: IbsEntryURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_loc_id": p_str_loc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size, "p_str_itm_code": p_str_itm_code, "p_str_itm_name": p_str_itm_name, "p_str_lot_id": p_str_lot_id,
+                    "p_str_po_num": p_str_po_num, "p_int_avail_ctn": p_int_avail_ctn, "p_int_itm_qty": p_int_itm_qty, "p_int_avail_qty": p_int_avail_qty,
+                },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#StockAdjContent').html(data);
+                    $('#StockAdjModal').modal(options);
+                    $('#StockAdjModal').modal('show');
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+    });
+
+    
+</script>
+<script>
+    var urlMergeCtn = '/InvStkAdj/loadInvMergeInquiry';
+    $(function () {
+        $('#StockAdjInq tbody').on('click', '.MergeCtn', function () {
+            debugger
+            var $StockAdjButtonClicked = $(this);
+            var p_str_cmp_id = $StockAdjButtonClicked.attr('c_mrg_str_cmp_id');
+            var p_str_itm_num = $StockAdjButtonClicked.attr('c_mrg_str_itm_num');
+            var p_str_itm_color = $StockAdjButtonClicked.attr('c_mrg_str_itm_color');
+
+            var p_str_itm_size = $StockAdjButtonClicked.attr('c_mrg_str_itm_size');
+            var p_str_itm_code = $StockAdjButtonClicked.attr('c_mrg_str_itm_code');
+            var p_str_itm_name = $StockAdjButtonClicked.attr('c_mrg_str_itm_name');
+            var p_str_status = '';
+            var p_str_ib_doc_id = '';
+            var p_str_cont_id = '';
+            //var p_str_lot_id = $StockAdjButtonClicked.attr('c_mrg_str_lot_id');
+            //var p_str_loc_id = $StockAdjButtonClicked.attr('c_mrg_str_loc_id');
+            var p_str_lot_id = '';
+            var p_str_loc_id = '';
+
+            var p_str_ref_no = '';
+            var p_str_whs_id = '';
+            var p_str_rcvd_from_dt = '';
+            var p_str_rcvd_to_dt = '';
+            var p_str_po_num = '';
+
+            
+
+            var options = { "backdrop": "static", keyboard: true };
+            debugger
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: urlMergeCtn,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_itm_num": p_str_itm_num,
+                    "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size,
+                    "p_str_itm_name": p_str_itm_name,
+                    "p_str_status": p_str_status,
+                    "p_str_ib_doc_id": p_str_ib_doc_id,
+                    "p_str_cont_id": p_str_cont_id,
+                    "p_str_lot_id": p_str_lot_id,
+                    "p_str_loc_id": p_str_loc_id,
+                    "p_str_ref_no": p_str_ref_no,
+                    "p_str_whs_id": p_str_whs_id,
+                    "p_str_rcvd_from_dt": p_str_rcvd_from_dt,
+                    "p_str_rcvd_to_dt": p_str_rcvd_to_dt,
+                    "p_str_po_num": p_str_po_num
+                },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $('#MergeInvContent').html(data);
+                    $('#MergeInvModal').modal(options);
+                    $('#MergeInvModal').modal('show');
+                    $("#ajaxLoading").hide();
+
+                },
+
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+    });
+</script>

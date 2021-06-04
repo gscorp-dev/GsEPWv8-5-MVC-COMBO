@@ -1,0 +1,434 @@
+﻿
+
+@model GsEPWv8_5_MVC.Model.OutboundInqModel
+@{
+    var Ordercount = Model.LstOutboundInqAlocGridLoadDtls.Count;
+    var Ordercount1 = Model.LstOutboundInqPickGridLoadDtls.Count;
+
+}
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+        div#ajaxLoadingPost {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: verdana;
+        font-size: 12px;
+    }
+     .text-muted {
+        color: black;
+    }
+</style>
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<div id="ajaxLoadingPost" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+<center>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Allocation Post</h4>
+        <button type="button" id="btnPostClose" onclick="closeModal();" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+        <button type="button" id="btnAlocPost" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Post</button>
+    </div>
+    <div id="childtabsrcvpost">
+
+    @Html.HiddenFor(model => model.Sonum)
+    @Html.HiddenFor(model => model.aloc_dt, new { @id = "sr_aloc_dt" })
+
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;padding-top: 6px;">
+                                <label class="Lblmanual">Cmp Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @disabled="true",@style = "width: 175%;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;padding-top: 6px;margin-left:8%">
+                                <label class="Lblmanual">Alloc#</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.aloc_doc_id, new { @id = "new_aloc_doc_id", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 20%;text-align: right;padding-top: 6px;margin-left:-3%">
+                                <label class="Lblmanual">Alloc Post Date(Carrier pickup Date)</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.aloc_dt, new { @class = "form-control txtlbl", @maxlength = "10",  @style = "font-size: 12px; font-family: verdana; width: 125px;" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                  
+                    <div class="row">
+                        <div class="col-xs-12">
+
+
+                            <div class="col-xs-2"></div>
+                            <div class="col-xs-2" style="margin-left:34%;">
+                                <button type="reset" id="btnDtlClr" class="btn-Clear" style="font-size: 13px;">Clear </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <table>
+                        <tr>
+                            <td style="width:8%;">
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                    Total Records:
+                                </span>
+                            </td>
+                            <td style="width: 93%;">
+                                <label class="totalCount" style="text-align:left">
+                                    @Ordercount
+                                </label>
+                            </td>
+
+                        </tr>
+                    </table>
+                    <br />
+                    <div class="box">
+                        <div id="table-Details">
+                            <div style="overflow-y:auto; height:auto; width:auto;">
+                                <fieldset>
+                                    <legend style="text-align:left;">Aloc Summary</legend>
+
+                                    <table id="GridalocPost" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                        <thead class="grid_backcolor">
+                                            <tr>
+                                                <th class="grid_header_backcolor">Line#</th>
+                                                <th class="grid_header_backcolor">ItmLine</th>
+                                                <th class="grid_header_backcolor">Style</th>
+                                                <th class="grid_header_backcolor">Color</th>
+                                                <th class="grid_header_backcolor">Size</th>
+                                                <th class="grid_header_backcolor">AlocQty</th>
+                                                <th class="grid_header_backcolor">PickQty</th>
+                                                <th class="grid_header_backcolor">ShipReq</th>
+                                               
+
+                                            </tr>
+                                        </thead>
+                                        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                                            @for (int i = 0; i < Model.LstOutboundInqAlocGridLoadDtls.Count; i++)
+    {
+                                            <tr id="@Model.LstOutboundInqAlocGridLoadDtls[i].cmp_id ">
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstOutboundInqAlocGridLoadDtls[i].line_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstOutboundInqAlocGridLoadDtls[i].itm_line</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqAlocGridLoadDtls[i].so_itm_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqAlocGridLoadDtls[i].so_itm_color</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqAlocGridLoadDtls[i].so_itm_size</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;text-align :right">@Model.LstOutboundInqAlocGridLoadDtls[i].aloc_qty</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.LstOutboundInqAlocGridLoadDtls[i].pick_qty</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.LstOutboundInqAlocGridLoadDtls[i].so_num</td>
+                                                
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       
+            <div class="box-body">
+                <div class="box-header">
+                    <table>
+                        <tr>
+                            <td style="width:8%;">
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                    Total Records:
+                                </span>
+                            </td>
+                            <td style="width: 93%;">
+                                <label class="totalCount" style="text-align:left">
+                                    @Ordercount1
+                                </label>
+                            </td>
+
+                        </tr>
+                    </table>
+                    <br />
+                    <div class="box">
+                        <div id="table-Details">
+                            <div style="overflow-y:auto; height:auto; width:auto;">
+                                <fieldset>
+                                    <legend style="text-align:left;">Pick Details</legend>
+
+                                    <table id="GridshipReqPost" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                        <thead class="grid_backcolor">
+                                            <tr>
+                                                <th class="grid_header_backcolor">Line</th>
+                                                <th class="grid_header_backcolor">PoNum</th>
+                                                <th class="grid_header_backcolor">PkgId</th>
+                                                <th class="grid_header_backcolor">Style</th>
+                                                <th class="grid_header_backcolor">Color</th>
+                                                <th class="grid_header_backcolor">Size</th>
+                                                <th class="grid_header_backcolor">LotId</th>
+                                                <th class="grid_header_backcolor">LocId</th>
+                                                <th class="grid_header_backcolor">Pkg</th>
+                                                <th class="grid_header_backcolor">ItmQty</th>
+                                                <th class="grid_header_backcolor">PickQty</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                                            @for (int i = 0; i < Model.LstOutboundInqPickGridLoadDtls.Count; i++)
+                                            {
+                                                int line = i + 1;
+                                            <tr id="@Model.LstOutboundInqPickGridLoadDtls[i].cmp_id ">
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@line</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstOutboundInqPickGridLoadDtls[i].po_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqPickGridLoadDtls[i].pkg_id</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqPickGridLoadDtls[i].itm_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqPickGridLoadDtls[i].itm_color</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundInqPickGridLoadDtls[i].itm_size</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.LstOutboundInqPickGridLoadDtls[i].lot_id</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.LstOutboundInqPickGridLoadDtls[i].loc_id</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.LstOutboundInqPickGridLoadDtls[i].pkg_type</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.LstOutboundInqPickGridLoadDtls[i].itm_qty</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.LstOutboundInqPickGridLoadDtls[i].pkg_qty</td>
+                                            </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+    </div>
+</center>
+<script>
+    $(function () {
+        $("#childtabsrcvpost").tabs();
+        $('#aloc_dt').val('');
+    });
+
+    $(function() {
+        $('#GridshipReqPost').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        });
+   
+        $('#GridshipReqPost_paginate').hide();
+    })
+
+    $(function() {
+    $('#GridalocPost').DataTable({
+        "pageLength": 10,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        'autoWidth': false,
+    });
+    $('#GridalocPost_paginate').hide();
+    })
+    //CR2018-03-07-001 Added By Nithya
+    $('#aloc_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $("#btnAlocPost").click(function () {
+        debugger
+        $("#ajaxLoadingPost").show();
+        $("#btnAlocPost").attr('disabled', 'disabled');
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_alocdocid = $('#new_aloc_doc_id').val();
+        var p_str_aloc_dt = $('#aloc_dt').val();
+     
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnAlocPost").removeAttr('disabled');
+            return false;
+
+        }
+
+        if (p_str_aloc_dt == "") {
+            swal("", "Please Enter the Alloc Post Date(Carrier pickup Date).", "");
+            $("#ajaxLoadingPost").hide();
+            $('#aloc_dt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnAlocPost").removeAttr('disabled');
+            return false;
+        }
+
+
+        var TodayDate = new Date();
+        var AlocPostDate = new Date(Date.parse($("#aloc_dt").val()));
+
+        if (AlocPostDate > TodayDate) {
+            swal("", "Alloc Post Date(Carrier pickup Date) should be Less than or equal to Todays date", "");
+            $("#ajaxLoadingPost").hide();
+            $('#aloc_dt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnAlocPost").removeAttr('disabled');
+            return false;
+        }
+        debugger
+        var sr_aloc_dt = new Date(Date.parse($("#sr_aloc_dt").val()));
+
+        if (sr_aloc_dt > AlocPostDate) {
+            swal("", "Alloc Post Date(Carrier pickup Date) should be greater than or equal to Allocation date", "");
+            $("#ajaxLoadingPost").hide();
+            $('#aloc_dt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnAlocPost").removeAttr('disabled');
+            return false;
+        }
+
+
+
+        if (p_str_alocdocid == "") {
+            sweetAlert("", "Please Enter Aloc Doc Id", "");
+            $('#new_aloc_doc_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnAlocPost").removeAttr('disabled');
+            return false;
+        }
+        else {
+            $("#ajaxLoadingPost").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/SaveAlocPost")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_alocdocid": p_str_alocdocid, "p_str_aloc_dt": p_str_aloc_dt
+
+                },
+                dataType: 'html',
+                success: function (e) {
+                    debugger
+                    $("#ajaxLoadingPost").hide();
+                    if (e != null) {
+                        swal({
+                            title: "",
+                            text: "AlocDoc# " + p_str_alocdocid + " Posted successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                         function () {
+                             setTimeout(function () {
+                                 debugger
+                                 var p_str_cmpid = $('#cmp_id').val();
+                                 //var p_str_ShipReq_id = $('#new_aloc_doc_id').val();
+                                 window.open('ShowAlocPostReport?p_str_cmpid=' + p_str_cmpid, 'OutboundShipInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowAlocPostReport')
+                                 $('#myModalPost').modal('hide');
+                                 debugger
+                                 $.ajax({
+                                     type: "get",
+                                     url: "/OutboundInq/GetOutboundInqDtl",
+                                     data: {
+                                         "p_str_cmp_id": p_str_cmpid,
+                                         "p_str_so_num": "",
+                                         "p_str_AlocdocId":p_str_alocdocid
+                                     },
+                                     datatype: 'html',
+                                     success: function (e) {
+                                         debugger
+                                         $("#ajaxLoadingPost").hide();
+                                         $('#showgrid').html("");
+                                         $('#showgrid').html(e);
+                                     },
+                                 })
+                               
+                             });
+                         });                                           
+                    }
+                    else {
+                        $("#btnAlocPost").removeAttr('disabled');
+                        $("#ajaxLoadingPost").hide();
+
+                    }                   
+                },
+
+            })
+        }
+    });
+
+    $("#btnPostClose").click(function () {
+        debugger
+        var p_str_cmp_id = $("#cmp_id").val();
+        var p_str_ShipReq_id = $("#Sonum").val();
+      
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+
+                       $('#myModalPost').modal('hide');
+                       $.ajax({
+                           type: "get",
+                           url: "/OutboundInq/GetOutboundInqDtl",
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_so_num": p_str_ShipReq_id
+                           },
+                           datatype: 'html',
+                           success: function (e) {
+                               debugger
+                               $("#ajaxLoadingPost").hide();
+                               $('#showgrid').html("");
+                               $('#showgrid').html(e);
+                           },
+                       })
+                       }
+               });
+    });
+</script>
+
+

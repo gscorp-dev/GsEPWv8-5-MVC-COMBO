@@ -1,0 +1,699 @@
+﻿@model GsEPWv8_5_MVC.Model.VasInquiryModel
+@{
+    var TotalNumberoflst = Model.ListVasEntryGridDtl.Count();
+    var Ordercount = Model.ListVasEntryGridDtl.Count;
+}
+<style type="text/css">
+
+</style>
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+</style>
+@Html.HiddenFor(model => model.whs_id)
+@Html.HiddenFor(model => model.screentitle)
+<input type="hidden" id="two" />
+<center>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">Vas Edit</h3></center>
+        <button type="button" id="btnCancel" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 40px;background-color: #ef8f00">Cancel</button>
+        <button type="button" id="btnUpdateVas" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 4px;background-color: #00c0ef;">Save</button>
+    </div>
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-11 col-sm-11 col-xs-11">
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+
+                            <tr>
+                                <td style="width: 9%;text-align: right;">
+                                    <label><b class="Lblmanual">Cmp Id:</b></label>
+                                </td>
+                                <td style="width: 38%; padding-left: 1%;">
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @disabled = "true", @class = "form-control txtlbl" })
+                                </td>
+                                <td style="width: 7%;text-align: right;">
+                                    <label><b class="Lblmanual">Vas Id:</b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.vas_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50" })
+                                </td>
+                                <td style="width: 7%;text-align: right;">
+                                    <label><b class="Lblmanual">Vas Dt:</b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.ship_dt, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </td>
+
+                            </tr>
+                        </table>
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+
+                            <tr>
+                                <td style="width: 9%;text-align: right;">
+                                    <label><b class="Lblmanual">Status:</b></label>
+                                </td>
+                                <td style="width: 20%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.Status, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+
+                                </td>
+                                <td style="width: 9%;text-align: right;">
+                                    <label><b class="Lblmanual">SR#:</b></label>
+                                </td>
+                                <td style="width: 20%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.so_num, new { @id = "Vassonum", @class = "form-control txtlbl", @maxlength = "50" })
+                                </td>
+                                <td style="width: 9%;text-align: right;">
+                                    <label><b class="Lblmanual">FOB:</b></label>
+                                </td>
+                                <td style="width: 18%; padding-left: 1%;">
+                                    @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListwhsPickDtl, "whs_id", "whs_id"), new {@Id="new_whs_id", @class = "form-control txtlbl", @style = "width: 165px;" })
+                                    @*@Html.TextBoxFor(model => model.whs_id, new { @id = "ps_itm_name", @class = "form-control txtlbl", @maxlength = "80", @style = "width:125px;margin-left:-18px;",@disabled="true" })*@
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr>
+                                <td style="width: 9%;text-align: right;">
+                                    <label><b class="Lblmanual">Ship To Id:</b></label>
+                                </td>
+                                <td style="width: 20%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.ship_to_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+
+                                </td>
+                                <td style="width: 9%;text-align: right;">
+                                    <label><b class="Lblmanual">Cust Po#:</b></label>
+                                </td>
+                                <td style="width: 20%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.cust_po_num, new { @class = "form-control txtlbl", @maxlength = "50" })
+
+                                </td>
+                                <td style="width: 9%;text-align: right;">
+                                    <label><b class="Lblmanual">Cust PO Date:</b></label>
+                                </td>
+                                <td style="width: 15%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.cust_po_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr>
+                                <td style="width: 9%;text-align: right;">
+                                    <label><b class="Lblmanual">Header Note:</b></label>
+                                </td>
+                                <td style="width: 72%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.Note, new { @class = "form-control txtlbl", @maxlength = "200" })
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    @*<div class="col-xs-3" style="width:30%;" id="mydiv">
+                            <table>
+                                <tr>
+                                <td rowspan=2>
+                                    <fieldset>
+                                        <legend>Report Selection</legend>
+
+                                        <table>
+
+                                            <tr>
+                                                <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Inquiry Report" name="radio1" /><b>VAS Report</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Post Report" name="radio1" /><b>VAS Supplies Usage(Detail)</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Detail Report" name="radio1" /><b>VAS Supplies Usage(Summary)</b></td>
+                                             </tr>
+                                        </table>
+                                    </fieldset>
+
+                                </td>
+                                </tr>
+                            </table>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <table>
+        <tr>
+            <td style="width:13%;padding-left:76px;">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+            </td>
+            <td style="width: 62%;">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            @*<td>
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn-Email" type="button" style=" width:100px; text-align: right;" id="btnEmail" data-toggle="dropdown">
+                                        Email
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">WORD</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn-Print" type="button" id="btnPrint" style="width:105px;" data-toggle="dropdown">
+                                        Print/View
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" id="btnPDF" onclick="GetVasDetailPDF('');">PDF</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">WORD</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" id="btnClose" class="btn-Close" data-dismiss="modal">Close</button>
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>*@
+        </tr>
+    </table>
+    <br />
+</center>
+<div class="box" style="padding: 2px;">
+    <div id="table-Details">
+        @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+        <table id="GridVasEntryEditDtl" class="table table-bordered table-striped" style="border:1px solid #121213;">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="font-size:11px;">Ln#</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;">ServiceId</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;">Description</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;">Qty</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;">Rate</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;">Amount</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;">Status</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;">UoM</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;">Note</th>
+                    <th style="display:none;"></th>
+                </tr>
+            </thead>
+            <tbody style="background-color:rgba(0, 0, 0, 0.12); ">
+                @for (int i = 0; i < Model.ListVasEntryGridDtl.Count; i++)
+                {
+                    int line = i + 1;
+                    var Amt = (Model.ListVasEntryGridDtl[i].Amt);
+                    var Rate = (Model.ListVasEntryTempGridDtl[i].list_price);
+                    var Qty = (Model.ListVasEntryGridDtl[i].ship_qty);
+                    var l_dec_Amt = Amt.ToString("F2");
+                    var l_dec_rate = Rate.ToString("F2");
+                    if (Convert.ToDouble(l_dec_Amt) != 0)
+                    {
+                        <tr id="GridIDP_@i" style="background-color:#5ae77e;">
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@line</td>
+                            @*<td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryDtl[i].cust_itm</td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.ListVasEntryGridDtl[i].cust_itm, new { @class = "ItmNum", @id = "itmnum_" + i, @style = "width:60px;text-align:right;" })@Model.ListVasEntryGridDtl[i].cust_itm</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.ListVasEntryGridDtl[i].cust_itm_name, new { @class = "ItmNum", @id = "vas_cust_itm_name_" + i, @style = "width:60px;text-align:left;" })@Model.ListVasEntryGridDtl[i].cust_itm_name</td>
+                            @*<td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryGridDtl[i].cust_itm_name</td>*@
+                            @*<td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListVasEntryDtl[i].ship_qty</td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListVasEntryGridDtl[i].ship_qty, new { @class = "Qty numericOnly", @id = "qty_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            @*<td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListVasEntryDtl[i].ship_itm_price</td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_rate, new { @class = "itmrate", @id = "price_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_Amt, new { @id = "amt_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.ListVasEntryGridDtl[i].status</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryGridDtl[i].ship_price_uom</td>
+                            @*<td style="font-size:10px; color:black; font-weight:bold;"><input type="text" name="note" style="width:347px;background-color:lightyellow;" value="@Model.ListVasEntryGridDtl[i].Note" /></td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListVasEntryGridDtl[i].notes, new { @class = "note", @id = "Note_" + i, @style = "width:347px;text-align:left;background-color:lightyellow;", @data = @line })</td>
+                            @*//CR - 3PL-MVC-VAS-20180505 Added by Soniya*@
+                            @if (Qty > 0)
+                            {
+                                <td id="chkboxclick" id1="@line" style="text-align:center; display:none;"><input id="test1_@i" name="attribute1" class="attribute1" type="checkbox" checked /></td>
+                            }
+                            else
+                            {
+                                <td id="chkboxclick" id1="@line" style="text-align:center; display:none;"><input id="test1_@i" name="attribute1" class="attribute1" type="checkbox" /></td>
+                            }
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr id="GridIDP_@i">
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@line</td>
+                            @*<td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryDtl[i].cust_itm</td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.ListVasEntryGridDtl[i].cust_itm, new { @class = "ItmNum", @id = "itmnum_" + i, @style = "width:60px;text-align:right;" })@Model.ListVasEntryGridDtl[i].cust_itm</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.ListVasEntryGridDtl[i].cust_itm_name, new { @class = "ItmNum", @id = "vas_cust_itm_name_" + i, @style = "width:60px;text-align:left;" })@Model.ListVasEntryGridDtl[i].cust_itm_name</td>
+
+                            @*<td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryGridDtl[i].cust_itm_name</td>*@
+                            @*<td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListVasEntryDtl[i].ship_qty</td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListVasEntryGridDtl[i].ship_qty, new { @class = "Qty numericOnly", @id = "qty_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            @*<td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListVasEntryDtl[i].ship_itm_price</td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_rate, new { @class = "itmrate", @id = "price_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_Amt, new { @id = "amt_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.ListVasEntryGridDtl[i].status</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryGridDtl[i].ship_price_uom</td>
+                            @*<td style="font-size:10px; color:black; font-weight:bold;"><input type="text" name="note" style="width:347px;background-color:lightyellow;" value="@Model.ListVasEntryGridDtl[i].Note" /></td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListVasEntryGridDtl[i].notes, new { @class = "note", @id = "Note_" + i, @style = "width:347px;text-align:left;background-color:lightyellow;", @data = @line })</td>
+                            @*//CR - 3PL-MVC-VAS-20180505 Added by Soniya*@
+                            @if (Qty > 0)
+                            {
+                                <td id="chkboxclick" id1="@line" style="text-align:center; display:none;"><input id="test1_@i" name="attribute1" class="attribute1" type="checkbox" checked /></td>
+                            }
+                            else
+                            {
+                                <td id="chkboxclick" id1="@line" style="text-align:center; display:none;"><input id="test1_@i" name="attribute1" class="attribute1" type="checkbox" /></td>
+                            }
+                        </tr>
+                    }
+
+                }
+            </tbody>
+
+        </table>
+        @Html.Hidden("Count_Values", TotalNumberoflst)
+        @*</div>*@
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    var p_str_check_value;
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+    $(".Qty").focusout(function () {
+        //alert('hit')
+
+        debugger
+        var QTYTEXT = $(this).val();
+
+        var $buttonClicked = $(this);
+        var IDLINE = $buttonClicked.attr('data');
+        var tot = parseFloat(IDLINE) - 1;
+        var QTYSUM = $("#qty_" + tot).val();
+        var PRICESUM = $("#price_" + tot).val();
+        var sum_iv = parseFloat(QTYSUM) * parseFloat(PRICESUM);
+        var sum_i = parseFloat(sum_iv).toFixed(2);
+        $("#amt_" + tot).val(sum_i);
+        var newamount = $("#amt_" + tot).val(sum_i);
+        if (parseFloat(sum_i) != 0) {//|| parseFloat(ITMTEXT) != 0
+            $("#test1_" + tot).prop('checked', true);
+            p_str_check_value = true;
+
+            $('#two').val(p_str_check_value);
+
+            $("#test1_" + tot).click();
+        }
+        else {
+            $("#test1_" + tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#two').val(p_str_check_value);
+
+            $("#test1_" + tot).click();
+
+        }
+    });
+    $(".itmrate").focusout(function () {
+        debugger
+        var ITMTEXT = $(this).val();
+        var $buttonClicked = $(this);
+        var IDLINE = $buttonClicked.attr('data');
+        var tot = parseFloat(IDLINE) - 1;
+        var QTYSUM = $("#qty_" + tot).val();
+        var PRICESUM = $("#price_" + tot).val();
+        var sum_iv = parseFloat(QTYSUM) * parseFloat(PRICESUM);
+        var sum_i = parseFloat(sum_iv).toFixed(2);
+        $("#amt_" + tot).val(sum_i);
+        var ITMTEXT = $("#qty_" + tot).val();
+        if (parseFloat(sum_i) != 0) {// || parseFloat(QTYTEXT) != 0
+            $("#test1_" + tot).prop('checked', true);
+            p_str_check_value = true;
+
+            $('#two').val(p_str_check_value);
+
+            $("#test1_" + tot).click();
+        }
+        else {
+            $("#test1_" + tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#two').val(p_str_check_value);
+
+            $("#test1_" + tot).click();
+
+        }
+    });
+    $(document).ready(function () {
+        $('.attribute1').click(function () {
+        });
+
+    });
+    //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+    $('#GridVasEntryEditDtl td[id="chkboxclick"]').click(function (event) {
+        debugger
+        var LINENUMBER = $(this).attr('id1');//CR-20180514-001 added by nithya
+        var Minus = LINENUMBER - 1;
+        var ImagesNewRowNumber = $("#Count_Values").val();
+        var VasId = $("#vas_id").val();
+        var _imagesCount = 0;
+        for (var i = Minus; i < LINENUMBER; i++) {
+            var p_str_check_value = $('#two').val();
+            var qty = $("#qty_" + i).val();
+            if (qty == "") {
+                qty = 0;
+            }
+            var price = $("#price_" + i).val();
+            if (price == "") {
+                price = 0;
+            }
+            var Amount = $("#amt_" + i).val();
+            var itmnum = $("#itmnum_" + i).val();
+            var p_str_note = $("#Note_" + i).val();
+            var p_str_RowNo = $(this).attr('id1');
+            if (p_str_check_value == "true" || p_str_check_value == "") {
+                $("#test1_" + Minus).prop('checked', true);
+                $("#GridIDP_" + Minus).css("background-color", "#5ae77e");
+                @*$.ajax({
+                    type: "POST",
+                    url: '@Url.Content("~/VasInquiry/UpdRateTempDetails ")',
+                    data: {
+                        "p_str_qty": qty,
+                        "p_str_rate": price,
+                        "p_str_amt": Amount,
+                        "p_str_itmnum": itmnum,
+                        "p_str_note": p_str_note,
+
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+
+                        $("#test1_" + Minus).prop('checked', true);
+                        $("#GridIDP_" + Minus).css("background-color", "#5ae77e");
+                    },
+
+                })*@
+            }
+            else {
+
+                $("#test1_" + Minus).prop('checked', false);
+                $("#GridIDP_" + Minus).css("background-color", "white");
+                @*$.ajax({
+                    type: "POST",
+                    url: '@Url.Content("~/VasInquiry/ReUpdateTempVasDetails")',
+                    data: {
+                        "p_str_qty": qty,
+                        "p_str_rate": price,
+                        "p_str_amt": Amount,
+                        "p_str_itmnum": itmnum,
+                        "p_str_note": p_str_note,
+                        "p_str_RowNo": p_str_RowNo,
+                        "VasId": VasId,
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+
+                        $("#test1_" + Minus).prop('checked', false);
+                        $("#GridIDP_" + Minus).css("background-color", "white");
+
+                        //$('#qty_' + i).val(0);//CR-20180514-001 commented by nithya
+                        //$('#amt_' + i).val(0.00);
+                        //$('#Note_' + i).val('');
+
+                    },
+
+                })*@
+            }
+        }
+    });
+
+    $('#ship_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#cust_po_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $(function () {
+        $('#GridVasEntryEditDtl').DataTable({
+            "paging": false,
+            "pageLength": 100,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+        });
+        $('#GridVasEntryEditDtl_paginate').hide();
+    })
+    $('#last_so_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'Y-m-d'
+    });
+    $(".note").focusout(function () {
+        debugger
+        var NOTETEXT = $(this).val();
+
+        var $buttonClicked = $(this);
+        var IDLINE = $buttonClicked.attr('data');
+        var tot = parseFloat(IDLINE) - 1;
+        var QTYSUM = $("#qty_" + tot).val();
+        var PRICESUM = $("#price_" + tot).val();
+        var sum_iv = parseFloat(QTYSUM) * parseFloat(PRICESUM);
+        var sum_i = parseFloat(sum_iv).toFixed(2);
+        $("#amt_" + tot).val(sum_i);
+        var newamount = $("#amt_" + tot).val(sum_i);
+        var qty = $("#qty_" + tot).val();
+        if (qty == "") {
+            qty = 0;
+        }
+        var price = $("#price_" + tot).val();
+        if (price == "") {
+            price = 0;
+        }
+        if (parseFloat(sum_i) != 0) {// || parseFloat(QTYTEXT) != 0
+            $("#test1_" + tot).prop('checked', true);
+            p_str_check_value = true;
+
+            $('#two').val(p_str_check_value);
+
+            $("#test1_" + tot).click();
+        }
+        else {
+            $("#test1_" + tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#two').val(p_str_check_value);
+
+            $("#test1_" + tot).click();
+
+        }
+    });
+    $("#btnUpdateVas").click(function () {
+        debugger
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_vas_id = $('#vas_id').val();
+        var p_str_vas_dt = $('#ship_dt').val();
+        var p_str_so_num = $('#Vassonum').val();
+        var p_str_whs_id = $('#new_whs_id').val();
+        var p_str_ship_to_id = $('#ship_to_id').val();
+        var p_str_cust_po_num = $('#cust_po_num').val();
+        var p_str_cust_po_dt = $('#cust_po_dt').val();
+        var p_str_note = $('#Note').val();
+        var p_str_check_value = $('#two').val();
+        var objVASHdr = {};
+        objVASHdr.cmp_id = $('#new_cmp_id').val();
+        objVASHdr.vas_id = $('#vas_id').val();
+        objVASHdr.vas_dt = $('#ship_dt').val();
+        objVASHdr.so_num = $('#Vassonum').val();
+        objVASHdr.whs_id = $('#new_whs_id').val();
+        objVASHdr.ship_to_id = $('#ship_to_id').val();
+        objVASHdr.cust_po_num = $('#cust_po_num').val();
+        objVASHdr.cust_po_dt = $('#cust_po_dt').val();
+        objVASHdr.note = $('#Note').val();
+        var VASHdr = new Array();
+        VASHdr.push(objVASHdr);
+        var numberOfCheckboxes = $("input[name='attribute1']:checked").length;
+        if (numberOfCheckboxes == 0) {
+            swal("", "No Item Added.", "");
+            return false;
+        }
+        $("#ajaxloading").show();
+        var VasdtlCount = $("#Count_Values").val();
+        var ItemDetails = new Array();
+        for (var i = 0; i < VasdtlCount; i++) {
+
+            var l_int_qty = $("#qty_" + i).val();
+            var l_dec_price = $("#price_" + i).val();
+            var l_dec_Amount = $("#amt_" + i).val();
+            var l_str_itmnum = $("#itmnum_" + i).val();
+            var l_str_note = $("#Note_" + i).val();
+            var l_str_itnname = $("#vas_cust_itm_name_" + i).val();
+            var l_str_priceuom = $("#price_uom_" + i).val();
+            if (l_int_qty == "") {
+                l_int_qty = 0;
+            }
+            else if (l_int_qty == undefined) {
+                l_int_qty = 0;
+            }
+            if (l_dec_price == "") {
+                l_dec_price = 0;
+            }
+            else if (l_dec_price == undefined) {
+                l_dec_price = 0;
+            }
+            if (l_int_qty != 0) {
+                var ItemDetail = {};
+                ItemDetail.qty = l_int_qty;
+                ItemDetail.list_price = l_dec_price;
+                ItemDetail.amt = l_dec_Amount;
+                ItemDetail.itm_num = l_str_itmnum;
+                ItemDetail.notes = l_str_note;
+                ItemDetail.itm_name = l_str_itnname;
+                ItemDetail.price_uom = l_str_priceuom;
+                ItemDetails.push(ItemDetail);
+            }
+        }
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/VasInquiry/UpdateVasEntry")',
+                data: JSON.stringify({ ItemDetails: ItemDetails, VASHdr: VASHdr }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    debugger
+                    if (e > 0) {
+                        swal({
+                            title: "",
+                            text: "No Records to Save",       //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        });
+                    }
+                    else {
+                        debugger
+                        swal({
+                            title: "",
+                            text: "VASId " + p_str_vas_id + " Updated successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                        //swal("", "Your record Added successfully.", "");
+                        function () {
+                            debugger
+                            setTimeout(function () {
+                                var p_str_screen_title = $('#screentitle').val();
+                                var p_str_cmpid = $('#new_cmp_id').val();
+                                var p_str_vasid = $('#vas_id').val();
+                                var SelectedID = p_str_vasid;
+                                var type = "PDF";
+                                var var_name = "Vas Post Report";
+                                var p_str_radio = var_name;
+                                window.open('VAsShowReport?SelectedID=' + SelectedID + '&p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&type=' + type, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectedID)
+                                debugger
+
+                                $('#myModalEdit').modal('hide');
+                                $('#myModalVasEdit').modal('hide');
+
+                                if (p_str_screen_title == "OBInquiry" || p_str_screen_title == "OBVisibility") {
+                                    $.ajax({
+                                        type: "get",
+                                        url: "/OutboundInq/GetOutboundInqDtl",
+                                        data: {
+                                            "p_str_cmp_id": p_str_cmp_id,
+                                            "p_str_so_num": p_str_so_num
+                                        },
+                                        datatype: 'html',
+                                        success: function (e) {
+                                            debugger
+                                            $("#ajaxloading").hide();
+                                            $('#showgrid').html("");
+                                            $('#showgrid').html(e);
+                                        },
+                                    })
+                                }
+                                else {
+                                    $.ajax({
+                                        type: "get",
+                                        url: "/VasInquiry/VasInquiryDtl",             //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                                        data: {
+                                            "p_str_cmp_id": p_str_cmpid,
+                                            "p_str_vas_id": p_str_vasid,
+                                        },
+                                        datatype: 'html',
+                                        success: function (e) {
+                                            debugger
+                                            $("#ajaxloading").hide();
+                                            $('#showgrid').html("");
+                                            $('#showgrid').html(e);
+                                        },
+                                    })
+                                }
+
+
+                            });
+                        });
+
+                    }
+                },
+
+            })
+        }
+
+    });
+    $('#cust_po_num').focusout(function () {
+        debugger
+        var p_str_cust_id = $('#ship_to_id').val();
+        var p_str_shipto_id = $('#cust_po_num').val();
+        var p_str_Note = $('#Note').val();
+        if (p_str_Note == "") {
+            $('#Note').val("Ship To:" + $('#ship_to_id').val() + " " + " " + " " + "Cust PO#:" + $('#cust_po_num').val());
+        }
+        else
+        {
+            $('#Note').val("Ship To:" + $('#ship_to_id').val() + " " + " " + " " + "Cust PO#:" + $('#cust_po_num').val());
+
+        }
+    });
+</script>

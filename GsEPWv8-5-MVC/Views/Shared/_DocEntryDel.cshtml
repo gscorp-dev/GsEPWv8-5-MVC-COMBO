@@ -1,0 +1,696 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+@{
+    var Ordercount = Model.ListDocDtl.Count;
+}
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+     .text-muted {
+    color:black;
+}
+</style>
+
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<center>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Delete</h4>
+        <button type="button" id="btnDelClose"  class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+        <button type="button" id="btnDocDel" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+    </div>
+    <div id="childtabsdel">
+        <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+            <li><a href="#childtabsdel-1" style="font-size:12px;">Header</a></li>
+            <li><a href="#childtabsdel-2" style="font-size:12px;">Detail</a></li>
+        </ul>
+        <div id="childtabsdel-1">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-11 col-sm-11 col-xs-11">
+
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 6%;text-align: right;">
+                                            <label><b class="Lblmanual">Cmp Id </b></label>
+                                        </td>
+                                        <td style="width: 38%; padding-left: 1%;">
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @disabled = "true", @class = "form-control txtlbl", @style = "background-color:lightyellow;" })
+                                        </td>
+
+                                        <td style="text-align: center; width: 9%;">
+                                            <label><b class="Lblmanual">IB Doc Id</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            <table>
+                                                <tr>
+                                                    <td> @Html.TextBoxFor(model => model.ib_doc_id, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @id= "Del_ib_doc_id" ,@style = "font-size: 12px; font-family: verdana; width: 110px;margin-left: -23px;background-color:lightyellow;" })</td>
+                                                    @*<td style="padding-left: 9px;">
+                                            <label for="chkPassport" style="font-size:12px;">
+                                                <input type="checkbox" id="chkPassport" onclick="Check()" />
+                                                Is RMA
+                                            </label>
+                                        </td>*@
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="text-align: right; width: 6%;">
+                                            <label><b class="Lblmanual">IB Doc Dt</b></label>
+                                        </td>
+                                        <td style="width: 9%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.ib_doc_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;background-color:lightyellow;" })
+                                        </td>
+
+                                    </tr>
+
+                                </table>
+                                <br />
+                                <table style="border-collapse: separate;border-spacing: 0px 0.5em;   width:100%" id="SRDetailSec">
+                                    <tr>
+                                        <td style="width:7.5%;text-align: right; ">
+                                            <label><b class="Lblmanual">Status</b></label>
+                                        </td>
+                                        <td style="width: 9%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.status, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana; background-color:lightyellow;" })
+                                        </td>
+                                        <td style="width: 4%;text-align: right;padding-left:1%; ">
+                                            <label><b class="Lblmanual">Container</b></label>
+                                        </td>
+
+                                        <td style="width: 25%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.cont_id, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "25", @style = "font-size: 12px;font-family: verdana;" })
+
+                                        </td>
+                                        <td style="text-align: right;  width: 5%;">
+                                            <label><b class="Lblmanual"> ETA</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.eta_dt, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", placeholder = "MM/DD/YYYY", @style = "font-size: 12px;font-family: verdana;background-color:lightyellow;" })
+                                        </td>
+                                        <td style="width: 5%;text-align: right;">
+                                            <label><b class="Lblmanual">Ref Num</b></label>
+                                        </td>
+
+                                        <td style="width: 14%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.refno, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                        </td>
+                                        <td style="width: 5%;text-align: right;">
+                                            <label><b class="Lblmanual">Rcvd Via</b></label>
+                                        </td>
+
+                                        <td style="width: 14%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.recvdvia, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                        </td>
+
+                                    </tr>
+                                </table>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+
+                                        <td style="text-align: right; width: 7.3%;">
+                                            <label><b class="Lblmanual">Rcvd Fm</b></label>
+                                        </td>
+                                        <td style="width: 21%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.recvd_fm, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                        </td>
+                                        <td style="text-align: right; width: 8%;">
+                                            <label><b class="Lblmanual">Master BOL</b></label>
+                                        </td>
+                                        <td style="width: 21%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.bol, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                        </td>
+                                        <td style="text-align: right; width: 6%;">
+                                            <label><b class="Lblmanual">Vessel No</b></label>
+                                        </td>
+                                        <td style="width: 19%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.vessel_num, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                        </td>
+                                        <td></td>
+
+                                    </tr>
+
+
+                                </table>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="text-align: right;  width: 7.3%;">
+                                            <label><b class="Lblmanual">Hdr Note</b></label>
+                                        </td>
+                                        <td style="width: 45%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.Note, new { @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                @*<table style="width:100%;">
+                                    <tr>*@
+
+                                        @*<td colspan="4"></td>*@
+                                        @*<td style="padding-left: 30px;text-align:right;padding-top:10px" colspan="6">
+                                            <button type="button" id="btnNextEdit" class="btn-Clear" style="font-size: 13px;">Next</button>
+                                            <button type="reset" id="btnClear" class="btn_search" style="font-size: 13px;display:none;">Clear</button>
+
+                                        </td>
+                                    </tr>
+                                </table>*@
+
+                            </div>
+                            @*<div class="col-md-1 col-sm-1 col-xs-1">
+
+                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+
+
+        <div id="childtabsdel-2" style="display:block" >
+            <div class="box-body">
+                <div class="box-header">
+                    <div id="DocEntryDelhdr" >
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-8 col-sm-8 col-xs-8" style="width: 70%;">
+                                <table style="border-collapse: separate;border-spacing: 0px 0.5em; " id="SRDetailSec">
+                                    <tr>
+                                        <td style="text-align: right;width:13%">
+                                            <label class="Lblmanual">Line#</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.LineNum, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 68px;background-color:lightyellow;" })
+                                        </td>
+                                        <td style="text-align: right;width:8%">
+                                            <label class="Lblmanual">Style</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+
+                                            @*@Html.DropDownListFor(model => model.itm_num, new SelectList(Model.ListItmStyledtl, "itm_num", "itm_num"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })*@
+                                            @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <label class="Lblmanual">Color</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                                        </td>
+                                        <td style="text-align: right;width:5%;">
+                                            <label class="Lblmanual">Size</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:5%;">
+                                            @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <label class="Lblmanual">Desc</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 180px;background-color:lightyellow;" })
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align: right;width:13%">
+                                            <label class="Lblmanual"> OrderQty</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.ord_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;width: 70px;text-align: right;" })
+                                        </td>
+                                        @*<td style="padding-left: 5px;">
+                                <button type="button" id="btnDetails" class="btn_search" style="font-size: 13px;display:none;">Details</button>
+                            </td>*@
+                                        <td style="text-align: right;width:8%">
+                                            <label class="Lblmanual"> PPK</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.docuppk, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;width: 130px;text-align: right;" })
+                                        </td>
+                                        <td style="text-align: right;" width:5%;>
+                                            <label class="Lblmanual"> Ctns</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.ctn_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;width: 130px;text-align: right;" })
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <label class="Lblmanual"> PoNum</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.po_num, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;width: 130px;" })
+                                        </td>
+
+
+
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align: right;width:13%">
+                                            <label class="Lblmanual">Length</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.doclength, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;text-align: right;" })
+                                        </td>
+                                        <td style="text-align: right;width:8%">
+                                            <label class="Lblmanual">Width</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.docwidth, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;text-align: right;" })
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <label class="Lblmanual"> Height</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.docheight, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;text-align: right;" })
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <label class="Lblmanual"> Weight</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.docweight, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;text-align: right;" })
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <label class="Lblmanual"> Cube</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.doccube, new { @class = "form-control txtlbl three-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;text-align: right;" })
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align: right;width:13%">
+                                            <label class="Lblmanual">Loc Id</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @Html.DropDownListFor(model => model.loc_id, new SelectList(Model.ListLocPickDtl, "loc_id", "loc_id"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                                            @*@Html.TextBoxFor(model => model.loc_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })*@
+                                        </td>
+                                        <td style="text-align: right;width:8%">
+                                            <label class="Lblmanual">StrgRate</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @*@Html.TextBoxFor(model => model.strg_rate, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px; " })*@
+                                            @Html.DropDownListFor(model => model.strg_rate, new SelectList(Model.LstStrgIddtl, "name", "description"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                                        </td>
+                                        <td style="text-align: right;width:5%;">
+                                            <label class="Lblmanual"> InoutRate</label>
+                                        </td>
+                                        <td style="padding-left: 5px;">
+                                            @*@Html.TextBoxFor(model => model.inout_rate, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px; " })*@
+                                            @Html.DropDownListFor(model => model.inout_rate, new SelectList(Model.LstInoutIddtl, "name1", "description1"), new { @class = "form-control txtlbl", @style = "width: 130px;" })
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <label class="Lblmanual"> Note</label>
+                                        </td>
+                                        <td style="padding-left: 5px;" colspan="6">
+                                            @Html.TextBoxFor(model => model.note, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 301px;" })
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+
+                                        @if (Model.Recv_Itm_Mode == "CUST LOT ID")
+                                    {
+                                    <td style="text-align: right;">
+                                        <label class="Lblmanual"> Lot Id</label>
+                                    </td>
+                                    <td style="padding-left: 5px;">
+                                        @Html.TextBoxFor(model => model.lot_id, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                                    </td>
+                                    }
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td style="text-align: right;">
+                                            <button type="button" id="btnInclude" class="btn_search" style="font-size: 13px;">Include</button>
+                                        </td>
+                                        <td>
+                                            <button type="reset" id="btnDtlClr" class="btn-Clear" style="font-size: 13px;">Clear </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="width: 2%;">
+
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3" style="display:none;">
+
+                                <table>
+                                    <tr>
+                                        <td colspan="3"><a id="upload" href="@Url.Action("downloadFile", "InboundInquiry")" target="_blank" style="text-decoration:underline; color:#4c8cff;"><b style="font-size:13px;">Upload Template</b></a></td>
+
+                                    </tr>
+                                    <tr>
+
+                                        <td style="text-align: right;">
+                                            <fieldset style="padding:6px;">
+                                                <legend style="text-align:left;">Upload File</legend>
+                                                <table style="margin-top:-14px;">
+                                                    <tr>
+                                                        <td><button type="button" id="btnBrowse" onclick="document.getElementById('img1').click();" class="btn_search" style="font-size: 13px;color:white;background-color:blue;width: 170px;">Container Upload</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="    width: 80%;">
+                                                            <input type="file" name="FileUpload" id="img1" onchange="updateFileName()" style="display:none" title="" />
+                                                            @Html.TextBoxFor(x => x.file_name, new { @class = "form-control", @name = "file_name", @id = "file_name", @style = "width: 170px;" })
+                                                        </td>
+                                                        <td style="padding-left: 10px;padding-top:5px"><button type="button" id="btnImport" class="btn_search" style="font-size: 13px;color:white;background-color:blue;">Import</button></td>
+                                                    </tr>
+
+
+                                                    <tr></tr>
+                                                </table>
+                                            </fieldset>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <fieldset style="margin-top:-10px;">
+                            <legend style="text-align:left;">Style Dimensions</legend><hr />
+                            <div class="body" style="margin-top:-66px;">
+                                <table>
+                                    <tr>
+                                        <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                            <button type="button" id="btncopydims" class="btn_search" style="font-size: 13px;width: 95px;">Copy Dims</button>
+                                        </td>
+                                        <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                            <label><b style="font-family:Verdana;color:#1d1e1e;">Length(IN)</b></label>
+                                        </td>
+                                        <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                            @Html.TextBoxFor(model => model.length, new { @class = "form-control two-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                        </td>
+                                        <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                            <label><b style="font-family:Verdana;color:#1d1e1e;">Width(IN)</b></label>
+                                        </td>
+                                        <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                            @Html.TextBoxFor(model => model.width, new { @class = "form-control two-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                        </td>
+
+                                        <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                            <label><b style="font-family:Verdana;color:#1d1e1e;">Height(IN)</b></label>
+                                        </td>
+                                        <td style="width: 133px;font-size: 12px;text-align:  right;padding-right: 10px;">
+                                            @Html.TextBoxFor(model => model.height, new { @class = "form-control two-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                        </td>
+
+                                        <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                            <label><b style="font-family:Verdana;color:#1d1e1e;">Weight(Lbs)</b></label>
+                                        </td>
+                                        <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                            @Html.TextBoxFor(model => model.weight, new { @class = "form-control two-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                        </td>
+                                        <td style="width: 103px;font-size: 12px;text-align: center;padding-right: 10px;">
+                                            <label><b style="font-family:Verdana;color:#1d1e1e;">Cube(Ft)</b></label>
+                                        </td>
+                                        <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                            @Html.TextBoxFor(model => model.cube, new { @class = "form-control three-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                        </td>
+                                        <td style="width: 57px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                            <label><b style="font-family:Verdana;color:#1d1e1e;">PPK</b></label>
+                                        </td>
+                                        <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                            @Html.TextBoxFor(model => model.ppk, new { @class = "form-control ", @maxlength = "50", @style = "text-align: right;" })
+                                        </td>
+
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <br />
+                    </div>
+                    
+                      <table>
+                        <tr>
+                            <td>
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                    Total Records:
+                                </span>
+                            </td>
+                            <td style="width: 93%;">
+                                <label class="totalCount" style="text-align:left">
+                                    @Ordercount
+                                </label>
+                            </td>
+
+                        </tr>
+                    </table>
+                    @Html.HiddenFor(model => model.DocumentdateFrom)
+                    @Html.HiddenFor(model => model.DocumentdateTo)
+                    <div class="box">
+                        <div id="table-Details">
+                            <div style="overflow-y:auto; height:auto; width:auto;">
+                                <table id="GridDocDElEntry" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                    <thead class="grid_backcolor">
+                                        <tr>
+                                            <th class="grid_header_backcolor">Ln#</th>
+                                            <th class="grid_header_backcolor">Ctn Ln#</th>
+                                            <th class="grid_header_backcolor">Style</th>
+                                            <th class="grid_header_backcolor">Color</th>
+                                            <th class="grid_header_backcolor">Size</th>
+                                            <th class="grid_header_backcolor">Name</th>
+                                            <th class="grid_header_backcolor">PONum</th>
+                                            <th class="grid_header_backcolor">OrderQty</th>
+                                            <th class="grid_header_backcolor">OrderCtns</th>
+                                            <th class="grid_header_backcolor">Note</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                                        @for (int i = 0; i < Model.ListDocdtl.Count; i++)
+                                        {
+                                            int line = i + 1;
+                                            <tr id="@Model.ListDocdtl[i].cmp_id ">
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListDocdtl[i].dtl_line</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListDocdtl[i].ctn_line</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListDocdtl[i].itm_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].itm_color</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].itm_size</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].itm_name</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].po_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].ordr_qty</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListDocdtl[i].ordr_ctn</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListDocdtl[i].note</td>
+                                               
+                                            </tr>
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+</center>
+
+<div id='myModalDetailsPopUp' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%;">
+            <div id='myModalDetailsPopUpDetails' style="width: 100%; height: 650px;"></div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript">
+    //CR20180216-07  Added By Soniya 16-02-2018
+    $(function () {
+
+        var l_str_eta_dt = $("#eta_dt").val();
+        if (l_str_eta_dt == '01/01/0001') {
+            $("#eta_dt").val('');
+        }
+    });
+    //	CR20180216-07  End
+      $('#new_ib_doc_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#new_eta_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#new_orderdt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+    $(function () {
+        $("#childtabsdel").tabs();
+    });
+    $(function () {
+        $('#childtabsdel-2 :input').attr('disabled', true);
+        $('#btnInclude :input').attr('disabled', true);
+        $('#btnDtlClr :input').attr('disabled', true);
+    });
+   
+    $("#btnDocDel").click(function () {
+        debugger
+        var p_str_cmp_id = $("#cmp_id").val();
+        var p_str_ibdocid = $("#Del_ib_doc_id").val();
+        var p_str_datefrom = $('#DocumentdateFrom').val(); //CR 2202018_01 Added by murugan
+        var p_str_dateto = $('#DocumentdateTo').val();     //CR 2202018_01 Added by murugan
+        
+        sweetAlert({
+            title: "",
+            text: "Do you want to delete?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+           // closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+
+                       $.ajax({
+                           type: "GET",
+                           url: '@Url.Content("~/InboundInquiry/DocDelete")',
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_ibdocid": p_str_ibdocid,
+                           },
+                           dataType: 'html',
+                           success: function (e) {
+                               swal.close();
+                               if (e != null)
+                               {
+                                   debugger
+
+                                   setTimeout(function ()
+                                   {
+                                       swal({
+                                           title: "",
+                                           text: "IBDocID #" + p_str_ibdocid + "Deleted successfully",
+                                           type: "",
+                                           showCancelButton: false,
+                                           confirmButtonClass: "btn-danger",
+                                           confirmButtonText: "Ok",
+                                           closeOnConfirm: true
+                                       },
+                                    function () {
+                                        setTimeout(function () {
+                                        //var p_str_cmp_id = $("#cmp_id").val();                                        
+                                        //var p_str_datefrom = $('#DocumentdateFrom').val(); //CR 2202018_01 Added by murugan
+                                        //var p_str_dateto = $('#DocumentdateTo').val();     //CR 2202018_01 Added by murugan
+                                       
+                                        $('#myModalEdit').modal('hide');
+                                        $.ajax({
+                                            type: "get",
+                                            url: "/inboundinquiry/inboundinquirydtl",
+                                            data: {
+                                                "p_str_cmp_id": p_str_cmp_id,
+                                                "p_str_ibdocid": p_str_ibdocid
+                                            },
+                                            datatype: 'html',
+                                            success: function (e) {
+                                                debugger
+                                                $("#ajaxloading").hide();
+                                                $('#showgrid').html("");
+                                                $('#showgrid').html(e);
+                                            },
+                                        })
+                                        });
+                                    });
+                                        },1000);
+
+
+
+                               }
+
+                           },
+
+                       })
+                   }
+               });
+    });
+    //CR 03-24-2018-001 added by Nithya
+  
+    $("#btnDelClose").click(function () {
+                   var p_str_cmp_id = $("#g_str_tmp_cmp_id").val();
+                   var p_str_doc_id = $("#Del_ib_doc_id").val();
+                   var p_str_screentitle = $('#screentitle').val();
+        debugger
+
+                
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+                   
+               function (isConfirm) {
+                              debugger
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+                                  debugger
+                                  $('#myModalEdit').modal('hide');
+                                  $.ajax({
+                                      type: "get",
+                                      url: "/inboundinquiry/inboundinquirydtl",
+                                      data: {
+                                          "p_str_cmp_id": p_str_cmp_id,
+                                          "p_str_ibdocid": p_str_doc_id
+                                      },
+                                      datatype: 'html',
+                                      success: function (e) {
+                                          debugger
+                                          $("#ajaxloading").hide();
+                                          $('#showgrid').html("");
+                                          $('#showgrid').html(e);
+                                      },
+                                  })
+                   }
+               });
+    });
+    
+</script>
+<script>
+
+    $(function () {
+        $('#GridDocDElEntry').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridDocDElEntry_paginate').hide();
+    })
+</script>

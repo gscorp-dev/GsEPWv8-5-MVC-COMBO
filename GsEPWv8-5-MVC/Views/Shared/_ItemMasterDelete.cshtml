@@ -1,0 +1,449 @@
+﻿
+
+@model GsEPWv8_5_MVC.Model.ItemMasterModel
+@{
+// var Ordercount = Model.ListDocdtl.Count;
+}
+
+@Html.HiddenFor(model => model.itm_code)
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: verdana;
+        font-size: 12px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+</style>
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+
+<center>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Delete Item</h4>
+        <button type="button" id="btnDeleteClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+        <button type="button" id="btnDelete" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Delete</button>
+    </div>
+    <div id="docchildtabs">
+        <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+            <li><a href="#docchildtabs-1" style="font-size:12px;">Header</a></li>
+            @*<li><a href="#docchildtabs-2" style="font-size:12px;">Item Details</a></li>*@
+        </ul>
+        <div id="docchildtabs-1">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-11 col-sm-11 col-xs-11">
+
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 8%;text-align: right;">
+                                            <label><b class="Lblmanual">Cmp Id </b></label>
+                                        </td>
+                                        <td style="width: 150px; padding-left: 3%;">
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl", @id = "cmpid", disabled = "disabled", @style = "width:125%;background-color:lightyellow;" })
+                                        </td>
+                                        <td style="width: 10px;">
+                                            @Html.HiddenFor(model => model.cmp_id)
+                                        </td>
+                                        <td style="width: 42.1%;text-align: left;padding-left: 6%;">
+                                            @Html.TextBoxFor(model => model.Str_cmp_id, new { @class = "form-control txtlbl", disabled = "disabled", @style = "font-size: 12px; font-family: verdana; width: 450px;" })
+                                        </td>
+                                        <td style="width: 100px; padding-left: -50%;">
+                                            @Html.CheckBoxFor(model => model.KitItem) Kit Item
+                                        </td>
+                                        <td style="padding-left: 1%; width:100px;">
+                                            @Html.CheckBoxFor(model => model.NonInventorysItem) Non Inventory Item
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Style </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 3%;">
+                                            @Html.TextBoxFor(model => model.itm_num, new { @class = "form-control txtlbl", @id = "itmno", disabled = "disabled", @maxlength = "50" })
+
+
+                                        </td>
+
+                                        <td style="text-align: right; width: 9%;">
+                                            <label><b class="Lblmanual">Color </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            <label><b class="Lblmanual">Size </b></label>
+                                        </td>
+                                        <td style="width: 22%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            @*<label><b class="Lblmanual">Extract </b></label>*@
+                                        </td>
+                                        <td style="width: 22%; padding-left: 1%;"></td>
+                                    </tr>
+
+                                </table>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Desc </b></label>
+                                        </td>
+                                        <td style="width: 45%; padding-left: 3%;">
+                                            @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                        </td>
+                                        <td style="width: 8%;text-align: center;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Status </b></label>
+                                        </td>
+                                        <td style="width: 50%; padding-left: 3%;">
+                                            @Html.DropDownListFor(model => model.status, new SelectList(Model.ListLookUpStatusDtl, "name", "description"), new { @class = "form-control txtlbl", disabled = "disabled", @style = "width:125px;" })
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Item Group# </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 3%;">
+                                            @Html.TextBoxFor(model => model.group_id, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+
+
+                                        </td>
+
+                                        <td style="text-align: right; width: 9%;">
+                                            <label><b class="Lblmanual">Class </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.Class, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            <label><b class="Lblmanual">Category Id </b></label>
+                                        </td>
+                                        <td style="width: 22%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.catg_id, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            @*<label><b class="Lblmanual">Extract </b></label>*@
+                                        </td>
+                                        <td style="width: 22%; padding-left: 1%;"></td>
+                                    </tr>
+
+                                </table>
+                                <br />
+                                <fieldset>
+                                    <legend style="text-align:left;">Measurement</legend>
+                                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                                <label><b class="Lblmanual">Length(IN)</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.TextBoxFor(model => model.Length, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 9%;">
+                                                <label><b class="Lblmanual">Width(IN) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Width, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Depth(IN)</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Depth, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Cube(CI) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Cube, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Weight(LB) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.wgt, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </fieldset>
+                                <fieldset>
+                                    <legend style="text-align:left;"> Pack Details </legend>
+                                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                                <label><b class="Lblmanual">Package Type</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.DropDownListFor(model => model.pkg_type, new SelectList(Model.ListPkgType, "config_name", "config_desc"), new { @id = "d_pkg_type", @class = "form-control txtlbl", @style = "width:150px;" })
+                                            </td>
+                                            <td style="text-align: right; width: 9%;">
+                                                <label><b class="Lblmanual">Poly Size </b></label>
+                                            </td>
+
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.DropDownListFor(model => model.pkg_size, new SelectList(Model.ListPkgPoly, "config_name", "config_desc"), new { @id = "d_poly_pkg_size", @class = "form-control txtlbl", @style = "width:150px;" })
+                                            </td>
+
+                                            <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                                <label><b class="Lblmanual">Box Size</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.DropDownListFor(model => model.pkg_size, new SelectList(Model.ListPkgBox, "config_name", "config_desc"), new { @id = "d_box_pkg_size", @class = "form-control txtlbl", @style = "width:150px;" })
+                                            </td>
+
+                                        </tr>
+
+                                    </table>
+                                    <label><b class="Lblmanual">Package Size </b></label>
+                                    <table id="grdPkgService" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                                        <thead class="grid_backcolor">
+                                            <tr>
+                                                <th class="grid_header_backcolor">Sel</th>
+                                                <th class="grid_header_backcolor">Package Service</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int j = 0; j < Model.ListPkgSrvc.Count; j++)
+                                            {
+                                                var e_pkg_service = @Model.ListPkgSrvc[j].pkg_service;
+                                                var e_pkg_service_exists = @Model.ListPkgSrvc[j].pkg_service_exists;
+
+
+                                                <tr id="@Model.ListPkgSrvc[j].pkg_service">
+                                                    @if (@Model.ListPkgSrvc[j].pkg_service_exists == true)
+                                                    {
+
+
+                                                        <td id="chkboxPkgService" id1="@e_pkg_service" id2="@e_pkg_service_exists" style="text-align:center">
+                                                            <input id="test" name="selPkgService" class="attribute" type="checkbox" checked value="@Model.ListPkgSrvc[j].pkg_service" />
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td id="chkboxPkgService" id1="@e_pkg_service" id2="@e_pkg_service_exists" style="text-align:center">
+                                                            <input id="test" name="selPkgService" class="attribute" type="checkbox" value="@Model.ListPkgSrvc[j].pkg_service" />
+                                                        </td>
+                                                    }
+
+
+                                                    <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListPkgSrvc[j].pkg_service</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</center>
+<script>
+
+
+    $(function () {
+        debugger;
+        $("#d_pkg_type").on('change', function () {
+            debugger;
+            var strPkgType = $(this).find(":selected").val();
+            if (strPkgType == "PKG-POLY") {
+                document.getElementById("d_poly_pkg_size").disabled = false;
+                document.getElementById("d_box_pkg_size").disabled = true;
+                $("#d_box_pkg_size").val('');
+            }
+            else if (strPkgType == "PKG-BOX") {
+                document.getElementById("d_box_pkg_size").disabled = false;
+                document.getElementById("d_poly_pkg_size").disabled = true;
+                $("#d_poly_pkg_size").val('');
+            }
+            else
+            {
+                document.getElementById("d_poly_pkg_size").disabled = true;
+                document.getElementById("d_box_pkg_size").disabled = true;
+                $("#d_poly_pkg_size").val('');
+                $("#d_box_pkg_size").val('');
+            }
+
+
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $("#btnDelete").click(function () {
+        debugger
+        $("#ajaxLoadingratemaster").show();
+        var p_str_cmp_id = $('#cmpid').val();
+        var p_str_itm_code = $('#itm_code').val();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/ItemMaster/ItemMasterDelete")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_itm_code": p_str_itm_code,
+                },
+                dataType: 'json',
+                //timeout: 500,
+                success: function (e) {
+                    debugger;
+                    if (e == 0) {
+                        swal({
+                            title: "",
+                            text: "ItemCode " + p_str_itm_code + "In Use",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+              function () {
+                  setTimeout(function () {
+                      debugger
+
+                      var p_str_cmp_id = $('#cmpid').val();
+                      var p_str_itm_style = $('#Style').val();
+                      var p_str_itm_Color = $('#Color').val();
+                      var p_str_itm_Size = $('#Size').val();
+                      var p_str_itm_Descr = $('#ItmName').val();
+                      $('#myModalDelete').modal('hide');
+                      $.ajax({
+                          type: "get",
+                          url: "/ItemMaster/GetItemMasterDtls",
+                          data: {
+                              "p_str_cmp_id": p_str_cmp_id,
+                              "p_str_itm_style": p_str_itm_style,
+                              "p_str_itm_Color": p_str_itm_Color,
+                              "p_str_itm_Size": p_str_itm_Size,
+                              "p_str_itm_Descr": p_str_itm_Descr,
+
+
+                          },
+                          datatype: 'html',
+                          success: function (e) {
+                              debugger
+                              $("#ajaxLoadingratemaster").hide();
+                              $('#showgrid').html("");
+                              $('#showgrid').html(e);
+                          },
+                      })
+
+                  });
+              });
+                    }
+                    else if (e == 1) {
+                        swal({
+                            title: "",
+                            text: "Your record Deleted successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        }
+                        ,
+                          function () {
+                              setTimeout(function () {
+                                  var p_str_cmp_id = $('#cmpid').val();
+                                  var p_str_itm_style = $('#Style').val();
+                                  var p_str_itm_Color = $('#Color').val();
+                                  var p_str_itm_Size = $('#Size').val();
+                                  var p_str_itm_Descr = $('#ItmName').val();
+                                  $('#myModalDelete').modal('hide');
+                                  $.ajax({
+                                      type: "get",
+                                      url: "/ItemMaster/GetItemMasterDtls",
+                                      data: {
+                                          "p_str_cmp_id": p_str_cmp_id,
+                                          "p_str_itm_style": p_str_itm_style,
+                                          "p_str_itm_Color": p_str_itm_Color,
+                                          "p_str_itm_Size": p_str_itm_Size,
+                                          "p_str_itm_Descr": p_str_itm_Descr,
+
+
+                                      },
+                                      datatype: 'html',
+                                      success: function (e) {
+                                          debugger
+                                          $("#ajaxLoadingratemaster").hide();
+                                          $('#showgrid').html("");
+                                          $('#showgrid').html(e);
+                                      },
+                                  })
+
+                              });
+                          }
+                          );
+
+                    }
+                },
+
+            })
+        }
+    });
+    $("#btnDeleteClose").click(function () {
+        $('#myModalDelete').modal('hide');
+    });
+</script>

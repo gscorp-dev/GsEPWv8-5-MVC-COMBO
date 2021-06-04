@@ -1,0 +1,50 @@
+﻿<div id="divAlocSummaryByLoc" class="box-header" style="padding-left:-61px;padding-top:5px;width:100%;">
+    <div style="padding-left:-61px;padding-top:5px;width:100%;">
+          <fieldset>
+            <legend>Allocation Detail By Location</legend>
+            <table id="grdAlocSummaryByLoc" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:5%;">Line#</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Style</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Color</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Size</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Po Number</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Lot#</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Received Dt</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Location</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Ctn(s)</th>
+                        <th class="grid_header_backcolor" style="width:7%;">PPK</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Line Qty</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Aloc Qty</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Balance Qty</th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12); display:table; width:100%; max-height:600px; overflow-y:scroll;">
+                    @for (int i = 0; i < Model.lstOBSRAlocDtlByLoc.Count; i++)
+                    {
+                        <tr>
+                            <td style="width:5%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtlByLoc[i].line_num</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtlByLoc[i].itm_num</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtlByLoc[i].itm_color</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtlByLoc[i].itm_size</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtlByLoc[i].po_num</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtlByLoc[i].lot_id</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtlByLoc[i].rcvd_dt</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtlByLoc[i].loc_id</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtlByLoc[i].ctn_cnt</td>
+                            <td style="width:7%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtlByLoc[i].ctn_qty</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtlByLoc[i].line_qty</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtlByLoc[i].line_taken_qty</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtlByLoc[i].loc_bal_qty</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+
+
+

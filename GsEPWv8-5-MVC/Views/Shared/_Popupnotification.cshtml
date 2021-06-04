@@ -1,0 +1,294 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        h2 {
+            color: #444;
+            font-family: sans-serif;
+        }
+
+        button:hover {
+            background-color: #DDD;
+        }
+
+        button:active {
+            background-color: #777;
+        }
+
+        footer {
+            font-family: sans-serif;
+            font-size: 12px;
+        }
+
+            footer p {
+                color: #aaa;
+            }
+
+                footer p a {
+                    color: yellowgreen;
+                    text-decoration: none;
+                }
+
+        .title {
+            font-size: 57px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #999;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        pre {
+            padding: 10px;
+            background-color: #EEE;
+        }
+
+        .comment {
+            color: #AAA;
+        }
+
+        .string {
+            color: teal;
+        }
+
+        .tag {
+            color: blue;
+        }
+
+        .attr {
+            color: green;
+        }
+
+        .button_download {
+            display: block;
+            font-family: sans-serif;
+            cursor: pointer;
+            width: 60px;
+            padding: 10px 30px 10px 30px;
+            font-weight: bold;
+            font-size: 20px;
+            text-decoration: none;
+            text-align: center;
+            margin: 0 auto;
+            background-color: #444;
+            color: #EEE;
+            transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+        }
+
+            .button_download:hover {
+                width: 480px;
+                background-color: yellowgreen;
+                color: #444;
+            }
+
+        .step {
+            color: #AAA;
+        }
+    </style>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="@Url.Content("~/NotifiPopup/notifIt.js")"></script>
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/NotifiPopup/notifIt.css")">
+
+    <meta content="chrome plugin" name="plugin_id">
+</head>
+<body>
+    <div id="wrap">
+    </div>
+    <script>
+        function not1(msg) {
+            notif({
+                msg: '<b></b> ' + msg + '',
+                type: "success",
+                position: "center"
+            });
+        }
+        function not2(msg) {
+            notif({
+                msg: '<b></b> ' + msg + '',
+                type: "error",
+                position: "center"
+            });
+        }
+        function not3(msg) {
+            notif({
+                type: "warning",
+                msg: '<b>Warning:</b> ' + msg + '',
+                position: "left"
+            });
+        }
+        function not4(msg) {
+            notif({
+                type: "success",
+                msg: '<b>Info: </b> ' + msg + '',
+                width: "all",
+                height: 100,
+                position: "center",
+                autohide: false,
+                width: 921,
+                left: 210
+            });
+        }
+        function not5(msg) {
+            notif({
+                type: "error",
+                msg: '<b>Error: </b> ' + msg + '',
+                position: "center",
+                width: 500,
+                height: 60,
+                autohide: false
+            });
+        }
+        function not6(msg) {
+            notif({
+                type: "warning",
+                msg: '' + msg + '',
+                position: "center",
+                opacity: 0.8
+            });
+        }
+        function not7(msg) {
+            notif({
+                type: "error",
+                msg: '<b> </b> ' + msg + '',
+                width: "all",
+                height: 100,
+                position: "center",
+                width: 500,
+                left: 210
+            });
+        }
+        function not8(msg) {
+            notif({
+                type: "error",
+                msg: '<b>Error: </b> ' + msg + '',
+                width: "all",
+                height: 300,
+                position: "center",
+                width: 1080,
+                left: 100
+            });
+        }
+        function not9(msg) {
+            notif({
+                type: "error",
+                msg: '' + msg + '',
+                width: "all",
+                height: 300,
+                position: "center",
+                width: 1080,
+                left: 100,
+                autohide: false,
+                linheight: 0
+            });
+        }
+        function FileUploadValidation() {
+            notif({
+                type: "error",
+                msg: '<b>Error: </b> ' + 'This file type is not supported. Please use: Jpeg, Tiff, Png ,Jpg, Bmp and system should allows this kind of files only. ' + '',
+                width: "all",
+                height: 300,
+                position: "center",
+                width: 1080,
+                left: 100
+            });
+        }
+        function InsertAlert() {
+            notif({
+                msg: '<b></b> ' + 'Your data has been added successfully.' + '',
+                type: "success",
+                position: "center",
+
+            });
+        }
+        function UpdateAlert() {
+            notif({
+                msg: '<b></b> ' + 'Your data has been modified successfully.' + '',
+                type: "success",
+                position: "center"
+            });
+        }
+        function DeleteAlert() {
+            notif({
+                msg: '<b></b> ' + 'Your data has been deleted successfully.' + '',
+                type: "success",
+                position: "center"
+            });
+        }
+        function AlreadyExistsAlert() {
+            notif({
+                msg: '<b></b> ' + 'Your data already exists.' + '',
+                type: "error",
+                position: "center"
+            });
+        }
+        function NotDeletedAlreadyexist() {
+            notif({
+                type: "error",
+                msg: '<b></b> ' + 'This item has lower level data associated with it. You cannot delete it until you have deleted all the associated data under it.' + '',
+                width: "all",
+                height: 100,
+                position: "center",
+                width: 800,
+                left: 210
+            });
+        }
+        function FromDateValidation() {
+            notif({
+                msg: '<b></b> ' + ' Please enter the from date.' + '',
+                type: "error",
+                position: "center"
+            });
+        }
+        function TodateValidation() {
+            notif({
+                msg: '<b></b> ' + ' Please enter the to date.' + '',
+                type: "error",
+                position: "center"
+            });
+        }
+        function ExportNotification() {
+            notif({
+                msg: '<b></b> ' + 'Please generate the report.' + '',
+                type: "error",
+                position: "center"
+            });
+        }
+        function longtext(msg) {
+            notif({
+                msg: '<b></b> ' + msg + '',
+                type: "success",
+
+                width: "all",
+                height: 100,
+                position: "center",
+                width: 800,
+                left: 210
+            });
+        }
+        function longtexterror(msg) {
+            notif({
+                msg: '<b></b> ' + msg + '',
+                type: "error",
+
+                width: "all",
+                height: 100,
+                position: "center",
+                width: 800,
+                left: 210
+            });
+        }
+    </script>
+</body>
+</html>

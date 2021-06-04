@@ -1,0 +1,698 @@
+﻿@model GsEPWv8_5_MVC.Model.IBRcvdDataUpdateModel
+
+@{
+    ViewBag.Title = "IBRcvdDataUpdate";
+    var l_int_tot_rec = Model.ListDocItemList.Count();
+    var l_str_cntr_type = Model.cntr_type;
+}
+
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+</style>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/plugins/jQueryUI/jquery-ui.js"></script>
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+
+<div id="showgrid" class="box-header" style="padding: 5px;border-radius: 5px;">
+    <div class="container" style="margin-left:0px; width:100%;">
+
+        <fieldset width="100%">
+            <legend>Document Update Header</legend>
+            <div class="container-fluid">
+                <table style="width:100%">
+                    .
+                    <tr class="col-xs-12" align="center">
+
+                        <td class="col-xs-1" align="right">
+                            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                Container ID
+                            </span>
+                        </td>
+
+                        <td class="col-xs-2" align="center">
+                            @Html.TextBoxFor(model => @Model.GetRcvdHdr[0].cntr_id, new { @class = "form-control txtlbl", @maxlength = "25", @id = "new_cntr_id", @style = "background-color:lightyellow;" })
+                        </td>
+
+                        <td class="col-xs-1" align="right">
+                            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                Container Type
+                            </span>
+                        </td>
+
+                        <td class="col-xs-1" align="center">
+                            @Html.DropDownListFor(model => model.cntr_type, new SelectList(Model.ListContainerType, "name", "description", l_str_cntr_type), new {  @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                        </td>
+
+
+                        <td class="col-xs-1" align="right">
+                            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                Ref ID
+                            </span>
+                        </td>
+
+                        <td class="col-xs-1" align="center">
+                            @Html.TextBoxFor(model => @Model.GetRcvdHdr[0].ref_no, new { @class = "form-control txtlbl", @maxlength = "20", @id = "new_ref_no", @style = "background-color:lightyellow;" })
+                        </td>
+
+                        <td class="col-xs-1" align="right">
+                            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                Post Date
+                            </span>
+                        </td>
+                        @if (Model.doc_status_changed == "Y")
+                        {
+                            <td class="col-xs-1" align="center">
+                                @Html.TextBoxFor(model => @Model.GetRcvdHdr[0].rcvd_dt, new { placeholder = "MM/DD/YYYY", @disabled = "true",  @class = "form-control txtlbl", @id = "new_rcvd_dt", @maxlength = "10", @style = "background-color:lightyellow;" })
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col-xs-1" align="center">
+                                @Html.TextBoxFor(model => @Model.GetRcvdHdr[0].rcvd_dt, new { placeholder = "MM/DD/YYYY", @class = "form-control txtlbl", @id = "new_rcvd_dt", @maxlength = "10", @style = "background-color:lightyellow;" })
+                            </td>
+
+                        }
+                        
+                        <td class="col-xs-1" align="right">
+                            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                Exclude I/O Bill @Html.CheckBoxFor(model => model.excld_bill)
+                            </span>
+                        </td>
+
+                       
+                      
+
+                        <td class="col-xs-1" align="center">
+                            <label for="chkSaveHdr" style="font-size:12px;">
+                                <input type="checkbox" id="chkSaveHdr" />
+                                Save Header details
+                            </label>
+                        </td>
+                        <td class="col-xs-1" align="left">
+                            <button type="button" id="btnSave" class="btn_NewEntry" style="width:100px">Save</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br />
+        </fieldset>
+    </div> 
+        
+    <hr class="break" />
+    <fieldset width="100%">
+        <legend>Document Update Details</legend>
+        <div class="container-fluid">
+            <div class="box-body">
+                <table id="grd_ib_rcvd_data_update" class="table table-bordered table-striped" style="table-layout:fixed; width:100%;">
+
+                    <thead class="grid_backcolor">
+                        <tr>
+                            <th class="grid_header_backcolor col-xs-1"><input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" />SelectAll</th>
+                            <th class="grid_header_backcolor col-xs-1">Item Code</th>
+                            <th class="grid_header_backcolor col-xs-2">Style</th>
+                            <th class="grid_header_backcolor col-xs-1">Color</th>
+                            <th class="grid_header_backcolor col-xs-1">Size</th>
+                            <th class="grid_header_backcolor col-xs-2">Item Name</th>
+                            <th class="grid_header_backcolor col-xs-1">Length</th>
+                            <th class="grid_header_backcolor col-xs-1">Width</th>
+                            <th class="grid_header_backcolor col-xs-1">Height</th>
+                            <th class="grid_header_backcolor col-xs-1">CalcCube</th>
+                            <th class="grid_header_backcolor col-xs-1">Cube</th>
+                            <th class="grid_header_backcolor col-xs-1">Weight</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody style="width:100%;">
+
+                        @for (int i = 0; i < Model.ListDocItemList.Count; i++)
+                    {
+                        int line = i + 1;
+                        var cmpid = @Model.ListDocItemList[i].cmp_id;
+
+                    <tr id="grdRow_@i" class="row-select" style="width:100%;">
+                        <td class="col-xs-1" style="text-align:center">
+                            <input class="checkbox" id="chkdd_@i" name="tblcheckboxItemCode" type="checkbox" value="@Model.ListDocItemList[i].itm_code" />
+                        </td>
+
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_code, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "10", @id = "itm_code_" + i, @style = "background-color:white;" })
+                        </td>
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_num, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "itm_num_" + i, @style = "background-color:lightyellow;" })
+                        </td>
+
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_color, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "itm_color_" + i, @style = "background-color:lightyellow;" })
+                        </td>
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_size, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "itm_size_" + i, @style = "background-color:lightyellow;" })
+                        </td>
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].itm_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "75", @id = "itm_name_" + i, @style = "background-color:lightyellow;" })
+                        </td>
+
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].length, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "length_" + i,  @style = "background-color:lightyellow;" })
+                        </td>
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].width, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "width_" + i, @style = "background-color:lightyellow;" })
+                        </td>
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].depth, new { @class = "form-control txtlbl CubeCalc two-decimals", @maxlength = "10", @id = "depth_" + i, @style = "background-color:lightyellow;", @data = @line })
+                        </td>
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            <a href="javascript:void(0);" class="btn btn-primary small btnCalcCube" style="color: white;height: 25px;width: 120px; border-radius: 5px;font-size: 12px;font-family: bold;padding-top: 5px; background-color:#ff9966" data = @i >Calc Cube</a>
+                        </td>
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].cube, new { @class = "form-control txtlbl three-decimals", @maxlength = "10", @id = "cube_" + i, @style = "background-color:lightyellow;" })
+                        </td>
+                        <td class="col-xs-1" style="color:black; font-size:12px">
+                            @Html.TextBoxFor(model => @Model.ListDocItemList[i].wgt, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "wgt_" + i, @style = "background-color:lightyellow;" })
+                        </td>
+
+                    </tr>
+                    }
+                    </tbody>
+                </table>
+                @Html.Hidden("h_int_tot_rec", l_int_tot_rec)
+                
+            </div>
+           
+        </div>
+    </fieldset>
+</div>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+<script type="text/javascript">
+    debugger
+   
+$("#btnSearch").click(function () {
+        debugger
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please select the Company Id", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ib_doc_id = $('#ib_doc_id').val();
+            var p_str_cntr_id = $('#cont_id').val();
+          
+           
+            
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: "/IBRcvdDataUpdate/GetIBRcvdDataUpdate",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_cntr_id": p_str_cntr_id
+                },
+                dataType: 'html',
+                success: function (e) {
+
+                    if (e == 2) {
+                        swal("", "Record Not Found.", "");
+                        $('#ib_doc_id').focus();
+                        $("#RecvajaxLoading").hide();
+                        $('body,html').animate({ scrollTop: 0 }, 0);
+                        er = 1;
+                        return false;
+                    }
+                    else {
+                    debugger
+                    $("#ajaxLoading").hide();
+                    $('#showgrid').html("");
+                    $('#showgrid').html(e);
+                    }
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();         
+                    swal("Dynamic content load failed.");
+                }
+            })
+
+        }
+});
+
+$("btnClear").each(function () {
+    $(this).val("");
+});
+
+$(function () {
+    $('#grd_ib_rcvd_data_update tbody').on('click', '.btnCalcCube', function () {
+        debugger
+        var $buttonClicked = $(this);
+        var l_int_cur_row = $buttonClicked.attr('data');
+        var l_int_cur_line = parseFloat(l_int_cur_row) ;
+        var l_dec_length = $("#length_" + l_int_cur_line).val();
+        var l_dec_width = $("#width_" + l_int_cur_line).val();
+        var l_dec_depth = $("#depth_" + l_int_cur_line).val();
+        if (l_dec_length == 0)
+        {
+            sweetAlert("", "Please enter the Length for the current line", "");
+            return false;
+        }
+        if (l_dec_width == 0) {
+            sweetAlert("", "Please enter the Width for the current line", "");
+            return false;
+        }
+        if (l_dec_depth == 0) {
+            sweetAlert("", "Please enter the Depth for the current line", "");
+            return false;
+        }
+        if ((l_dec_length < 2) || (l_dec_width < 2) || (l_dec_depth < 2))
+        {
+            sweetAlert("", "Dimension L/W/B should be greater than 0.5 ", "");
+            return false;
+        }
+        //if (parseFloat(l_dec_length) > 0 && parseFloat(l_dec_width) > 0 && parseFloat(l_dec_depth) > 0)
+                $("#cube_" + l_int_cur_line).val((l_dec_length * l_dec_width * l_dec_depth)  / 1728);
+                $("#cube_" + l_int_cur_line).val(parseFloat($("#cube_" + l_int_cur_line).val()).toFixed(3));
+       });
+});
+
+
+
+function change(el) {
+    if (el.value === "(Click to hide...)")
+        el.value = "(Click to show...)";
+    else
+        el.value = "(Click to hide...)";
+}
+
+
+$('#new_rcvd_dt').datetimepicker({
+    timepicker: false,
+    step: 15, format: 'm-d-Y'
+});
+
+$(".two-decimals").change(function () {
+    this.value = parseFloat(this.value).toFixed(2);
+    if (this.value == 'NaN') {
+        $('#ctn_qty').val(0);
+    }
+});
+$(".three-decimals").change(function () {
+    this.value = parseFloat(this.value).toFixed(3);
+    if (this.value == 'NaN') {
+
+        $("#doccube").val(0);
+        return false;
+    }
+});
+
+$(document).ready(function () {
+    $('.attribute').click(function () {
+    });
+
+});
+
+
+
+$("input[name=chkAll").click(function () {
+    if ($(this).prop("checked") == true) {
+
+        $("input[name='tblcheckboxItemCode']").prop("checked", true);
+    }
+    else if ($(this).prop("checked") == false) {
+
+        $("input[name='tblcheckboxItemCode']").prop("checked", false);
+    }
+
+});
+
+
+
+$("input[name='tblcheckboxItemCode']").click(function () {
+
+    if ($("input[name='tblcheckboxItemCode']").length == $("input[name='tblcheckboxItemCode']:checked").length) {
+        $("#chkAll").prop("checked", true);
+    }
+    else {
+        $("#chkAll").prop("checked", false);
+    }
+
+});
+$("input[name='tblcheckbox']").on('change', function () {
+    $("input[name='tblcheckboxItemCode']").not(this).prop('checked', false);
+});
+
+</script>
+<script>
+
+    $('#chkSelectAll').click(function (event) {
+        if ($(this).is(":checked")) {
+            $('.checkbox').each(function () {
+                $(this).prop("checked", true);
+            });
+        }
+        else {
+            $('.checkbox').each(function () {
+                $(this).prop("checked", false);
+            });
+        }
+    });
+</script>
+
+<script>
+    $("#btnSave").click(function () {
+        debugger;
+    
+        var checkboxIDArray = [];
+        var SelectedRow = [];
+       
+        var numberOfCheckboxes = $("input[name='tblcheckboxItemCode']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            sweetAlert("", "Please select the Record to Update Data", "");
+        }
+        else {
+            var objRcvdDataUpdateHdr = {};
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ib_doc_id = $('#ib_doc_id').val();
+            var p_str_cntr_id = $('#new_cntr_id').val();
+            var p_str_ref_no = $('#new_ref_no').val();
+            var p_str_rcvd_dt = $('#new_rcvd_dt').val();
+            var p_str_cntr_type = $('#cntr_type').val();
+          
+            var todaysDate = new Date();
+           
+
+            //if (p_str_rcvd_dt > todaysDate)
+            //{
+            //    swal("", "Receive Post Date can not be greater than system date", "");
+            //    $('#new_rcvd_dt').focus();
+            //    $('body,html').animate({ scrollTop: 0 }, 0);
+            //    er = 1;
+            //    return false;
+            //}
+
+           
+            if (p_str_cmp_id == "") {
+                swal("", "Please Select The Company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+            if (p_str_ib_doc_id == "") {
+                sweetAlert("", "Please Enter the IB Doc Id", "");
+                $('#ib_doc_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+            if (p_str_cntr_id == "") {
+                sweetAlert("", "Please Enter the Container Id", "");
+                $('#new_cntr_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+            if (p_str_ref_no == "") {
+                sweetAlert("", "Please Enter the Reference Number", "");
+                $('#new_ref_no').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+
+            if (p_str_rcvd_dt == "") {
+                sweetAlert("", "Please Enter the Received Date", "");
+                $('#new_rcvd_dt').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+            objRcvdDataUpdateHdr.cmp_id = p_str_cmp_id;
+            objRcvdDataUpdateHdr.ib_doc_id = p_str_ib_doc_id;
+            objRcvdDataUpdateHdr.ref_no = p_str_ref_no;
+            objRcvdDataUpdateHdr.cntr_id = p_str_cntr_id;
+            objRcvdDataUpdateHdr.rcvd_dt = p_str_rcvd_dt;
+            //objRcvdDataUpdateHdr.cntr_type = p_str_cntr_type;
+            var chk_excld_bill = document.getElementById("excld_bill");
+            var p_bln_excld_bill;
+            if (chk_excld_bill.checked) {
+                p_bln_excld_bill = 'true';
+            }
+            else {
+                p_bln_excld_bill = 'false';
+            }
+           
+
+            $("input[name='tblcheckboxItemCode']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    SelectedRow.push(check.val());
+                }
+            });
+
+            var l_str_sel_itm_code = '';
+            $.each(SelectedRow, function (i, v) {
+
+                if (l_str_sel_itm_code == '')
+                    l_str_sel_itm_code = v;
+                else
+                    l_str_sel_itm_code = l_str_sel_itm_code + ',' + v;
+            }
+            );
+            var p_str_so_list = l_str_sel_itm_code;
+           
+            debugger;
+            var l_int_tot_rec = $("#h_int_tot_rec").val();
+            var ItemDetails = new Array();
+            debugger
+
+
+            for (var i = 0; i < l_int_tot_rec; i++) {
+                debugger
+                var l_itm_code = $("#itm_code_" + i).val();
+                if (SelectedRow.indexOf(l_itm_code) > -1) {
+
+                    var l_cmp_id = $('#cmp_id').val();
+                    var l_ib_doc_id = $('#ib_doc_id').val();
+                    var l_itm_num = $("#itm_num_" + i).val();
+                    var l_itm_color = $("#itm_color_" + i).val();
+                    var l_itm_size = $("#itm_size_" + i).val();
+                    var l_itm_name = $("#itm_name_" + i).val();
+                    var l_length = $("#length_" + i).val();
+                    var l_width = $("#width_" + i).val();
+                    var l_depth = $("#depth_" + i).val();
+                    var l_cube = $("#cube_" + i).val();
+                    var l_wgt = $("#wgt_" + i).val();
+                    var ItemDetail = {};
+                    ItemDetail.cmp_id = l_cmp_id;
+                    ItemDetail.ib_doc_id = l_ib_doc_id;
+                    ItemDetail.itm_code = l_itm_code;
+                    ItemDetail.itm_num = l_itm_num;
+                    ItemDetail.itm_color = l_itm_color;
+                    ItemDetail.itm_size = l_itm_size;
+                    ItemDetail.itm_name = l_itm_name;
+                    ItemDetail.length = l_length;
+                    ItemDetail.width = l_width;
+                    ItemDetail.depth = l_depth;
+                    ItemDetail.cube = l_cube;
+                    ItemDetail.wgt = l_wgt;
+                    ItemDetails.push(ItemDetail);
+                }
+            }
+            var Count = $("input[name='tblcheckboxItemCode']:checked").length;
+            if (Count > 0) {
+                debugger;
+              
+                var chkSaveHdr = document.getElementById("chkSaveHdr");
+                var p_str_save_hdr;
+                if (chkSaveHdr.checked)
+                {
+                    p_str_save_hdr ='Y'
+                }
+                else
+                {
+                    p_str_save_hdr = 'N'
+                }
+
+             
+
+                var p_str_cmp_id = $('#cmp_id').val();
+                $("#ajaxLoading").show();
+
+
+                    $.ajax({
+                    type: "POST",
+                    url: '/IBRcvdDataUpdate/SaveIBRcvdData',
+                    data: JSON.stringify({
+                        objRcvdDataUpdateHdr: objRcvdDataUpdateHdr, ItemDetails: ItemDetails,
+                        "p_str_save_hdr": p_str_save_hdr, "p_str_cntr_type": p_str_cntr_type, "p_bln_excld_bill": p_bln_excld_bill
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (e) {
+                        $("#ajaxLoading").hide();
+
+                        if (e > 0) {
+
+                            if (e == 1) {
+                                swal({
+                                    title: "",
+                                    text: "Record Already allocated/Shipped and Received date is greater than Document date Can not change Received date",
+                                    type: "",
+                                    showCancelButton: false,
+                                    confirmButtonClass: "btn-danger",
+                                    confirmButtonText: "Ok",
+                                    closeOnConfirm: true
+                                });
+                            }
+                            if (e == 2) {
+                                swal({
+                                    title: "",
+                                    text: "Document Already allocated/Shipped Can not change Received date ",
+                                    type: "",
+                                    showCancelButton: false,
+                                    confirmButtonClass: "btn-danger",
+                                    confirmButtonText: "Ok",
+                                    closeOnConfirm: true
+                                });
+                            }
+
+                            if (e == 3) {
+                                swal({
+                                    title: "",
+                                    text: "Received date should be greater than Document date and less than or equal to system date",
+                                    type: "",
+                                    showCancelButton: false,
+                                    confirmButtonClass: "btn-danger",
+                                    confirmButtonText: "Ok",
+                                    closeOnConfirm: true
+                                });
+                            }
+                        }
+
+                        else {
+                            debugger
+                            swal({
+                                title: "",
+                                text: "Inbound Recevid Data updated successfully.",
+                                type: "",
+                                showCancelButton: false,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "Ok",
+                                closeOnConfirm: true
+                            },
+
+                            function () {
+                                debugger
+                                $("#ajaxLoading").hide();
+                                $('#showgrid').html("");
+                                $('#showgrid').html(e);
+
+                            });
+
+                        }
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+            }
+        }
+
+    });
+
+</script>
+

@@ -1,0 +1,394 @@
+﻿
+@model GsEPWv8_5_MVC.Model.ClsEcomLinkModel
+@{
+    ViewBag.Title = "Ecom Order Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+</style>
+<style>
+    fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+@Html.HiddenFor(model => model.objCustEcomLinkHdr.cmp_id, new { @id = "g_str_tmp_cmp_id" })
+@Html.HiddenFor(model => model.objCustEcomLinkHdr.cmp_id, new { @id = "cmb_v_cmp_id" })
+@using (Html.BeginForm("EcomGetAPI", "EcomLink", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    Ecom Order Management
+                </td>
+
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;">
+        <img src="~/Images/ajax-loader.gif" />
+    </div>
+
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <div>
+            <br />
+            <table style="width:100%;padding-top:5px;">
+                <tr>
+                    <td style="text-align: right;width:5%">
+                        <label><b class="Lblmanual">Company</b></label>
+                    </td>
+                    <td style="width: 38%; padding-left: 1%;">
+                        @if (Model.cmp_id == "" || Model.cmp_id == null)
+                        {
+                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                        }
+                    </td>
+                    
+                <tr>
+
+                    <td></td>
+                </tr>
+
+            </table>
+
+            <br />
+        </div>
+
+    </div>
+
+    <div id="ShowDashboard" class="box-header" style="padding: 5px;text-align:center ">
+        <table style="width:100%">
+            <tr>
+                <td style="width: 10%"></td>
+                <td colspan="3">
+
+                    <center>
+                        <table style="width:100%">
+                            <tr>
+
+                                <td style="width:395px;">
+                                    <div>
+                                        <!-- small box -->
+                                        <div class="small-box " style="height: 230px;border: 1px solid #3a7fe6;">
+                                            <div class="inner" style="padding:10px 10px 0px 10px;background-color: #6A0888;border-bottom: 1px solid #3a7fe6;">
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 333px;">
+                                                            <p class="dashboardhdr" style="color:white;">Item master Upload</p>
+                                                        </td>
+                                                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                            <img src="~/Images/ItmUpload.jpg" width="40" height="40" style="margin-top: -17px;" />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <table id="exampl" class="table  table-striped">
+                                                    <tbody></tbody>
+                                                    <tr>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            Select XML/Json Item file to upload
+                                                            <a href="javascript:void(0);" style="text-decoration:underline; color: orange;" class="ItemUpload" data-id="@Model.cmp_id">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding-left: 10px;width:405px;">
+                                    <div>
+                                        <div class="small-box " style="height: 230px;border: 1px solid #3a7fe6;">
+                                            <div class="inner" style="padding:10px 10px 0px 10px;background-color: #8A0868;border-bottom: 1px solid #3a7fe6;">
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 333px;">
+                                                            <p class="dashboardhdr" style="color:white;">Item Inventory Upload</p>
+                                                        </td>
+                                                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                            <img src="~/Images/InventoryUpload.jpg" width="40" height="40" style="margin-top: -17px;" />
+                                                        </td>
+                                                    </tr>
+
+                                                </table>
+                                                <table id="exampl" class="table  table-striped">
+                                                    <tbody></tbody>
+                                                    <tr>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            Select XML/Json Inventory file to upload
+                                                            <a href="javascript:void(0);" style="text-decoration:underline; color: orange;" class="InventoryUpload" data-id="@Model.cmp_id">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td style="padding-left: 10px;width:405px;">
+                                    <div>
+                                        <div class="small-box " style="height: 230px;border: 1px solid #3a7fe6;">
+                                            <div class="inner" style="padding:10px 10px 0px 10px;background-color: #8A0829;border-bottom: 1px solid #3a7fe6;">
+                                                <table>
+                                                    <tr>
+                                                        <td style="width:333px;">
+                                                            <p class="dashboardhdr" style="color:white;">Order Download</p>
+                                                        </td>
+                                                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                            <img src="~/Images/ItmDownload.jpg" width="40" height="40" style="margin-top: -17px;" />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                                <tr>
+
+                                    <td style="width:395px;">
+
+                                        <div class="small-box " style="height: 200px;border: 1px solid #3a7fe6;">
+                                            <div class="inner" style="padding:10px 10px 0px 10px;background-color: #DF7401;border-bottom: 1px solid #3a7fe6;">
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 333px;">
+                                                            <p class="dashboardhdr" style="color:white;">Order Accept Upload</p>
+                                                        </td>
+                                                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                            <img src="~/Images/AcceptOrder.jpg" width="40" height="40" style="margin-top: -17px;" />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+
+                                    <td style="padding-left: 10px;width:405px;">
+                                        <div class="small-box " style="height: 200px;border: 1px solid #3a7fe6;">
+                                            <div class="inner" style="padding:10px 10px 0px 10px;background-color: #088A08;border-bottom: 1px solid #3a7fe6;">
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 333px;">
+                                                            <p class="dashboardhdr" style="color:white;">Order Docs (LABELS / Packing Slip) Download</p>
+                                                        </td>
+                                                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                            <img src="~/Images/PackingSlip.jpg" width="40" height="40" style="margin-top: -17px;" />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+
+                                        </div>
+
+
+                                    </td>
+                                    <td style="padding-left: 10px;width:405px;">
+                                        <div>
+                                            <div class="small-box " style="height: 200px;border: 1px solid #3a7fe6;">
+                                                <div class="inner" style="padding:10px 10px 0px 10px;background-color: #0B6121;border-bottom: 1px solid #3a7fe6;">
+                                                    <table>
+                                                        <tr>
+                                                            <td style="width: 333px;">
+                                                                <p class="dashboardhdr" style="color:white;">Order Ship Confirmation and Ship Track# upload</p>
+                                                            </td>
+                                                            <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                                <img src="~/Images/ShipTrack.jpg" width="40" height="40" style="margin-top: -17px;" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            
+                            <tr>
+
+                                <td style="width:395px;">
+
+                                    <div class="small-box " style="height: 200px;border: 1px solid #3a7fe6;">
+                                        <div class="inner" style="padding:10px 10px 0px 10px;background-color: cornflowerblue;border-bottom: 1px solid #3a7fe6;">
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 333px;">
+                                                        <p class="dashboardhdr" style="color:white;">Order Invoice Upload </p>
+                                                    </td>
+                                                    <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                        <img src="~/Images/OrderInvoice.jpg" width="40" height="40" style="margin-top: -17px;" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
+                                </td>
+                                </tr>
+
+</table>
+
+                    </center>
+
+
+                </td>
+                <td style="width: 10%"></td>
+
+            </tr>
+
+        </table>
+    </div>
+    <div id='modelUpload' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 250%; left:-365px;">
+                <div id='modelUploadContent' style="width: 100%; height: 650px;"></div>
+            </div>
+        </div>
+
+    </div>
+}
+
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+
+   
+
+    $("#btnClose").click(function () {
+        var p_str_cmp_id = $('#cmb_v_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+    })
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmp_id = $('#cmb_v_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+        window.location.href = url;
+
+    })
+    
+
+    var pstrCmpId = $("#g_str_tmp_cmp_id").val();
+    var urlItemUpload = '/EcomLink/EcomItemUpload';
+    $(function () {
+        $(".ItemUpload").click(function () {
+            debugger
+            var $buttonClicked = $(this);
+             var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+
+
+            $.ajax({
+                type: "GET",
+                url: urlItemUpload,
+                contentType: "application/json; charset=utf-8",
+                data: { "pstrCmpId": pstrCmpId },
+                datatype: "json",
+                success: function (data) {
+                    $('#modelUploadContent').html(data);
+                    $('#modelUpload').modal(options);
+                    $('#modelUpload').modal('show');
+                    $("#ajaxLoading").hide();
+
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();  
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+    });
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+
+

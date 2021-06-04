@@ -1,0 +1,158 @@
+﻿
+
+
+@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+
+@{
+    var Ordercount = Model.lstBillVASList.Count;
+    decimal l_dec_tot_bill_amnt = 0;
+}
+
+@Html.HiddenFor(model => model.tot_inv_strg_amnt, new { @id = "p_strr_cmpid" })
+
+@for (int j = 0; j < Model.lstBillVASList.Count(); j++)
+{
+    var bill_amt = (Model.lstBillVASList[j].total_price);
+    decimal l_dec_bill_amnt = bill_amt;
+    if (l_dec_bill_amnt > 0)
+    {
+        l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+    }
+}
+<div class="box-body">
+    <div class="row">
+        <table>
+            <tr>
+                <td style="width:10%;">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Records:
+                    </span>
+                </td>
+                <td style="width: 10%;">
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </td>
+                <td>
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Invoice Amount:
+                    </span>
+                </td>
+                <td style="width: 64%;">
+                    <label class="totalCount" style="text-align:left">
+                        $ @l_dec_tot_bill_amnt.ToString("0.00")
+                    </label>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <table id="GrdConsolePartialVasBillingInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="font-size:11px;width:3%;">Select All<input class="checkbox" id="tblCheckAll" name="tblcheckboxselect" type="checkbox" /></th>  
+                <th class="grid_header_backcolor" style="font-size:11px;width:8%;display:none">CmpId</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:8%;display:none">CustId</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">VASID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:12%;">VAS Date</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%;display:none">Status</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">WareHouseID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Customer</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">PONo</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:12%;">SONo</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">TotalActivities</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">TotalPrice</th>
+            </tr>
+        </thead>
+        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+            @for (int i = 0; i < Model.lstBillVASList.Count; i++)
+            {
+                var bill_amt = (Model.lstBillVASList[i].total_price);
+                decimal l_dec_bill_amnt = bill_amt;
+                var tot_amnt = l_dec_bill_amnt.ToString("F2");
+
+                <tr style="background-color:white;">
+                    <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox3" type="checkbox" value="@Model.lstBillVASList[i].ship_doc_id" /></td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none">@Model.lstBillVASList[i].cmp_id</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none">@Model.lstBillVASList[i].cust_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="VasDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.lstBillVASList[i].ship_doc_id">@Model.lstBillVASList[i].ship_doc_id</a></td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.lstBillVASList[i].ship_dt</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none">@Model.lstBillVASList[i].vas_status</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.lstBillVASList[i].whs_id</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.lstBillVASList[i].ship_to</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.lstBillVASList[i].po_num</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.lstBillVASList[i].so_num</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@Model.lstBillVASList[i].total_activities</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@tot_amnt</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+<script>
+    $(function () {
+        $('#GrdConsolePartialVasBillingInq').DataTable({
+            'paging': false,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': true,
+            'info': false,
+            'autoWidth': false,
+        });
+    })
+</script>
+<script>
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackURL = '/BillingInquiry/VasDetail';
+    $(function () {
+        $('#GrdConsolePartialVasBillingInq tbody').on('click', '.VasDetail', function ()
+        {
+
+            var $buttonClicked = $(this);
+            var VasId = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "VasId": VasId, "cmp_id": cmp_id },
+                datatype: "json",
+                success: function (data) {
+                    $('#myVASContent').html(data);
+                    $('#VasModal').modal(options);
+                    $('#VasModal').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+<script>
+    $('#tblCheckAll').click(function (event) {
+            if ($(this).is(":checked")) {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+</script>

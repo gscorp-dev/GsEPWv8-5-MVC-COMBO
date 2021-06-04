@@ -1,0 +1,595 @@
+﻿@model GsEPWv8_5_MVC.Model.ClsOBAlocEditModel
+@{
+
+}
+<style>
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style>
+    div.scrollmenu {
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+        div.scrollmenu a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+        }
+
+            div.scrollmenu a:hover {
+                background-color: #777;
+            }
+
+    .btn-AlocEdit {
+        /*background-color: #64afef;*/
+        background-color: #ff6767;
+        height: 30px;
+        width: 150px;
+        border-radius: 7px;
+        font-size: 16px;
+        font-family: bold;
+        color: white;
+    }
+
+        .btn-AlocEdit:hover {
+            color: #fff;
+            background: #fff;
+            background-color: rgb(255, 255, 255);
+            background-color: rgb(17, 88, 233);
+            -moz-box-shadow: 0px 0px 15px 0px #ff0000;
+            -webkit-box-shadow: 0px 0px 15px 0px #0fcff8;
+            box-shadow: 0px 0px 15px 0px #0054ff;
+        }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+<style type="text/css">
+    div#ajaxLoadingAloc {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+
+
+<center>
+    <hr />
+    <div id="ajaxLoadingEdit" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="modal-header">
+
+
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Allocation Entry - Modify</h4>
+        <button type="button" id="btnAlocEditClose" class="btn-Close" style="float:right;margin-top: -18px">Close</button>
+        <button type="button" id="btnAlocEditSave" class="btn-Close" style="float:right;margin-top: -18px;background-color: #e38a2f">Save </button>
+
+    </div>
+    <hr />
+    <div id="childtabsAloc">
+        <ul>
+            <li><a href="#childtabsAloc-1" style="font-size:12px;">Alocation Header and Detail</a> </li>
+            <li><a href="#childtabsAloc-2" style="font-size:12px;">Alocation Edit</a></li>
+            <li><a href="#childtabsAloc-3" style="font-size:12px;">Alocation Ctn Summary</a></li>
+        </ul>
+
+            <div id="childtabsAloc-1">
+
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="col-xs-1" text-align right;">
+                                    <label class="Lblmanual">Cmp Id</label>
+                                </div>
+                                <div class="col-xs-5">
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "ae_cmp_id", @disabled = "true", @class = "form-control txtlbl", @style = "background-color:lightyellow;" })
+                                </div>
+
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">SR#</label>
+                                </div>
+
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.sr_no, new { @id = "ae_sr_no", @disabled = "true", @class = "form-control txtlbl", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">SR Date</label>
+                                </div>
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.so_dt, new { @id = "ae_so_dt", @class = "form-control txtlbl", @disabled = "true", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Alloc#</label>
+                                </div>
+
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.aloc_doc_id, new { @id = "ae_aloc_doc_id", @disabled = "true", @class = "form-control txtlbl", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Alloc Date</label>
+                                </div>
+
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.aloc_dt, new { @id = "ae_aloc_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Ship Date</label>
+                                </div>
+
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.ship_dt, new { @id = "ae_ship_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">CancelDate</label>
+                                </div>
+
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.cancel_dt, new { @id = "ae_cancel_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Price Ticket</label>
+                                </div>
+                                <div class="col-xs-1">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.price_tkt, new { @id = "ae_price_tkt", @class = "form-control txtlbl", @maxlength = "1", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Cust Id</label>
+                                </div>
+                                <div class="col-xs-1">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.cust_id, new { @id = "ae_cust_id", @class = "form-control txtlbl", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.cust_name, new { @id = "ae_cust_name", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Cust Order#</label>
+                                </div>
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.cust_ordr_num, new { @id = "ae_cust_ordr_num", @class = "form-control txtlbl", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Order Dt</label>
+                                </div>
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.cust_ordr_dt, new { @id = "ae_cust_ordr_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+
+
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Ship To</label>
+                                </div>
+                                <div class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.ship_to_id, new { @id = "ae_ship_to_id", @class = "form-control txtlbl", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-3">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.ship_to_name, new { @id = "ae_ship_to_name", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right;">
+                                    <label class="Lblmanual">Note</label>
+                                </div>
+                                <div class="col-xs-5">
+                                    @Html.TextBoxFor(model => model.objOBAlocHdr.note, new { @id = "ae_note", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+
+                <div id="divAlocSummary" class="box-header" style="padding:4px;margin-top: -1%; width:auto">
+                    <div>
+                        <table id="grdAlocSmryEdit" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                            <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+                                <tr>
+                                    <th class="grid_header_backcolor">Edit</th>
+                                    <th class="grid_header_backcolor">Line#</th>
+                                    <th style="display:none;">SR Line#</th>
+                                    <th class="grid_header_backcolor">Style</th>
+                                    <th class="grid_header_backcolor">Color</th>
+                                    <th class="grid_header_backcolor">Size</th>
+                                    @*<th class="grid_header_backcolor" >ItemName</th>*@
+                                    <th class="grid_header_backcolor">SR Qty</th>
+                                    <th class="grid_header_backcolor">Aloc Qty</th>
+                                    <th class="grid_header_backcolor">B/O qty</th>
+                                </tr>
+                            </thead>
+                            <tbody style="display:block; max-height:500px; overflow-y:scroll;">
+                                @for (int i = 0; i < Model.lstOBAlocSmry.Count; i++)
+                                {
+                                    <tr style="background-color:white;display:table; width:100%; table-layout:fixed;">
+                                        <td style="font-size:12px; color:black; font-weight:bold;text-align:center;">
+                                            <a href="javascript:void(0);" class="btn btn-primary small linkAlocLineEdit" style="color: white;height: 17px;width: 44px; border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;"
+                                               aed_str_cmp_id="@Model.lstOBAlocSmry[i].cmp_id" aed_aloc_doc_id="@Model.lstOBAlocSmry[i].aloc_doc_id"
+                                               aed_so_no="@Model.lstOBAlocSmry[i].so_num" aed_line_num="@Model.lstOBAlocSmry[i].line_num"
+                                               aed_so_line_num="@Model.lstOBAlocSmry[i].so_dtl_line"
+                                               c_adj_str_due_qty="@Model.lstOBAlocSmry[i].due_qty"
+                                               c_adj_str_itm_num="@Model.lstOBAlocSmry[i].itm_num" c_adj_str_itm_color="@Model.lstOBAlocSmry[i].itm_color"
+                                               c_adj_str_itm_size="@Model.lstOBAlocSmry[i].itm_size" c_adj_str_itm_code="@Model.lstOBAlocSmry[i].itm_code">Edit</a>
+                                        </td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.lstOBAlocSmry[i].line_num</td>
+                                        <td style="display:none;">@Model.lstOBAlocSmry[i].so_dtl_line</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.lstOBAlocSmry[i].itm_num</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.lstOBAlocSmry[i].itm_color</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.lstOBAlocSmry[i].itm_size</td>
+                                        @*<td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.lstOBAlocSmry[i].itm_name</td>*@
+                                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right;color:green;">@Model.lstOBAlocSmry[i].due_qty</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right;color:green;">@Model.lstOBAlocSmry[i].aloc_qty</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right;color:red;">@Model.lstOBAlocSmry[i].bo_qty</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-8"></div>
+                        <div class="col-xs-4">
+                            <button type="button" id="btnNext" class="btn-Clear" style="font-size: 13px;">Next>> </button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        <div id="childtabsAloc-2">
+            <div id="divAlocCtnLineEdit" class="box-header"></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-8"></div>
+                    <div class="col-xs-4">
+                        <button type="button" id="btn1Next" class="btn-Clear" style="font-size: 13px;">Next>> </button>
+                        <button type="button" id="btnback" class="btn_search" style="font-size: 13px;"><< Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div id="childtabsAloc-3">
+                <div id="divAlocCtnGrid" class="box-header">
+                    <div class="row">
+                        <div class="box box-primary">
+                            <h6><b style="font-size: 14px;color: mediumvioletred;">Allocation Details</b></h6>
+                            <table id="grdAlocDtlEdit" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                                <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+                                    <tr>
+                                        <th class="grid_header_backcolor">AlcLn</th>
+                                        <th class="grid_header_backcolor">Ctnln</th>
+                                        <th class="grid_header_backcolor">Style</th>
+                                        <th class="grid_header_backcolor">Color</th>
+                                        <th class="grid_header_backcolor">Size</th>
+                                        <th class="grid_header_backcolor">LocId</th>
+                                        <th class="grid_header_backcolor">PPK</th>
+                                        <th class="grid_header_backcolor">Ctn(s)</th>
+                                        <th class="grid_header_backcolor">Aloc Qty</th>
+                                        <th class="grid_header_backcolor">RcvdDt</th>
+                                        <th class="grid_header_backcolor">LotId</th>
+                                        <th class="grid_header_backcolor">Vendor PoNo</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody style="display:block; max-height:500px; overflow-y:scroll;">
+                                    @for (int i = 0; i < Model.lstOBAlocCtn.Count; i++)
+                                    {
+                                        <tr class="row-select" style="background-color:white;display:table; width:100%; table-layout:fixed;">
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].line_num</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;"> @Model.lstOBAlocCtn[i].ctn_line</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].itm_num</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].itm_color</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].itm_size</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].loc_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.lstOBAlocCtn[i].itm_qty</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Model.lstOBAlocCtn[i].ctn_cnt</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Model.lstOBAlocCtn[i].line_qty</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.lstOBAlocCtn[i].rcvd_dt.ToString("MM/dd/yyyy")</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].lot_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].po_num</td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-8"></div>
+                        <div class="col-xs-4">
+                            <button type="button" id="btn2back" class="btn_search" style="font-size: 13px;">Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+    </div>
+</center>
+
+
+<script type="text/javascript">
+
+    $("#btnAlocEditClose").click(function () {
+        var p_str_cmp_id = $("#ae_cmp_id").val();
+        var p_str_ShipReq_id = $('#ae_sr_no').val();
+        var p_str_AlocdocId = $("#ae_aloc_doc_id").val();
+
+        $("#ajaxLoadingAloc").show();
+
+        debugger
+        $('#myModalEdit').modal('hide');
+        $.ajax({
+            type: "get",
+            url: "/OutboundInq/GetOutboundInqDtl",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_so_num": p_str_ShipReq_id,
+                "p_str_AlocdocId": p_str_AlocdocId
+            },
+            datatype: 'html',
+            success: function (e) {
+                debugger
+                $("#ajaxLoadingAloc").hide();
+                $('#showgrid').html("");
+                $('#showgrid').html(e);
+            },
+        })
+
+    });
+
+    var urlAlocLineEdit = '/OBAllocation/getAlocCtnEditByLine';
+    $(function () {
+        $('#grdAlocSmryEdit tbody').on('click', '.linkAlocLineEdit', function () {
+            debugger
+            $("#ajaxLoadingEdit").show();
+            var $StockAdjButtonClicked = $(this);
+            var p_str_cmp_id = $StockAdjButtonClicked.attr('aed_str_cmp_id');
+            var p_str_aloc_doc_id = $StockAdjButtonClicked.attr('aed_aloc_doc_id');
+            var p_str_so_no = $StockAdjButtonClicked.attr('aed_so_no');
+
+            var p_str_line_num = $StockAdjButtonClicked.attr('aed_line_num');
+            var p_str_so_line_num = $StockAdjButtonClicked.attr('aed_so_line_num');
+
+            var p_str_itm_code = $StockAdjButtonClicked.attr('c_adj_str_itm_code');
+            var p_str_itm_num = $StockAdjButtonClicked.attr('c_adj_str_itm_num');
+            var p_str_itm_color = $StockAdjButtonClicked.attr('c_adj_str_itm_color');
+            var p_str_itm_size = $StockAdjButtonClicked.attr('c_adj_str_itm_size');
+            var p_str_due_qty = $StockAdjButtonClicked.attr('c_adj_str_due_qty');
+            debugger
+
+            $.ajax({
+                type: "GET",
+                url: urlAlocLineEdit,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_aloc_doc_id": p_str_aloc_doc_id, "p_str_so_no": p_str_so_no,
+                    "p_str_line_num": p_str_line_num, "p_str_so_line_num": p_str_so_line_num,
+                    "p_str_itm_code": p_str_itm_code, "p_str_itm_num": p_str_itm_num,
+                    "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_due_qty": p_str_due_qty
+                },
+                datatype: "html",
+                success: function (e) {
+                    $("#ajaxLoadingEdit").hide();
+                    $('#divAlocCtnLineEdit').html("");
+                    $('#divAlocCtnLineEdit').html(e);
+                    $('#divAlocCtnLineEdit').show();
+                    $("#childtabsAloc").tabs("option", "active", $("#childtabsAloc").tabs('option', 'active') + 1);
+                    $('#divAlocCtnGrid').hide();
+                    //$('#divAlocCtnGrid').toggle();
+                },
+                error: function () {
+                    $("#ajaxLoadingEdit").hide();
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $('#ae_aloc_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+    $('#ae_ship_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+    $('#ae_cancel_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+    $('#ae_cust_ordr_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+</script>
+
+<script>
+    $("#btnAlocEditSave").click(function () {
+        debugger
+        var pstrCmpId = $('#ae_cmp_id').val();
+        var pstrAlocDocId = $('#ae_aloc_doc_id').val();
+        var pstrSrNum = $('#ae_sr_no').val();
+        var pstrAlocDocDt = $('#ae_aloc_dt').val();
+        var pstrShipDt = $('#ae_ship_dt').val();
+        var pstrCancelDt = $('#ae_cancel_dt').val();
+        var pstrPriceTkt = $('#ae_price_tkt').val();
+        var pstrCustId = $('#ae_cust_id').val();
+        var pstrCustName = $('#ae_cust_name').val();
+        var pstrCustOrdrNum = $('#ae_cust_ordr_num').val();
+        var pstrCustOrdrDt = $('#ae_cust_ordr_dt').val();
+        var pstrNote = $('#ae_note').val();
+
+
+        $("#ajaxLoadingEdit").show();
+        $('#btnAlocEditClose').attr('disabled', 'disabled');
+
+
+        if (pstrAlocDocDt == "") {
+            sweetAlert("", "Please Enter Allocation Date ", "");
+            $('#ae_aloc_doc_id').focus();
+            $("#ajaxLoadingEdit").hide();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OBAllocation/SaveOBAlocEditHdr")',
+                data: {
+                    "pstrCmpId": pstrCmpId,
+                    "pstrAlocDocId": pstrAlocDocId,
+                    "pstrAlocDocDt": pstrAlocDocDt, "pstrSrNum": pstrSrNum,
+                    "pstrShipDt": pstrShipDt, "pstrCancelDt": pstrCancelDt, "pstrPriceTkt": pstrPriceTkt, "pstrCustId": pstrCustId,
+                    "pstrCustName": pstrCustName, "pstrCustOrdrNum": pstrCustOrdrNum, "pstrCustOrdrDt": pstrCustOrdrDt, "pstrNote": pstrNote
+                },
+                dataType: 'html',
+                success: function (e) {
+                    debugger
+                    if (e == 'true') {
+                        swal({
+                            title: "",
+                            text: "Aloc# " + pstrAlocDocId + " Updated  Successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                           function () {
+                               setTimeout(function () {
+                                   debugger
+
+                                   window.open('ShowAlocSaveReport?p_str_cmpid=' + pstrCmpId + '&p_str_Alocdocid=' + pstrAlocDocId + '&p_str_Sonum=' + pstrSrNum, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowAlocSaveReport')
+
+                                   $('#myModalEdit').modal('hide');
+                                   debugger
+                                   $.ajax({
+                                       type: "get",
+                                       url: "/OutboundInq/GetOutboundInqDtl",
+                                       data: {
+                                           "p_str_cmp_id": pstrCmpId,
+                                           "p_str_so_num": pstrSrNum,
+                                           "p_str_AlocdocId": pstrAlocDocId
+                                       },
+                                       datatype: 'html',
+                                       success: function (e) {
+                                           debugger
+                                           $("#ajaxLoadingEdit").hide();
+                                           $('#showgrid').html("");
+                                           $('#showgrid').html(e);
+                                           $('#btnAlocEditClose').removeAttr('disabled');
+                                          
+                                         
+                                       },
+                                   })
+
+                                   });
+                           });
+
+                    }
+                    else if (e == 'false') {
+                        sweetAlert("", "No Item is Allocated ,Can not Save.", "");
+                    }
+                },
+
+            })
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    $("#childtabsAloc").tabs({ active: 0 })
+
+    //$(document).ready(function () {
+    //    $("#childtabsAloc-2 :input").attr("disabled", true);
+    //});
+</script>
+
+<script>
+    $("#btnNext").click(function () {
+        debugger
+        $("#childtabsAloc").tabs("option", "active", $("#childtabsAloc").tabs('option', 'active') + 1);
+
+    });
+    $("#btnback").click(function () {
+        debugger
+        $("#childtabsAloc").tabs("option", "active", $("#childtabsAloc").tabs('option', 'active') - 1);
+
+    });
+    $("#btn1Next").click(function () {
+        debugger
+        $("#childtabsAloc").tabs("option", "active", $("#childtabsAloc").tabs('option', 'active') + 1);
+
+    });
+
+    $("#btn2back").click(function () {
+        debugger
+        $("#childtabsAloc").tabs("option", "active", $("#childtabsAloc").tabs('option', 'active') - 1);
+
+    });
+    $(function () {
+        $("#tabs").tabs();
+    });
+    $(function () {
+        $("#childtabsAloc").tabs();
+    });
+    
+
+
+</script>

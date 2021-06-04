@@ -1,0 +1,326 @@
+﻿@model GsEPWv8_5_MVC.Model.StockChangeModel
+
+@{
+    var Ordercount = Model.ListGetStockChangeDetails.Count;
+    var l_int_inv_amt = string.Empty;
+    int l_int_totctns = 0;
+    int l_int_totpcs = 0;
+}
+<style>
+    .ItemGridSummary {
+        height: 49px;
+        background: #d2d6de;
+        padding-top: 10px;
+    }
+</style>
+@for (int k = 0; k < Model.ListGetStockChangeDetails.Count(); k++)
+{
+    l_int_totctns = l_int_totctns + Model.ListGetStockChangeDetails[k].avail_cnt;
+    l_int_totpcs = l_int_totpcs + Model.ListGetStockChangeDetails[k].avail_qty;
+}
+<div class="box-body">
+    <div class="ItemGridSummary">
+        <table>
+            <tr>
+                <td style="width: 5%;"></td>
+                <td>
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                        Total Records:
+                    </span>
+                </td>
+                <td style="width: 22%;">
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </td>
+                <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-right: 10px;font-family:Verdana;">
+                    Total Ctns:
+                </td>
+                <td>
+                    <input type="text" value="@l_int_totctns" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red;width:152px" />
+                </td>
+                <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-left:30px;padding-right: 10px;font-family:Verdana;">
+                    Total Pcs:
+                </td>
+                <td>
+                    <input type="text" value="@l_int_totpcs" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red;width:152px " />
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <br />
+    <table id="GrdPartialStockChangeInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th></th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:3%;">IBDocID</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:7%;">ContID</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:8%;">Style</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:8%;">Color</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:4%;">Size</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:7%;">LotID</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:8%;">LocID</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:8%;">PaletID</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:7%;">PoNum</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:7%;">Ctns</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:6%;">Ppk</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:6%;">Pcs</th>
+                <th class="grid_header_backcolor" style="font-size:12px;font-weight:bold;width:20%;">Remarks</th>
+
+            </tr>
+        </thead>
+        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+            @for (int i = 0; i < Model.ListGetStockChangeDetails.Count; i++)
+            {
+                int line = i + 1;
+
+                <tr style="background-color:white;">
+                    @*<td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox3" type="checkbox" value="@Model.ListGetStockChangeDetails[i].ib_doc_id" /></td>*@
+                    <td>
+                        <a href="javascript:void(0);" style="font-size:12px; text-decoration:underline; color: red;" class="ItmMove" data-id="@Model.ListGetStockChangeDetails[i].cmp_id" data-id1="@Model.ListGetStockChangeDetails[i].itm_code" data-id2="@Model.ListGetStockChangeDetails[i].palet_id" data-id3="@Model.ListGetStockChangeDetails[i].po_num" data-id4="@Model.ListGetStockChangeDetails[i].loc_id"
+                           data-id5="@Model.ListGetStockChangeDetails[i].itm_num" data-id6="@Model.ListGetStockChangeDetails[i].itm_color" data-id7="@Model.ListGetStockChangeDetails[i].itm_size"><span style="font-size: 18px;"></span><b>ItemMove</b></a>
+                    </td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListGetStockChangeDetails[i].ib_doc_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListGetStockChangeDetails[i].cont_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListGetStockChangeDetails[i].itm_num</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListGetStockChangeDetails[i].itm_color</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListGetStockChangeDetails[i].itm_size</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListGetStockChangeDetails[i].lot_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListGetStockChangeDetails[i].loc_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListGetStockChangeDetails[i].palet_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.ListGetStockChangeDetails[i].po_num</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.ListGetStockChangeDetails[i].avail_cnt</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.ListGetStockChangeDetails[i].itm_qty</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.ListGetStockChangeDetails[i].avail_qty</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListGetStockChangeDetails[i].doc_notes</td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+<div id='myModalAdd' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%; left:-500px;">
+            <div id='myModalContentAdd' style="width: 100%; height: 1000px;"></div>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    $('#GrdPartialStockChangeInq').DataTable({
+        "paging": true,
+        "pageLength": 50,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        // "scrollY": "280px",
+        "scrollCollapse": true,
+        //true
+        //"sDom": 't',
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+    //  CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report
+
+    function BLStrgDetailExcel() {
+        debugger
+
+        //var p_str_cmp_id = $('#cust_id').val();
+        //var p_str_ib_doc_id = $('#ibdocid').val();
+        //var p_str_bill_doc_type = "INOUT";
+        //var p_str_rpt_status = "OPEN";
+        //var p_str_cust_id = "";
+        var type = "Excel"
+        var p_str_radio = "BillDocument";
+        var p_str_cmp_id = $('#cust_id').val();
+        //var p_str_Bill_doc_id = $('#bill_doc_id').val();
+        var p_str_Bill_type = $('STRG').val();
+        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+
+
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+
+
+        var numberOfCheckboxes = $("input[name='tblcheckbox3']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            sweetAlert("", "Please select the Record to Print.", "");
+        }
+
+        else {
+            $("input[name='tblcheckbox3']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    SelectedRow.push(check.val());
+
+
+                }
+            });
+            var Count = $("input[name='tblcheckbox3']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == '')
+                        SelectdID = v;
+                    else
+                        SelectdID = SelectdID + ',' + v;
+                });
+
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                //var SelectdID = $('#bill_doc_id').val();
+                var p_str_Bill_doc_id = SelectdID;
+                window.location.replace("/BillingInquiry/ShowReport?p_str_radio=" + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+            + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type)
+
+
+            }
+        }
+    }
+    //  CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report
+
+    function BLStrgDetailPDF() {
+        debugger
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+
+
+        var numberOfCheckboxes = $("input[name='tblcheckbox3']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            sweetAlert("", "Please select the Record to Print.", "");
+        }
+
+        else {
+            $("input[name='tblcheckbox3']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    SelectedRow.push(check.val());
+
+
+                }
+            });
+            var Count = $("input[name='tblcheckbox3']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == '')
+                        SelectdID = v;
+                    else
+                        SelectdID = SelectdID + ',' + v;
+                });
+
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+
+                var p_str_cmp_id = $('#cust_id').val();
+                var p_str_bill_doc_ids = SelectdID;
+                var p_str_bill_doc_type = "STRG";
+                var p_str_rpt_status = "OPEN";
+
+                window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill_doc_ids + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                    , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+
+
+            }
+        }
+    }
+
+
+    var TeamDetailPostBackAddURL = '/StockChange/ItemMove';
+    //$(".ItmMove").click(function () {
+    $('#GrdPartialStockChangeInq tbody').on('click', '.ItmMove', function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var p_str_cmpid = $buttonClicked.attr('data-id');
+        var p_str_itm_code = $buttonClicked.attr('data-id1');
+        var p_str_paletid = $buttonClicked.attr('data-id2');
+        var p_str_ponum = $buttonClicked.attr('data-id3');
+        var p_str_LocId = $buttonClicked.attr('data-id4');
+        var p_str_style = $buttonClicked.attr('data-id5');
+        var p_str_Color = $buttonClicked.attr('data-id6');
+        var p_str_Size = $buttonClicked.attr('data-id7');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_ib_doc_id = $('#ib_doc_id').val();
+        var p_str_itm_num = $('#Itmdtl').val();
+        var p_str_itm_color = $('#itm_color').val();
+        var p_str_itm_size = $('#itm_size').val();
+        var p_str_itm_name = $('#itm_name').val();
+        var p_str_search_text = $('#search_text').val();
+        var p_str_cont_id = $('#cont_id').val();
+        var p_str_lot_id = $('#lot_id').val();
+        var p_str_loc_id = $('#loc_id').val();
+        var p_str_whs_id = $('#whs_id').val();
+        var p_str_Date_fm = $('#rcvd_dt_fm').val();
+        var p_str_Date_To = $('#rcvd_dt_to').val();
+        var p_str_po_num = $('#po_num').val();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/StockChange/STK_CHG_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                "p_str_itm_name": p_str_itm_name,
+                "p_str_search_text": p_str_search_text,
+                "p_str_cont_id": p_str_cont_id,
+                "p_str_lot_id": p_str_lot_id,
+                "p_str_loc_id": p_str_loc_id, "p_str_whs_id": p_str_whs_id,
+                "p_str_Date_fm": p_str_Date_fm,
+                "p_str_Date_To": p_str_Date_To, "p_str_po_num": p_str_po_num
+            },
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+            },
+
+        });
+
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmpid": p_str_cmpid, "p_str_itm_code": p_str_itm_code, "p_str_paletid": p_str_paletid, "p_str_ponum": p_str_ponum, "p_str_LocId": p_str_LocId,
+                "p_str_style": p_str_style, "p_str_Color": p_str_Color, "p_str_Size": p_str_Size
+            },
+            datatype: "json",
+            success: function (data) {
+                if (data == 0) {
+                    sweetAlert("Can Not Adjust", "Cannot Adjust,Document Is Not Yet Posted")
+                }
+
+                else{
+
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentAdd').html(data);
+                    $('#myModalAdd').modal(options);
+                    $('#myModalAdd').modal('show');
+                }
+            },
+            error: function () {
+                $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                swal("Dynamic content load failed.");
+            }
+        });
+    });
+
+
+</script>

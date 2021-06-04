@@ -1,0 +1,4 @@
+SLF940,CompID,REFNUM,BATCHID,CUSTID,CustPO,PickLine,ItemNum,Color,Size,Cust-SKU,ItmQty,Ctns,ctn_qty,ctn_cube,ctn_wgt,itm_name,DtlCount,SO-Num,Rel-ID,ReqDt,StartDt,CancelDt,Dept,STORE,ShipToName,ShipToAdd1,ShipToAdd2,City,State,ZipCode,HdrNote
+SLF940,TEST,31621,-,CITI,7525,1,GSMS-1207,BLK,9,7461-B1,372,31,12,,,,,,,12/31/2018,12/3/2018,12/7/2018,,,CITI TRENDS,104 Coleman Boulevard,-,Savannah,GA,31408-9565,-
+SLF940,TEST,31621,-,CITI,7525,2,GSCB-1207-7,WHT,7,7461-B1,252,21,12,,,,,,,12/31/2018,12/3/2018,12/7/2018,,,CITI TRENDS,104 Coleman Boulevard,-,Savannah,GA,31408-9565,
+SLF940,TEST,31622,-,CITI,7525,3,GSCB-1207-7,WHT,7,7461-B1,372,31,12,,,,,,,12/31/2018,12/3/2018,12/7/2018,,,CITI TRENDS,104 Coleman Boulevard,-,Savannah,GA,31408-9565,

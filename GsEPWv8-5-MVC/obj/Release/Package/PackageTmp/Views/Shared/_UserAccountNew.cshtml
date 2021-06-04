@@ -1,0 +1,1561 @@
+﻿
+@model GsEPWv8_5_MVC.Model.UserAccountModel
+@{
+    var Screencount = Model.LstScnPermDtls.Count();
+}
+
+<input type="hidden" id="SelectedValue" />
+<input type="hidden" id="EditScreenSelectedValue" />
+<script src="~/plugins/jQueryUI/jquery-ui.js"></script>
+<center>
+
+    <div class="modal-header">
+        @if (Model.View_Flag == "V")
+        {
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">User Account - View</h4>
+            <button type="button" id="UserbtnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+            @*<button type="button" id="btnUserUpdate" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>*@
+        }
+        @if (Model.View_Flag == "A")
+        {
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">User Account - Add</h4>
+            <button type="button" id="UserbtnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnUserSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        }
+        @if (Model.View_Flag == "M")
+        {
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">User Account - Edit</h4>
+            <button type="button" id="UserbtnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnUserUpdate" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        }
+        @if (Model.View_Flag == "D")
+        {
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">User Account - Del</h4>
+            <button type="button" id="UserbtnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnUserDel" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        }
+    </div>
+@if (Model.View_Flag == "A")
+{
+    <div id="childtabsNew">
+        <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+        <ul style="background: #f39c12;">
+            <li><a href="#childtabsNew-1" style="font-size:12px;">User Account</a></li>
+            <li><a href="#childtabsNew-2" style="font-size:12px;">Comp Permission</a></li>
+            <li><a href="#childtabsNew-3" style="font-size:12px;">Screen Permission</a></li>
+            <li><a href="#childtabsNew-4" style="font-size:12px;">Others Permission</a></li>
+        </ul>
+
+       <div id="childtabsNew-1">
+            <div class="box box-default">
+                <div class="box-header">
+                    <div class="container">
+                        <div style="width:75%;margin-top: 6px;margin-bottom: 11px;margin-left: -229px;">
+                            <center>
+
+                                <table>
+                                    <tr>
+                                        <td style="text-align: right;width:8%">
+                                            <label><b class="Lblmanual">User Id</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.user_id, new { @id = "txt_user_id", @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+                                        </td>
+                                        <td style="text-align: right; width: 14%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">First Name</b></label>
+                                        </td>
+                                        <td style="width: 17%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.first_name, new { @id = "txt_fst_name", @class = "form-control txtlbl", @maxlength = "50", @style = "width:175px;" })
+                                        </td>
+                                        <td style="text-align: right; width: 15%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">Last Name</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.last_name, new { @id = "txt_lst_name", @class = "form-control txtlbl", @maxlength = "50", @style = "width:175px;" })
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <br />
+                                <table>
+                                    <tr>
+                                        <td style="text-align: right;width:8%">
+                                            <label><b class="Lblmanual">Password</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.password, new { @id = "txt_pwd", @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;", placeholder = "Password", @type = "password" })
+                                        </td>
+                                        <td style="text-align: right; width: 20%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">Confirm Password</b></label>
+                                        </td>
+                                        <td style="width: 17%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.cfm_password, new { @id = "txt_cnfrm_pwd", @class = "form-control txtlbl", @maxlength = "50", @style = "width:142px;", placeholder = "Password", @type = "password" })
+                                        </td>
+                                        <td style="text-align: right; width: 15%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">User Type</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.DropDownListFor(model => model.usr_type, new SelectList(Model.ListUserType, "group_id", "group_name"), "---Select All---", new { @id = "cmb_user_type", @class = "form-control txtlbl", @style = "width:150px;" })
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <br />
+                                <table>
+                                    <tr>
+                                        <td style="text-align: right;width:8%">
+                                            <label><b class="Lblmanual">Email</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.email, new { @id = "txt_email", @class = "form-control txtlbl", @maxlength = "50", @style = "width:275px;" })
+                                        </td>
+                                        <td style="text-align: right; width: 14%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">Tel</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.tel, new { @id = "txt_tel", @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "width:200px;" })
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+
+                                    </tr>
+                                </table>
+                            </center>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+       <div id="childtabsNew-2">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 17%;margin-top: 5px;">
+                                <label><b class="Lblmanual">Default Customer Id </b></label>
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCmpDtls, "cmp_id", "cmp_name"), "---Select All---", new { @id = "cmb_cmp_id", @class = "form-control txtlbl", @style = "background-color:lightyellow;width: 300%;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    @if (Model.View_Flag == "A")
+                    {
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="GridUserAccountCompanyAdd" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">Sel</th>
+                                        <th class="grid_header_backcolor">Line#</th>
+                                        <th class="grid_header_backcolor">Cmp Id</th>
+                                        <th class="grid_header_backcolor">Cmp Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int j = 0; j < Model.LstCmpPermDtls.Count; j++)
+                                    {
+                                        int line = @Model.LstCmpPermDtls[j].LineNum;
+                                        var ColCheck = @Model.LstCmpPermDtls[j].colChk;
+                                        <tr id="@Model.LstCmpPermDtls[j].cmp_id ">
+                                            @*@if (ColCheck == "true")
+                                            {
+                                                <td id="chkboxclickAdd" id1="@line" id2="@Model.LstCmpPermDtls[j].colChk" style="text-align:center"><input id="test" name="attribute" class="attribute" checked type="checkbox" /></td>
+                                            }
+                                            else
+                                            {
+                                                <td id="chkboxclickAdd" id1="@line" id2="@Model.LstCmpPermDtls[j].colChk" style="text-align:center"><input id="test1" name="attribute" class="attribute" type="checkbox" /></td>
+                                            }*@
+                                            <td id="chkboxclickAdd" id1="@line" id2="@Model.LstCmpPermDtls[j].colChk" id3="@Model.LstCmpPermDtls[j].cmp_id" style="text-align:center"><input id="test" name="attribute" class="attribute"  type="checkbox" /></td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@line</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstCmpPermDtls[j].cmp_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstCmpPermDtls[j].cmp_name</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+       <div id="childtabsNew-3">
+            <div class="box-body">
+                <div class="box-header">
+
+                    <br />
+                    @if (Model.View_Flag == "A")
+                    {
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="GridUserAccScnAdd" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+
+                                        <th class="grid_header_backcolor">Screen Name</th>
+                                        <th class="grid_header_backcolor" style="display:none"></th>
+                                        <th class="grid_header_backcolor">View</th>
+                                        <th class="grid_header_backcolor">Add</th>
+                                        <th class="grid_header_backcolor">Mod</th>
+                                        <th class="grid_header_backcolor">Del</th>
+                                        <th class="grid_header_backcolor">Post</th>
+                                        <th class="grid_header_backcolor">UnPost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.ListScnDtls.Count; i++)
+                                    {
+                                        int lineNum = @Model.ListScnDtls[i].LineNum;
+                                        int line = i + 1;
+                                        <tr>
+
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListScnDtls[i].scn_id</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none;">@line</td>
+                                            <td style="text-align:center">
+                                                <input type="checkbox" name="tblcheckboxview" id="checkboxview_@i" />
+                                            </td>
+                                            <td style="text-align:center">
+                                                <input type="checkbox" name="tblcheckboxadd" id="checkboxadd_@i" />
+                                            </td>
+                                            <td style="text-align:center">
+                                                <input type="checkbox" name="tblcheckboxmod" id="checkboxmod_@i"/>
+                                            </td>
+
+                                            <td style="text-align:center">
+                                                <input type="checkbox"name="tblcheckboxdel" id="checkboxdel_@i"/>
+                                            </td>
+                                            <td style="text-align:center">
+                                                <input type="checkbox" name="tblcheckboxpost" id="checkboxpost_@i"/>
+                                            </td>
+                                            <td style="text-align:center">
+                                                <input type="checkbox" name="tblcheckboxunpost" id="checkboxunpost_@i"/>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @Html.Hidden("Count_Values", Screencount)
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+       <div id="childtabsNew-4">
+            <div class="box-body">
+                <div class="box-header">
+                    @if (Model.View_Flag == "A")
+                    {
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="GridUserAccOthersScnAdd" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">Screen Name</th>
+                                        <th class="grid_header_backcolor">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.ListOtherScnPerm.Count; i++)
+                                    {
+                                        int lineNum = @Model.ListOtherScnPerm[i].LineNum;
+                                        <tr id="@Model.ListScnDtls[i].cmp_id ">
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListOtherScnPerm[i].scn_caption</td>
+                                            <td style="text-align:center">
+                                                <input class="checkbox12" id="chkdd_@i" name="tblcheckbox12" type="checkbox" value="@Model.ListOtherScnPerm[i].scn_id" />
+                                            </td>
+                                     
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                               
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@if ((Model.View_Flag == "M") || (Model.View_Flag == "V"))
+{
+    <div id="childtabsMod">
+        <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+        <ul style="background: #f39c12;">
+            <li><a href="#childtabsMod-1" style="font-size:12px;">User Account</a></li>
+            <li><a href="#childtabsMod-2" style="font-size:12px;" id="hob">Comp Permission</a></li>
+            <li><a href="#childtabsMod-3" style="font-size:12px;" id="hob">Permission Setting</a></li>
+            <li><a href="#childtabsMod-4" style="font-size:12px;" id="hob">Others Permission</a></li>
+        </ul>
+
+        <div id="childtabsMod-1">
+            <div class="box box-default">
+                <div class="box-header">
+                    <div class="container">
+                        <div style="width:75%;margin-top: 6px;margin-bottom: 11px;margin-left: -229px;">
+                            <center>
+
+                                <table>
+                                    <tr>
+                                        <td style="text-align: right;width:8%">
+                                            <label><b class="Lblmanual">User Id</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.user_id, new { @id = "txt_Edit_user_id", @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+                                        </td>
+                                        <td style="text-align: right; width: 14%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">First Name</b></label>
+                                        </td>
+                                        <td style="width: 17%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.first_name, new { @id = "txt_Edit_fst_name", @class = "form-control txtlbl", @maxlength = "50", @style = "width:175px;" })
+                                        </td>
+                                        <td style="text-align: right; width: 15%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">Last Name</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.last_name, new { @id = "txt_Edit_lst_name", @class = "form-control txtlbl", @maxlength = "50", @style = "width:175px;" })
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <br />
+                                <table>
+                                    <tr>
+                                        <td style="text-align: right;width:8%">
+                                            <label><b class="Lblmanual">Password</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @if (Session["UserID"].ToString() == "pm")
+                                            {
+                                              @Html.TextBoxFor(model => model.password, new { @id = "txt_Edit_pwd", @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(model => model.password, new { @id = "txt_Edit_pwd", @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;", placeholder = "Password", @type = "password" })
+                                            }
+
+                                        </td>
+                                        <td style="text-align: right; width: 20%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">Confirm Password</b></label>
+                                        </td>
+                                        <td style="width: 17%; padding-left: 1%;">
+                                        @if (Session["UserID"].ToString() == "pm")
+                                        {
+                                            @Html.TextBoxFor(model => model.cfm_password, new { @id = "txt_Edit_cnfrm_pwd", @class = "form-control txtlbl", @maxlength = "50", @style = "width:142px;" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(model => model.cfm_password, new { @id = "txt_Edit_cnfrm_pwd", @class = "form-control txtlbl", @maxlength = "50", @style = "width:142px;", placeholder = "Password", @type = "password" })
+                                        }
+                                        </td>
+                                        <td style="text-align: right; width: 15%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">User Type</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.DropDownListFor(model => model.usr_type, new SelectList(Model.ListUserType, "group_id", "group_name"), "---Select All---", new { @id = "cmb_Edit_user_type", @class = "form-control txtlbl", @style = "width:150px;" })
+                                        
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <br />
+                                <table>
+                                    <tr>
+                                        <td style="text-align: right;width:8%">
+                                            <label><b class="Lblmanual">Email</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.email, new { @id = "txt_Edit_email",@class = "form-control txtlbl", @maxlength = "50", @style = "width:275px;" })
+                                        </td>
+                                        <td style="text-align: right; width: 14%;padding-top: 3px;">
+                                            <label><b class="Lblmanual">Tel</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.tel, new { @id = "txt_Edit_tel", @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "width:200px;" })
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+
+                                    </tr>
+                                </table>
+                            </center>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="childtabsMod-2">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 17%;margin-top: 5px;">
+                                <label><b class="Lblmanual">Default Customer Id </b></label>
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCmpDtls, "cmp_id", "cmp_name"), "---Select All---", new { @id = "txt_Edit_cmp_id", @class = "form-control txtlbl", @style = "background-color:lightyellow;width: 300%;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                        <table id="GridUserAccountCmpMod" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                            <thead class="grid_backcolor">
+                                <tr>
+                                    <th class="grid_header_backcolor">Sel</th>
+                                    <th class="grid_header_backcolor">Line#</th>
+                                    <th class="grid_header_backcolor">Cmp Id</th>
+                                    <th class="grid_header_backcolor">Cmp Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int j = 0; j < Model.ListCmpDtls.Count; j++)
+                                {
+                                    int line = @Model.LstModCmpPermDtls[j].LineNum;
+                                    var ColCheck = @Model.LstModCmpPermDtls[j].colChk;
+                                    <tr id="@Model.LstModCmpPermDtls[j].cmp_id ">
+                                        @if (ColCheck == "true")
+                                        {
+                                            <td id="chkboxclickEdit" id1="@line" id2="@Model.LstModCmpPermDtls[j].colChk" id3="@Model.LstModCmpPermDtls[j].cmp_id" style="text-align:center">
+                                                <input name="attribute1" class="attribute1" type="checkbox" checked />
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td id="chkboxclickEdit" id1="@line" id2="@Model.LstModCmpPermDtls[j].colChk" id3="@Model.LstModCmpPermDtls[j].cmp_id" style="text-align:center">
+                                                <input id="test1" name="attribute1" class="attribute1" type="checkbox" />
+                                            </td>
+                                        }
+                                        <td style="font-size:12px; color:black; font-weight:bold; ">@line</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstCmpPermDtls[j].cmp_id</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstCmpPermDtls[j].cmp_name</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="childtabsMod-3">
+            <div class="box-body">
+                <div class="box-header">
+
+                    <br />
+
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="GridUserAccScnMod" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">Screen Name</th>
+                                        <th class="grid_header_backcolor">View</th>
+                                        <th class="grid_header_backcolor">Add</th>
+                                        <th class="grid_header_backcolor">Mod</th>
+                                        <th class="grid_header_backcolor">Del</th>
+                                        <th class="grid_header_backcolor">Post</th>
+                                        <th class="grid_header_backcolor">UnPost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.ListScnPermDtls.Count; i++)
+                                    {
+
+                                        <tr id="@Model.ListScnPermDtls[i].cmp_id ">
+                                            @*<td style="font-size:12px; color:black; font-weight:bold; ">@lineNum</td>*@
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListScnPermDtls[i].scn_caption</td>
+                                            @if (Model.ListScnPermDtls[i].scn_view.Trim() == "true" || Model.ListScnPermDtls[i].scn_view.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkdd_@i" name="tblcheckbox5" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                </td>
+
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_view.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_view.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkdd_@i" name="tblcheckbox5" type="checkbox" disabled />
+                                                </td>
+
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkdd_@i" name="tblcheckbox5" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_add.Trim() == "true" || Model.ListScnPermDtls[i].scn_add.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox1" id="chkdd1_@i" name="tblcheckbox6" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_add.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_add.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox1" id="chkdd1_@i" name="tblcheckbox6" type="checkbox" disabled />
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox1" id="chkdd1_@i" name="tblcheckbox6" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_mod.Trim() == "true" || Model.ListScnPermDtls[i].scn_mod.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox2" id="chkdd2_@i" name="tblcheckbox7" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                    @*<input id="test" name="attribute2" class="attribute2"  type="checkbox" />*@
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_mod.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_mod.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox2" id="chkdd2_@i" name="tblcheckbox7" type="checkbox" disabled />
+                                                    @*<input id="test" name="attribute2" class="attribute2"  type="checkbox" />*@
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox2" id="chkdd2_@i" name="tblcheckbox7" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                    @*<input id="test" name="attribute2" class="attribute2"  type="checkbox" />*@
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_del.Trim() == "true" || Model.ListScnPermDtls[i].scn_del.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox3" id="chkdd3_@i" name="tblcheckbox8" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                    @*<input id="test" name="attribute3" class="attribute3"  type="checkbox" />*@
+
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_del.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_del.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox3" id="chkdd3_@i" name="tblcheckbox8" type="checkbox" disabled />
+                                                    @*<input id="test" name="attribute3" class="attribute3"  type="checkbox" />*@
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox3" id="chkdd3_@i" name="tblcheckbox8" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                    @*<input id="test" name="attribute3" class="attribute3"  type="checkbox" />*@
+
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_post.Trim() == "true" || Model.ListScnPermDtls[i].scn_post.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox4" id="chkdd4_@i" name="tblcheckbox9" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" />
+
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_post.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_post.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox4" id="chkdd4_@i" name="tblcheckbox9" type="checkbox" disabled />
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox4" id="chkdd4_@i" name="tblcheckbox9" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" />
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_unpost.Trim() == "true" || Model.ListScnPermDtls[i].scn_unpost.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox5" id="chkdd5_@i" name="tblcheckbox10" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" />
+
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_unpost.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_unpost.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox5" id="chkdd5_@i" name="tblcheckbox10" type="checkbox" disabled />
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox5" id="chkdd5_@i" name="tblcheckbox10" type="checkbox" value="@Model.ListScnPermDtls[i].scn_id" />
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div id="childtabsMod-4">
+            <div class="box-body">
+                <div class="box-header">
+
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="GridUserAccOtherScnMod" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor" style="width:50%">Screen Name</th>
+                                        <th class="grid_header_backcolor" style="width:50%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.ListOtherScnPermMod.Count; i++)
+                                    {
+
+                                        <tr id="@Model.ListOtherScnPermMod[i].cmp_id ">
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListOtherScnPermMod[i].scn_caption</td>
+                                            @if (Model.ListOtherScnPermMod[i].pm_perm.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox18" id="chkdd_@i" name="tblcheckbox18" type="checkbox" checked value="@Model.ListOtherScnPermMod[i].scn_id" />
+                                                </td>
+
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox18" id="chkdd_@i" name="tblcheckbox18" type="checkbox" value="@Model.ListOtherScnPermMod[i].scn_id" />
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+    @if (Model.View_Flag == "D")
+    {
+        <div id="childtabsDel">
+            <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+            <ul style="background: #f39c12;">
+                <li><a href="#childtabsDel-1" style="font-size:12px;">User Account</a></li>
+                <li><a href="#childtabsDel-2" style="font-size:12px;" id="hob">Comp Permission</a></li>
+                <li><a href="#childtabsDel-3" style="font-size:12px;" id="hob">Permission Setting</a></li>
+                <li><a href="#childtabsDel-4" style="font-size:12px;" id="hob">Others Permission</a></li>
+            </ul>
+
+            <div id="childtabsDel-1">
+                <div class="box box-default">
+                    <div class="box-header">
+                        <div class="container">
+                            <div style="width:75%;margin-top: 6px;margin-bottom: 11px;margin-left: -229px;">
+                                <center>
+
+                                    <table>
+                                        <tr>
+                                            <td style="text-align: right;width:8%">
+                                                <label><b class="Lblmanual">User Id</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.user_id, new { @id = "txt_Delete_user_id", @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;",@disabled="true" })
+                                            </td>
+                                            <td style="text-align: right; width: 14%;padding-top: 3px;">
+                                                <label><b class="Lblmanual">First Name</b></label>
+                                            </td>
+                                            <td style="width: 17%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.first_name, new { @id = "new_fst_name", @class = "form-control txtlbl", @maxlength = "50", @style = "width:175px;", @disabled = "true" })
+                                            </td>
+                                            <td style="text-align: right; width: 15%;padding-top: 3px;">
+                                                <label><b class="Lblmanual">Last Name</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.last_name, new { @id = "new_lst_name", @class = "form-control txtlbl", @maxlength = "50", @style = "width:175px;", @disabled = "true" })
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                    <br />
+                                    <table>
+                                        <tr>
+                                            <td style="text-align: right;width:8%">
+                                                <label><b class="Lblmanual">Password</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.password, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;", placeholder = "Password", @type = "password", @disabled = "true" })
+                                            </td>
+                                            <td style="text-align: right; width: 20%;padding-top: 3px;">
+                                                <label><b class="Lblmanual">Confirm Password</b></label>
+                                            </td>
+                                            <td style="width: 17%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.cfm_password, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:142px;", placeholder = "Password", @type = "password", @disabled = "true" })
+                                            </td>
+                                            <td style="text-align: right; width: 15%;padding-top: 3px;">
+                                                <label><b class="Lblmanual">User Type</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.DropDownListFor(model => model.usr_type, new SelectList(Model.ListUserType, "group_id", "group_name"), "---Select All---", new { @id = "new_user_type", @class = "form-control txtlbl", @style = "width:150px;", @disabled = "true" })
+                                                @*@Html.TextBoxFor(model => model.usr_type, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })*@
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                    <br />
+                                    <table>
+                                        <tr>
+                                            <td style="text-align: right;width:8%">
+                                                <label><b class="Lblmanual">Email</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.email, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:275px;", @disabled = "true" })
+                                            </td>
+                                            <td style="text-align: right; width: 14%;padding-top: 3px;">
+                                                <label><b class="Lblmanual">Tel</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.tel, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:200px;", @disabled = "true" })
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+
+                                        </tr>
+                                    </table>
+                                </center>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="childtabsDel-2">
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="col-xs-1" style="width: 17%;margin-top: 5px;">
+                                    <label><b class="Lblmanual">Default Customer Id </b></label>
+                                </div>
+                                <div class="col-xs-2">
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @id = "new_cmp_id", @class = "form-control txtlbl", @style = "background-color:lightyellow;width: 300%;", @disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="GridUserAccountcmpDel" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">Sel</th>
+                                        <th class="grid_header_backcolor">Line#</th>
+                                        <th class="grid_header_backcolor">Cmp Id</th>
+                                        <th class="grid_header_backcolor">Cmp Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int j = 0; j < Model.ListCmpDtls.Count; j++)
+                                    {
+                                        int line = @Model.LstModCmpPermDtls[j].LineNum;
+                                        var ColCheck = @Model.LstModCmpPermDtls[j].colChk;
+                                        <tr id="@Model.LstModCmpPermDtls[j].cmp_id">
+                                            @if (ColCheck == "true")
+                                            {
+                                                <td id="chkboxclickEdit" id1="@line" id2="@Model.LstModCmpPermDtls[j].colChk" style="text-align:center">
+                                                    <input name="attribute5" class="attribute5" type="checkbox" checked disabled />
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td id="chkboxclickEdit" id1="@line" id2="@Model.LstModCmpPermDtls[j].colChk" style="text-align:center">
+                                                    <input id="test1" name="attribute5" class="attribute5" type="checkbox" disabled />
+                                                </td>
+                                            }
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@line</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstCmpPermDtls[j].cmp_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstCmpPermDtls[j].cmp_name</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div id="childtabsDel-3">
+                <div class="box-body">
+                    <div class="box-header">
+
+                        <br />
+
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="GridUserAccDel" class="table table-bordered table-striped" style="border:1px solid #121213">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">Screen Name</th>
+                                        <th class="grid_header_backcolor">View</th>
+                                        <th class="grid_header_backcolor">Add</th>
+                                        <th class="grid_header_backcolor">Mod</th>
+                                        <th class="grid_header_backcolor">Del</th>
+                                        <th class="grid_header_backcolor">Post</th>
+                                        <th class="grid_header_backcolor">UnPost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.ListScnPermDtls.Count; i++)
+                                    {
+
+                                        <tr id="@Model.ListScnPermDtls[i].cmp_id ">
+                                            @*<td style="font-size:12px; color:black; font-weight:bold; ">@lineNum</td>*@
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListScnPermDtls[i].scn_caption</td>
+                                            @if (Model.ListScnPermDtls[i].scn_view.Trim() == "true" || Model.ListScnPermDtls[i].scn_view.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkdd_@i" name="tblcheckbox30" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+                                                </td>
+
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_view.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_view.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkdd_@i" name="tblcheckbox30" type="checkbox" disabled />
+                                                </td>
+
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkdd_@i" name="tblcheckbox30" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_add.Trim() == "true" || Model.ListScnPermDtls[i].scn_add.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox1" id="chkdd1_@i" name="tblcheckbox31" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_add.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_add.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox1" id="chkdd1_@i" name="tblcheckbox31" type="checkbox" disabled />
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox1" id="chkdd1_@i" name="tblcheckbox31" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_mod.Trim() == "true" || Model.ListScnPermDtls[i].scn_mod.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox2" id="chkdd2_@i" name="tblcheckbox32" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+                                                    @*<input id="test" name="attribute2" class="attribute2"  type="checkbox" />*@
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_mod.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_mod.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox2" id="chkdd2_@i" name="tblcheckbox32" type="checkbox" disabled />
+                                                    @*<input id="test" name="attribute2" class="attribute2"  type="checkbox" />*@
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox2" id="chkdd2_@i" name="tblcheckbox32" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" disabled/>
+                                                    @*<input id="test" name="attribute2" class="attribute2"  type="checkbox" />*@
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_del.Trim() == "true" || Model.ListScnPermDtls[i].scn_del.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox3" id="chkdd3_@i" name="tblcheckbox33" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+                                                    @*<input id="test" name="attribute3" class="attribute3"  type="checkbox" />*@
+
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_del.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_del.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox3" id="chkdd3_@i" name="tblcheckbox33" type="checkbox" disabled />
+                                                    @*<input id="test" name="attribute3" class="attribute3"  type="checkbox" />*@
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox3" id="chkdd3_@i" name="tblcheckbox33" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+                                                    @*<input id="test" name="attribute3" class="attribute3"  type="checkbox" />*@
+
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_post.Trim() == "true" || Model.ListScnPermDtls[i].scn_post.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox4" id="chkdd4_@i" name="tblcheckbox34" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_post.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_post.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox4" id="chkdd4_@i" name="tblcheckbox34" type="checkbox" disabled />
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox4" id="chkdd4_@i" name="tblcheckbox34" type="checkbox" value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+                                                </td>
+                                            }
+                                            @if (Model.ListScnPermDtls[i].scn_unpost.Trim() == "true" || Model.ListScnPermDtls[i].scn_unpost.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox5" id="chkdd5_@i" name="tblcheckbox35" type="checkbox" checked value="@Model.LstModScnPermDtls[i].scn_id" disabled />
+
+                                                </td>
+                                            }
+                                            else if (Model.ListScnPermDtls[i].scn_unpost.Trim() == "disabled" || Model.ListScnPermDtls[i].scn_unpost.Trim() == "2")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox5" id="chkdd5_@i" name="tblcheckbox35" type="checkbox" disabled />
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox5" id="chkdd5_@i" name="tblcheckbox35" type="checkbox" value="@Model.ListScnPermDtls[i].scn_id" disabled />
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="childtabsDel-4">
+                <div class="box-body">
+                    <div class="box-header">
+
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="GridUserAccOtherScnDel" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor" style="width:50%">Screen Name</th>
+                                        <th class="grid_header_backcolor" style="width:50%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.ListOtherScnPermMod.Count; i++)
+                                    {
+
+                                        <tr id="@Model.ListOtherScnPermMod[i].cmp_id ">
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListOtherScnPermMod[i].scn_caption</td>
+                                            @if (Model.ListOtherScnPermMod[i].pm_perm.Trim() == "1")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox18" id="chkdd_@i" name="tblcheckbox18" type="checkbox" checked value="@Model.ListOtherScnPermMod[i].scn_id" disabled />
+                                                </td>
+
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox18" id="chkdd_@i" name="tblcheckbox18" type="checkbox" value="@Model.ListOtherScnPermMod[i].scn_id" disabled />
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</center>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script>
+    var Flag = @{@Html.Raw(Json.Encode(Model.View_Flag));};
+    $(document).ready(function () {
+        debugger
+        $('.attribute').click(function () {
+            debugger
+            var CheckValue = (this.checked ? 'true' : 'false');
+            $('#SelectedValue').val(CheckValue);
+           
+        });
+        $('#cmb_cmp_id').val('');
+        $('.attribute1').click(function () {
+            debugger
+            var CheckValue = (this.checked ? 'true' : 'false');
+            $('#EditScreenSelectedValue').val(CheckValue);
+        });
+
+    });
+
+    var Flag = @{@Html.Raw(Json.Encode(Model.View_Flag));};
+    if (view_Flag = "A") {
+        $('#GridUserAccountCompanyAdd td[id="chkboxclickAdd"]').click(function (event) {
+            debugger
+            var l_str_Row_No = $(this).attr('id1');
+            var id=$(this).attr('id2');
+            var l_str_checked_value = $('#SelectedValue').val();
+            var l_str_cmp_id=$(this).attr('id3');
+            var l_str_dflt_cmpid = $('#cmb_cmp_id').val();
+            $.ajax({
+                type: "GET",
+                url: "/UserAccount/UserAccountCmpPermDtls",
+                data: {
+                    "l_str_Row_No": l_str_Row_No, "l_str_checked_value": l_str_checked_value
+                },
+                datatype: "json",
+                success: function (e) {
+                    debugger
+                    if(l_str_cmp_id==l_str_dflt_cmpid)
+                    {
+                        if(l_str_checked_value=='false')
+                        {
+                            $('#cmb_cmp_id').val('');
+                        }
+                    }
+                },
+            })
+        });
+    }
+
+        $('#GridUserAccountCmpMod td[id="chkboxclickEdit"]').click(function (event) {
+            debugger
+            var l_str_Row_No = $(this).attr('id1');
+            var l_str_checked_value = $('#EditScreenSelectedValue').val();
+            var l_str_cmp_id=$(this).attr('id3');
+            var l_str_dflt_cmpid = $('#txt_Edit_cmp_id').val();
+            $.ajax({
+                type: "GET",
+                url: "/UserAccount/UserAccountCmpPermDtls",
+                data: {
+                    "l_str_Row_No": l_str_Row_No, "l_str_checked_value": l_str_checked_value
+                },
+                datatype: "json",
+                success: function (e) {
+                    debugger
+                    if(l_str_dflt_cmpid!="")
+                    {
+                        if(l_str_cmp_id==l_str_dflt_cmpid)
+                        {
+                            if(l_str_checked_value=='false')
+                            {
+                                $('#txt_Edit_cmp_id').val('');
+                            }
+                       
+                        }
+                    }
+                   
+                },
+            })
+        });
+       
+
+    $("#btnUserSave").click(function () {
+        debugger
+        $("#ajaxloading").show();
+        var l_str_user_id = $('#txt_user_id').val();
+        var l_str_fst_name = $('#txt_fst_name').val();
+        var l_str_lst_name = $('#txt_lst_name').val();
+        var l_str_pwd = $('#txt_pwd').val();
+        var l_str_cfm_pwd = $('#txt_cnfrm_pwd').val();
+        var l_str_user_type = $('#cmb_user_type').val();
+        var l_str_email = $('#txt_email').val();
+        var l_str_tel = $('#txt_tel').val();
+        var l_str_dflt_cmpid = $('#cmb_cmp_id').val();
+        var numberOfCheckboxes = $("input[name='attribute']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            swal("", "Please Select Atleaset One Customer in Grid", "");
+            return false;
+        }
+        if (l_str_fst_name == "") {
+            swal("", "Please Enter First Name.", "");
+            $('#txt_fst_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else if (l_str_pwd == "") {
+            swal("", "Please Enter Password.", "");
+            $('#txt_pwd').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else if (l_str_cfm_pwd == "") {
+            swal("", "Please Enter Confirm Password.", "");
+            $('#txt_cnfrm_pwd').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else if (l_str_pwd != l_str_cfm_pwd) {
+            swal("", "Password and Confirm Password does not match.", "");
+            $('#txt_cnfrm_pwd').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else if (l_str_user_type == "") {
+            swal("", "Please Select User Type or Enter User Type.", "");
+            $('#cmb_user_type').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else
+        {
+            var objUserAccHdr = {};
+            objUserAccHdr.user_id =l_str_user_id;
+            objUserAccHdr.user_fst_name =l_str_fst_name;
+            objUserAccHdr.user_lst_name =l_str_lst_name;
+            objUserAccHdr.password =l_str_pwd;
+            objUserAccHdr.cfm_password = l_str_cfm_pwd;
+            objUserAccHdr.email = l_str_email;
+            objUserAccHdr.tel = l_str_tel;
+            objUserAccHdr.usr_type = l_str_user_type;
+            objUserAccHdr.dflt_cust_id = l_str_dflt_cmpid;
+            var UserAccHdr = new Array();
+            UserAccHdr.push(objUserAccHdr);
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/UserAccount/UserIdCheckExist")',
+                data: { "l_str_userid":l_str_user_id},
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (e) {
+                    if (e ==1)
+                    {
+                        swal("", "UserAccount is Already Exist", "");
+
+                    }
+                    else
+                    {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Content("~/UserAccount/SaveUserDetails")',
+                            data: JSON.stringify({ UserAccHdr: UserAccHdr }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (e) {
+                                if(e==true)
+                                {
+                                    swal({
+                                        title: "",
+                                        text: "UserID " + l_str_user_id + " Added successfully.",
+                                        type: "",
+                                        showCancelButton: false,
+                                        confirmButtonClass: "btn-danger",
+                                        confirmButtonText: "Ok",
+                                        closeOnConfirm: true
+                                    },
+                              function () {
+                                  debugger
+                                  setTimeout(function () {
+                                      debugger
+                                      var l_str_user_id = $('#txt_user_id').val();
+                                      $('#UserAdd').modal('hide');
+                                      $.ajax({
+                                          type: "get",
+                                          url: "/UserAccount/GetUserDetails",
+                                          data: {
+                                              "l_str_user_id": l_str_user_id,
+                                          },
+                                          datatype: 'html',
+                                          success: function (e) {
+                                              debugger
+                                              $("#ajaxloading").hide();
+                                              $('#showuseraccountgrid').html("");
+                                              $('#showuseraccountgrid').html(e);
+                                          },
+                                      })
+                                  });
+                              });              
+                                }
+                                else
+                                {
+                                    swal("", " Please Select the Default Customer From the Customer Permission List Grid.", "");
+                                }
+                                                       
+                            },
+
+                        })
+                    }
+                }
+            })
+         
+        }
+        });
+
+
+  
+    $("#btnUserUpdate").click(function () {
+
+        debugger
+        var l_str_user_id = $('#txt_Edit_user_id').val();
+        var l_str_fst_name = $('#txt_Edit_fst_name').val();
+        var l_str_lst_name = $('#txt_Edit_lst_name').val();
+        var l_str_pwd = $('#txt_Edit_pwd').val();
+        var l_str_cfm_pwd = $('#txt_Edit_cnfrm_pwd').val();
+        var l_str_user_type = $('#cmb_Edit_user_type').val();
+        var l_str_email = $('#txt_Edit_email').val();
+        var l_str_tel = $('#txt_Edit_tel').val();
+        var l_str_dflt_cmpid = $('#txt_Edit_cmp_id').val();
+        var numberOfCheckboxes = $("input[name='attribute1']:checked").length;
+       
+        if (l_str_fst_name == "") {
+            swal("", "Please Enter First Name.", "");
+            $('#txt_fst_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else if (l_str_pwd == "") {
+            swal("", "Please Enter Password.", "");
+            $('#txt_pwd').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else if (l_str_cfm_pwd == "") {
+            swal("", "Please Enter Confirm Password.", "");
+            $('#txt_cnfrm_pwd').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else if (l_str_pwd != l_str_cfm_pwd) {
+            swal("", "Password and Confirm Password does not match.", "");
+            $('#txt_cnfrm_pwd').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else if (l_str_user_type == "") {
+            swal("", "Please Select User Type or Enter User Type.", "");
+            $('#cmb_user_type').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (numberOfCheckboxes == 0) {
+
+            swal("", "Please Select Atleast One Customer in Grid", "");
+            return false;
+        }
+        else
+        {
+            var objUserAccHdr = {};
+            objUserAccHdr.user_id =l_str_user_id;
+            objUserAccHdr.user_fst_name =l_str_fst_name;
+            objUserAccHdr.user_lst_name =l_str_lst_name;
+            objUserAccHdr.password =l_str_pwd;
+            objUserAccHdr.cfm_password = l_str_cfm_pwd;
+            objUserAccHdr.email = l_str_email;
+            objUserAccHdr.tel = l_str_tel;
+            objUserAccHdr.usr_type = l_str_user_type;
+            objUserAccHdr.dflt_cust_id = l_str_dflt_cmpid;
+            var UserAccHdr = new Array();
+            UserAccHdr.push(objUserAccHdr);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/UserAccount/UpdateUserdtls")',
+                data: JSON.stringify({ UserAccHdr: UserAccHdr }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (e) {
+                    if (e ==true)
+                    {
+
+                        swal({
+                            title: "",
+                            text: "UserID " + l_str_user_id + " Modified successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                         function () {
+                             debugger
+                             setTimeout(function () {
+                                 debugger
+                                 var l_str_user_id = $('#txt_Edit_user_id').val();
+                                 $('#UserEdit').modal('hide');
+                                 $.ajax({
+                                     type: "get",
+                                     url: "/UserAccount/GetUserDetails",
+                                     data: {
+                                         "l_str_user_id": l_str_user_id,
+                                     },
+                                     datatype: 'html',
+                                     success: function (e) {
+                                         debugger
+                                         $("#ajaxloading").hide();
+                                         $('#showuseraccountgrid').html("");
+                                         $('#showuseraccountgrid').html(e);
+                                     },
+                                 })
+                             });
+                         });
+                       
+                    }
+                    else
+                    {
+                        swal("", " Please Select the Default Customer From the Customer Permission List Grid.", "");
+                    }
+                },
+
+            })
+        }
+        });
+
+    $("#btnUserDel").click(function () {
+        debugger
+        var l_str_user_id = $("#txt_Delete_user_id").val();
+
+                       $.ajax({
+                           type: "GET",
+                           url: '@Url.Content("~/UserAccount/DeleteUserDtls")',
+                           data: {
+                               "l_str_user_id": l_str_user_id,
+
+                           },
+                           dataType: 'html',
+                           success: function (e) {
+                              if(e == 1) {
+                                  swal({
+                                      title: "",
+                                      text:  "You Can Not Delete Current User" ,
+                                      type: "",
+                                      showCancelButton: false,
+                                      confirmButtonClass: "btn-danger",
+                                      confirmButtonText: "Ok",
+                                      closeOnConfirm: true
+                                  },
+                         function () {
+                             setTimeout(function () {
+                                 var url = '@Url.Action("UserAccount", "UserAccount")';
+                                 window.location.href = url;
+                             });
+                         });
+                               }
+                             else {
+                        swal({
+                            title: "",
+                            text: "UserID " + l_str_user_id + " Deleted successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                       function () {
+                             debugger
+                             setTimeout(function () {
+                                 debugger
+                                 var l_str_user_id = $('#txt_Delete_user_id').val();
+                                 $('#UserDelete').modal('hide');
+                                  $.ajax({
+                                      type: "get",
+                                      url: "/UserAccount/GetUserDetails",
+                                      data: {
+                                          "l_str_user_id": l_str_user_id,
+
+                                      },
+                                      datatype: 'html',
+                                      success: function (e) {
+                                          debugger
+                                          $("#ajaxloading").hide();
+                                          $('#showuseraccountgrid').html("");
+                                          $('#showuseraccountgrid').html(e);
+                                      },
+                                  })
+                             });
+                         });
+
+                    }
+
+                           },
+
+                       })
+
+               });
+
+</script>
+<script>
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+</script>
+<script>
+       $(function () {
+        if(Flag=="A")
+        {
+            $("#tabs").tabs();
+        }
+        else  if((Flag=="M") || (Flag=="V"))
+        {
+            $("#tabs1").tabs();
+        }
+        else
+        {
+            $("#tabs2").tabs();
+        }
+    });
+    $(function () {
+        if(Flag=="A")
+        {
+            $("#childtabsNew").tabs();
+        }
+        else  if((Flag=="M") || (Flag=="V"))
+        {
+            $("#childtabsMod").tabs();
+        }
+        else
+        {
+            $("#childtabsDel").tabs();
+        }
+    });
+
+
+
+
+    if(Flag=="A")
+    {
+
+        $('#GridUserAccountCompanyAdd').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": false,
+            "autoWidth": true,
+            "scrollCollapse": true,
+        });
+        $('#GridUserAccScnAdd').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "autoWidth": false,
+            "scrollCollapse": false,
+        });
+        $('#GridUserAccOthersScnAdd').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": false,
+            "autoWidth": true,
+            "scrollCollapse": true,
+
+        });
+
+    }
+    else if((Flag=="M") || (Flag=="V"))
+    {
+        $('#GridUserAccScnMod').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+        });
+        $('#GridUserAccountCmpMod').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+        });
+        $('#GridUserAccOtherScnMod').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+
+        });
+    }
+    else
+    {
+
+        $('#GridUserAccDel').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+        });
+        $('#GridUserAccountcmpDel').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+        });
+        $('#GridUserAccOtherScnDel').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+
+        });
+
+    }
+</script>

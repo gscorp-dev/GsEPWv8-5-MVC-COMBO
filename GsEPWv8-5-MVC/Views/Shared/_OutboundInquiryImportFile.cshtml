@@ -1,0 +1,432 @@
+﻿@model GsEPWv8_5_MVC.Model.DocumentUploadModel
+@{
+
+    var FILENAME = string.Empty;
+}
+<style type="text/css">
+    div#table-Details {
+        border: 1px solid #999;
+        box-shadow: 0px 0px 15px;
+    }
+
+    table.dataTable thead > tr > th {
+        padding-right: 0px;
+    }
+
+    .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #f5f5f5;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+
+<center>
+
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;">Outbound Document Upload</h4>
+    </div>
+    <center>
+        <table style="width: 100%; margin-top:-11px;">
+            <tbody>
+
+                <tr>
+                    <td style="width: 60%;padding-left: 42%;font-size: 18px;font-family: Verdana;font-weight: bold;padding-top: 15px;">
+                        <label style="font-size:20px;"><b></b></label>
+                    </td>
+                    <td style="padding-top: 11px;width:30%;text-align:right">
+                        @*<button type="button" id="btnClosed" class="btn-Close">Close</button>*@
+                        <button type="button" id="buttonClose"  class="btn-Close" style="float:right;">Close</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+
+    <hr />
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;">
+                        <label><b class="Lblmanual">Cmp Id </b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", @maxlength = "10" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
+                        <label><b class="Lblmanual">OB Doc Id </b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.doc_id, new { @class = "form-control txtlbl", @maxlength = "10" })
+                    </div>
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">Comments </b></label>
+                    </div>
+                    <div class="col-xs-5">
+                        @Html.TextBoxFor(model => model.comments, new { @class = "form-control txtlbl", @maxlength = "500" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;">
+                        <label><b class="Lblmanual">DocType </b></label>
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.DropDownListFor(model => model.doc_sub_type, new SelectList(Model.ListDocumentsSubType, "name", "description"), new { @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana; ", @id = "a_doc_sub_type" })
+                    </div>
+                    <div class="col-xs-7" style="text-align: right; margin-top: 6px; font-size:10px;">
+                        </div>
+                    </div>
+                </div>
+            <br />
+
+                <div id="DocBtn" class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;">
+                            <label><b class="Lblmanual">File Name </b></label>
+                            </div>
+                            <div class="col-xs-7" style="text-align: left; margin-top: 6px; font-size:10px;">
+                                <input type="file" name="FileUpload" id="img1" onchange="updateFileName()" style="display:none" title="" />
+                                @Html.TextBoxFor(x => x.upload_file_name, new { @class = "txtlbl", @name = "file_name", @id = "file_name", @style = "width:400px; height:32px;" })
+                                <button type="button" id="btnBrowse" class="btn_browse" onclick="document.getElementById('img1').click();">Browse</button>
+                                <button type="button" id="btnUploads" class="btn_upload">Upload</button>
+                                <button type="button" id="buttonClear" class="btn-Close">Clear</button>
+           
+                            </div>
+                        <div class="col-xs-4" style="text-align: right; margin-top: 6px; font-size:10px;">
+                            </div>
+                        </div>
+                    </div>
+                <br />
+            </div>
+    </div>
+    <br />
+    <br />
+</center>
+<div class="box" style="padding-left: 13px;padding-right: 13px;">
+    <div id="table-Details" style="padding-left:5px; padding-right:5px;">
+        <table id="GridDocumentFile" class="table table-bordered table-striped" style="border:1px solid #121213;">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="width:10%">Type</th>
+                    <th class="grid_header_backcolor" style="width:19%">FileName</th>
+                    <th class="grid_header_backcolor" style="width:8%">Views</th>
+                    <th class="grid_header_backcolor" style="width:8%">Delete</th>
+                    <th class="grid_header_backcolor" style="width:15%">Uploaded DtTime</th>
+                    <th class="grid_header_backcolor" style="width:15%">Uploaded By</th>
+                    <th class="grid_header_backcolor" style="width:25%">Comments</th>
+
+                </tr>
+            </thead>
+            <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                @for (int i = 0; i < Model.LstDocumentUpload.Count; i++)
+                {
+                    var filename = @Model.LstDocumentUpload[i].upload_file_name;
+                    var filepath = @Model.LstDocumentUpload[i].file_path;
+                    FILENAME = filepath + '\\' + filename;
+                    <tr style="background-color:white;">
+                        <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.LstDocumentUpload[i].doc_sub_type</td>
+                        <td style="text-align:left;font-size:10px;font-weight:bold;"> @Model.LstDocumentUpload[i].upload_file_name</td>
+                        <td>
+                            <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="ViewDocumentFile" data-id="@Model.LstDocumentUpload[i].cmp_id" data-id1="@FILENAME" data-id2="@filename"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="DelDocumentFile" data-id="@Model.LstDocumentUpload[i].upload_file_name" data-id1="@Model.LstDocumentUpload[i].file_path" data-id2="@Model.LstDocumentUpload[i].upload_dt"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                        </td>
+                        <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.LstDocumentUpload[i].upload_dt</td>
+                        <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.LstDocumentUpload[i].upload_by</td>
+                        <td style="text-align:left;font-size:8px;font-weight:bold;">@Model.LstDocumentUpload[i].comments</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    function updateFileName() {
+        var img1 = document.getElementById('img1');
+        var file_name = document.getElementById('file_name');
+        var fileNameIndex = img1.value.lastIndexOf("\\");
+        debugger
+        file_name.value = img1.value.substring(fileNameIndex + 1);
+    }
+    //CR2018021602 Ravi
+    $('#buttonClose').click(function () {
+        debugger;
+   
+        $('#myModalOBdocupld').modal('hide');
+        $('#myModalINFile').modal('hide');
+        $('#myModalINdocupld').modal('hide');
+
+        $('#myModal').modal('hide');
+
+    });
+    
+    $('#buttonClear').click(function () {
+        debugger;
+
+        $('#comments').val('');
+
+    });
+
+    $('#btnUploads').click(function () {
+        debugger
+        var CompID = $('#cmp_id').val();
+        var p_str_so_num = $('#doc_id').val();
+        var comment = $('#comments').val();
+  
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_ib_doc_id = $('#doc_id').val();
+        var p_str_comments = $('#comments').val();
+        var p_str_cntr_id ='';
+          var filename = $('#file_name').val();
+          var p_str_sub_doc_type = $('#a_doc_sub_type').val();
+        debugger
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#img1").get(0);
+            var files = fileUpload.files;
+
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            // Adding one more key to FormData object
+            fileData.append(CompID, doc_id);
+            if (file_name != "") {
+                $.ajax({
+                    url: '/DocumentUpload/GridUploadFiles?p_str_cmp_id=' + p_str_cmp_id + '&p_str_doc_id=' + p_str_so_num + '&p_str_comments=' + p_str_comments + '&p_str_cntr_id=' + p_str_cntr_id + '&p_str_sub_doc_type=' + p_str_sub_doc_type,
+                    type: "POST",
+                    contentType: false, 
+                    processData: false, 
+                    data: fileData,
+                    success: function (result) {
+                        debugger
+                        $("#ajaxLoading").hide();
+                        $('#GridDocumentFile').html("");
+                        $('#GridDocumentFile').html(result);
+                        if (filename != "") {
+                            swal({
+                                title: "",
+                                text: "File Uploaded Successfully",
+                                type: "",
+                                showCancelButton: false,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "Ok",
+                                closeOnConfirm: true
+                            },
+                            function () {
+
+                                //$("#ajaxloading").show();
+                                $('#myModalOBdocupld').modal('hide');
+                                $('#myModalINFile').modal('hide');
+                                $('#myModalINdocupld').modal('hide');
+
+                            });
+
+
+                        }
+                        else {
+                            sweetAlert("", "Please Select anyone File!", "");
+                        }
+
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            }
+
+        }
+        else {
+            alert("FormData is not supported.");
+        }
+    });
+    $("#btnSave").click(function () {
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please select the Company Id", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ib_doc_id = $('#doc_id').val();
+            var p_str_comments = $('#comments').val();
+            var p_str_sub_doc_type = $('#a_doc_sub_type').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: "/DocumentUpload/GetDocumentUpload",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_comments": p_str_comments, "p_str_sub_doc_type": p_str_sub_doc_type
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#GridDocumentFile').html("");
+                    $('#GridDocumentFile').html(e);
+                },
+            })
+
+        }
+    });
+    var cmp_id = $("#cmp_id").val();
+
+    $(function () {
+        debugger
+        $('#GridDocumentFile tbody').on('click', '.ViewDocumentFile', function () {
+
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id');
+            var path = $buttonClicked.attr('data-id1');
+            var filename = $buttonClicked.attr('data-id2');
+            $("#ajaxLoading").show();
+
+            var options = { "backdrop": "static", keyboard: true };
+            debugger
+            $.ajax({
+                type: "GET",
+                url: '/DocumentUpload/GetDocumentFullFileName',
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "path": path },
+                datatype: "json",
+                success: function (path) {
+                    debugger
+                    var ext = path.split('.').pop();
+                    if (ext == "pdf" || ext == "PDF" || ext == "jpg" || ext == "JPG" | ext == "jpeg" || ext == "JPEG")
+                    {
+                        window.open('@Url.Action("ViewDocument")?path=' + path + '&ext=' + ext + '&filename=' + filename, "_blank", "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                    }
+                    else
+                    {
+                        window.location.replace('@Url.Action("ViewDocument")?path=' + path + '&ext=' + ext + '&filename=' + filename, "_blank", "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                    }
+                    $("#ajaxLoading").hide();
+                    $("#DocBtn").hide();
+                },
+
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+
+    $("#btnCancel").click(function () {
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please select the Company Id", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+
+            var CompID = $('#cmp_id').val();
+            var ibdocid = $('#doc_id').val();
+            var comment = $('#comments').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: "/DocumentUpload/GetDocumentUploadCancel",
+                data: {
+                    "CompID": CompID, "ibdocid": doc_id, "comment": comment
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalINdocupldContent').html(e);
+                    $('#myModalINdocupld').modal(options);
+                    $('#myModalINdocupld').modal('show');
+                },
+            })
+
+        }
+    });
+    var cmp_id = $("#cmp_id").val();
+    var ibdocid = $('#doc_id').val();
+    var TeamDetailPostBackDelURL = '/DocumentUpload/DeleteDocument';
+    $(function () {
+        //$(".DelDocumentFile").click(function () {
+        $('#GridDocumentFile tbody').on('click', '.DelDocumentFile', function () { //CR2018-19-07-001 Added by Nithya
+
+            debugger
+            var $buttonClicked = $(this);
+            var CompID = $('#cmp_id').val();
+            var Filename = $buttonClicked.attr('data-id');
+            var Filepath = $buttonClicked.attr('data-id1');
+            $("#ajaxLoading").show();
+
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackDelURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_cmp_id": cmp_id, "p_str_doc_id": ibdocid, "p_str_file_name": Filename, "p_str_file_path": Filepath },
+                datatype: "json",
+
+                success: function (data) {
+                    debugger
+                    $("#ajaxLoading").hide();
+                    $('#GridDocumentFile').html("");
+                    $('#GridDocumentFile').html(data);
+                    sweetAlert("", "File deleted Successfully!", "");
+                    $('#file_name').val('');
+                 swal({
+                        title: "",
+                        text: "File deleted Successfully",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                        function () {
+                            $('#myModalOBdocupld').modal('hide');
+                            $('#myModalINFile').modal('hide');
+                            $('#myModalINdocupld').modal('hide');
+
+
+
+                        });
+
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+            $('#myModalOBdocupld').modal('hide');
+            $('#myModalINFile').modal('hide');
+            $('#myModalINdocupld').modal('hide');
+        });
+    });
+
+</script>
+
+

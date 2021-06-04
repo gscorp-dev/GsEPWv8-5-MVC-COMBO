@@ -1,0 +1,2246 @@
+﻿
+<div>
+    @model GsEPWv8_5_MVC.Model.InboundInquiryModel
+
+    @{
+        var Ordercount = Model.ListInboundDocInquiry.Count;
+    }
+    @Html.HiddenFor(model => model.cmp_id)
+    @Html.HiddenFor(model => model.ib_doc_dt_fm)
+    @Html.HiddenFor(model => model.ib_doc_dt_to)
+    @Html.HiddenFor(model => model.user_id)
+
+
+    <div class="gridSummary">
+        <table style="width:100%">
+            <tr>
+                <td style="width:20%;text-align:right">
+
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                        Total Records:
+                    </span>
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </td>
+
+                <td style="width:105px;"></td>
+                <td style="width:105px;"></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    @*<br />*@
+
+    <div class="box box-primary" style="box-shadow: 0 1px 1px white;">
+        <div class="row">
+
+        </div>
+        <br />
+
+        <table id="IBPartialGridInq" class="table table-bordered table-striped" style="border:1px solid #121213 ;table-layout:fixed">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="width:3%;">Print</th>
+                    <th class="grid_header_backcolor" style="width:9%;">IB Doc Id</th>
+                    <th class="grid_header_backcolor" style="width:6%;">Doc Dt</th>
+                    <th class="grid_header_backcolor" style="width:5%;">Status</th>
+                    <th class="grid_header_backcolor" style="width:5%;">Ord Type</th>
+                    <th class="grid_header_backcolor" style="width:10%;">Cont Id</th>
+                    @if (Model.is_company_user == "Y")
+                    {
+                        <th class="grid_header_backcolor" style="width:6%;">IBS</th>
+                    }
+
+                    @if (((Model.is_company_user == "Y")) || (Session["UserType"].ToString().Trim() == "4PL-USER"))
+                    {
+
+                        <th class="grid_header_backcolor" style="font-family: Verdana;width:7%;">Recv</th>
+                    }
+                  
+
+                    <th class="grid_header_backcolor" style="width:5%;">Lot Id</th>
+                    <th class="grid_header_backcolor" style="width:6%;">RcvdDt</th>
+                    <th class="grid_header_backcolor" style="width:7%;">Ref No</th>
+                    <th class="grid_header_backcolor" style="width:6%;">Rcvd From</th>
+                    <th class="grid_header_backcolor" style="width:6%;">ETA Dt</th>
+                    <th class="grid_header_backcolor" style="width:12%;">Note</th>
+                    @if ((Model.IS3RDUSER != "yes") && (Session["UserType"].ToString().Trim() != "4PL-USER"))
+                    {
+                        <th class="grid_header_backcolor" style="width:5%;">IO Bill Status</th>
+                    }
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (int i = 0; i < Model.ListInboundDocInquiry.Count; i++)
+                {
+                    var l_str_bill_status = @Model.ListInboundDocInquiry[i].inout_bill_status;
+                    var cmpid = @Model.ListInboundDocInquiry[i].cmp_id;
+                    var docid = @Model.ListInboundDocInquiry[i].ib_doc_id;
+                    var path = System.Configuration.ConfigurationManager.AppSettings["Docpath"].ToString().Trim();
+                    var docPath = path + '\\' + cmpid + '\\' + "INBOUND" + '\\' + docid;
+                    var l_str_staus = @Model.ListInboundDocInquiry[i].status.Trim();
+                    var l_str_transtaus = @Model.ListInboundDocInquiry[i].tran_status;
+                    var l_str_ibs_doc_id = @Model.ListInboundDocInquiry[i].ibs_doc_id;
+                    var l_str_tmp_status = "RECEIVED";
+
+                    System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(docPath);
+                    int count = @Model.ListInboundDocInquiry[i].upload_file_count;
+                    <tr class="row-select">
+                        <td style="text-align:center">
+                            <input class="checkbox" id="chkdd_@i" data-cntr="@Model.ListInboundDocInquiry[i].cntr_id" data-ib-doc-id="@Model.ListInboundDocInquiry[i].ib_doc_id" name="tblcheckbox" type="checkbox" value="@Model.ListInboundDocInquiry[i].ib_doc_id" />
+                        </td>
+
+                        <td class="ib_doc_id" style="font-size:12px; color:black; font-weight:bold;">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a href="javascript:void(0);" style="text-decoration:underline;" class="anchorDetail" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id">@Model.ListInboundDocInquiry[i].ib_doc_id</a>
+                                    </td>
+                                    <td>
+
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color: #ffd400;" class="Inbounddocupld" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id1="@Model.ListInboundDocInquiry[i].cntr_id"><span class="glyphicon glyphicon-file" style="font-size: 18px;"></span></a>
+                                        @if (count > 0)
+                                        {
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color: orange;" class="Inbounddocupld" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id1="@Model.ListInboundDocInquiry[i].cntr_id">(@count)</a>
+
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color: #ffd400;" class="ib_doc_send" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id1="@Model.ListInboundDocInquiry[i].cntr_id"><span class="glyphicon glyphicon-envelope" style="font-size: 14px;"></span></a>
+
+
+                                        }
+                                    </td>
+
+                                    @if (@l_str_staus == "OPEN")
+                                    {
+                                        <td>
+                                            <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline;color: blue;" class="DocEntryEditDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b></b></a>
+                                        </td>
+
+                                        <td>
+                                            <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline; color: red;" class="InboundInqDelDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                    }
+
+                                </tr>
+                            </table>
+
+                        </td>
+                        <td class="ib_doc_dt" style="font-size:12px; color:black; font-weight:bold;" name="tblcheckbox[]" value="@Model.ListInboundDocInquiry[i].ordr_type">@Model.ListInboundDocInquiry[i].ib_doc_dt</td>
+
+                        @if (@l_str_staus == "1-RCVD")
+                        {
+                            <td class="status" style="font-size:12px; color:black; font-weight:bold;">@l_str_tmp_status</td>
+                        }
+                        else
+                        {
+                            <td class="status" style="font-size:12px; color:black; font-weight:bold;">@Model.ListInboundDocInquiry[i].status</td>
+                        }
+
+                        <td class="ordr_type" style="font-size:12px; color:black; font-weight:bold; ">@Model.ListInboundDocInquiry[i].ordr_type</td>
+                        <td class="ordr_type" style="font-size:12px; color:black; font-weight:bold; ">@Model.ListInboundDocInquiry[i].cntr_id</td>
+             
+
+                        @if (Model.is_company_user == "Y")
+                        {
+                            if (@l_str_ibs_doc_id == "" || @l_str_ibs_doc_id == null)
+                            {
+                                <td>
+                                    <a href="javascript:void(0);" class="btn btn-primary small IBSEntry" style="color: white;height: 17px;width: 44px; border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;" A_str_cmp_id="@Model.ListInboundDocInquiry[i].cmp_id" A_str_ib_doc_id="@Model.ListInboundDocInquiry[i].ib_doc_id" A_str_ib_doc_status="@Model.ListInboundDocInquiry[i].status" A_str_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt">IBS</a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqServiceView" V_str_cmp_id="@Model.ListInboundDocInquiry[i].cmp_id" V_str_ib_doc_id="@Model.ListInboundDocInquiry[i].ib_doc_id" V_str_ib_doc_status="@Model.ListInboundDocInquiry[i].status" V_str_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt" V_str_ibs_doc_id="@Model.ListInboundDocInquiry[i].ibs_doc_id"><b>@Model.ListInboundDocInquiry[i].ibs_doc_id</b></a>
+                                    <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline;color: blue;" class="InboundInqServiceEdit" E_str_cmp_id="@Model.ListInboundDocInquiry[i].cmp_id" E_str_ib_doc_id="@Model.ListInboundDocInquiry[i].ib_doc_id" E_str_ib_doc_status="@Model.ListInboundDocInquiry[i].status" E_str_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt" E_str_ibs_doc_id="@Model.ListInboundDocInquiry[i].ibs_doc_id"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b></b></a>
+                                    <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline; color: red;" class="InboundInqServiceDelete" D_str_cmp_id="@Model.ListInboundDocInquiry[i].cmp_id" D_str_ib_doc_id="@Model.ListInboundDocInquiry[i].ib_doc_id" D_str_ib_doc_status="@Model.ListInboundDocInquiry[i].status" D_str_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt" D_str_ibs_doc_id="@Model.ListInboundDocInquiry[i].ibs_doc_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                </td>
+                            }
+
+                        }
+
+
+                        @if ((Model.is_company_user == "Y") || (Session["UserType"].ToString().Trim() == "4PL-USER"))
+                        {
+
+                            if (@l_str_staus == "OPEN")
+                            {
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color:#0094ff;font-size:12px;" class="InboundInqReceivingEntry" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt" ><span style="font-size: 18px;"></span><b>Recv</b></a>
+                                </td>
+                            }
+                            else if (@l_str_staus == "1-RCVD")
+                            {
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].rcvd_dt"><span style="font-size: 18px;"></span><b>Post</b></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingView" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"></span><b></b></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingEdit" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt" ><span class="glyphicon glyphicon-pencil" style="font-size: 15px;"></span><b></b></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="InboundRecvDelDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                            }
+                            else if (@l_str_staus == "POST")
+                            {
+                                @*if (@l_str_transtaus.Trim() == "CHGD")
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {*@
+                                    <td>
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingUnPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].inout_bill_status" data-id6="@Model.ListInboundDocInquiry[i].ib_doc_id"><span style="font-size: 18px;"></span><b>Unpost</b></a>
+                                    </td>
+                                //}
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        }
+                        <td style="font-size:12px; color:black; font-weight:bold;">
+                            <a href="javascript:void(0);" class="anchorlotDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.ListInboundDocInquiry[i].lot_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id">@Model.ListInboundDocInquiry[i].lot_id</a>
+                        </td>
+                        <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.ListInboundDocInquiry[i].rcvd_dt</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.ListInboundDocInquiry[i].req_num</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListInboundDocInquiry[i].vend_name</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.ListInboundDocInquiry[i].eta_dt</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListInboundDocInquiry[i].note</td>
+
+                        @if ((Model.IS3RDUSER != "yes") && (Session["UserType"].ToString().Trim() != "4PL-USER"))
+                        {
+                            <td>
+                                @if (@l_str_staus == "POST")
+                                {
+                                if (l_str_bill_status == "BILL")
+                                {
+                                    if (Model.is_company_user == "Y")
+                                    {
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingBillStatus" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span style="font-size: 18px;"></span><b>@Model.ListInboundDocInquiry[i].inout_bill_status</b></a>
+
+                                    }
+                                 }
+                                    else if (l_str_bill_status == "TEMP")
+                                    {
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="BillDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].bill_doc_id" data-id2="@Model.ListInboundDocInquiry[i].ib_doc_dt" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span style="font-size: 18px;"></span><b>@Model.ListInboundDocInquiry[i].bill_doc_id</b></a>    
+                                        if (Model.is_company_user == "Y")
+                                        {
+                                            <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline; color: red;" class="DeleteIOBillByIbDocId" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].bill_doc_id" data-id2="@Model.ListInboundDocInquiry[i].lot_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>D</b></a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                    }
+
+                                }
+                                
+                            </td>
+                        }
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <div id='myModalLot' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 238%; left: -319px;">
+                <div id='myModallotContent' style="width: 100%; height: 950px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div id='myModalEmail' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 198%; left:-160px;">
+                <div id='myModalEmailContent' style="width: 100%; height: 800px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id='myModalEmailAlert' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 250%; left:-400px;">
+                <div id='myModalEmailAlertContent' style="width: 100%; height: 900px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id='UsersEmail' class='modal' style="padding-left:947px;padding-top:271px">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 100%;">
+                <div id='UsersEmailContent' style="width: 100%; height: 360px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+    @*<div id='myModalView' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 300%; left:-610px;">
+                <div id='myModalContentView' style="width: 100%; height: 1000px;"></div>
+            </div>
+        </div>
+
+    </div>*@
+
+
+
+    <div id='myModalView' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 200%; left:-350px;">
+                <div id='myModalContentView' style="width: 100%; height: 900px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+   
+
+    <div id='myModalDel' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 300%; left:-550px;">
+                <div id='myModalContentDel' style="width: 100%; height: 900px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div id='myModalRecvEntry' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 320%; left:-610px;">
+                <div id='myModalContentRecvEntry' style="width: 100%; height: 1000px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div id='myModalRecvPost' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 300%; left:-550px;">
+                <div id='myModalContentRecvPost' style="width: 100%; height: 900px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div id='myModalEdit' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 275%; left:-480px;">
+                <div id='myModalContentEdit' style="width: 100%; height: 900px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id='myModal' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 275%; left:-395px;">
+                <div id='myModalContent' style="width: 100%; height: 900px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id='IbsEntryAdd' class='modal'>
+        <div class="modal-dialog">
+            <center>
+                <div class="modal-content" style="width: 187%;left:-183px;">
+                    <div id='IBSENtryAddcontent' style="width: 1050px;height:3000px;"></div>
+                </div>
+            </center>
+        </div>
+
+    </div>
+    <div id='IbsEntryEdit' class='modal'>
+        <div class="modal-dialog">
+            <center>
+                <div class="modal-content" style="width: 187%;left:-183px;">
+                    <div id='IBSEntryEditcontent' style="width: 1050px;height:3000px;"></div>
+                </div>
+            </center>
+        </div>
+
+    </div>
+
+
+    <div id='cntrModal' class='modal'>
+        <div class="modal-dialog">
+            <center>
+                <div class="modal-content" style="width: 187%;left:-183px;">
+                    <div id='cntrModalcontent' style="width: 1050px;height:3000px;"></div>
+                </div>
+            </center>
+        </div>
+
+    </div>
+
+
+
+    <script>
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackRecvEntryURL = '/InboundInquiry/ReceivingEntry';
+        $(function () {
+            $('#IBPartialGridInq tbody').on('click', '.InboundInqReceivingEntry', function () {
+                debugger
+                var $buttonClicked = $(this);
+                var CmpId = $buttonClicked.attr('data-id');
+                var id = $buttonClicked.attr('data-id1');
+                var Cont_id = $buttonClicked.attr('data-id2');
+                var status = $buttonClicked.attr('data-id3').trim();
+                var lstrIbDocDate =  $buttonClicked.attr('data_ib_doc_dt').trim();
+
+                    
+
+                var datefrom = $('#ib_doc_dt_fm').val();
+                var dateto = $('#ib_doc_dt_to').val();
+                if (status != "1-RCVD" && status != "POST") {
+                    var options = { "backdrop": "static", keyboard: true };
+                    var windowHeight = $(window).height();
+                    var windowWidth = $(window).width();
+                    var boxHeight = $('.modal-content').height();
+                    var boxWidth = $('.modal').width();
+                    var boxContent = $('.modal-content').width();
+                    debugger
+                    $("#ajaxLoading").show();
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_cntr_id = $('#cntr_id').val();
+                    var p_str_status = $('#status').val();
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                    var p_str_ref_no = $('#req_num').val();
+                    var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                    var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                    var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                    var p_str_eta_dtTo = $('#eta_dt_to').val();
+                    var p_str_rcvd_frm = $('#vend_name').val();
+                    var p_str_screen_title = $('#screentitle').val();
+                    var p_str_itm_num = $('#ib_Itmdtl').val();
+                    var p_str_itm_color = $('#ib_itm_color').val();
+                    var p_str_itm_size = $('#ib_itm_size').val();
+                    var p_str_itm_desc = $('#ib_itm_name').val();
+                    var p_str_itm_type = $('#status').val();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                            "p_str_doc_dtFm": p_str_doc_dtFm,
+                            "p_str_doc_dtTo": p_str_doc_dtTo,
+                            "p_str_eta_dtFm": p_str_eta_dtFm,
+                            "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                            "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                            "p_str_itm_type": p_str_itm_type
+                        },
+
+                        dataType: "json",
+                        success: function (e) {
+                            //alert(e)
+
+                        },
+
+                    });
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostBackRecvEntryURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "CmpId": CmpId, "id": id, "pstrIbDocDate":lstrIbDocDate, "Cont_id": Cont_id,"datefrom":datefrom,"dateto":dateto },
+                        datatype: "json",
+
+                        success: function (data) {
+                            if (data == "IB DOC ALREADY RCVD")  
+                            {
+                                $("#ajaxLoading").hide();
+                                swal("IB Doc Id Already Received.");
+                            }
+                           else if (data == "STRG-RATE-NOT-FOUND")  
+                            {
+                                $("#ajaxLoading").hide();
+                                swal("Storage Rate Not Found for the selected Customer Storage Bill Type");
+                            }
+                            else if (data == "INOUT-RATE-NOT-FOUND")   
+                            {
+                                $("#ajaxLoading").hide();
+                                swal("INOUT Rate Not Found for the selected Customer Inout Bill Type");
+                            }
+                            else
+                                {
+                            $("#ajaxLoading").hide();
+                            $('#myModalContentRecvEntry').html(data);
+                            $('#myModalRecvEntry').modal(options);
+                            $('#myModalRecvEntry').modal('show');
+                            }
+                        },
+                        error: function () {
+                            $("#ajaxLoading").hide();
+                            swal("Dynamic content load failed.");
+                        }
+                    });
+                }
+                else if(status == "1-RCVD")
+                {
+                    swal("Container was Already Received, Couldn't Modify")
+                }
+                else {
+
+                    swal("Container was Already Posted, Couldn't Modify")
+                }
+            });
+        });
+
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackRecvPostURL = '/InboundInquiry/ReceivingPost';
+        $(function () {
+            $('#IBPartialGridInq tbody').on('click', '.InboundInqReceivingPost', function ()
+            {
+                debugger
+                var $buttonClicked = $(this);
+                var CmpId = $buttonClicked.attr('data-id');
+                var id = $buttonClicked.attr('data-id1');
+                var Cont_id = $buttonClicked.attr('data-id2');
+                var LotId = $buttonClicked.attr('data-id3');
+                var status = $buttonClicked.attr('data-id4').trim();
+                var rcvd_dt = $buttonClicked.attr('data-id5').trim();
+                var datefrom = $('#ib_doc_dt_fm').val();
+                var dateto = $('#ib_doc_dt_to').val();
+                debugger
+                if (status != "OPEN" && status != "POST") {
+                    var options = { "backdrop": "static", keyboard: true };
+                    var windowHeight = $(window).height();
+                    var windowWidth = $(window).width();
+                    var boxHeight = $('.modal-content').height();
+                    var boxWidth = $('.modal').width();
+                    var boxContent = $('.modal-content').width();
+                    debugger
+                    $("#ajaxLoading").show();
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_cntr_id = $('#cntr_id').val();
+                    var p_str_status = $('#status').val();
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                    var p_str_ref_no = $('#req_num').val();
+                    var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                    var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                    var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                    var p_str_eta_dtTo = $('#eta_dt_to').val();
+                    var p_str_rcvd_frm = $('#vend_name').val();
+                    var p_str_screen_title = $('#screentitle').val();
+                    var p_str_itm_num = $('#ib_Itmdtl').val();
+                    var p_str_itm_color = $('#ib_itm_color').val();
+                    var p_str_itm_size = $('#ib_itm_size').val();
+                    var p_str_itm_desc = $('#ib_itm_name').val();
+                    var p_str_itm_type = $('#status').val();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                            "p_str_doc_dtFm": p_str_doc_dtFm,
+                            "p_str_doc_dtTo": p_str_doc_dtTo,
+                            "p_str_eta_dtFm": p_str_eta_dtFm,
+                            "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                            "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                            "p_str_itm_type": p_str_itm_type
+                        },
+
+                        dataType: "json",
+                        success: function (e) {
+                            //alert(e)
+
+                        },
+
+                    });
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostBackRecvPostURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "CmpId": CmpId, "id": id, "Cont_id": Cont_id, "LotId": LotId,"datefrom":datefrom,"dateto":dateto,"rcvd_dt":rcvd_dt},
+                        datatype: "json",
+
+                        success: function (data) {
+                            $("#ajaxLoading").hide();
+                            $('#myModalContentRecvPost').html(data);
+                            $('#myModalRecvPost').modal(options);
+                            $('#myModalRecvPost').modal('show');
+                        },
+                        error: function () {
+                            $("#ajaxLoading").hide();
+                            swal("Dynamic content load failed.");
+                        }
+                    });
+                }
+                else if(status == "OPEN")
+                {
+                    swal("Lot Id Not Found!")
+                }
+                else
+                {
+
+                    swal("ContainerId was Already Posted")
+                }
+            });
+
+        });
+
+
+        var urlDeleteBillEntry = '/InboundInquiry/DeleteIOBillByIbDocId';
+        $(function () {
+            $(".DeleteIOBillByIbDocId").click(function () {
+
+                debugger;
+                var $buttonClicked = $(this);
+                var cmpid = $('#cmp_id').val();
+                var $buttonClicked = $(this);
+                var p_str_cmpid = $buttonClicked.attr('data-id');
+                var p_str_bill_doc_id = $buttonClicked.attr('data-id1');
+                var p_str_lot_id = $buttonClicked.attr('data-id2');
+
+                $("#ajaxLoading").show();
+                var options = { "backdrop": "static", keyboard: true };
+
+                sweetAlert({
+                    title: "",
+                    text: "Do you want to Delete this IB Doc ID from the bill?",
+                    type: "",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "No",
+                    cancelButtonText: "Yes",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                   function (isConfirm) {
+                       if (isConfirm) {
+
+
+                       }
+
+                       else {
+                           debugger
+
+                           $.ajax({
+                               type: "get",
+                               url: urlDeleteBillEntry,
+                               data: {
+                                   "p_str_cmp_id": p_str_cmp_id,
+                                   "p_str_bill_doc_id": p_str_bill_doc_id,
+                                   "p_str_lot_id": p_str_lot_id
+
+                               },
+                               datatype: 'html',
+                               success: function (e) {
+                                   debugger
+                                   $("#ajaxLoading").hide();
+                               },
+                           })
+
+                       }
+                   });
+
+
+                debugger
+
+            });
+
+        });
+
+
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackRecvUnPostURL = '/InboundInquiry/ReceivingUnPost';
+        $(function () {
+            //$(".InboundInqReceivingUnPost").click(function () {
+            $('#IBPartialGridInq tbody').on('click', '.InboundInqReceivingUnPost',
+                function () { 
+
+                    debugger
+                    var $buttonClicked = $(this);
+                    var CmpId = $buttonClicked.attr('data-id');
+                    var id = $buttonClicked.attr('data-id1');
+                    var Cont_id = $buttonClicked.attr('data-id2');
+                    var LotId = $buttonClicked.attr('data-id3');
+                    var status = $buttonClicked.attr('data-id4').trim();
+                    var billstatus=$buttonClicked.attr('data-id5');
+                    var billdocid=$buttonClicked.attr('data-id6');
+
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_ib_doc_id = $buttonClicked.attr('data-id1');
+                    var l_str_ib_doc_in_use = '';
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Content("~/InboundInquiry/checkIBDocInUse")',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({
+                            "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id
+
+                        }),
+
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (e) {
+                            if (e == 'Y') {
+                                swal("IB Doc Id is already in Use - Allocated/Shipped status.")
+                                $("#ajaxLoading").hide();
+                            }
+
+                            else
+                            {
+                                if(billstatus=="TEMP")
+                                {
+                                    sweetAlert({
+                                        title: "",
+                                        text: "Inout Bill is Generated Do You Want to Do Receiving UnPost",
+                                        type: "",
+                                        showCancelButton: true,
+                                        confirmButtonClass: "btn-danger",
+                                        confirmButtonText: "No",
+                                        cancelButtonText: "Yes",
+                                        closeOnConfirm: true,
+                                        closeOnCancel: true
+                                    },
+                                  function (isConfirm) {
+                                      if (isConfirm) {
+                                          $("#ajaxLoading").hide();
+                                      }
+
+                                      else {
+                                          var datefrom = $('#ib_doc_dt_fm').val(); //CR 2202018_01 Added by murugan
+                                          var dateto = $('#ib_doc_dt_to').val(); //CR 2202018_01 Added by murugan
+                                          if (status != "OPEN" && status != "1-RCVD") {
+                                              var options = { "backdrop": "static", keyboard: true };
+                                              var windowHeight = $(window).height();
+                                              var windowWidth = $(window).width();
+                                              var boxHeight = $('.modal-content').height();
+                                              var boxWidth = $('.modal').width();
+                                              var boxContent = $('.modal-content').width();
+                                              debugger
+                                             
+                                              var p_str_cmp_id = $('#cmp_id').val();
+                                              var p_str_cntr_id = $('#cntr_id').val();
+                                              var p_str_status = $('#status').val();
+                                              var p_str_ib_doc_id = $('#ib_doc_id').val();
+                                              var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                                              var p_str_ref_no = $('#req_num').val();
+                                              var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                                              var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                                              var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                                              var p_str_eta_dtTo = $('#eta_dt_to').val();
+                                              var p_str_rcvd_frm = $('#vend_name').val();
+                                              var p_str_screen_title = $('#screentitle').val();
+                                              var p_str_itm_num = $('#ib_Itmdtl').val();
+                                              var p_str_itm_color = $('#ib_itm_color').val();
+                                              var p_str_itm_size = $('#ib_itm_size').val();
+                                              var p_str_itm_desc = $('#ib_itm_name').val();
+                                              var p_str_itm_type = $('#status').val();
+                                              $.ajax({
+                                                  type: "GET",
+                                                  url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                                                  data: {
+                                                      "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                                                      "p_str_doc_dtFm": p_str_doc_dtFm,
+                                                      "p_str_doc_dtTo": p_str_doc_dtTo,
+                                                      "p_str_eta_dtFm": p_str_eta_dtFm,
+                                                      "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                                                      "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                                                      "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                                                      "p_str_itm_type": p_str_itm_type
+                                                  },
+
+                                                  dataType: "json",
+                                                  success: function (e) {
+                                                      //alert(e)
+
+                                                  },
+
+                                              });
+                                              $.ajax({
+                                                  type: "GET",
+                                                  url: TeamDetailPostBackRecvUnPostURL,
+                                                  contentType: "application/json; charset=utf-8",
+                                                  data: { "CmpId": CmpId, "id": id, "Cont_id": Cont_id,"LotId": LotId,"datefrom":datefrom,"dateto":dateto},
+                                                  datatype: "json",
+
+                                                  success: function (data) {
+                                                      $("#ajaxLoading").hide();
+                                                      $('#myModalContentRecvPost').html(data);
+                                                      $('#myModalRecvPost').modal(options);
+                                                      $('#myModalRecvPost').modal('show');
+                                                  },
+                                                  error: function () {
+                                                      $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                                                      swal("Dynamic content load failed.");
+                                                  }
+                                              });
+                                          }
+                                          else if (status == "OPEN") {
+                                              swal("Lot Id Not Found!")
+                                              $("#ajaxLoading").hide();
+                                          }
+                                          else {
+
+                                              swal("LotId Cannot be Unpost")
+                                              $("#ajaxLoading").hide();
+                                          }
+                                      }
+                                  });
+                                }
+                                else
+                                {
+                                    var datefrom = $('#ib_doc_dt_fm').val(); //CR 2202018_01 Added by murugan
+                                    var dateto = $('#ib_doc_dt_to').val(); //CR 2202018_01 Added by murugan
+                                    if (status != "OPEN" && status != "1-RCVD") {
+                                        var options = { "backdrop": "static", keyboard: true };
+                                        var windowHeight = $(window).height();
+                                        var windowWidth = $(window).width();
+                                        var boxHeight = $('.modal-content').height();
+                                        var boxWidth = $('.modal').width();
+                                        var boxContent = $('.modal-content').width();
+                                        debugger
+                                        $("#ajaxLoading").show();
+                                        var p_str_cmp_id = $('#cmp_id').val();
+                                        var p_str_cntr_id = $('#cntr_id').val();
+                                        var p_str_status = $('#status').val();
+                                        var p_str_ib_doc_id = $('#ib_doc_id').val();
+                                        var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                                        var p_str_ref_no = $('#req_num').val();
+                                        var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                                        var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                                        var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                                        var p_str_eta_dtTo = $('#eta_dt_to').val();
+                                        var p_str_rcvd_frm = $('#vend_name').val();
+                                        var p_str_screen_title = $('#screentitle').val();
+                                        var p_str_itm_num = $('#ib_Itmdtl').val();
+                                        var p_str_itm_color = $('#ib_itm_color').val();
+                                        var p_str_itm_size = $('#ib_itm_size').val();
+                                        var p_str_itm_desc = $('#ib_itm_name').val();
+                                        var p_str_itm_type = $('#status').val();
+                                        $.ajax({
+                                            type: "GET",
+                                            url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                                            data: {
+                                                "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                                                "p_str_doc_dtFm": p_str_doc_dtFm,
+                                                "p_str_doc_dtTo": p_str_doc_dtTo,
+                                                "p_str_eta_dtFm": p_str_eta_dtFm,
+                                                "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                                                "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                                                "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                                                "p_str_itm_type": p_str_itm_type
+                                            },
+
+                                            dataType: "json",
+                                            success: function (e) {
+                                                //alert(e)
+
+                                            },
+
+                                        });
+                                        $.ajax({
+                                            type: "GET",
+                                            url: TeamDetailPostBackRecvUnPostURL,
+                                            contentType: "application/json; charset=utf-8",
+                                            data: { "CmpId": CmpId, "id": id, "Cont_id": Cont_id,"LotId": LotId,"datefrom":datefrom,"dateto":dateto},
+                                            datatype: "json",
+
+                                            success: function (data) {
+                                                $("#ajaxLoading").hide();
+                                                $('#myModalContentRecvPost').html(data);
+                                                $('#myModalRecvPost').modal(options);
+                                                $('#myModalRecvPost').modal('show');
+                                            },
+                                            error: function () {
+                                                $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                                                swal("Dynamic content load failed.");
+                                            }
+                                        });
+                                    }
+                                    else if (status == "OPEN") {
+                                        swal("Lot Id Not Found!")
+                                        $("#ajaxLoading").hide();
+                                    }
+                                    else {
+
+                                        swal("LotId Cannot be Unpost")
+                                        $("#ajaxLoading").hide();
+                                    }
+                                }
+                            }
+
+                        }});
+             });
+            var cmp_id = $("#cmp_id").val();
+            var TeamDetailPostBackViewURL = '/InboundInquiry/Views';
+            $(function () {
+                //$(".DocEntryViewDetail").click(function () {
+                $('#IBPartialGridInq tbody').on('click', '.DocEntryViewDetail', function () { //CR2018-04-07-001 Added by Nithya
+                    debugger
+                    var $buttonClicked = $(this);
+                    var CmpId = $buttonClicked.attr('data-id');
+                    var id = $buttonClicked.attr('data-id1');
+                    var options = { "backdrop": "static", keyboard: true };
+                    var windowHeight = $(window).height();
+                    var windowWidth = $(window).width();
+                    var boxHeight = $('.modal-content').height();
+                    var boxWidth = $('.modal').width();
+                    var boxContent = $('.modal-content').width();
+                    $("#ajaxLoading").show();
+                    debugger
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostBackViewURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "CmpId": CmpId,"id": id },
+                        datatype: "json",
+
+                        success: function (data) {
+                            $("#ajaxLoading").hide();
+                            $('#myModalContentView').html(data);
+                            $('#myModalView').modal(options);
+                            $('#myModalView').modal('show');
+                        },
+                        error: function () {
+                            $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                            swal("Dynamic content load failed.");
+                        }
+                    });
+                });
+                //$("#closbtn").click(function () {
+                //    $('#myModal').modal('hide');
+                //});
+            });
+            var cmp_id = $("#cmp_id").val();
+            var TeamDetailPostBackEditURL = '/InboundInquiry/DocEdit';
+            $(function () {
+                //$(".DocEntryEditDetail").click(function () {
+                $('#IBPartialGridInq tbody').on('click', '.DocEntryEditDetail', function () { //CR2018-04-07-001 Added by Nithya
+                    debugger
+                    var $buttonClicked = $(this);
+                    var CmpId = $buttonClicked.attr('data-id');
+                    var id = $buttonClicked.attr('data-id1');
+                    var datefrom = $('#ib_doc_dt_fm').val(); //CR 2202018_01 Added by murugan
+                    var dateto = $('#ib_doc_dt_to').val(); //CR 2202018_01 Added by murugan
+                    var userId = $('#user_id').val();
+                    var options = { "backdrop": "static", keyboard: true };
+                    var windowHeight = $(window).height();
+                    var windowWidth = $(window).width();
+                    var boxHeight = $('.modal-content').height();
+                    var boxWidth = $('.modal').width();
+                    var boxContent = $('.modal-content').width();
+                    debugger
+                    $("#ajaxLoading").show();
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_cntr_id = $('#cntr_id').val();
+                    var p_str_status = $('#status').val();
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                    var p_str_ref_no = $('#req_num').val();
+                    var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                    var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                    var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                    var p_str_eta_dtTo = $('#eta_dt_to').val();
+                    var p_str_rcvd_frm = $('#vend_name').val();
+                    var p_str_screen_title = $('#screentitle').val();
+                    var p_str_itm_num = $('#ib_Itmdtl').val();
+                    var p_str_itm_color = $('#ib_itm_color').val();
+                    var p_str_itm_size = $('#ib_itm_size').val();
+                    var p_str_itm_desc = $('#ib_itm_name').val();
+                    var p_str_itm_type = $('#status').val();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                            "p_str_doc_dtFm": p_str_doc_dtFm,
+                            "p_str_doc_dtTo": p_str_doc_dtTo,
+                            "p_str_eta_dtFm": p_str_eta_dtFm,
+                            "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                            "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                            "p_str_itm_type": p_str_itm_type
+                        },
+
+                        dataType: "json",
+                        success: function (e) {
+                            //alert(e)
+
+                        },
+
+                    });
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostBackEditURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "CmpId": CmpId, "id": id,"datefrom":datefrom,"dateto":dateto },
+                        datatype: "json",
+
+                        success: function (data) {
+                            if(data=='1')
+                            {
+                                swal({
+                                    title: "",
+                                    text: "IB# "+ id +" Already Login By " + userId +"",
+                                    type: "",
+                                    showCancelButton: false,
+                                    confirmButtonClass: "btn-danger",
+                                    confirmButtonText: "Ok",
+                                    closeOnConfirm: true
+                                },
+
+                            function () {
+                                $('#myModalEdit').modal('hide');
+                                $("#ajaxLoading").hide();
+                                setTimeout(function () {
+                                    debugger
+                                });
+                            });
+                            }
+                            else
+                            {
+                                $("#ajaxLoading").hide();
+                                $('#myModalContentEdit').html(data);
+                                $('#myModalEdit').modal(options);
+                                $('#myModalEdit').modal('show');
+                                $('#new_edit_cont_id').focus();
+                            }
+
+                        },
+                        error: function () {
+                            $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                            swal("Dynamic content load failed.");
+                        }
+                    });
+                });
+                //$("#closbtn").click(function () {
+                //    $('#myModal').modal('hide');
+                //});
+            });
+
+            var cmp_id = $("#cmp_id").val();
+            var TeamDetailPostBackDelURL = '/InboundInquiry/Delete';
+            $(function () {
+                //$(".DocEntryDelDetail").click(function () {
+                $('#IBPartialGridInq tbody').on('click', '.DocEntryDelDetail', function () { //CR2018-04-07-001 Added by Nithya
+                    debugger
+                    var $buttonClicked = $(this);
+                    var CmpId = $buttonClicked.attr('data-id');
+                    var id = $buttonClicked.attr('data-id1');
+                    var options = { "backdrop": "static", keyboard: true };
+                    var windowHeight = $(window).height();
+                    var windowWidth = $(window).width();
+                    var boxHeight = $('.modal-content').height();
+                    var boxWidth = $('.modal').width();
+                    var boxContent = $('.modal-content').width();
+                    $("#ajaxLoading").show();
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_cntr_id = $('#cntr_id').val();
+                    var p_str_status = $('#status').val();
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                    var p_str_ref_no = $('#req_num').val();
+                    var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                    var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                    var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                    var p_str_eta_dtTo = $('#eta_dt_to').val();
+                    var p_str_rcvd_frm = $('#vend_name').val();
+                    var p_str_screen_title = $('#screentitle').val();
+                    var p_str_itm_num = $('#ib_Itmdtl').val();
+                    var p_str_itm_color = $('#ib_itm_color').val();
+                    var p_str_itm_size = $('#ib_itm_size').val();
+                    var p_str_itm_desc = $('#ib_itm_name').val();
+                    var p_str_itm_type = $('#status').val();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                            "p_str_doc_dtFm": p_str_doc_dtFm,
+                            "p_str_doc_dtTo": p_str_doc_dtTo,
+                            "p_str_eta_dtFm": p_str_eta_dtFm,
+                            "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                            "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                            "p_str_itm_type": p_str_itm_type
+                        },
+
+                        dataType: "json",
+                        success: function (e) {
+                            //alert(e)
+
+                        },
+
+                    });
+                    debugger
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostBackDelURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: {  "CmpId": CmpId,"id": id },
+                        datatype: "json",
+
+                        success: function (data) {
+                            $("#ajaxLoading").hide();
+                            $('#myModalContentEdit').html(data);
+                            $('#myModalEdit').modal(options);
+                            $('#myModalEdit').modal('show');
+                            $(document).ready(function () {
+                                $("#SRDetailSec :input").attr("disabled", true);
+                            });
+                        },
+                        error: function () {
+                            $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                            swal("Dynamic content load failed.");
+                        }
+                    });
+                });
+                //$("#closbtn").click(function () {
+                //    $('#myModal').modal('hide');
+                //});
+            });
+            var cmp_id = $("#cmp_id").val();
+            var TeamDetailPostLOTBackURL = '/InboundInquiry/LotDetail';
+            $(function () {
+                //$(".anchorlotDetail").click(function () {
+                $('#IBPartialGridInq tbody').on('click', '.anchorlotDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+                    var $buttonClicked = $(this);
+                    var id = $buttonClicked.attr('data-id');
+                    var ibdocid = $buttonClicked.attr('data-id1');
+                    var options = { "backdrop": "static", keyboard: true };
+
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostLOTBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "Id": id, "cmp_id": cmp_id, "ibdocid": ibdocid },
+                        datatype: "json",
+                        success: function (data) {
+
+                            $("#ajaxLoading").hide();
+                            $('#myModallotContent').html(data);
+                            $('#myModalLot').modal(options);
+                            $('#myModalLot').modal('show');
+
+                        },
+                        error: function () {
+                            $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                            swal("Dynamic content load failed.");
+                        }
+                    });
+                });
+                //$("#closbtn").click(function () {
+                //    $('#myModal').modal('hide');
+                //});
+            });
+            var cmp_id = $("#cmp_id").val();
+            var TeamDetailPostBackRecvEditURL = '/InboundInquiry/ReceivingEntryEdit';
+            $(function () {
+                //$(".InboundInqReceivingEdit").click(function () {
+                $('#IBPartialGridInq tbody').on('click', '.InboundInqReceivingEdit', function () { //CR2018-04-07-001 Added by Nithya
+
+                    debugger
+                    var $buttonClicked = $(this);
+                    var CmpId = $buttonClicked.attr('data-id');
+                    var id = $buttonClicked.attr('data-id1');
+                    var Cont_id = $buttonClicked.attr('data-id2');
+                    var LotId = $buttonClicked.attr('data-id3');
+                    var status = $buttonClicked.attr('data-id4').trim();
+                    var datefrom = $('#ib_doc_dt_fm').val(); //CR 2202018_01 Added by murugan
+                    var dateto = $('#ib_doc_dt_to').val(); //CR 2202018_01 Added by murugan
+                    debugger
+                    if (status != "OPEN" && status != "POST") {
+                        var options = { "backdrop": "static", keyboard: true };
+                        var windowHeight = $(window).height();
+                        var windowWidth = $(window).width();
+                        var boxHeight = $('.modal-content').height();
+                        var boxWidth = $('.modal').width();
+                        var boxContent = $('.modal-content').width();
+                        debugger
+                        $("#ajaxLoading").show();
+                        var p_str_cmp_id = $('#cmp_id').val();
+                        var p_str_cntr_id = $('#cntr_id').val();
+                        var p_str_status = $('#status').val();
+                        var p_str_ib_doc_id = $('#ib_doc_id').val();
+                        var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                        var p_str_ref_no = $('#req_num').val();
+                        var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                        var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                        var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                        var p_str_eta_dtTo = $('#eta_dt_to').val();
+                        var p_str_rcvd_frm = $('#vend_name').val();
+                        var p_str_screen_title = $('#screentitle').val();
+                        var p_str_itm_num = $('#ib_Itmdtl').val();
+                        var p_str_itm_color = $('#ib_itm_color').val();
+                        var p_str_itm_size = $('#ib_itm_size').val();
+                        var p_str_itm_desc = $('#ib_itm_name').val();
+                        var p_str_itm_type = $('#status').val();
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                            data: {
+                                "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                                "p_str_doc_dtFm": p_str_doc_dtFm,
+                                "p_str_doc_dtTo": p_str_doc_dtTo,
+                                "p_str_eta_dtFm": p_str_eta_dtFm,
+                                "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                                "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                                "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                                "p_str_itm_type": p_str_itm_type
+                            },
+
+                            dataType: "json",
+                            success: function (e) {
+                                //alert(e)
+
+                            },
+
+                        });
+                        $.ajax({
+                            type: "GET",
+                            url: TeamDetailPostBackRecvEditURL,
+                            contentType: "application/json; charset=utf-8",
+                            data: { "CmpId": CmpId, "id": id, "Cont_id": Cont_id, "LotId": LotId,"datefrom": datefrom, "dateto": dateto },
+                            datatype: "json",
+
+                            success: function (data) {
+                                $("#ajaxLoading").hide();
+                                $('#myModalContentRecvPost').html(data);
+                                $('#myModalRecvPost').modal(options);
+                                $('#myModalRecvPost').modal('show');
+                            },
+                            error: function () {
+                                $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                                swal("Dynamic content load failed.");
+                            }
+                        });
+                    }
+                    else if(status == "OPEN")
+                    {
+                        swal("Lot Id Not Found!")
+                    }
+                    else
+                    {
+
+                        swal("ContainerId was Already Posted")
+                    }
+                });
+                //$("#closbtn").click(function () {
+                //    $('#myModal').modal('hide');
+                //});
+            });
+            var cmp_id = $("#cmp_id").val();
+            var TeamDetailPostBackRecvViewURL = '/InboundInquiry/ReceivingEntryView';
+            $(function () {
+                //$(".InboundInqReceivingView").click(function () {
+                $('#IBPartialGridInq tbody').on('click', '.InboundInqReceivingView', function () { //CR2018-04-07-001 Added by Nithya
+
+                    debugger
+                    var $buttonClicked = $(this);
+                    var CmpId = $buttonClicked.attr('data-id');
+                    var id = $buttonClicked.attr('data-id1');
+                    var Cont_id = $buttonClicked.attr('data-id2');
+                    var LotId = $buttonClicked.attr('data-id3');
+                    var status = $buttonClicked.attr('data-id4').trim();
+                    debugger
+                    if (status != "OPEN" && status != "POST") {
+                        var options = { "backdrop": "static", keyboard: true };
+                        var windowHeight = $(window).height();
+                        var windowWidth = $(window).width();
+                        var boxHeight = $('.modal-content').height();
+                        var boxWidth = $('.modal').width();
+                        var boxContent = $('.modal-content').width();
+                        debugger
+                        $("#ajaxLoading").show();
+                        $.ajax({
+                            type: "GET",
+                            url: TeamDetailPostBackRecvViewURL,
+                            contentType: "application/json; charset=utf-8",
+                            data: { "CmpId": CmpId, "id": id, "Cont_id": Cont_id, "LotId": LotId },
+                            datatype: "json",
+
+                            success: function (data) {
+                                $("#ajaxLoading").hide();
+                                $('#myModalContentRecvPost').html(data);
+                                $('#myModalRecvPost').modal(options);
+                                $('#myModalRecvPost').modal('show');
+                            },
+                            error: function () {
+                                $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                                swal("Dynamic content load failed.");
+                            }
+                        });
+                    }
+                    else if(status == "OPEN")
+                    {
+                        swal("Lot Id Not Found!")
+                    }
+                    else
+                    {
+
+                        swal("ContainerId was Already Posted")
+                    }
+                });
+                //$("#closbtn").click(function () {
+                //    $('#myModal').modal('hide');
+                //});
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        $("#dialog-confirm").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: 500,
+            modal: true,
+            buttons: {
+                "Delete this item": function () {
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("[data-dialog-confirm]").click(function (e) {
+            e.preventDefault();
+            var theHREF = $(this).attr("href");
+            $("#dialog-confirm").dialog('option', 'buttons', {
+                "Yes":
+                function () {
+                    $.get(theHREF, null, function () { refreshList() });
+                    $(this).dialog("close");
+                }, "No":
+              function () { $(this).dialog("close"); }
+            });
+            $("#dialog-confirm").dialog("open");
+        });
+    </script>
+    <script>
+        $(function () {
+            //$('#example1').DataTable()
+            $('#IBPartialGridInq').DataTable({
+                "paging": true,
+                "pageLength": 50,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                // "scrollY": "280px",
+                "scrollCollapse": true,
+                "sScrollY": "1060px",
+                "sScrollX": "100%",
+                "height":"1000px"
+
+            });
+            $('#InbndRcvdDtl').DataTable({
+                "pageLength": 10,
+                'paging': true,
+                'lengthChange': false,
+                'searching': false,
+                'ordering': false,
+                'info': false,
+                'autoWidth': false,
+            })
+            $('#InbndRcvdDtl_paginate').hide();
+        })
+        $("#btnClose").click(function () {
+
+            window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+        })
+
+        $("input[name=chkAll").click(function () {
+            if ($(this).prop("checked") == true) {
+
+                $("input[name='tblcheckbox']").prop("checked", true);
+            }
+            else if ($(this).prop("checked") == false) {
+
+                $("input[name='tblcheckbox']").prop("checked", false);
+            }
+
+        });
+        $("input[name='tblcheckbox']").click(function () {
+
+            if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+                $("#chkAll").prop("checked", true);
+            }
+            else {
+                $("#chkAll").prop("checked", false);
+            }
+        });
+        $("input[name='tblcheckbox']").on('change', function () {
+            $("input[name='tblcheckbox']").not(this).prop('checked', false);
+        });
+        function GetPDF(type) {
+            debugger
+            if(@Model.ListInboundDocInquiry.Count != 0)
+            {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var var_name = $("input[name='radio1']:checked").val();
+                if (var_name == "GridSummary") {
+                    var p_str_radio = var_name;
+                    var type=type;
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_cntr_id = $('#cntr_id').val();
+                    var p_str_status = $('#status').val();
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_ref_no = $('#req_num').val();
+                    var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                    var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                    var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                    var p_str_eta_dtTo = $('#eta_dt_to').val();
+                    if(type=="PDF")
+                    {
+                        window.open('ShowSummaryReport?p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id
+                                   + '&p_str_cntr_id=' + p_str_cntr_id + '&p_str_status=' + p_str_status + '&p_str_ref_no=' + p_str_ref_no + '&p_str_doc_dtFm=' + p_str_doc_dtFm
+                                                                        + '&p_str_doc_dtTo=' + p_str_doc_dtTo + '&p_str_eta_dtFm=' + p_str_eta_dtFm + '&p_str_eta_dtTo=' + p_str_eta_dtTo + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowSummaryReport' + p_str_ib_doc_id)
+
+                    }
+                    debugger
+                    if(type=="Word")
+                    {
+                        window.open('ShowSummaryReport?p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id
+                                                                    + '&p_str_cntr_id=' + p_str_cntr_id + '&p_str_status=' + p_str_status + '&p_str_ref_no=' + p_str_ref_no + '&p_str_doc_dtFm=' + p_str_doc_dtFm
+                                                                    + '&p_str_doc_dtTo=' + p_str_doc_dtTo + '&p_str_eta_dtFm=' + p_str_eta_dtFm + '&p_str_eta_dtTo=' + p_str_eta_dtTo + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowSummaryReport' + p_str_ib_doc_id)
+
+                    }
+                    if(type=="Excel")
+                    {
+                        var Win = window.open('ShowSummaryReport?p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id
+                                                                     + '&p_str_cntr_id=' + p_str_cntr_id + '&p_str_status=' + p_str_status + '&p_str_ref_no=' + p_str_ref_no + '&p_str_doc_dtFm=' + p_str_doc_dtFm
+                                                                     + '&p_str_doc_dtTo=' + p_str_doc_dtTo + '&p_str_eta_dtFm=' + p_str_eta_dtFm + '&p_str_eta_dtTo=' + p_str_eta_dtTo + '&type=' + type,
+                                                                     'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowSummaryReport' + p_str_ib_doc_id)
+                    }
+
+                }
+                else {
+                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                    if (numberOfCheckboxes == 0) {
+
+                        sweetAlert("", "Please select the Record to Print.", "");
+                        //not2("Please select the Record to Print.");
+                        //sweetAlert("Congratulations!!", "You Uploaded A Valid File", "success");
+                    }
+
+                    else {
+                        $("input[name='tblcheckbox']:checked").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                checkboxIDArray.push(check.attr('id'));
+                                SelectedRow.push(check.val());
+
+
+                            }
+                        });
+                        var Count = $("input[name='tblcheckbox']:checked").length;
+                        if (Count > 0) {
+                            var SelectdID = '';
+                            $.each(SelectedRow, function (i, v) {
+
+                                if (SelectdID == '')
+                                    SelectdID = v;
+                                else
+                                    SelectdID = SelectdID + ',' + v;
+                            });
+                            var var_name = $("input[name='radio1']:checked").val();
+                            var p_str_cmpid = $('#cmp_id').val();
+                            var p_str_radio = var_name;
+                            var type=type;
+                            var p_str_so_NumFm = $('#so_NumFm').val();
+                            var p_str_so_NumTo = $('#so_NumTo').val();
+                            var p_str_so_DtFm = $('#so_DtFm').val();
+                            var p_str_so_DtTo = $('#so_DtTo').val();
+                            var p_str_CustPo = $('#CustPo').val();
+                            //var p_str_status = $('#status').val();
+                            //window.open('ShowReport?SelectdID=' + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+                            //CR-3PL_MVC_IB_2018_0312_
+                            var p_str_cmp_id = $('#cmp_id').val();
+                            var p_str_ib_doc_id = SelectdID;
+
+                            var TeamDetailPostBackRecvPostURL = '/InboundInquiry/GetDocStatus';
+
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostBackRecvPostURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: { "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id },
+                                datatype: "json",
+
+                                success: function (data) {
+                                    debugger
+                                    var p_str_status = data;
+
+                                    // CR-3PL_MVC_IB_2018_0312_
+                                    //window.open('ShowReport?SelectdID=' + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+                                    if (p_str_status == "1-RCVD" && p_str_radio == "Confirmation") {
+                                        sweetAlert("", "Report print is not allowed .", "");
+                                        return false;
+                                    }
+                                    else if (p_str_status == "OPEN" && p_str_radio == "Confirmation") {
+                                        sweetAlert("", "Report print is not allowed .", "");
+                                        return false;
+                                    }
+                                    else if (p_str_status == "OPEN" && p_str_radio == "TallySheet") {
+                                        sweetAlert("", "Report print is not allowed .", "");
+                                        return false;
+                                    }
+                                    else {
+                                        window.open('ShowReport?SelectdID=' + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+                                    }
+                                },
+
+                            });
+
+                        }
+                        else {
+
+                            $("input:checkbox").each(function () {
+                                var check = $(this);
+                                if (check.is(':checked')) {
+                                    this.checked = !this.checked;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                sweetAlert("Record Selection!!", "No Record found", "Error alert");
+            }
+
+        }
+
+        function GetEmail(type,id) {
+            debugger
+            var TeamDetailPostemailBackURL = '/InboundInquiry/ShowSummaryEmailRpt';
+            var options = { "backdrop": "static", keyboard: true };
+            if(@Model.ListInboundDocInquiry.Count != 0)
+            {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var var_name = $("input[name='radio1']:checked").val();
+                if (var_name == "GridSummary") {
+                    var p_str_radio = var_name;
+                    var type=type;
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_cntr_id = $('#cntr_id').val();
+                    var p_str_status = $('#status').val();
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_ref_no = $('#req_num').val();
+                    var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                    var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                    var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                    var p_str_eta_dtTo = $('#eta_dt_to').val();
+                    var $buttonClicked = $(this);
+                    var id = $buttonClicked.attr('cmp_id');
+                    //alert(id)
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostemailBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "p_str_ib_doc_id": p_str_ib_doc_id , "p_str_radio":p_str_radio,"p_str_cmp_id": p_str_cmp_id,
+                            "p_str_cntr_id": p_str_cntr_id ,"p_str_status": p_str_status ,"p_str_ref_no": p_str_ref_no ,"p_str_doc_dtFm": p_str_doc_dtFm,
+                            "p_str_doc_dtTo": p_str_doc_dtTo ,"p_str_eta_dtFm": p_str_eta_dtFm ,"p_str_eta_dtTo": p_str_eta_dtTo,"type": type },
+                        datatype: "json",
+                        success: function (data) {
+
+                            $('#myModalEmailContent').html(data);
+                            $('#myModalEmail').modal(options);
+                            $('#myModalEmail').modal('show');
+
+                        },
+                        error: function () {
+                            $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                            swal("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                else {
+                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                    if (numberOfCheckboxes == 0) {
+
+                        sweetAlert("", "Please select the Record to Print.", "");
+
+                    }
+                    else {
+                        $("input[name='tblcheckbox']:checked").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                checkboxIDArray.push(check.attr('id'));
+                                SelectedRow.push(check.val());
+                            }
+                        });
+                        var Count = $("input[name='tblcheckbox']:checked").length;
+                        if (Count > 0) {
+                            var SelectdID = '';
+                            $.each(SelectedRow, function (i, v) {
+
+                                if (SelectdID == '')
+                                    SelectdID = v;
+                                else
+                                    SelectdID = SelectdID + ',' + v;
+                            });
+                            var var_name = $("input[name='radio1']:checked").val();
+                            var p_str_cmpid = $('#cmp_id').val();
+                            var p_str_radio = var_name;
+                            var p_str_so_NumFm = $('#so_NumFm').val();
+                            var p_str_so_NumTo = $('#so_NumTo').val();
+                            var p_str_so_DtFm = $('#so_DtFm').val();
+                            var p_str_so_DtTo = $('#so_DtTo').val();
+                            var p_str_CustPo = $('#CustPo').val();
+                            var p_str_status = $('#status').val();
+                            window.open('ShowReport?SelectdID=' + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+                        }
+                        else {
+
+                            $("input:checkbox").each(function () {
+                                var check = $(this);
+                                if (check.is(':checked')) {
+                                    this.checked = !this.checked;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                sweetAlert("Record Selection!!", "No Record found", "Error alert");
+                // not2("No Record found")
+            }
+
+        }
+    </script>
+    <script>
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackURL = '/InboundInquiry/Edit';
+        $(function () {
+            //$(".anchorDetail").click(function () {
+            $('#IBPartialGridInq tbody').on('click', '.anchorDetail', function () { //CR2018-04-07-001 Added by Nithya
+                debugger;
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Id": id, "cmp_id": cmp_id },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal(options);
+                        $('#myModal').modal('show');
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+
+        });
+
+        var p_str_cmp_id = $("#cmp_id").val();
+        var TeamDetailInbounddocupldURL = '/DocumentUpload/LoadInboundDocuments';
+        $(function () {
+            //$(".Inbounddocupld").click(function () {
+            $('#IBPartialGridInq tbody').on('click', '.Inbounddocupld', function () {
+                debugger
+                var $buttonClicked = $(this);
+                var p_str_ib_doc_id = $buttonClicked.attr('data-id');
+                var p_str_cntr_id = $buttonClicked.attr('data-id1');
+                var p_str_screentitle = $('#screentitle').val();
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                debugger
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailInbounddocupldURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "p_str_cmp_id": p_str_cmp_id, "p_str_doc_id": p_str_ib_doc_id , "p_str_cntr_id" :p_str_cntr_id },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+
+                        $('#myModalINdocupldContent').html(data);
+                        $('#myModalINdocupld').modal(options);
+                        $('#myModalINdocupld').modal('show');
+                        //$("#DocBtn").show();
+
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+
+
+
+            $('#IBPartialGridInq tbody').on('click', '.ib_doc_send', function () {
+                debugger
+                UrlEmailDocuments = '/DocumentUpload/EmailDocuments';
+                var $buttonClicked = $(this);
+                var p_str_doc_id = $buttonClicked.attr('data-id');
+                var p_str_cntr_id = $buttonClicked.attr('data-id1');
+                var p_str_cust_name ='';
+                var p_str_cust_po_num = '';
+                var p_str_cmp_id = $("#cmp_id").val();
+
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                debugger
+                $.ajax({
+                    type: "GET",
+                    url: UrlEmailDocuments,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "p_str_cmp_id": p_str_cmp_id, "p_str_doc_id": p_str_doc_id, "p_str_cntr_id": p_str_cntr_id, "p_str_cust_name": p_str_cust_name, "p_str_cust_po_num": p_str_cust_po_num  },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalEmailAlertContent').html(data);
+                        $('#myModalEmailAlert').modal(options);
+                        $('#myModalEmailAlert').modal('show');
+
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+
+
+        });
+
+
+
+
+
+        var TeamDetailRecvdDelBackDelURL = '/InboundInquiry/RecevLoadDelete';
+
+        //$(".InboundRecvDelDetail").click(function () {
+        $('#IBPartialGridInq tbody').on('click', '.InboundRecvDelDetail', function () { //CR2018-04-07-001 Added by Nithya
+            debugger
+            var $buttonClicked = $(this);
+            var CmpId = $buttonClicked.attr('data-id');
+            var p_str_ib_doc_id = $buttonClicked.attr('data-id1');
+            var p_str_cntr_id = $buttonClicked.attr('data-id2');
+            var options = { "backdrop": "static", keyboard: true };
+            var windowHeight = $(window).height();
+            var windowWidth = $(window).width();
+            var boxHeight = $('.modal-content').height();
+            var boxWidth = $('.modal').width();
+            var boxContent = $('.modal-content').width();
+            var datefrom = $('#ib_doc_dt_fm').val();
+            var dateto = $('#ib_doc_dt_to').val();
+
+            debugger
+            $("#ajaxLoading").show();
+
+            $.ajax({
+                type: "GET",
+                url: TeamDetailRecvdDelBackDelURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_CmpId": CmpId, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_cntr_id": p_str_cntr_id,"datefrom": datefrom, "dateto": dateto },
+                datatype: "json",
+
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+
+                    $('#myModalContentEdit').html(data);
+                    $('#myModalEdit').modal(options);
+                    $('#myModalEdit').modal('show');
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+
+        var TeamDetailPostBackDelURL = '/InboundInquiry/Delete';
+        $(function () {
+            //$(".InboundInqDelDetail").click(function () {
+            $('#IBPartialGridInq tbody').on('click', '.InboundInqDelDetail', function () { //CR2018-04-07-001 Added by Nithya
+                debugger
+                var $buttonClicked = $(this);
+                var CmpId = $buttonClicked.attr('data-id');
+                var id = $buttonClicked.attr('data-id1');
+                var options = { "backdrop": "static", keyboard: true };
+                var windowHeight = $(window).height();
+                var windowWidth = $(window).width();
+                var boxHeight = $('.modal-content').height();
+                var boxWidth = $('.modal').width();
+                var boxContent = $('.modal-content').width();
+                var datefrom = $('#ib_doc_dt_fm').val(); //CR 2202018_01 Added by murugan
+                var dateto = $('#ib_doc_dt_to').val(); //CR 2202018_01 Added by murugan
+                debugger
+                $("#ajaxLoading").show();
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_cntr_id = $('#cntr_id').val();
+                var p_str_status = $('#status').val();
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                var p_str_ref_no = $('#req_num').val();
+                var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                var p_str_eta_dtTo = $('#eta_dt_to').val();
+                var p_str_rcvd_frm = $('#vend_name').val();
+                var p_str_screen_title = $('#screentitle').val();
+                var p_str_itm_num = $('#ib_Itmdtl').val();
+                var p_str_itm_color = $('#ib_itm_color').val();
+                var p_str_itm_size = $('#ib_itm_size').val();
+                var p_str_itm_desc = $('#ib_itm_name').val();
+                var p_str_itm_type = $('#status').val();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                        "p_str_doc_dtFm": p_str_doc_dtFm,
+                        "p_str_doc_dtTo": p_str_doc_dtTo,
+                        "p_str_eta_dtFm": p_str_eta_dtFm,
+                        "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                        "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                        "p_str_itm_type": p_str_itm_type
+                    },
+
+                    dataType: "json",
+                    success: function (e) {
+                        //alert(e)
+
+                    },
+
+                });
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackDelURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "CmpId": CmpId, "id": id,"datefrom":datefrom,"dateto":dateto },
+                    datatype: "json",
+
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContentEdit').html(data);
+                        $('#myModalEdit').modal(options);
+                        $('#myModalEdit').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+            //$("#closbtn").click(function () {
+            //    $('#myModal').modal('hide');
+            //});
+        });
+        @*CR-3PL_MVC_IB_2018_0219_004*@
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackAddURLINOUT = '/BillingInquiry/GenerateIBInoutBillDetails';
+        $(function () {
+            //$(".InboundInqReceivingBillStatus").click(function () {
+            $('#IBPartialGridInq tbody').on('click', '.InboundInqReceivingBillStatus', function () { //CR2018-04-07-001 Added by Nithya
+                debugger;
+                var $buttonClicked = $(this);
+                var cmpid = $('#cmp_id').val();
+                var $buttonClicked = $(this);
+                var p_str_cmpid = $buttonClicked.attr('data-id');
+                var p_str_ib_doc_id1 = $buttonClicked.attr('data-id1');
+                var Cont_id = $buttonClicked.attr('data-id2');
+                var LotId = $buttonClicked.attr('data-id3');
+                var status = $buttonClicked.attr('data-id4').trim();
+                var datefrom = $('#ib_doc_dt_fm').val(); //CR 2202018_01 Added by murugan
+                var dateto = $('#ib_doc_dt_to').val(); //CR 2202018_01 Added by murugan
+                var p_str_screen_title = $('#screenTitle').val();
+                $("#ajaxLoading").show();
+                var options = { "backdrop": "static", keyboard: true };
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_cntr_id = $('#cntr_id').val();
+                var p_str_status = $('#status').val();
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+                var p_str_ref_no = $('#req_num').val();
+                var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+                var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+                var p_str_eta_dtFm = $('#eta_dt_fm').val();
+                var p_str_eta_dtTo = $('#eta_dt_to').val();
+                var p_str_rcvd_frm = $('#vend_name').val();
+                var p_str_screen_title = $('#screentitle').val();
+                var p_str_itm_num = $('#ib_Itmdtl').val();
+                var p_str_itm_color = $('#ib_itm_color').val();
+                var p_str_itm_size = $('#ib_itm_size').val();
+                var p_str_itm_desc = $('#ib_itm_name').val();
+                var p_str_itm_type = $('#status').val();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                        "p_str_doc_dtFm": p_str_doc_dtFm,
+                        "p_str_doc_dtTo": p_str_doc_dtTo,
+                        "p_str_eta_dtFm": p_str_eta_dtFm,
+                        "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                        "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                        "p_str_itm_type": p_str_itm_type
+                    },
+
+                    dataType: "json",
+                    success: function (e) {
+                        //alert(e)
+
+                    },
+
+                });
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackAddURLINOUT,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "p_str_cmpid": p_str_cmpid, "p_str_ib_doc_id": p_str_ib_doc_id1,"datefrom":datefrom,"dateto":dateto , "p_str_screen_title": p_str_screen_title },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContentInOutBill').html(data);
+                        $('#myModalInOutBill').modal(options);
+                        $('#myModalInOutBill').modal('show');
+                        @*CR-3PL_MVC_IB_2018_0219_004*@
+                        var p_str_cmp_id = $('#cust_of_cmpid').val();
+                        var p_str_cust_id = $('#cmp_id').val();
+                        var p_str_print_dt = $('#bill_print_dt').val();
+                        var p_str_bill_pd_fm = $('#inout_bill_pd_fm').val();
+                        var p_str_bill_pd_to = $('#inout_bill_pd_to').val();
+                        //var p_str_ib_doc_id = $('#ibdocid').val();
+                        $("#ajaxLoading").show();
+                        $.ajax({
+                            type: "GET",
+                            url: "/BillingInquiry/GetSearchInOutBillInqDetails",
+                            data: {
+                                "p_str_cmp_id": p_str_cmp_id, "p_str_cust_id": p_str_cust_id, "p_str_print_dt": p_str_print_dt, "p_str_bill_pd_fm": p_str_bill_pd_fm, "p_str_bill_pd_to": p_str_bill_pd_to, "p_str_ib_doc_id": p_str_ib_doc_id1
+
+                            },
+                            dataType: 'html',
+                            success: function (e) {
+                                $("#ajaxLoading").hide();
+                                $('#ShowInOutBillGrid').html("");
+                                $('#ShowInOutBillGrid').html(e);
+                            },
+                        })
+                        @*CR-3PL_MVC_IB_2018_0219_004*@
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+
+                debugger
+
+            });
+        });
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBlBackURL = '/BillingInquiry/Billingdtl';
+        $(function () {
+            //$(".BillDetail").click(function () {
+            $('#IBPartialGridInq tbody').on('click', '.BillDetail', function () { //CR2018-04-07-001 Added by Nithya
+                debugger
+                var $buttonClicked = $(this);
+                var BilldocId = $buttonClicked.attr('data-id1');
+                var Billdocdate = $buttonClicked.attr('data-id2');
+                var IBDocID = $buttonClicked.attr('data-id5');
+                var p_str_viewmode = "View";
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBlBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode,"IBDocID": IBDocID  },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal(options);
+                        $('#myModal').modal('show');
+                    },
+                    error: function () {
+                        //alert("Dynamic content load failed.");
+                        sweetAlert("", "Dynamic content load failed.", "");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+            });
+        })
+        var IbsEntryURL = '/InboundInquiry/IbsEntryAdd';
+        $(function () {
+            $('#IBPartialGridInq tbody').on('click', '.IBSEntry', function () {
+                debugger
+                var $IBServiceAddButtonClicked = $(this);
+                var p_str_cmp_id = $IBServiceAddButtonClicked.attr('A_str_cmp_id');
+                var p_str_ib_docid = $IBServiceAddButtonClicked.attr('A_str_ib_doc_id');
+                var p_str_status = $IBServiceAddButtonClicked.attr('A_str_ib_doc_status');
+                var p_str_ib_doc_dt=$IBServiceAddButtonClicked.attr('A_str_ib_doc_dt');
+                var p_str_user_id = $('#user_id').val();
+                var options = { "backdrop": "static", keyboard: true };
+                debugger
+                $("#ajaxLoading").show();
+                getheadersectiondata();
+                $.ajax({
+                    type: "GET",
+                    url: IbsEntryURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "p_str_cmp_id": p_str_cmp_id, "p_str_ib_docid": p_str_ib_docid,"p_str_status":p_str_status,"p_str_ib_doc_dt":p_str_ib_doc_dt,"p_str_user_id":p_str_user_id},
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#IBSENtryAddcontent').html(data);
+                        $('#IbsEntryAdd').modal(options);
+                        $('#IbsEntryAdd').modal('show');
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+        });
+
+        var EditIbsEntryURL = '/InboundInquiry/IbsEntryEdit';
+        $(function () {
+            $('#IBPartialGridInq tbody').on('click', '.InboundInqServiceEdit', function () {
+                debugger
+                var $IBServiceEditButtonClicked = $(this);
+                var p_str_cmp_id = $IBServiceEditButtonClicked.attr('E_str_cmp_id');
+                var p_str_ib_docid = $IBServiceEditButtonClicked.attr('E_str_ib_doc_id');
+                var p_str_status = $IBServiceEditButtonClicked.attr('E_str_ib_doc_status');
+                var p_str_ib_doc_dt=$IBServiceEditButtonClicked.attr('E_str_ib_doc_dt');
+                var p_str_ibs_doc_id=$IBServiceEditButtonClicked.attr('E_str_ibs_doc_id');
+                var p_str_user_id = $('#user_id').val();
+                var p_str_action_type="Edit";
+                var options = { "backdrop": "static", keyboard: true };
+                debugger
+                $("#ajaxLoading").show();
+                getheadersectiondata();
+                $.ajax({
+                    type: "GET",
+                    url: EditIbsEntryURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "p_str_cmp_id": p_str_cmp_id, "p_str_ib_docid": p_str_ib_docid,"p_str_status":p_str_status,"p_str_ib_doc_dt":p_str_ib_doc_dt,"p_str_ibs_doc_id":p_str_ibs_doc_id,
+                        "p_str_user_id":p_str_user_id,"p_str_action_type":p_str_action_type},
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#IBSEntryEditcontent').html(data);
+                        $('#IbsEntryEdit').modal(options);
+                        $('#IbsEntryEdit').modal('show');
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+        });
+
+
+        $(function () {
+            $('#IBPartialGridInq tbody').on('click', '.InboundInqServiceDelete', function () {
+                debugger
+                var $IBServiceDeleteButtonClicked = $(this);
+                var p_str_cmp_id = $IBServiceDeleteButtonClicked.attr('D_str_cmp_id');
+                var p_str_ib_docid = $IBServiceDeleteButtonClicked.attr('D_str_ib_doc_id');
+                var p_str_status = $IBServiceDeleteButtonClicked.attr('D_str_ib_doc_status');
+                var p_str_ib_doc_dt=$IBServiceDeleteButtonClicked.attr('D_str_ib_doc_dt');
+                var p_str_ibs_doc_id=$IBServiceDeleteButtonClicked.attr('D_str_ibs_doc_id');
+                var p_str_user_id = $('#user_id').val();
+                var p_str_action_type="Delete";
+                var options = { "backdrop": "static", keyboard: true };
+                debugger
+                $("#ajaxLoading").show();
+                getheadersectiondata();
+                $.ajax({
+                    type: "GET",
+                    url: EditIbsEntryURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "p_str_cmp_id": p_str_cmp_id, "p_str_ib_docid": p_str_ib_docid,"p_str_status":p_str_status,"p_str_ib_doc_dt":p_str_ib_doc_dt,"p_str_ibs_doc_id":p_str_ibs_doc_id,
+                        "p_str_user_id":p_str_user_id,"p_str_action_type":p_str_action_type},
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#IBSEntryEditcontent').html(data);
+                        $('#IbsEntryEdit').modal(options);
+                        $('#IbsEntryEdit').modal('show');
+                        $(document).ready(function () {
+                            $("#headersection :input").attr("disabled", true);
+                        });
+                        $(document).ready(function () {
+                            $("#tablesection :input").attr("disabled", true);
+                        });
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+        });
+
+        $(function () {
+            $('#IBPartialGridInq tbody').on('click', '.InboundInqServiceView', function () {
+                debugger
+                var $IBServiceViewButtonClicked = $(this);
+                var p_str_cmp_id = $IBServiceViewButtonClicked.attr('V_str_cmp_id');
+                var p_str_ib_docid = $IBServiceViewButtonClicked.attr('V_str_ib_doc_id');
+                var p_str_status = $IBServiceViewButtonClicked.attr('V_str_ib_doc_status');
+                var p_str_ib_doc_dt=$IBServiceViewButtonClicked.attr('V_str_ib_doc_dt');
+                var p_str_ibs_doc_id=$IBServiceViewButtonClicked.attr('V_str_ibs_doc_id');
+                var p_str_user_id = $('#user_id').val();
+                var p_str_action_type="View";
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                getheadersectiondata();
+                $.ajax({
+                    type: "GET",
+                    url: EditIbsEntryURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "p_str_cmp_id": p_str_cmp_id, "p_str_ib_docid": p_str_ib_docid,"p_str_status":p_str_status,"p_str_ib_doc_dt":p_str_ib_doc_dt,"p_str_ibs_doc_id":p_str_ibs_doc_id,
+                        "p_str_user_id":p_str_user_id,"p_str_action_type":p_str_action_type},
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#IBSEntryEditcontent').html(data);
+                        $('#IbsEntryEdit').modal(options);
+                        $('#IbsEntryEdit').modal('show');
+                        $(document).ready(function () {
+                            $("#headersection :input").attr("disabled", true);
+                        });
+                        $(document).ready(function () {
+                            $("#tablesection :input").attr("disabled", true);
+                        });
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+        });
+
+
+
+
+        $(function () {
+            $('#IBPartialGridInq tbody').on('click', '.ContainerView', function () {
+                debugger
+                var urlViewContainer = '/InboundInquiry/ViewContainer';
+                var $IBServiceViewButtonClicked = $(this);
+                var p_str_cmp_id = $IBServiceViewButtonClicked.attr('v_str_cmp_id');
+                var p_str_ib_doc_id = $IBServiceViewButtonClicked.attr('v_str_ib_doc_id');
+                var p_str_cntr_id = $IBServiceViewButtonClicked.attr('v_str_cntr_id');
+
+                var p_str_action_type="View";
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                getheadersectiondata();
+                $.ajax({
+                    type: "GET",
+                    url: urlViewContainer,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,"p_str_cntr_id":p_str_cntr_id},
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#cntrModalcontent').html(data);
+                        $('#cntrModal').modal(options);
+                        $('#cntrModal').modal('show');
+                        $(document).ready(function () {
+                            $("#headersection :input").attr("disabled", true);
+                        });
+                        $(document).ready(function () {
+                            $("#tablesection :input").attr("disabled", true);
+                        });
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+        });
+
+
+        function getheadersectiondata()
+        {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_cntr_id = $('#cntr_id').val();
+            var p_str_status = $('#status').val();
+            var p_str_ib_doc_id = $('#ib_doc_id').val();
+            var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+            var p_str_ref_no = $('#req_num').val();
+            var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+            var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+            var p_str_eta_dtFm = $('#eta_dt_fm').val();
+            var p_str_eta_dtTo = $('#eta_dt_to').val();
+            var p_str_rcvd_frm = $('#vend_name').val();
+            var p_str_screen_title = $('#screentitle').val();
+            var p_str_itm_num = $('#ib_Itmdtl').val();
+            var p_str_itm_color = $('#ib_itm_color').val();
+            var p_str_itm_size = $('#ib_itm_size').val();
+            var p_str_itm_desc = $('#ib_itm_name').val();
+            var p_str_itm_type = $('#status').val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                    "p_str_doc_dtFm": p_str_doc_dtFm,
+                    "p_str_doc_dtTo": p_str_doc_dtTo,
+                    "p_str_eta_dtFm": p_str_eta_dtFm,
+                    "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                    "p_str_itm_type": p_str_itm_type
+                },
+
+                dataType: "json",
+                success: function (e) {
+                },
+
+            });
+        }
+    </script>
+</div>

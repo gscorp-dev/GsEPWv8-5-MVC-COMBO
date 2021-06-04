@@ -1,0 +1,414 @@
+﻿@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+@{
+    var Ordercount = Model.ListAckRptDetails.Count;
+    int TotalQty = 0;
+    int Totalctn = 0;
+    decimal l_dec_tot_cube = 0;
+    decimal l_dec_tot_wgt = 0;
+}
+@for (int j = 0; j < Model.ListAckRptDetails.Count(); j++)
+{
+    var qty = (Model.ListAckRptDetails[j].TotalQty);
+    if (qty > 0)
+    {
+        TotalQty = TotalQty + qty;
+    }
+    var ctn = (Model.ListAckRptDetails[j].ctn);
+    if (ctn > 0)
+    {
+        Totalctn = Totalctn + ctn;
+    }
+    var l_dec_cube = (Model.ListAckRptDetails[j].CUBE);
+    if (l_dec_cube > 0)
+    {
+        l_dec_tot_cube = l_dec_tot_cube + (ctn * l_dec_cube);
+    }
+    var l_dec_wgt = (Model.ListAckRptDetails[j].wgt);
+    if (l_dec_wgt > 0)
+    {
+        l_dec_tot_wgt = l_dec_tot_wgt + (ctn * l_dec_wgt);
+    }
+
+}
+<style type="text/css">
+    div#table-Details {
+        border: 1px solid #999;
+        box-shadow: 0px 0px 15px;
+    }
+
+    table.dataTable thead > tr > th {
+        padding-right: 0px;
+    }
+
+    .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #f5f5f5;
+    }
+
+    .dataTables_wrapper {
+        padding-top: 10px;
+    }
+
+    div#ajaxLoadingIBRcvdDtl {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<center>
+    @Html.HiddenFor(model => model.status)
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Inbound View</h4>
+        <button type="button" style="margin-left: 88%; margin-top: -1%;" id="btnClose" class="btn-Close" data-dismiss="modal">Close</button>
+    </div>
+    <center><label style="font-size:20px;"><b>Inbound View</b></label></center>
+    <hr />
+    <div id="ajaxLoadingIBRcvdDtl" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+    <div class="box-body">
+        <div class="box-header">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-9 col-sm-9 col-xs-9" style="bottom: -24px;">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;">
+                                <label><b class="Lblmanual">Cmp Id </b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.CompID, new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
+                                <label><b class="Lblmanual">IBDocID </b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ibdocid, new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
+                                <label><b class="Lblmanual">ContainerID </b></label>
+
+                            </div>
+                            <div class="col-xs-2" style="margin-left:-17px;">
+                                @Html.TextBoxFor(model => model.Container, new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+
+                            <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
+                                <label><b class="Lblmanual">Load date </b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ib_load_dt, new { @class = "form-control txtlbl", @maxlength = "10" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Status </b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.status, new { @class = "form-control txtlbl", @maxlength = "50", @id = "Statuspar" })
+
+                            </div>
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">VenderName </b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -15px;">
+                                @Html.TextBoxFor(model => model.vend_name, new { @class = "form-control txtlbl", @maxlength = "50", })
+                            </div>
+
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Ref No </b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -15px;">
+                                @Html.TextBoxFor(model => model.refno, new { @class = "form-control txtlbl", @maxlength = "50", })
+
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">FOB </b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.FOB, new { @class = "form-control txtlbl", @maxlength = "50", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                    <div class="container">
+                        <fieldset>
+                            <legend style="text-align:center">Report Selection</legend>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <b style="color:blue;font-size: 12px;">Format</b>
+                                        <select id="Formatrcvddtlid" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right" data-toggle="dropdown">
+                                            <option>PDF</option>
+                                            <option>XLS</option>
+                                        </select>
+
+                                    </td>
+                                    <td>
+                                        <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                                        <select id="Modercvddtlid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                            <option>VIEW</option>
+                                            <option>EMAIL</option>
+
+                                        </select>
+
+
+                                    </td>
+                                    <td>
+
+                                        <button type="button" id="btnrcvddtl" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                    </td>
+
+                                </tr>
+
+
+                            </table>
+                        </fieldset>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <fieldset style="width:100%">
+        <legend style="text-align:left;color:orange;margin-bottom:10px;">Total Summary</legend><hr style="margin-bottom:0px;" />
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-2" style="margin-left:3%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Records:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-13%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </div>
+                <div class="col-xs-2" style="margin-left:-5%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Qty:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-13%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @TotalQty
+                    </label>
+                </div>
+                <div class="col-xs-2" style="margin-left:-5%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                        Total Ctns:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-10%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @Totalctn
+                    </label>
+                </div>
+                <div class="col-xs-2" style="margin-left:-5%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                        Cube:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-10%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @l_dec_tot_cube
+                    </label>
+                </div>
+                <div class="col-xs-2" style="margin-left:-5%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                        Weight:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-10%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @l_dec_tot_wgt
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    </fieldset>
+
+    <br />
+</center>
+
+
+<table id="InbndRcvdDtl" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+    <thead class="grid_backcolor">
+        <tr>
+            <th class="grid_header_backcolor" style="font-size:11px;width:4%;">Dt#</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Style</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Color</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Size</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:13%;">ItemName</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">L/W/H</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:5%;">ppk</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Ctn</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:6%;">TotQty</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Cube</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Wgt</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">VendPO</th>
+            @*<th class="grid_header_backcolor" style="font-size:11px;width:8%;">CustPO</th>
+            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Pick List</th>*@
+        </tr>
+    </thead>
+    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+        @for (int i = 0; i < Model.ListAckRptDetails.Count; i++)
+        {
+
+            var Length = (Model.ListAckRptDetails[i].length);
+            var Width = (Model.ListAckRptDetails[i].width);
+            var Height = (Model.ListAckRptDetails[i].depth);
+            var Cube = (Model.ListAckRptDetails[i].CUBE);
+            var weight = (Model.ListAckRptDetails[i].wgt);
+            var l_dec_Length = Length.ToString("F2");
+            var l_dec_Width = Width.ToString("F2");
+            var l_dec_Height = Height.ToString("F2");
+            var l_dec_weight = weight.ToString("F2");
+            var l_str_length = l_dec_Length + "/" + l_dec_Width + "/" + l_dec_Height;
+
+            <tr style="background-color:white;">
+                <td style="text-align:center;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].LineNum</td>
+                <td style="text-align:left;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].Style</td>
+                <td style="text-align:left;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].Color</td>
+                <td style="text-align:left;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].Size</td>
+                <td style="text-align:right;font-size:11px;font-weight:bold;text-align:left">@Model.ListAckRptDetails[i].itm_name</td>
+
+                <td style="text-align:right;font-size:11px;font-weight:bold;">@l_str_length</td>
+                <td style="text-align:right;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].ppk</td>
+                <td style="text-align:right;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].ctn</td>
+                <td style="text-align:right;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].TotalQty</td>
+                <td style="text-align:right;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].CUBE</td>
+                <td style="text-align:right;font-size:11px;font-weight:bold;">@l_dec_weight</td>
+                <td style="text-align:left;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].po_num</td>
+                @*<td style="text-align:left;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].cust_po_num</td>
+                <td style="text-align:left;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].pick_list</td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+      @*  $('#InbndRcvdDtl').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#InbndRcvdDtl_paginate').hide();*@
+
+    $("#btnrcvddtl").click(function () {
+        debugger
+        var getli = $('#Formatrcvddtlid').find(":selected").text();
+        var getli2 = $('#Modercvddtlid').find(":selected").text();
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+            $("#ajaxLoadingIBRcvdDtl").show();
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var p_str_cmp_id = $('#CompID').val();
+            var p_str_ib_doc_id = $('#ibdocid').val();
+            var p_str_status = $('#Statuspar').val();
+
+            window.open('ShowdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_ib_doc_id=' + p_str_ib_doc_id, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowdtlReport')
+            $("#ajaxLoadingIBRcvdDtl").hide();
+        }
+        if (getli == 'PDF' && getli2 == 'EMAIL') {
+            var TeamDetailPostemailBackURL = '/InboundInquiry/ShowSummaryEmailRpt';
+            var TeamDetailPostSelectedemailBackURL = '/InboundInquiry/ShowEmailReport';
+            $("#ajaxLoadingIBRcvdDtl").show();
+            var options = { "backdrop": "static", keyboard: true };
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var type = "PDF";
+
+            var p_str_cmpid = $('#CompID').val();
+            var p_str_ib_doc_id = $('#ibdocid').val();
+            var SelectdID = p_str_ib_doc_id;
+            var p_str_status = $('#Statuspar').val();
+            if (p_str_status == 'OPEN') {
+                p_str_radio = 'Acknowledgement'
+
+            }
+            else if (p_str_status == '1-RCVD') {
+                p_str_radio = 'TallySheet'
+            }
+            else if (p_str_status == 'POST') {
+                p_str_radio = 'Confirmation'
+            }
+
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostSelectedemailBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "SelectdID": SelectdID, "p_str_radio": p_str_radio, "p_str_cmpid": p_str_cmpid, "type": type },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoadingIBRcvdDtl").hide();
+                    $('#myModalEmailContent').html(data);
+                    $('#myModalEmail').modal(options);
+                    $('#myModalEmail').modal('show');
+
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0317_002 Added By Meera 17-03-2018
+                    swal("Dynamic content load failed.");
+                    $("#ajaxLoadingIBRcvdDtl").hide();
+                }
+            });
+        }
+        if (getli == 'XLS' && getli2 == 'VIEW') {
+            var p_str_cmpid = $('#CompID').val();
+            var p_str_status = $('#Statuspar').val();
+
+            if (p_str_status == 'OPEN') {
+                p_str_radio = 'Acknowledgement'
+
+            }
+            else if (p_str_status == '1-RCVD') {
+                p_str_radio = 'TallySheet'
+            }
+            else if (p_str_status == 'POST') {
+                p_str_radio = 'Confirmation'
+            }
+            var SelectdID = $('#ibdocid').val();
+            var type = 'Excel'
+            window.location.replace("/InboundInquiry/ShowReport?SelectdID=" + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type);
+        }
+    })
+
+    //function InboundReceivedDetailExcel() {
+    //    debugger
+    //    var var_name = $("input[name='radio1']:checked").val();
+
+    //}
+    ////CR_3PL_MVC_BL_2018_0317_001 Added By Soniya 17-03-2018
+    //function InboundReceivedDetailEmailPDF() {
+    //    debugger
+
+    //    // window.open('ShowdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_ib_doc_id=' + p_str_ib_doc_id, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowdtlReport')
+    //}
+</script>
+

@@ -1,0 +1,741 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InvStkAdjModel
+@{
+    ViewBag.Title = "Stock Adjustment Inquiry";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var hdrcount = Model.ListInvStkAdjDetail.Count;
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+
+<style>
+    .ui-autocomplete .ui-menu-item {
+        font-size: x-small;
+    }
+
+fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .btn-danger {
+        background-color: red;
+        border-color: red;
+    }
+
+        .btn-danger:hover {
+            background-color: red;
+            border-color: red;
+        }
+
+    .sweet-alert {
+        background-color: #8cd6f7; 
+        width: 545px;
+        padding: 17px;
+        border-radius: 5px;
+        text-align: center;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -256px;
+        margin-top: -200px;
+        overflow: hidden;
+        display: none;
+        z-index: 2000;
+    }
+
+    .btn-default {
+        background-color: #009685;
+        color: white;
+        border-color: #009685;
+    }
+
+        .btn-default:hover {
+            background-color: #009685;
+            color: white;
+            border-color: #009685;
+        }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+</style>
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+@Html.HiddenFor(model => model.cmp_id, new { @id = "g_str_tmp_cmp_id" })
+
+
+@using (Html.BeginForm("StockAdjInquiry", "StockAdjInquiry", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    Stock Adjustment - Inquiry
+
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+            </div>
+        </div>
+        <div id="childtabs">
+            <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+            <ul>
+                <li><a href="#childtabs-1" style="font-size:12px;">Stock Adjustment - Inquiry</a></li>
+            </ul>
+
+            <div id="childtabs-1">
+                <div class="box box-default">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-8 col-sm-8 col-xs-8">
+                                    <table style="border-collapse: separate;border-spacing: 0px 0.5em;    ">
+                                        <tr>
+                                            <td style="text-align: right;width: 6%;">
+                                                <label><b class="Lblmanual">Cmp Id </b></label>
+                                            </td>
+
+                                            @Html.HiddenFor(model => model.cmp_id)
+
+
+                                            @Html.HiddenFor(model => model.cmp_id)
+                                            <td style="width: 15%; padding-left: 1%;">
+                                                @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                                {
+                                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                                }
+
+
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">IB Doc Id</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.ib_doc_id, new { @id = "adj_ib_doc_id",  @class = "form-control txtlbl", @maxlength = "10" })
+                                            </td>
+
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">PO No</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.po_num, new { @id = "adj_po_num", @class = "form-control txtlbl", @maxlength = "30" })
+                                            </td>
+                                            <td style="text-align: right;    width: 5%;">
+                                                <label><b class="Lblmanual">Ref No</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%; ">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.ref_no, new { @id = "adj_ref_no",  @class = "form-control txtlbl", @maxlength = "10" })
+                                            </td>
+                                            <td colspan="2" style="width: 11%;"></td>
+
+                                        </tr>
+                                        <tr style="padding-bottom:2%">
+                                            <td style="text-align: right;width: 6%;">
+                                                <label><b class="Lblmanual">Cont ID</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.cont_id, new { @id = "adj_cont_id", @class = "form-control txtlbl", @maxlength = "30" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Lot ID</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.lot_id, new { @id = "adj_lot_id", @class = "form-control txtlbl", @maxlength = "10" })
+                                            </td>
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">Loc ID</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.loc_id, new { @id = "adj_loc_id", @class = "form-control txtlbl", @maxlength = "10", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">WhsId</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.whs_id, new { @id = "adj_whs_id", @class = "form-control txtlbl", @maxlength = "10" })
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align: right;width: 6%;">
+                                                <label><b class="Lblmanual">Style</b></label>
+                                            </td>
+                                            <td style="width: 15%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.itm_num, new { @id = "adj_itm_num", @class = "form-control txtlbl", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Color</b></label>
+                                            </td>
+                                            <td style="width: 8%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.itm_color, new { @id = "adj_itm_color" , @class = "form-control txtlbl", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">Size</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.itm_size, new { @id = "adj_itm_size",  @class = "form-control txtlbl", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">Desc</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.itm_name, new { @id = "adj_itm_name", @class = "form-control txtlbl", @maxlength = "75", @style = "background-color:lightyellow;" })
+                                            </td>
+
+                                            <td style="width: 11%; padding-left: 1%;">
+                                                @Html.DropDownListFor(model => model.objInvStkAdjInquiry.status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @id = "adj_status",  @class = "form-control txtlbl" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;width: 5.4%;">
+                                                <label><b class="Lblmanual">Fm Dt</b></label>
+                                            </td>
+                                            <td style="width:15%; padding-left:1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.rcvd_from_dt, new { @id = "adj_rcvd_from_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10" })
+                                            </td>
+                                            <td style="text-align: right; width: 6.2%;">
+                                                <label><b class="Lblmanual"> To</b></label>
+                                            </td>
+                                            <td style="width: 9%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.objInvStkAdjInquiry.rcvd_to_dt, new { @id = "adj_rcvd_to_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10" })
+                                            </td>
+                                            <td colspan="9" style="width: 71%;">
+                                                <button type="button" id="btnSearch" class="btn_search" style="margin-left: 20px;">Search </button>
+                                                <button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                            </td>
+
+                                        </tr>
+
+
+                                    </table>
+
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1">
+
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <table>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <fieldset>
+                                                    <legend>Report Selection</legend>
+
+
+                                                    <table style="margin-top:0px;">
+                                                        <tr>
+                                                            <td style="padding-left: 10px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="DetailbyStyle" name="radio3" checked /><b> Stock Report Detail by Style</b></td>
+                                                            <td style="padding-left: 5px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="DetailbyLoc" name="radio3" /><b> Stock Report Detail by Loc</b></td>
+                                                        </tr>
+                                                    </table>
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <b style="color:blue;font-size: 12px;font-family: verdana; margin-left:5px;">Format</b>
+                                                            </td>
+                                                            <td>
+
+                                                                <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right " data-toggle="dropdown">
+                                                                    <option>XLS</option>
+                                                                    <option>PDF</option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td>
+                                                                <b style="color:blue;font-size: 12px;font-family: verdana; margin-left:20px;">Mode</b>
+                                                            </td>
+                                                            <td>
+
+                                                                <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:65px; text-align:right " data-toggle="dropdown">
+                                                                    <option>VIEW</option>
+                                                                    <option>EMAIL</option>
+
+                                                                </select>
+
+
+                                                            </td>
+                                                            <td>
+
+                                                                <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                            </td>
+
+                                                        </tr>
+                                                    </table>
+
+                                                </fieldset>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="showgrid" class="box-header" style="padding:5px;">
+                    <div class="box-body">
+                        <br />
+                        <table>
+                            <tr>
+                                <td style="width:22%;text-align:center;">
+                                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                        Total Records:
+                                    </span>
+                                    <label class="totalCount" style="text-align:left">
+                                        @hdrcount
+                                    </label>
+                                </td>
+                              
+                              
+                            </tr>
+                        </table>
+
+                        <br />
+
+                        <table id="grd_inv_stk_adj_inq" class="table table-bordered table-striped">
+
+                            <thead class="grid_backcolor">
+                                <tr>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Adj</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">LocID</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Style</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Color</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Size</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:20%;">Desc</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Lot#</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:7%;">PoNumber</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Ctn</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:7%;">PPK</th>
+                                    <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Qty</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div id="showgridstock_inq" class="box-header" style="padding:0px; ">
+                </div>
+
+            </div>
+
+        </div>
+        <div id='myModalEmail' class='modal'>
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 198%; left:-160px;">
+                    <div id='myModalEmailContent' style="width: 100%; height: 700px;"></div>
+                </div>
+            </div>
+
+        </div>
+        <div id='myModalINdocupld' class='modal'>
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 220%; left:-365px;">
+                    <div id='myModalINdocupldContent' style="width: 100%; height: 650px;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+
+
+    $(function () {
+
+
+
+        $("#adj_itm_num").autocomplete({
+            source: function (request, response) {
+                $.getJSON("/InvStkAdj/ItemXGetitmDtl", {
+                    term: request.term,
+                    cmp_id: $('#cmp_id').val(),
+                },
+                          response);
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                $("#adj_itm_num").val(ui.item.itm_size);
+                $("#adj_itm_color").val(ui.item.itm_color);    //action
+                $("#adj_itm_name").val(ui.item.itm_name);
+            }
+        });
+
+    });
+
+    $('#adj_rcvd_from_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#adj_rcvd_to_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+
+    $("#btnSearch").click(function () {
+        debugger
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please Select The Company", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_itm_num = $('#adj_itm_num').val();
+            var p_str_itm_color = $('#adj_itm_color').val();
+            var p_str_itm_size = $('#adj_itm_size').val();
+            var p_str_itm_name = $('#adj_itm_name').val();
+            var p_str_status = $('#adj_status').val();
+            var p_str_ib_doc_id = $('#adj_ib_doc_id').val();
+            var p_str_cont_id = $('#adj_cont_id').val();
+            var p_str_lot_id = $('#adj_lot_id').val();
+            var p_str_loc_id = $('#adj_loc_id').val();
+            var p_str_ref_no = $('#adj_ref_no').val();
+            var p_str_whs_id = $('#adj_whs_id').val();
+            var p_str_rcvd_from_dt = $('#adj_rcvd_from_dt').val();
+            var p_str_rcvd_to_dt = $('#adj_rcvd_to_dt').val();
+            var p_str_po_num = $('#adj_po_num').val();
+            var p_str_exit_flag = "N"
+            if ( p_str_itm_num == "" && p_str_itm_color == "" && p_str_itm_size == "" && p_str_itm_name == "" && p_str_ib_doc_id == "" && p_str_cont_id == "" &&
+                p_str_lot_id == "" && p_str_loc_id == "" && p_str_ref_no == "" && p_str_whs_id == "" && p_str_rcvd_from_dt == "" && p_str_rcvd_to_dt == "" && p_str_po_num == "")
+            {
+
+
+                sweetAlert({
+                    title: "",
+                    text: " Please note NO FILTERS Selected. RUNNING STOCK Adjustment INQ for the ENTIRE Company ******WILL TAKE LONG PROCESSING TIME ****** Unless required click NO",
+                    type: "",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "No",
+                    cancelButtonText: "Yes",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+           function (isConfirm) {
+               if (isConfirm) {
+                   swal("", "please select any other fields", "");
+                   var table = $("#example3").DataTable();
+                   table.clear().draw();
+
+                   $('label[id*=lblhdrcount]').text('');
+
+                   return false;
+               }
+               else
+               {
+                  
+
+                   $("#ajaxLoading").show();
+                   $.ajax({
+                       type: "GET",
+                       url: '@Url.Content("~/InvStkAdj/GetStockAdjGridDetails")',
+                       data: {
+                           "p_str_cmp_id": p_str_cmp_id,
+                           "p_str_itm_num": p_str_itm_num,
+                           "p_str_itm_color": p_str_itm_color,
+                           "p_str_itm_size": p_str_itm_size,
+                           "p_str_itm_name": p_str_itm_name,
+                           "p_str_status": p_str_status,
+                           "p_str_ib_doc_id": p_str_ib_doc_id,
+                           "p_str_cont_id": p_str_cont_id,
+                           "p_str_lot_id": p_str_lot_id,
+                           "p_str_loc_id": p_str_loc_id,
+                           "p_str_ref_no": p_str_ref_no,
+                           "p_str_whs_id": p_str_whs_id,
+                           "p_str_rcvd_from_dt": p_str_rcvd_from_dt,
+                           "p_str_rcvd_to_dt": p_str_rcvd_to_dt,
+                           "p_str_po_num": p_str_po_num
+                       },
+                       dataType: 'html',
+                       success: function (e) {
+                           $("#ajaxLoading").hide();
+                           $('#showgrid').hide();
+                           $('#showgridstock_inq').html("");
+                           $('#showgridstock_inq').html(e);
+                       },
+
+                   })
+               }
+           });
+            }
+            else
+
+            {
+                $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InvStkAdj/GetStockAdjGridDetails")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_itm_num": p_str_itm_num,
+                    "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size,
+                    "p_str_itm_name": p_str_itm_name,
+                    "p_str_status": p_str_status,
+                    "p_str_ib_doc_id": p_str_ib_doc_id,
+                    "p_str_cont_id": p_str_cont_id,
+                    "p_str_lot_id": p_str_lot_id,
+                    "p_str_loc_id": p_str_loc_id,
+                    "p_str_ref_no": p_str_ref_no,
+                    "p_str_whs_id": p_str_whs_id,
+                    "p_str_rcvd_from_dt": p_str_rcvd_from_dt,
+                    "p_str_rcvd_to_dt": p_str_rcvd_to_dt,
+                    "p_str_po_num": p_str_po_num
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#showgrid').hide();
+                    $('#showgridstock_inq').html("");
+                    $('#showgridstock_inq').html(e);
+                },
+
+            })}
+
+        }})
+    $('#example1').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true
+    });
+    $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true
+    });
+
+</script>
+
+<script type="text/javascript">
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $(function () {
+
+        $('#cmp_id').change(function () {
+            debugger;
+            var l_str_comp = this.value;
+            debugger
+            $("#p_str_company").val(l_str_comp);
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "InvStkAdj")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+
+    });
+
+
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+<script type="text/javascript">
+    $("#adj_loc_id").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/InvStkAdj/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#adj_loc_id").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+<script>
+    $(function () {
+        $('#grd_inv_stk_adj_inq').DataTable({
+            "paging": true,
+            "pageLength": 50,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            "sScrollY": "460px",
+            "sScrollX": "100%",
+        })
+    })
+</script>
+<script>
+    $(function () {
+        $('#cmp_id').change(function () {
+            debugger;
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "InvStkAdj")',
+
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+
+                },
+            });
+        });
+
+    });
+</script>

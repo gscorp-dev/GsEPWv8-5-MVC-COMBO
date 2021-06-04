@@ -1,0 +1,621 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+@{
+    var TotalNumberoflst = Model.List_ibs_dtl.Count();
+    var Ordercount = Model.List_ibs_dtl.Count;
+
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+@Html.HiddenFor(model=>model.action_type)
+<input type="hidden" id="two" />
+@if (Model.action_type == "Edit")
+{
+    <div class="modal-header">
+        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">Edit IBS Entry</h3></center>
+        <button type="button" id="btnEditibs_Close" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+        <button type="button" class="btn-Close" id="btnUpdateIbs" style="float:right;margin-top: -18px;background-color: #00c0ef;">Save</button>
+    </div>
+}
+else if (Model.action_type == "Delete")
+{
+    <div class="modal-header">
+        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">Delete IBS Entry</h3></center>
+        <button type="button" id="btnEditibs_Close" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+        <button type="button" class="btn-Close" id="btnDeleteIbs" style="float:right;margin-top: -18px;background-color: #00c0ef;">Delete</button>
+    </div>
+}
+else
+{
+    <div class="modal-header">
+        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">View IBS Entry</h3></center>
+        <button type="button" id="btnEditibs_Close" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+    </div>
+}
+
+<div class="box-body" id="headersection">
+    <div class="box-header">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-11 col-sm-11 col-xs-11">
+                    <table style="width:100%;border-collapse: separate;border-spacing:0px 0.5em;">
+
+                        <tr>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">Comp ID:</b></label>
+                            </td>
+                            <td style="width: 38%; padding-left: 1%;">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "e_cmb_cmp_id", @disabled = "true", @class = "form-control txtlbl" })
+                            </td>
+                            <td style="width: 7%;text-align: right;">
+                                <label><b class="Lblmanual">IB Doc ID:</b></label>
+                            </td>
+                            <td style="width: 12%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.ib_doc_id, new { @id = "e_txt_ib_doc_id", @class = "form-control txtlbl", @disabled = "true", @maxlength = "50" })
+                            </td>
+                           
+                        </tr>
+                    </table>
+                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+
+                        <tr>
+                            <td style="width:2.1%;text-align: right;">
+                                <label><b class="Lblmanual">IBS Doc ID:</b></label>
+                            </td>
+                            <td style="width:5%;padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.ibs_doc_id, new { @id = "e_txt_ibs_doc_id", @class = "form-control txtlbl", @disabled = "true", @maxlength = "50" })
+                            </td>
+                            <td style="width:2.1%;text-align: right;">
+                                <label><b class="Lblmanual">IB Doc Dt:</b></label>
+                            </td>
+                            <td style="width:5%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.ib_doc_dt, new { @id = "new_ib_doc_dt", @class = "form-control txtlbl", @disabled = "true", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                            </td>
+
+                            <td style="width:3.5%;text-align: right;">
+                                <label><b class="Lblmanual">Status:</b></label>
+                            </td>
+                            <td style="width:5%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.Status, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+                            </td>
+                          
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+</div>
+<br />
+<table>
+    <tr>
+        <td style="width:13%;padding-left:76px;">
+            <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                Total Records:
+            </span>
+        </td>
+        <td style="width: 62%;">
+            <label class="totalCount" style="text-align:left">
+                @Ordercount
+            </label>
+        </td>
+
+    </tr>
+</table>
+<br />
+<div class="box" style="padding: 2px;" id="tablesection">
+    <div id="table-Details">
+        <div style="overflow-y:auto; height:auto; width:auto;">
+            <table id="GridibsEditEntryDtls" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:11px;">Ln#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;">ServiceId</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;">Description</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;">Qty</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;">Rate</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;">Amount</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;">Status</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;">UoM</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;">Note</th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.List_get_ibs_dtl.Count; i++)
+                    {
+                        int line = i + 1;
+                        var Amt = (Model.List_get_ibs_dtl[i].amt);
+                        var Rate = (Model.List_get_ibs_dtl[i].srvc_price);
+                        var l_dec_Amt = Amt.ToString("F2");
+                        var l_dec_rate = Rate.ToString("F2");
+                        var Qty= (Model.List_get_ibs_dtl[i].srvc_qty);
+                        if (Convert.ToDouble(l_dec_Amt) != 0)
+                        {
+                        <tr id="GridibsEditEntryGridID_@i" style="background-color:#5ae77e;">
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@line</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.List_get_ibs_dtl[i].srvc_id, new { @class = "ItmNum", @id = "itmnum_" + i, @style = "width:60px;text-align:right;" })@Model.List_get_ibs_dtl[i].srvc_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Model.List_get_ibs_dtl[i].srvc_name</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.List_get_ibs_dtl[i].srvc_qty, new { @class = "Qty numericOnly", @id = "qty_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_rate, new { @class = "itmrate", @id = "price_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_Amt, new { @id = "amt_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">O</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Model.List_get_ibs_dtl[i].srvc_uom</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.List_get_ibs_dtl[i].notes, new { @class = "note", @id = "Note_" + i, @style = "width:140px;text-align:left;background-color:lightyellow;", @data = @line })</td>
+                            @if (Qty > 0)
+                            {
+                                <td id="ibsEntryEditDtlsGridchkboxclick" id1="@line" style="text-align:center; display:none;"><input id="ibsEntryEditDtlsGridchkbox_@i" name="ibsEntryEditDtlsGridchkbox" class="ibsEntryEditDtlsGridchkbox" type="checkbox" checked /></td>
+                            }
+                            else
+                            {
+                                <td id="ibsEntryEditDtlsGridchkboxclick" id1="@line" style="text-align:center; display:none;"><input id="ibsEntryEditDtlsGridchkbox_@i" name="ibsEntryEditDtlsGridchkbox" class="ibsEntryEditDtlsGridchkbox" type="checkbox" /></td>
+                            }
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none;">@Html.TextBoxFor(model => model.List_ibs_dtl[i].srvc_name, new { @id = "itm_name_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none;">@Html.TextBoxFor(model => model.List_ibs_dtl[i].srvc_uom, new { @id = "price_uom_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                        </tr>
+                        }
+                        else
+                        {
+                            <tr id="GridibsEditEntryGridID_@i" style="background-color:white;">
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@line</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.List_get_ibs_dtl[i].srvc_id, new { @class = "ItmNum", @id = "itmnum_" + i, @style = "width:60px;text-align:right;" })@Model.List_get_ibs_dtl[i].srvc_id</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;">@Model.List_get_ibs_dtl[i].srvc_name</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.List_get_ibs_dtl[i].srvc_qty, new { @class = "Qty numericOnly", @id = "qty_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_rate, new { @class = "itmrate", @id = "price_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_Amt, new { @id = "amt_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">O</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;">@Model.List_get_ibs_dtl[i].srvc_uom</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.List_get_ibs_dtl[i].notes, new { @class = "note", @id = "Note_" + i, @style = "width:140px;text-align:left;background-color:lightyellow;", @data = @line })</td>
+                                @if (Qty > 0)
+                                {
+                                    <td id="ibsEntryEditDtlsGridchkboxclick" id1="@line" style="text-align:center; display:none;"><input id="ibsEntryEditDtlsGridchkbox_@i" name="ibsEntryEditDtlsGridchkbox" class="ibsEntryEditDtlsGridchkbox" type="checkbox" checked /></td>
+                                }
+                                else
+                                {
+                                    <td id="ibsEntryEditDtlsGridchkboxclick" id1="@line" style="text-align:center; display:none;"><input id="ibsEntryEditDtlsGridchkbox_@i" name="ibsEntryEditDtlsGridchkbox" class="ibsEntryEditDtlsGridchkbox" type="checkbox"  /></td>
+                                }
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none;">@Html.TextBoxFor(model => model.List_ibs_dtl[i].srvc_name, new { @id = "itm_name_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none;">@Html.TextBoxFor(model => model.List_ibs_dtl[i].srvc_uom, new { @id = "price_uom_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @Html.Hidden("Count_Values", TotalNumberoflst)
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var p_str_check_value;
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+    $(".Qty").blur(function () {
+        debugger
+        var QTYTEXT = $(this).val();
+
+        var $buttonClicked = $(this);
+        var p_str_line_num = $buttonClicked.attr('data');
+        var p_str_tot = parseFloat(p_str_line_num) - 1;
+        var p_str_qty_sum = $("#qty_" + p_str_tot).val();
+        var p_str_price_sum = $("#price_" + p_str_tot).val();
+        var p_str_sum_iv = parseFloat(p_str_qty_sum) * parseFloat(p_str_price_sum);
+        var p_str_sum_i = parseFloat(p_str_sum_iv).toFixed(2);
+        $("#amt_" + p_str_tot).val(p_str_sum_i);
+        var newamount = $("#amt_" + p_str_tot).val(p_str_sum_i);
+        if (parseFloat(p_str_sum_i) != 0) {
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).prop('checked', true);
+            p_str_check_value = true;
+            $('#two').val(p_str_check_value);
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).click();
+        }
+        else {
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#two').val(p_str_check_value);
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).click();
+
+        }
+    });
+    $(".itmrate").blur(function () {
+        debugger
+        var p_str_itm = $(this).val();
+        var $buttonClicked = $(this);
+        var p_str_line_num = $buttonClicked.attr('data');
+        var p_str_tot = parseFloat(p_str_line_num) - 1;
+        var p_str_qty_sum = $("#qty_" + p_str_tot).val();
+        var p_str_price_sum = $("#price_" + p_str_tot).val();
+        var p_str_sum_iv = parseFloat(p_str_qty_sum) * parseFloat(p_str_price_sum);
+        var p_str_sum_i = parseFloat(p_str_sum_iv).toFixed(2);
+        $("#amt_" + p_str_tot).val(p_str_sum_i);
+        var p_str_itm = $("#qty_" + p_str_tot).val();
+        if (parseFloat(p_str_sum_i) != 0) {// || parseFloat(QTYTEXT) != 0
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).prop('checked', true);
+            p_str_check_value = true;
+
+            $('#two').val(p_str_check_value);
+
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).click();
+        }
+        else {
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#two').val(p_str_check_value);
+
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).click();
+
+        }
+    });
+
+    $('#GridibsEditEntryDtls td[id="ibsEntryEditDtlsGridchkboxclick"]').click(function (event) {
+        debugger
+        var p_str_line_num = $(this).attr('id1');
+        var p_str_minus = p_str_line_num - 1;
+        for (var i = p_str_minus; i < p_str_line_num; i++) {
+            var p_str_check_value = $('#two').val();
+            var qty = $("#qty_" + i).val();
+            if (qty == "") {
+                qty = 0;
+            }
+            var price = $("#price_" + i).val();
+            if (price == "") {
+                price = 0;
+            }
+            var l_int_qty = $("#qty_" + i).val();
+            var l_dec_price = $("#price_" + i).val();
+            var l_dec_Amount = $("#amt_" + i).val();
+            var l_str_itmnum = $("#itmnum_" + i).val();
+            var l_str_note = $("#Note_" + i).val();
+            var l_str_itnname = $("#itm_name_" + i).val();
+            var l_str_priceuom = $("#price_uom_" + i).val();
+
+            if (p_str_check_value == "true" || p_str_check_value == "") {
+
+                $("#ibsEntryEditDtlsGridchkbox_" + p_str_minus).prop('checked', true);
+                $("#GridibsEditEntryGridID_" + p_str_minus).css("background-color", "#5ae77e");
+
+                }
+            else {
+                $("#ibsEntryEditDtlsGridchkbox_" + p_str_minus).prop('checked', false);
+                $("#GridibsEditEntryGridID_" + p_str_minus).css("background-color", "white");
+
+                }
+        }
+    });
+    $(".note").focusout(function () {
+        debugger
+        var $buttonClicked = $(this);
+        var p_str_line_num = $buttonClicked.attr('data');
+        var p_str_tot = parseFloat(p_str_line_num) - 1;
+        var p_str_qty_sum = $("#qty_" + p_str_tot).val();
+        var p_str_price_sum = $("#price_" + p_str_tot).val();
+        var p_str_sum_iv = parseFloat(p_str_qty_sum) * parseFloat(p_str_price_sum);
+        var p_str_sum_i = parseFloat(p_str_sum_iv).toFixed(2);
+        $("#amt_" + p_str_tot).val(p_str_sum_i);
+        var newamount = $("#amt_" + p_str_tot).val(p_str_sum_i);
+        var qty = $("#qty_" + p_str_tot).val();
+        if (qty == "") {
+            qty = 0;
+        }
+        var price = $("#price_" + p_str_tot).val();
+        if (price == "") {
+            price = 0;
+        }
+        if (parseFloat(p_str_sum_i) != 0) {// || parseFloat(QTYTEXT) != 0
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).prop('checked', true);
+            p_str_check_value = true;
+
+            $('#two').val(p_str_check_value);
+
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).click();
+        }
+        else {
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#two').val(p_str_check_value);
+
+            $("#ibsEntryEditDtlsGridchkbox_" + p_str_tot).click();
+
+        }
+    });
+    $("#btnUpdateIbs").click(function () {
+        debugger
+        var p_str_cmp_id = $('#e_cmb_cmp_id').val();
+        var p_str_ib_doc_id = $('#e_txt_ib_doc_id').val();
+        var p_str_ibs_doc_id = $('#e_txt_ibs_doc_id').val();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#e_cmb_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        p_str_check_value = $('#one').val();
+        var numberOfCheckboxes = $("input[name='ibsEntryEditDtlsGridchkbox']:checked").length;
+        $("#ajaxLoading").show();
+        $('#btnvas_Close').attr('disabled', 'disabled');
+        if (numberOfCheckboxes == 0) {
+            swal("", "No Item Added.", "");
+            return false;
+        }
+        var ItemDetails = new Array();
+        debugger;
+        var IbsdtlCount = $("#Count_Values").val();
+        debugger
+        for (var i = 0; i < IbsdtlCount; i++) {
+            debugger
+            var l_int_qty = $("#qty_" + i).val();
+            var l_dec_price = $("#price_" + i).val();
+            var l_dec_Amount = $("#amt_" + i).val();
+            var l_str_itmnum = $("#itmnum_" + i).val();
+            var l_str_note = $("#Note_" + i).val();
+            var l_str_itnname = $("#itm_name_" + i).val();
+            var l_str_priceuom = $("#price_uom_" + i).val();
+            var l_str_cmp_id = $('#e_cmb_cmp_id').val();
+            var l_str_ib_doc_id = $('#e_txt_ib_doc_id').val();
+            var l_str_ibs_doc_id = $('#e_txt_ibs_doc_id').val();
+            var l_str_Status = $('#Status').val();
+            if (l_int_qty == "") {
+                l_int_qty = 0;
+            }
+            else if (l_int_qty == undefined) {
+                l_int_qty = 0;
+            }
+            if (l_dec_price == "") {
+                l_dec_price = 0;
+            }
+            else if (l_dec_price == undefined) {
+                l_dec_price = 0;
+            }
+            debugger;
+
+            if (l_int_qty != 0) {
+                var ItemDetail = {};
+                ItemDetail.ib_doc_id = l_str_ib_doc_id;
+                ItemDetail.ibs_doc_id = l_str_ibs_doc_id;
+                ItemDetail.cmp_id = l_str_cmp_id;
+                ItemDetail.srvc_id = l_str_itmnum;
+                ItemDetail.srvc_name = l_str_itnname;
+                ItemDetail.srvc_qty = l_int_qty;
+                ItemDetail.srvc_price = l_dec_price;
+                ItemDetail.srvc_uom = l_str_priceuom;
+                ItemDetail.amt = l_dec_Amount;
+                ItemDetail.notes = l_str_note;
+                ItemDetails.push(ItemDetail);
+            }
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/InboundInquiry/UpdateIBSEntryDtls")',
+            data: JSON.stringify({ ItemDetails: ItemDetails }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+                $("#ajaxLoading").hide();
+                debugger
+
+                if (e > 0) {
+                    swal({
+                        title: "",
+                        text: "No Records to Save",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    });
+                }
+                else {
+                    debugger
+                    swal({
+                        title: "",
+                        text: "IBS#" + p_str_ibs_doc_id + " Modified successfully.",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                    function () {
+                        debugger
+                        setTimeout(function () {
+                           // window.open('ShowIBSReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowVasReport')
+                            debugger
+                            var p_str_doc_cmp_id = $('#e_cmb_cmp_id').val();
+                            var p_str_ibdocid = $('#e_txt_ib_doc_id').val();
+                            $('#IbsEntryEdit').modal('hide');
+                            $.ajax({
+                                type: "get",
+                                url: "/inboundinquiry/inboundinquirydtl",
+                                data: {
+                                    "p_str_cmp_id": p_str_doc_cmp_id,
+                                    "p_str_ibdocid": p_str_ibdocid
+                                },
+                                datatype: 'html',
+                                success: function (e) {
+                                    debugger
+                                    $("#ajaxloading").hide();
+                                    $('#showgrid').html("");
+                                    $('#showgrid').html(e);
+                                },
+                            })
+                        });
+                    });
+                }
+
+
+            },
+
+        })
+    });
+    $(function () {
+        $('#GridibsEditEntryDtls').DataTable({
+            "paging": false,
+            "pageLength": 100,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+        });
+        $('#GridibsEditEntryDtls_paginate').hide();
+    })
+  
+    $("#btnEditibs_Close").click(function () {
+        debugger
+        var p_str_ibdocid = $('#e_txt_ib_doc_id').val();
+        var p_str_cmp_id = $('#e_cmb_cmp_id').val();
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+                 function (isConfirm) {
+                     if (isConfirm) {
+
+                     }
+
+                     else {
+                         $('#IbsEntryEdit').modal('hide');
+                             $.ajax({
+                                     type: "get",
+                                     url: "/inboundinquiry/inboundinquirydtl",
+                                     data: {
+                                         "p_str_cmp_id": p_str_cmp_id,
+                                         "p_str_ibdocid": p_str_ibdocid
+                                     },
+                                     datatype: 'html',
+                                     success: function (e) {
+                                         debugger
+                                         $("#ajaxloading").hide();
+                                         $('#showgrid').html("");
+                                         $('#showgrid').html(e);
+                                     },
+                                 })
+                         $("#ajaxloading").hide();
+
+                     }
+                 });
+    })
+
+
+    $("#btnDeleteIbs").click(function () {
+        debugger
+        var p_str_ibdocid = $('#e_txt_ib_doc_id').val();
+        var p_str_cmp_id = $('#e_cmb_cmp_id').val();
+        var p_str_ibsdocid = $('#e_txt_ibs_doc_id').val();
+        sweetAlert({
+            title: "",
+            text: "Do you want to delete?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+
+                       $.ajax({
+                           type: "GET",
+                            url: '@Url.Content("~/InboundInquiry/DeleteIbsEntryDtls")',
+                           data: { "p_str_cmp_id": p_str_cmp_id, "p_str_ibdocid": p_str_ibdocid, "p_str_ibsdocid": p_str_ibsdocid },
+                           dataType: 'html',
+                           success: function (e) {
+                               swal.close();
+                               if (e = "Deleted") {
+                                   debugger
+
+                                   setTimeout(function () {
+                                       swal({
+                                           title: "",
+                                           text: "IBS#" + p_str_ibsdocid + " Deleted successfully.",
+                                           type: "",
+                                           showCancelButton: false,
+                                           confirmButtonClass: "btn-danger",
+                                           confirmButtonText: "Ok",
+                                           closeOnConfirm: true
+                                       },
+                                    function () {
+                                        setTimeout(function () {
+                                            $('#IbsEntryEdit').modal('hide');
+                                            $.ajax({
+                                                type: "get",
+                                                url: "/inboundinquiry/inboundinquirydtl",
+                                                data: {
+                                                    "p_str_cmp_id": p_str_cmp_id,
+                                                    "p_str_ibdocid": p_str_ibdocid
+                                                },
+                                                datatype: 'html',
+                                                success: function (e) {
+                                                    debugger
+                                                    $("#ajaxloading").hide();
+                                                    $('#showgrid').html("");
+                                                    $('#showgrid').html(e);
+                                                },
+                                            })
+                                        });
+                                    });
+                                   }, 1000);
+
+
+
+                               }
+                               else
+                               {
+                                  alert('')
+                               }
+
+                           },
+
+                       })
+                   }
+               });
+    });
+</script>
+
+

@@ -1,0 +1,357 @@
+﻿@model GsEPWv8_5_MVC.Model.StockChangeModel
+
+@{
+    var g_int_total_records = Model.ListGetStockChangeDetails.Count;
+    var l_int_inv_amt = string.Empty;
+    int l_int_totctns = 0;
+    int l_int_totpcs = 0;
+}
+<style>
+    .ItemGridSummary {
+        height: 49px;
+        background: #d2d6de;
+        padding-top: 10px;
+    }
+</style>
+@for (int k = 0; k < Model.ListGetStockChangeDetails.Count(); k++)
+{
+    l_int_totctns = l_int_totctns + Model.ListGetStockChangeDetails[k].avail_cnt;
+    l_int_totpcs = l_int_totpcs + Model.ListGetStockChangeDetails[k].avail_qty;
+}
+<div class="box-body">
+    <div class="Itemgrid">
+        <table>
+            <tr>
+                <td style="width: 5%;"></td>
+                <td>
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                        Total Records:
+                    </span>
+                </td>
+                <td style="width: 22%;">
+                    <label class="totalCount" style="text-align:left">
+                        @g_int_total_records
+                    </label>
+                </td>
+                <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-right: 10px;font-family:Verdana;">
+                    Total Ctns:
+                </td>
+                <td>
+                    <input type="text" value="@l_int_totctns" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red;width:152px" />
+
+                </td>
+                <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-left:30px;padding-right: 10px;font-family:Verdana;">
+                    Total Pcs:
+                </td>
+                <td>
+                    <input type="text" value="@l_int_totpcs" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red;width:152px " />
+
+                </td>
+            </tr>
+        </table>
+
+
+        <br />
+        <center>
+            <table id="GridItemMove" class="table table-bordered table-striped" style="border:1px solid #121213;width: 1461px;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">Sel</th>
+                        <th class="grid_header_backcolor">IBDocId</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">ContId</th>
+                        @*<th class="grid_header_backcolor">LotId</th>
+                        <th class="grid_header_backcolor">Pallet</th>*@
+                        <th class="grid_header_backcolor">PoNum</th>
+                        <th class="grid_header_backcolor">From Loc</th>
+                        <th class="grid_header_backcolor">Totctns</th>
+                        <th class="grid_header_backcolor">Ppk</th>
+                        <th class="grid_header_backcolor">TotQty</th>
+                        <th class="grid_header_backcolor">To Loc</th>
+                        <th class="grid_header_backcolor">Move Ctn(s)</th>
+                        <th class="grid_header_backcolor">Move Qty</th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.ListGetStockChangeDetails.Count; i++)
+            {
+                int line = i + 1;
+                int ppk = (Model.ListGetStockChangeDetails[i].pkg_qty);
+
+                        <tr id="GridID_@i" style="background-color:white;">
+
+                            <td id="chkboxclick" id1="@line" id2="@ppk" style="text-align:center;">
+                                <input id="check_@i" name="chkItemMove" class="attribute" type="checkbox" />
+                            </td>
+
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListGetStockChangeDetails[i].ib_doc_id</td>
+
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListGetStockChangeDetails[i].itm_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListGetStockChangeDetails[i].itm_color</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListGetStockChangeDetails[i].itm_size</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListGetStockChangeDetails[i].cont_id</td>
+                            @*<td style="font-size:12px; color:black; font-weight:bold;">@Model.ListGetStockChangeDetails[i].lot_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListGetStockChangeDetails[i].palet_id</td>*@
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListGetStockChangeDetails[i].po_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListGetStockChangeDetails[i].loc_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListGetStockChangeDetails[i].tot_ctns</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListGetStockChangeDetails[i].pkg_qty</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListGetStockChangeDetails[i].tot_qty</td>
+
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Html.TextBoxFor(model => model.ListGetStockChangeDetails[i].to_loc, new { @class = "to_loc", @id = "to_loc_" + i, @style = "width:100px;text-align:left;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListGetStockChangeDetails[i].move_ctns, new { @class = "mvctn numericOnly", @id = "mvctn_" + i, @style = "width:100px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => Model.ListGetStockChangeDetails[i].move_qty, new { @class = "mvqty", @id = "mvqty_" + i, @disabled = "true", @style = "width:100px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].tot_ctns, new { @class = "tot_ctns", @id = "tot_ctns_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].tot_ctns</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].pkg_qty, new { @class = "pkg_qty", @id = "pkg_qty_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].pkg_qty</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].tot_qty, new { @class = "tot_qty", @id = "tot_qty_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].tot_qty</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].po_num, new { @class = "po_num", @id = "po_num_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].po_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].cont_id, new { @class = "cont_id", @id = "cont_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].cont_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].ib_doc_id, new { @class = "ib_doc_id", @id = "ib_doc_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].ib_doc_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].lot_id, new { @class = "lot_id", @id = "lot_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].lot_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].palet_id, new { @class = "palet_id", @id = "palet_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].palet_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].loc_id, new { @class = "loc_id", @id = "loc_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].loc_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].rcvd_dt, new { @class = "rcvd_dt", @id = "rcvd_dt_" + i, @style = "width:1px;text-align:left;" })@Model.ListGetStockChangeDetails[i].rcvd_dt</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].itm_code, new { @class = "itm_code", @id = "itm_code_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetStockChangeDetails[i].itm_code</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetStockChangeDetails[i].whs_id, new { @class = "whs_id", @id = "whs_id_" + i, @style = "width:1px;text-align:left;" })@Model.ListGetStockChangeDetails[i].whs_id</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </center>
+    </div>
+    @Html.Hidden("hdn_total_records", g_int_total_records)
+
+
+
+</div>
+
+<div id="hdrgridItemMoveshow"></div>
+<div id='myModalDetailsPopUp' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%;">
+            <div id='myModalDetailsPopUpDetails' style="width: 100%; height: 650px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $(".to_loc").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/StockChange/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#to_loc").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+
+<script>
+
+    var p_str_check_value = false;
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+
+    $('#GridItemMove').DataTable({
+        "paging": false,
+        "lengthChange": true,
+        "pageLength": 5000,
+        "searching": false,
+        "ordering": false,
+        "info": true,
+        "autoWidth": false,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+
+    $(".to_loc").focusout(function () {
+        debugger
+
+        var $buttonClicked = $(this);
+        var i_int_cur_line = $buttonClicked.attr('data');
+        var l_str_to_loc = $(this).val();
+        var l_int_line = parseFloat(i_int_cur_line) - 1;
+        var l_int_move_ctns = $("#mvctn_" + l_int_line).val();
+        var l_int_tot_ctns = $("#tot_ctns_" + l_int_line).val();
+        var l_str_from_loc = $("#loc_id_" + l_int_line).val();
+
+        if ((l_str_to_loc != "") && (l_str_to_loc != null))
+            {
+            if (l_str_to_loc == l_str_from_loc)
+            {
+                sweetAlert("", "New Location can not be same as From Location ", "");
+                $("#to_loc_" + l_int_line).focus();
+                $("#to_loc_" + l_int_line).val("");
+                return false;
+            }
+
+            var l_int_ppk = $("#pkg_qty_" + l_int_line).val();
+            var l_int_move_qty = parseInt(l_int_ppk) * parseInt(l_int_move_ctns);
+            var l_int_move_qty = parseInt(l_int_move_qty);
+            $("#mvqty_" + l_int_line).val(l_int_move_qty);
+            if (l_int_move_qty > 0)
+                {
+                    $("#check_" + l_int_line).prop('checked', true);
+                    $("#GridID_" + l_int_line).css("background-color", "#5ae77e");
+                    p_str_check_value = true;
+                    $('#one').val(p_str_check_value);
+                }
+        }
+        else {
+
+                $("#check_" + l_int_line).prop('checked', false);
+                $("#to_loc_" + l_int_line).val("");
+                p_str_check_value = false;
+                $('#one').val(p_str_check_value);
+                $("#GridID_" + l_int_line).css("background-color", "#ffffff");
+             }
+
+    });
+
+
+    $(".mvctn").blur(function () {
+        debugger
+
+        var $buttonClicked = $(this);
+        var i_int_cur_line = $buttonClicked.attr('data');
+        var l_int_line = parseFloat(i_int_cur_line) - 1;
+        var l_str_to_loc = $("#to_loc_" + l_int_line).val();
+        var l_int_move_ctns = $(this).val();
+        var l_int_tot_ctns = $("#tot_ctns_" + l_int_line).val();
+
+        if (l_int_move_ctns != 0)
+        {
+            if (parseInt(l_int_move_ctns) > parseInt(l_int_tot_ctns))
+            {
+                sweetAlert("", "Move Ctns(s) Can not be greater than available Ctn(s)", "");
+                $("#mvctn_" + l_int_line).focus();
+                $("#mvctn_" + l_int_line).val("0");
+                return false;
+            }
+            var l_int_ppk = $("#pkg_qty_" + l_int_line).val();
+            var l_int_move_qty = parseInt(l_int_ppk) * parseInt(l_int_move_ctns);
+            var l_int_move_qty = parseInt(l_int_move_qty);
+            $("#mvqty_" + l_int_line).val(l_int_move_qty);
+            if ((l_str_to_loc != "") && (l_str_to_loc != null))
+              {
+                $("#check_" + l_int_line).prop('checked', true);
+                $("#GridID_" + l_int_line).css("background-color", "#5ae77e");
+                p_str_check_value = true;
+                $('#one').val(p_str_check_value);
+               }
+
+            }
+        else
+        {
+            if (l_int_move_ctns == 0)
+            {
+                $("#check_" + l_int_line).prop('checked', false);
+                $("#mvqty_" + l_int_line).val("0");
+                p_str_check_value = false;
+                $('#one').val(p_str_check_value);
+                $("#GridID_" + l_int_line).css("background-color", "#ffffff");
+            }
+        }
+    });
+
+
+    $('#GridItemMove td[id="chkboxclick"]').click(function (event) {
+        debugger
+        var l_int_cur_line = $(this).attr('id1');
+        var l_int_cur_line = l_int_cur_line - 1;
+        var l_bool_is_selected = $(this).val();
+        var l_chkbox = "check_" + l_int_cur_line
+        var l_str_is_selected = document.getElementById(l_chkbox).checked;
+        if (l_str_is_selected )
+        {
+            var l_str_to_loc = $("#to_loc_" + l_int_cur_line).val();
+            var l_int_move_ctns = $("#mvctn_" + l_int_cur_line).val();
+            if ((l_str_to_loc == "") || (l_str_to_loc == null))
+            {
+                $("#check_" + l_int_cur_line).prop('checked', false);
+                $("#to_loc_" + l_int_cur_line).val("");
+                p_str_check_value = false;
+                $("#GridID_" + l_int_cur_line).css("background-color", "#ffffff");
+                return false;
+            }
+
+            if (l_int_move_ctns == 0) {
+                $("#check_" + l_int_cur_line).prop('checked', false);
+                $("#mvqty_" + l_int_cur_line).val("0");
+                $("#mvctn_" + l_int_cur_line).val("0");
+                p_str_check_value = false;
+                $("#GridID_" + l_int_cur_line).css("background-color", "#ffffff");
+                return false;
+            }
+
+        }
+
+        else
+        {
+            p_str_check_value = false;
+            $("#to_loc_" + l_int_cur_line).val("");
+            $("#mvqty_" + l_int_cur_line).val("0");
+            $("#mvctn_" + l_int_cur_line).val("0");
+            $("#GridID_" + l_int_cur_line).css("background-color", "#ffffff");
+            $("#check_" + l_int_cur_line).prop('checked', false);
+        }
+
+    });
+
+   
+</script>
+
+<script>
+
+    $('#GrdPartialStockChangeInq').DataTable({
+        "paging": true,
+        "pageLength": 50,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+  
+
+    
+</script>
+

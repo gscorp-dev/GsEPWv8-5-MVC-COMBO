@@ -1,0 +1,239 @@
+﻿
+@model GsEPWv8_5_MVC.Model.RateMasterModel
+@{
+
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+</style>
+<div class="box-body">
+    <div class="box-header">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                    <label><b class="Lblmanual">Cmp Id:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -52px;width:38%;">
+                    @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", placeholder = "CmpId", @maxlength = "50", @disabled = "true", @style = "width:81%;background-color:lightyellow;" })
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                    <label><b class="Lblmanual">Rate Type:</b></label>
+                </div>
+            @if ((Model.itm_num == "INOUT-1") || (Model.itm_num == "STRG-1"))
+            {
+                <div class="col-xs-2" style="margin-left: -28px;">
+                    @Html.DropDownListFor(model => model.type, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @id = "p_type", @class = "form-control txtlbl", @disabled = "true", @style = "width:175px;" })
+                </div>
+            }
+            else
+            {
+                <div class="col-xs-2" style="margin-left: -28px;">
+                    @Html.DropDownListFor(model => model.type, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @id = "p_type", @class = "form-control txtlbl", @style = "width:175px;" })
+                </div>
+            }
+     
+                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                    <label id="lblcatg" ><b class="Lblmanual">Category:</b></label>
+                </div>
+            @if ((Model.itm_num == "INOUT-1") || (Model.itm_num == "STRG-1"))
+            {
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.DropDownListFor(model => model.catg, new SelectList(Model.ListLookUpCategoryDtl, "name", "description"), new { @class = "form-control txtlbl", @disabled = "true", @style = "width:138px;" })
+                </div>
+            }
+            else
+            {
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.DropDownListFor(model => model.catg, new SelectList(Model.ListLookUpCategoryDtl, "name", "description"), new { @class = "form-control txtlbl", @style = "width:138px;" })
+                </div>
+            }
+
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-xs-12" style="margin-top: -8px;">
+                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                    <label><b class="Lblmanual">Status:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -28px;">
+                    @Html.DropDownListFor(model => model.status, new SelectList(Model.ListLookUpStatusDtl, "name", "description"), new { @class = "form-control txtlbl", @style = "width:125px;" })
+                </div>
+                <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                    <label><b class="Lblmanual">Rate Id:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.TextBoxFor(model => model.itm_num, new { @id = "p_itm_num", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "20", @disabled = "true", @style = "background-color:lightyellow;" })
+                </div>
+                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                    <label><b class="Lblmanual">Rate Desc:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.TextBoxFor(model => model.itm_name, new { @id = "p_itm_name", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "75", @style = "width:200%" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-xs-12" style="margin-top: -8px;">
+                <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                    <label><b class="Lblmanual">List Price:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -22px;">
+                    @Html.TextBoxFor(model => model.list_price, new { @id= "new_list_price", @class = "form-control txtlbl", @maxlength = "50", @style = "width:250px;" })
+                </div>
+                <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;margin-left:70px;">
+                    <label><b class="Lblmanual">Price UoM:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -22px;">
+                    @Html.DropDownListFor(model => model.price_uom, new SelectList(Model.ListPriceuom, "uom_id", "uom_id"), new { @class = "form-control txtlbl", @style = "width:250px;background-color:lightyellow;" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-xs-12" style="margin-top: -8px;">
+                <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 131px;margin-left:-10px;">
+                    <label><b class="Lblmanual">Rate Dt:</b></label>
+                </div>
+                <div class="col-xs-2" style="margin-left: -23px;">
+                    @Html.TextBoxFor(model => model.last_so_dt, new { @id="new_last_so_dt",@class = "form-control txtlbl", @placeholder = "MM/DD/YYYY", @maxlength = "50", @style = "width:180px;background-color:lightyellow;" })
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row" id="divEditAutoIBS">
+            <div class="col-xs-12" style="margin-top: -8px;">
+
+                <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 200px;">
+                    <label><b class="Lblmanual">Is Auto IBS Entry</b></label>
+                </div>
+
+                <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width:50px;">
+                    @Html.CheckBoxFor(model => model.is_auto_ibs, new { @id = "edit_is_auto_ibs", @style = "background-color:lightyellow;" })
+                </div>
+
+                <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;margin-left:70px;">
+                    <label><b class="Lblmanual">IBS Unit </b></label>
+                </div>
+
+                <div class="col-xs-2" style="margin-left: -22px;">
+                    @Html.DropDownListFor(model => model.ibs_unit, new SelectList(Model.ListIBSUnit, "name", "description"), new { @id = "edit_ibs_unit", @class = "form-control txtlbl", @style = "width:250px;background-color:lightyellow;" })
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        debugger
+        var p_str_type = $('#p_type').val();
+        if (p_str_type != 'VAS')
+        {
+            document.getElementById('lblcatg').innerHTML = 'Bill For :';
+
+        }
+        else
+        {
+            document.getElementById('lblcatg').innerHTML = 'Category:';
+        }
+
+        if (p_str_type == 'IBS') {
+
+            document.getElementById("divEditAutoIBS").removeAttribute("hidden");
+        }
+        else {
+            document.getElementById("divEditAutoIBS").setAttribute("hidden", "");
+        }
+
+
+    });
+    </script>
+<script type="text/javascript">
+    $('#new_last_so_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'Y-m-d'
+    });
+    $('#list_price').val("");
+
+
+    $(function () {
+        $('#p_type').on('change', function () {
+            var id = $(this).find(":selected").val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/RateMaster/TypeChange")',
+                data: '{id: "' + id + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                //Ravi Below Code
+                success: function (r) {
+                    $("#ajaxLoading").hide();
+                    //alert("Success :" + r.length)
+                    var Getcatgdetail = $('#catg');
+                    Getcatgdetail.empty();
+                    $.each(r.ListLookUpCategoryDtl, function (key, value) {
+
+                        Getcatgdetail.append('<option value=' + value.name + '>' + value.description + '</option>');
+                    });
+
+                    if (id != 'VAS')
+                        {
+                        document.getElementById('lblcatg').innerHTML = 'Bill For :';
+
+                    }
+                    else
+                    {
+                        document.getElementById('lblcatg').innerHTML = 'Category:';
+                    }
+
+                    if (id == 'IBS') {
+
+                        document.getElementById("divEditAutoIBS").removeAttribute("hidden");
+                    }
+                    else {
+                        document.getElementById("divEditAutoIBS").setAttribute("hidden", "");
+                    }
+                    },
+
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+
+        });
+
+    });
+
+    $(document).ready(function () {
+        $('.VLDTITMFILD').keyup(function () {
+            $(this).val($(this).val().toUpperCase());
+        });
+    });
+</script>

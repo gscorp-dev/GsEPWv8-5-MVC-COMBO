@@ -1,0 +1,347 @@
+﻿@model GsEPWv8_5_MVC.Model.WhsMasterModel
+@{
+    ViewBag.Title = "WhsMaster";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var Ordercount = Model.ListWhsMaster.Count;
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+      .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+</style>
+<style>
+    fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+@Html.HiddenFor(model => model.cmp_id, new { @id = "g_str_tmp_cmp_id" })
+@using (Html.BeginForm("WhsMaster", "WhsMaster", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <a href="/DashBoardB2B/DashBoardB2B" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    Item Master
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="container">;
+                    <div style="width:97%">
+                        <center>
+                            <table>
+                                <tr>
+                                    <td style="text-align: right; width:5%;">
+                                        <label><b class="Lblmanual">Cust ID:</b></label>
+                                    </td>
+                                    <td style="width: 8%; padding-left: 1%;padding-bottom:1%;">
+                                        @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                        {
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select Company---", new { @class = "form-control txtlbl",@id= "cmb_v_cmp_id" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl",@id = "cmb_v_cmp_id" })
+                                        }
+                                    </td>
+                                    <td style="text-align: right; width: 3%;"></td>
+                                    <td style="width: 7%; padding-left: 1%;"></td>
+
+                                </tr>
+                                <tr>
+
+                                    <td style="text-align: right;width:5%;">
+                                        <label><b class="Lblmanual">Whs ID:</b></label>
+                                    </td>
+                                    <td style="width: 8%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.whs_id, new { @class = "form-control txtlbl", @maxlength = "50", @id = "txt_v_whs_id" })
+                                    </td>
+                                    <td style="text-align: right; width: 3%;">
+                                        <label><b class="Lblmanual">Whs Name:</b></label>
+                                    </td>
+                                    <td style="width: 7%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.whs_name, new { @class = "form-control txtlbl", @maxlength = "50", @id = "txt_v_whs_name",@style="width:450px"})
+                                    </td>
+                                   
+                                </tr>
+                            </table>
+
+                        </center>
+                    </div>    
+                <br/>       
+                    <table>
+                        <tr>
+                            <td style="width: 65%; "></td>
+                            <td> <button type="button" id="btnwhsinquiry" class="btn_search" style="font-size:16px;">Search</button></td>
+                            <td><button type="reset" id="btnwhsClear" class="btn-Clear" style="font-size:16px;">Clear</button></td>
+                            <td> <button type="button" id="btnNewWhsEntry" class="btn_NewEntry" onclick="">New Warehouse</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id='WareHouseAdd' class='modal' style="padding-top:73px">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:190%; left:-430px;">
+                <div id='WareHouseContentAdd' style="width: 100%; height:523px;"></div>
+            </div>
+        </div>
+    </div>
+    <div id='WareHouseEdit' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 190%; left:-430px;">
+                <div id='WareHouseContentEdit' style="width: 100%; height:523px;"></div>
+            </div>
+        </div>
+    </div>
+    <div id='WareHouseView' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:190%; left:-430px;">
+                <div id='WareHouseContentView' style="width: 100%; height: 523px;"></div>
+            </div>
+        </div>
+    </div>
+    <div id='WareHouseDelete' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:190%; left:-430px;">
+                <div id='WareHouseContentDelete' style="width: 100%; height:523px;"></div>
+            </div>
+        </div>
+    </div>
+    <div id="showwhsgrid" class="box-header" style="padding:5px; ">
+        <div class="box-body">
+            <div>
+                <table>
+                    <tr>
+                        <td style="width:83%;">
+                            <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;">
+                                Total Records:
+                            </span>
+                            <label class="totalCount" style="text-align:left">
+                                @Ordercount
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <table id="WhsGrid" class="table table-bordered table-striped">
+
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">Cmp Id</th>
+                        <th class="grid_header_backcolor">Action</th>
+                        <th class="grid_header_backcolor">Whs Id</th>
+                        <th class="grid_header_backcolor">Description</th>
+                        <th class="grid_header_backcolor">Status</th>
+                        <th class="grid_header_backcolor">Attn</th>
+                        <th class="grid_header_backcolor">Mail Name</th>
+                        <th class="grid_header_backcolor">Dflt Whs</th>
+
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+}
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+
+    $('#WhsGrid').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+    });
+  
+    $("#btnNewWhsEntry").click(function () {
+        debugger
+        var a_str_cmpid = $('#cmb_v_cmp_id').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '/WhsMaster/AddWhs',
+            contentType: "application/json; charset=utf-8",
+            data: { "a_str_cmpid": a_str_cmpid },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#WareHouseContentAdd').html(data);
+                $('#WareHouseAdd').modal(options);
+                $('#WareHouseAdd').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $("btnwhsClear").each(function () {
+            $(this).val("");
+        });
+    });
+
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseB2B").click(function () {
+        debugger
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("DashboardB2B", "DashboardB2B")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnwhsinquiry").click(function () {
+        debugger
+        var f_str_cmp_id = $("#cmb_v_cmp_id").val();
+        if (f_str_cmp_id == "") {
+            not2("Please Select The Company.")
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var f_str_cmp_id = $('#cmb_v_cmp_id').val();
+            var f_str_whs_id = $('#txt_v_whs_id').val();
+            var f_str_whs_name = $('txt_v_whs_name').val();
+
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/WhsMaster/GetWhsMasterDetails")',
+                data: {
+                    "f_str_cmp_id": f_str_cmp_id,
+                    "f_str_whs_id": f_str_whs_id,
+                    "f_str_whs_name": f_str_whs_name,
+
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#myModal').modal('hide')
+                    $('#showwhsgrid').html("");
+                    $('#showwhsgrid').html(e);
+
+                }
+
+            })
+        }
+    });
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}

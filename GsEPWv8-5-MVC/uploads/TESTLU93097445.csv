@@ -1,0 +1,4 @@
+SLF943,CompID,cntr_id,line_num,po_num / Ref#,itm_Num,itm_color,itm_size,itm_name,itm_qty,ctn_qty,ctns,Ctn-Len,Ctn-Wid,Ctn-Hgt,ctn_cube,ctn_wgt,ENTRY-DT,ETA-DT,SUPPLIER,Hdr-Note,Dtl-Note
+SLF943,TEST,TESTLU93097459,1,,TEST9410,,,Test Sweet leaf toilet paper holder,660,6,110,,,,,,,,,,
+SLF943,TEST,TESTLU93097459,2,,TEST9510,,,Test Arch Paper Towel Holder,600,12,50,,,,,,,,,,
+SLF943,TEST,TESTLU93097460,1,,TE5511,,,Test Luminous Over The Door 10,1008,12,84,,,,,,,,,,

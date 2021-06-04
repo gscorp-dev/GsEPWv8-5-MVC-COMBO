@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5AEA13D4-5654-4A4F-82F1-75EEF72A84A5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GsEPWv8_5_MVC.Data</RootNamespace>
+    <AssemblyName>GsEPWv8-5-MVC.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Reference\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>..\..\GsERPMvcWeb\Gs-ERPMvcWeb.Data\bin\Debug\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="GsEPWv8-5-MVC.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Reference\GsEPWv8-5-MVC.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GsEPWv8-5-MVC.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Reference\GsEPWv8-5-MVC.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Implementation\BillingInquiryRepository.cs" />
+    <Compile Include="Implementation\BinMasterRepository.cs" />
+    <Compile Include="Implementation\CarrierRepository.cs" />
+    <Compile Include="Implementation\CompanyMasterRepository.cs" />
+    <Compile Include="Implementation\ConnectionManager.cs" />
+    <Compile Include="Implementation\CompanyRepository.cs" />
+    <Compile Include="Implementation\CustMasterRepository.cs" />
+    <Compile Include="Implementation\DailyFlashExceptionReportRepository.cs" />
+    <Compile Include="Implementation\DashBoardRepository.cs" />
+    <Compile Include="Implementation\DataUpdateRepository.cs" />
+    <Compile Include="Implementation\DocumentUploadRepository.cs" />
+    <Compile Include="Implementation\EcomBinScanOutRepository.cs" />
+    <Compile Include="Implementation\EcomLinkRepository.cs" />
+    <Compile Include="Implementation\eComSR940Repository.cs" />
+    <Compile Include="Implementation\EmailRepository.cs" />
+    <Compile Include="Implementation\EmailSetupRepository.cs" />
+    <Compile Include="Implementation\ETAInquiryRepository.cs" />
+    <Compile Include="Implementation\ExceptionReportsRepository.cs" />
+    <Compile Include="Implementation\ForgotPasswordRepository.cs" />
+    <Compile Include="Implementation\IB943UploadFileRepository.cs" />
+    <Compile Include="Implementation\IBRcvdDataUpdateRepository.cs" />
+    <Compile Include="Implementation\InboundInquiryRepository.cs" />
+    <Compile Include="Implementation\InboundReceivingRepository.cs" />
+    <Compile Include="Implementation\InboundReportRepository.cs" />
+    <Compile Include="Implementation\InvStkAdjRepository.cs" />
+    <Compile Include="Implementation\ItemMasterRepository.cs" />
+    <Compile Include="Implementation\LabelPrintRepository.cs" />
+    <Compile Include="Implementation\LocationMasterRepository.cs" />
+    <Compile Include="Implementation\LoginRepository.cs" />
+    <Compile Include="Implementation\LookUpRepository.cs" />
+    <Compile Include="Implementation\MailConfigRepository.cs" />
+    <Compile Include="Implementation\OB940ChubUploadFileRepository.cs" />
+    <Compile Include="Implementation\OB940UploadFileRepository.cs" />
+    <Compile Include="Implementation\OBAllocationRepository.cs" />
+    <Compile Include="Implementation\OBLoadEntryUploadFileRepository.cs" />
+    <Compile Include="Implementation\OBSRLoadEntryRepository.cs" />
+    <Compile Include="Implementation\OrderSummaryRepository.cs" />
+    <Compile Include="Implementation\OutboundInqRepository.cs" />
+    <Compile Include="Implementation\OutboundShipInqRepository.cs" />
+    <Compile Include="Implementation\OutboundShipRptRepository.cs" />
+    <Compile Include="Implementation\OutboundShipSchedulingInquiryRepository.cs" />
+    <Compile Include="Implementation\PickRepository.cs" />
+    <Compile Include="Implementation\PriceuomRepository.cs" />
+    <Compile Include="Implementation\RateMasterRepository.cs" />
+    <Compile Include="Implementation\StockAsOfDateRepository.cs" />
+    <Compile Include="Implementation\StockChangeRepository.cs" />
+    <Compile Include="Implementation\StockInquiryRepository.cs" />
+    <Compile Include="Implementation\UPSShipmentRepository.cs" />
+    <Compile Include="Implementation\UserAccountRepository.cs" />
+    <Compile Include="Implementation\UserProfileRepository.cs" />
+    <Compile Include="Implementation\VasEntryRepository.cs" />
+    <Compile Include="Implementation\VasInquiryRepository.cs" />
+    <Compile Include="Implementation\WhsMasterRepository.cs" />
+    <Compile Include="Interface\IBillingInquiryRepository.cs" />
+    <Compile Include="Interface\IBinMasterRepository.cs" />
+    <Compile Include="Interface\ICarrierRepository.cs" />
+    <Compile Include="Interface\ICompanyMasterRepository.cs" />
+    <Compile Include="Interface\ICompanyRepository.cs" />
+    <Compile Include="Interface\ICustMasterRepository.cs" />
+    <Compile Include="Interface\IDailyFlashExceptionReportRepository.cs" />
+    <Compile Include="Interface\IDashBoardRepository.cs" />
+    <Compile Include="Interface\IDataUpdateRepository.cs" />
+    <Compile Include="Interface\IDocumentUploadRepository.cs" />
+    <Compile Include="Interface\IEcomBinScanOutRepository.cs" />
+    <Compile Include="Interface\IEcomLinkRepository.cs" />
+    <Compile Include="Interface\IeComSR940Repository.cs" />
+    <Compile Include="Interface\IEmailRepository.cs" />
+    <Compile Include="Interface\IEmailSetupRepository.cs" />
+    <Compile Include="Interface\IETAInquiryRepository.cs" />
+    <Compile Include="Interface\IExceptionReportsRepository.cs" />
+    <Compile Include="Interface\IForgotPasswordRepository.cs" />
+    <Compile Include="Interface\IIB943UploadFileRepository.cs" />
+    <Compile Include="Interface\IIBRcvdDataUpdateRepository.cs" />
+    <Compile Include="Interface\IInboundInquiryRepository.cs" />
+    <Compile Include="Interface\IInboundReceivingRepository.cs" />
+    <Compile Include="Interface\IInboundReportRepository.cs" />
+    <Compile Include="Interface\IInvStkAdjRepository.cs" />
+    <Compile Include="Interface\IItemMasterRepository.cs" />
+    <Compile Include="Interface\ILabelPrintRepository.cs" />
+    <Compile Include="Interface\ILocationMasterRepository.cs" />
+    <Compile Include="Interface\ILoginRepository.cs" />
+    <Compile Include="Interface\ILookUpRepository.cs" />
+    <Compile Include="Interface\IMailConfigRepository.cs" />
+    <Compile Include="Interface\IOB940ChubUploadFileRepository.cs" />
+    <Compile Include="Interface\IOB940UploadFileRepository.cs" />
+    <Compile Include="Interface\IOBAllocationRepository.cs" />
+    <Compile Include="Interface\IOBLoadEntryUploadFileRepository.cs" />
+    <Compile Include="Interface\IOBSRLoadEntryRepository.cs" />
+    <Compile Include="Interface\IOrderSummaryRepository.cs" />
+    <Compile Include="Interface\IOutboundInqRepository.cs" />
+    <Compile Include="Interface\IOutboundShipInqRepository.cs" />
+    <Compile Include="Interface\IOutboundShipRptRepository.cs" />
+    <Compile Include="Interface\IOutboundShipSchedulingInquiryRepository.cs" />
+    <Compile Include="Interface\IPickRepository.cs" />
+    <Compile Include="Interface\IPriceuomRepository.cs" />
+    <Compile Include="Interface\IRateMasterRepository.cs" />
+    <Compile Include="Interface\IStockAsOfDateRepository.cs" />
+    <Compile Include="Interface\IStockChangeRepository.cs" />
+    <Compile Include="Interface\IStockInquiryRepository.cs" />
+    <Compile Include="Interface\IUPSShipmentRepository.cs" />
+    <Compile Include="Interface\IUserAccountRepository.cs" />
+    <Compile Include="Interface\IUserProfileRepository.cs" />
+    <Compile Include="Interface\IVasEntryRepository.cs" />
+    <Compile Include="Interface\IVasInquiryRepository.cs" />
+    <Compile Include="Interface\IWhsMasterRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

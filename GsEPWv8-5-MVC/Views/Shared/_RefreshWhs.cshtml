@@ -1,0 +1,15 @@
+﻿@model  GsEPWv8_5_MVC.Model.InboundReportModel
+<div class="box-body">
+    <table style="border-collapse: separate;border-spacing: 0px 0.5em;">
+
+        <tr>
+            <td style="width: 9%;text-align: right;">
+                <label><b class="Lblmanual">Whs Id</b></label>
+            </td>
+            <td style="width: 25%; padding-left: 1%;">
+                @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListwhsPickDtl, "whs_id", "whs_name"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;background-color:lightyellow;" })
+            </td>
+
+        </tr>
+    </table>
+    </div>

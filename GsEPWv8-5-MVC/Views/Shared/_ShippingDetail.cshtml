@@ -1,0 +1,328 @@
+﻿@model GsEPWv8_5_MVC.Model.OutboundShipInqModel
+@{
+    var Ordercount = Model.LstOutboundShipInqpackingSlipRpt.Count;
+}
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+      div#ajaxLoadingShipping {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<center>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">Shipping INFO</h4>
+    </div>
+    <div id="ajaxLoadingShipping" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <center><label style="font-size:20px;"><b>Shipping Detail</b></label><button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right">Close</button></center>
+    <hr />
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;">
+                        <label><b class="Lblmanual">CmpId </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", placeholder = "Cmp id", @maxlength = "50" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
+                        <label><b class="Lblmanual">ShipDocId </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.ship_doc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
+                        <label><b class="Lblmanual">Shipdate </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.Ship_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">Status </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.status, new { @class = "form-control txtlbl", @maxlength = "50", @id = "ShippingStatus" })
+
+                    </div>
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
+                        <label><b class="Lblmanual">WhsId </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.whs_id, new { @class = "form-control txtlbl", @maxlength = "50", })
+                    </div>
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">ShipType </b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.ship_type, new { @class = "form-control txtlbl", @maxlength = "50", })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                        <label><b class="Lblmanual">Notes </b></label>
+                    </div>
+                    <div class="col-xs-2" style="width:465px;margin-left: -1%;">
+                        @Html.TextBoxFor(model => model.notes, new { @class = "form-control txtlbl", @maxlength = "50", })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-2" style="left:-21px">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                    Total Records:
+                </span>
+            </div>
+            <div class="col-xs-2" style="left:-163px">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+       
+                    @*<table>
+                        <tr>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn-Email" type="button" style=" width:100px; text-align: right;" id="btnEmail" data-toggle="dropdown">
+                                        Email
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" id="btnEmailPDF" onclick="OutboundShippingDetailEmailPDF('');">PDF</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn-Print" type="button" id="btnPrint" style=" width:105px;" data-toggle="dropdown">
+                                        Print/View
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" id="btnPDF" onclick="OutboundShippingDetailPDF('');">PDF</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" id="btnEXCEL" onclick="OutboundShippingDetailExcel('');">EXCEL</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                    <button type="button" id="btnClose" class="btn-Close" data-dismiss="modal">Close</button>
+                                </td>
+                        </tr>
+                    </table>*@
+        <div class="col-md-3 col-sm-3 col-xs-3" style="width:410px">
+            <div class="container" style="margin-left:1053px; width:100%; margin-top:-162px">
+                <fieldset>
+                    <legend style="text-align:center">Report Selection</legend>
+                    <table>
+                        <tr>
+                            <td>
+                                <b style="color:blue;font-size: 12px;">Format</b>
+                                <select id="Formatshippingid" class="btn-Format" type="button" style="margin-left:6px;width:60px; text-align:right" data-toggle="dropdown">
+                                    <option>PDF</option>
+                                    <option>XLS</option>
+                                </select>
+
+                            </td>
+                            <td>
+                                <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                                <select id="Modeshippingid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                    <option>VIEW</option>
+                                    <option>EMAIL</option>
+
+                                </select>
+
+
+                            </td>
+                            <td>
+
+                                <button type="button" id="btnshippingrpt" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                            </td>
+
+                        </tr>
+
+
+                    </table>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+    <br />
+</center>
+<div class="box">
+    <div id="table-Details">
+        @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+        <table id="example5" class="table table-bordered table-striped" style="border:1px solid #121213;">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor">Line#</th>
+                    <th class="grid_header_backcolor">Style</th>
+                    <th class="grid_header_backcolor">Color</th>
+                    <th class="grid_header_backcolor">Size</th>
+                    <th class="grid_header_backcolor">AlocDocId</th>
+                    <th class="grid_header_backcolor">Status</th>
+                    <th class="grid_header_backcolor">SoNum</th>
+                    <th class="grid_header_backcolor">Shipqty</th>
+                    <th class="grid_header_backcolor">ShipUom</th>
+                </tr>
+            </thead>
+            <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                @for (int i = 0; i < Model.LstOutboundShipInqpackingSlipRpt.Count; i++)
+                {
+                    <tr style="background-color:white;">
+                        <td style="color:black; font-weight:bold;text-align:left;">@Model.LstOutboundShipInqpackingSlipRpt[i].so_dtl_line</td>
+                        <td style="color:black; font-weight:bold;text-align:left;">@Model.LstOutboundShipInqpackingSlipRpt[i].so_itm_num</td>
+                        <td style="color:black; font-weight:bold;text-align:left;">@Model.LstOutboundShipInqpackingSlipRpt[i].so_itm_color</td>
+                        <td style="color:black; font-weight:bold;text-align:left;">@Model.LstOutboundShipInqpackingSlipRpt[i].so_itm_size</td>
+                        <td style="color:black; font-weight:bold;text-align:left;">@Model.LstOutboundShipInqpackingSlipRpt[i].aloc_doc_id</td>
+                        @if (@Model.LstOutboundShipInqpackingSlipRpt[i].status.Trim() == "S")
+                        {
+                            <td style="color:black; font-weight:bold;text-align:left;">SHIP</td>
+                        }
+                        else if (@Model.LstOutboundShipInqpackingSlipRpt[i].status.Trim() == "P")
+                        {
+                            <td style="color:black; font-weight:bold;text-align:left;">POST</td>
+                        }
+                        <td style="color:black; font-weight:bold;text-align:left;">@Model.LstOutboundShipInqpackingSlipRpt[i].so_num</td>
+                        <td style="color:black; font-weight:bold;text-align:right;">@Model.LstOutboundShipInqpackingSlipRpt[i].ship_qty</td>
+                        <td style="color:black; font-weight:bold;text-align:left;">@Model.LstOutboundShipInqpackingSlipRpt[i].ship_Uom</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @*</div>*@
+    </div>
+</div>
+<script>
+    $('#example5').DataTable({
+        "pageLength": 10,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        'autoWidth': false,
+    });
+    $('#example5_paginate').hide();
+   
+</script>
+
+<script>
+    $("#btnshippingrpt").click(function () {
+
+           debugger
+           var getli = $('#Formatshippingid').find(":selected").text();
+           var getli2 = $('#Modeshippingid').find(":selected").text();
+           if (getli == 'PDF' && getli2 == 'VIEW') {
+               var p_str_cmp_id = $('#cmp_id').val();
+               var p_str_Shipping_id = $('#ship_doc_id').val();
+               var p_str_status = $('#ShippingStatus').val();
+               $("#ajaxLoadingShipping").show();
+               window.open('ShowdtlshipReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_Shipping_id=' + p_str_Shipping_id, 'OutboundShipInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowdtlReport')
+               $("#ajaxLoadingShipping").hide();
+           }
+            if (getli == 'PDF' && getli2 == 'EMAIL')
+            {
+                var options = { "backdrop": "static", keyboard: true };
+
+                var TeamDetailPostemailBackURL = '/OutboundShipInq/EmailShowReport';
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var p_str_cmpid = $('#cmp_id').val();
+                var type = "PDF";
+                var var_name = "BillofLadding";
+                var p_str_radio = var_name;
+                var p_str_Shipping_id = $('#ship_doc_id').val();
+                var SelectdID = p_str_Shipping_id;
+                var p_str_status = $('#ShippingStatus').val();
+                var p_str_ship_docId_Fm = $('#ship_doc_id_Fm').val();
+                var p_str_ship_docId_To = $('#ship_doc_id_To').val();
+                var p_str_ship_dt_frm = $('#Ship_dt_Fm').val();
+                var p_str_ship_dt_to = $('#Ship_dt_To').val();
+                var p_str_CustId = $('#cust_id').val();
+                var p_str_AlocId = $('#aloc_doc_id').val();
+                var p_str_Shipto = $('#ship_to').val();
+                var p_str_ship_via_name = $('#ship_via_name').val();
+                var p_str_Whsid = $('#whs_id').val();
+                $("#ajaxLoadingShipping").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "SelectedID": SelectdID, "p_str_cmp_id": p_str_cmpid, "p_str_radio": p_str_radio, "p_str_ship_docId_Fm": p_str_ship_docId_Fm,
+                        "p_str_ship_docId_To": p_str_ship_docId_To, "p_str_ship_dt_frm": p_str_ship_dt_frm, "p_str_ship_dt_to": p_str_ship_dt_to, "p_str_CustId": p_str_CustId,
+                        "p_str_AlocId": p_str_AlocId, "p_str_Shipto": p_str_Shipto, "p_str_ship_via_name": p_str_ship_via_name, "p_str_status": p_str_status, "p_str_Whsid": p_str_Whsid, "type": type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoadingShipping").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoadingShipping").hide();
+                    }
+                });
+            }
+            if (getli == 'XLS' && getli2 == 'VIEW')
+            {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var p_str_cmpid = $('#cmp_id').val();
+                var SelectdID = $('#ship_doc_id').val();
+                //var p_str_status = $('#ShippingStatus').val();
+                var p_str_radio = "BillofLadding";
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_ship_docId_Fm = "";
+                var p_str_ship_docId_To = "";
+                var p_str_ship_dt_frm = "";
+                var p_str_ship_dt_to = "";
+                var p_str_CustId = "";
+                var p_str_AlocId = "";
+                var p_str_Shipto = "";
+                var p_str_ship_via_name = "";
+                var p_str_status = "";
+                var p_str_Whsid = "";
+                var type = "Excel";
+         window.location.replace("/OutboundShipInq/ShowReport? &SelectedID=" + SelectdID + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_radio=' + p_str_radio
+        + '&p_str_ship_docId_Fm=' + p_str_ship_docId_Fm + '&p_str_ship_docId_To=' + p_str_ship_docId_To + '&p_str_ship_dt_frm=' + p_str_ship_dt_frm + '&p_str_ship_dt_to=' + p_str_ship_dt_to
+        + '&p_str_CustId=' + p_str_CustId + '&p_str_AlocId=' + p_str_AlocId + '& p_str_Shipto=' + p_str_Shipto + '&p_str_ship_via_name = ' + p_str_ship_via_name + '& p_str_status=' + p_str_status + '& p_str_Whsid=' + p_str_Whsid + '&type=' + type)
+         $("#ajaxLoadingShipping").hide();
+            }
+        
+
+      })
+
+</script>

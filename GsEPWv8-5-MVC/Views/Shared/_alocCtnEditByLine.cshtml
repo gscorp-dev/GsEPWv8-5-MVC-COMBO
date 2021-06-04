@@ -1,0 +1,474 @@
+﻿@model GsEPWv8_5_MVC.Model.ClsOBAlocEditModel
+@{
+    int lintAlocQty = 0;
+    int lintReqdQty = 0;
+    int lintSplitCount = 0;
+    int lintIsCtnDtlChanged = 0;
+    int lintTotLines = Model.lstOBAlocCtnByLine.Count;
+}
+<div class="box-body">
+    <div class="box-header">
+        <fieldset>
+            <legend style="text-align:left;">Allocation Detail Edit</legend>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Aloc Line#</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.TextBoxFor(model => model.objBAlocDtl.line_num, new { @id = "ace_line_num", @class = "form-control txtlbl", @maxlength = "3", @style = "font-size: 12px; font-family: verdana;" })
+                        
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Style</label>
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.TextBoxFor(model => model.objBAlocDtl.so_itm_num, new { @id = "ace_so_itm_num", @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Color</label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.objBAlocDtl.so_itm_color, new { @id = "ace_so_itm_color", @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Size</label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.objBAlocDtl.so_itm_size, new { @id = "ace_so_itm_size", @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">SR Qty</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.TextBoxFor(model => model.objBAlocDtl.due_qty, new { @id = "ace_due_qty", @class = "form-control txtlbl", @maxlength = "6", @style = "font-size: 12px; font-family: verdana;" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Allocated Qty</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <label id="lblAllocatedQty" style="font-size:14px;color:orangered"></label>
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Required Qty</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <label id="lblReqdQty" style="font-size:14px;color:orangered"></label>
+                    </div>
+                    <div class="col-xs-1" style="text-align: center;">
+                        <button type="button" id="btnAlocCtnEditAcpt" class="btn-Close" style="float:right;margin-right: 2px;background-color: #00c0ef;">Accept Change</button>
+                    </div>
+                    
+                    <div class="col-xs-1" style="text-align: right;">
+                        <button type="button" id="btnAlocCtnEditReject"  class="btn-Close" style="float:right;margin-right: 29px;">Cancel</button>
+                    </div>
+
+
+                </div>
+            </div>
+            <br />
+            <table id="grdAlocDtlEdit" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+                    <tr>
+                        <th class="grid_header_backcolor">Sel</th>
+                        <th class="grid_header_backcolor">Line#</th>
+                        <th class="grid_header_backcolor">LocId</th>
+                        <th class="grid_header_backcolor">Lot#</th>
+                        <th style="display:none;"></th>
+                        <th class="grid_header_backcolor">Po Number</th>
+                        <th style="display:none;"></th>
+                        <th class="grid_header_backcolor">Line Ctn(s)</th>
+                        <th class="grid_header_backcolor">Line Qty</th>
+                        <th class="grid_header_backcolor">PPk</th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th class="grid_header_backcolor">Aloc Qty</th>
+                        <th class="grid_header_backcolor">Aloc Ctn(s)</th>
+                     
+                        <th class="grid_header_backcolor">Split Qty</th>
+                        <th class="grid_header_backcolor">Bal Ctn(s)</th>
+                        <th class="grid_header_backcolor">Bal Qty</th>
+                    </tr>
+                </thead>
+                <tbody style="display:block; max-height:500px; overflow-y:scroll;">
+                    @for (int i = 0; i < Model.lstOBAlocCtnByLine.Count; i++)
+                    {
+                        int l_int_cur_row = i + 1;
+                        lintAlocQty = lintAlocQty + @Model.lstOBAlocCtnByLine[i].aloc_qty;
+                      
+                        <tr class="row-select" style="background-color:white;display:table; width:100%; table-layout:fixed;">
+                            @if (@Model.lstOBAlocCtnByLine[i].aloc_qty > 0)
+                            {
+                                <td style="text-align:center"><input class="checkbox" id="chkAlocLine_@i" name="chkAlocLine" disabled="disabled" checked type="checkbox"  /></td>
+                            }
+                            else
+                            {
+                                <td style="text-align:center"><input class="checkbox" id="chkAlocLine_@i" disabled="disabled" name="chkAlocLine" type="checkbox"  /></td>
+                            }
+                            <td style="font-size:12px; color:black; font-weight:bold;">@l_int_cur_row</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].loc_id, new { @id = "ace_loc_id_" + i, @disabled = "true", @style = "width:80px;text-align:left;background-color:lightyellow;" })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;"> @Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].lot_id, new { @id = "ace_lot_id_" + i, @disabled = "true", @style = "width:80px;text-align:left;background-color:lightyellow;" })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;;display:none;"> @Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].rcvd_dt, new { @id = "ace_rcvd_dt_" + i, @disabled = "true", @style = "width:60px;text-align:left;background-color:lightyellow;" })</td>
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].po_num, new { @id = "ace_po_num_" + i, @disabled = "true", @style = "width:80px;text-align:left;background-color:lightyellow;" })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;display:none;"> @Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].palet_id, new { @id = "ace_palet_id_" + i, @disabled = "false", @style = "width:60px;text-align:left;background-color:lightyellow;" })</td>
+                            
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].tot_line_ctns, new { @id = "tot_line_ctns_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].tot_line_qty, new { @id = "tot_line_qty_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].itm_qty, new { @id = "itm_qty_" + i, @disabled = "true", @style = "width:50px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none; ">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].aloc_ctns, new {  @id = "prev_aloc_ctns_" + i,  @rowId = @l_int_cur_row })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none; ">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].aloc_ctns, new { @id = "old_aloc_ctns_" + i, @rowId = @l_int_cur_row })</td>
+
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none; ">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].aloc_qty, new { @id = "prev_aloc_qty_" + i, @rowId = @l_int_cur_row })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none; ">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].aloc_qty, new { @id = "old_aloc_qty_" + i, @rowId = @l_int_cur_row })</td>
+                             <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].aloc_qty, new { @class = "AlocQty numericOnly", @id = "aloc_qty_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @rowId = @l_int_cur_row })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].aloc_ctns, new { @class = "AlocCtns numericOnly", @id = "aloc_ctns_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @rowId = @l_int_cur_row })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].split_qty, new { @id = "split_qty_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].avail_ctns, new { @id = "avail_ctns_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.lstOBAlocCtnByLine[i].avail_qty, new { @id = "avail_qty_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            </tr>
+                    }
+
+                </tbody>
+            </table>
+            @Html.Hidden("lintAlocQty", lintAlocQty)
+            @Html.Hidden("lintReqdQty", lintReqdQty)
+            @Html.Hidden("lintSplitCount", lintSplitCount)
+            @Html.Hidden("lintIsCtnDtlChanged", lintIsCtnDtlChanged)
+            @Html.Hidden("lintTotLines", lintTotLines)
+            @Html.HiddenFor(model => model.objBAlocDtl.so_num, new { @id = "ace_so_num" })
+           @Html.HiddenFor(model => model.objBAlocDtl.so_itm_code, new { @id = "ace_itm_code" })
+            @Html.HiddenFor(model => model.objBAlocDtl.so_dtl_line, new { @id = "ace_so_dtl_line" })
+            @Html.HiddenFor(model => model.lstOBAlocCtnByLine[0].whs_id, new { @id = "ace_whs_id" })
+            
+        </fieldset>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () 
+    {
+        document.getElementById('lblAllocatedQty').innerHTML = $('#lintAlocQty').val();
+        document.getElementById('lblReqdQty').innerHTML = $('#lintReqdQty').val();
+        $("#btnAlocEditSave").attr('disabled', 'disabled');
+    });
+
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+
+    $(".AlocQty").focusout(function () {
+
+        debugger
+        var lintAlocQty = $(this).val();
+
+        var $curLine = $(this);
+        var lintRowId = $curLine.attr('rowId');
+        var lintCurRow = parseFloat(lintRowId) - 1;
+
+        var lintTotLineQty = $("#tot_line_qty_" + lintCurRow).val();
+        var lintPrevAlocQty = $("#prev_aloc_qty_" + lintCurRow).val();
+        var lintDueQty = $("#ace_due_qty").val();
+        var lintReqdQty = $("#lintReqdQty").val();
+        var lintTotLineCtns = $("#tot_line_ctns_" + lintCurRow).val();
+        var lintPrevAlocCtns = $("#prev_aloc_ctns_" + lintCurRow).val();
+        if (parseInt(lintAlocQty) != parseInt(lintPrevAlocQty)) {
+            if (parseInt(lintAlocQty) > parseInt(lintTotLineQty)) {
+                swal("", "Allocated Qty can not be greater than Total Qty", "");
+                $("#aloc_qty_" + lintCurRow).val(lintPrevAlocQty);
+                return false;
+            }
+            else {
+
+             
+
+                var lintPPK = $("#itm_qty_" + lintCurRow).val();
+                $("#aloc_ctns_" + lintCurRow).val(Math.ceil(lintAlocQty / lintPPK));
+
+                var lintAlocCtns = $("#aloc_ctns_" + lintCurRow).val();
+               
+                var lintTotAlocQty = $("#lintAlocQty").val();
+                var lintSplitCount = $("#lintSplitCount").val();
+
+
+                var lintDiffQty = (parseInt(lintAlocCtns) - parseInt(lintPrevAlocCtns)) * parseInt(lintPPK);
+                var lintTotReqdQty = parseInt(lintReqdQty) - parseInt(lintDiffQty);
+                lintTotAlocQty = parseInt(lintTotAlocQty) + parseInt(lintDiffQty);
+                if (parseInt(lintTotAlocQty) >= parseInt(lintDueQty) + parseInt(lintPPK)) {
+                    swal("", "Allocated Quantity can not be greater than Ship Requestd Quantity", "");
+                    $("#aloc_ctns_" + lintCurRow).val(lintPrevAlocCtns);
+                    $("#aloc_qty_" + lintCurRow).val(lintPrevAlocQty);
+                    return false;
+                }
+
+                if (parseInt(lintTotAlocQty) > parseInt(lintDueQty) && parseInt(lintSplitCount) > 1) {
+                    swal("", "Split Ctn Already exists. Please remove the Existing split and try again ", "");
+                    $("#aloc_ctns_" + lintCurRow).val(lintPrevAlocCtns);
+                    $("#aloc_qty_" + lintCurRow).val(lintPrevAlocQty);
+                    return false;
+                }
+                else {
+                    $("#lintSplitCount").val('1');
+                    $("#avail_qty_" + lintCurRow).val(lintAvailQty);
+                }
+
+                var lintAvailCtns = parseInt(lintTotLineCtns) - parseInt(lintAlocCtns);
+                var lintAvailQty = parseInt(lintAvailCtns) * parseInt(lintPPK);
+                var lintAlocQty = parseInt(lintAlocCtns) * parseInt(lintPPK);
+                var lintSplitQty = parseInt(lintTotAlocQty) - parseInt(lintDueQty);
+                if (parseInt(lintSplitQty) > 0) {
+                    $("#split_qty_" + lintCurRow).val(lintSplitQty);
+                }
+                else {
+                    $("#split_qty_" + lintCurRow).val('0');
+                }
+
+                $("#chkAlocLine_" + lintCurRow).prop('checked', true);
+                $("#avail_ctns_" + lintCurRow).val(lintAvailCtns);
+                $("#avail_qty_" + lintCurRow).val(lintAvailQty);
+                $("#aloc_qty_" + lintCurRow).val(lintAlocQty);
+                $("#prev_aloc_ctns_" + lintCurRow).val(lintAlocCtns);
+                $("#prev_aloc_qty_" + lintCurRow).val(lintAlocQty);
+
+
+                $("#lintIsCtnDtlChanged").val('1');
+                $("#lintAlocQty").val(lintTotAlocQty);
+                $("#lintReqdQty").val(lintTotReqdQty);
+                document.getElementById('lblAllocatedQty').innerHTML = $('#lintAlocQty').val();
+                document.getElementById('lblReqdQty').innerHTML = $('#lintReqdQty').val();
+            }
+        }
+    });
+
+    $(".AlocCtns").focusout(function () {
+       
+        debugger
+        var lintAlocCtns = $(this).val();
+
+        var $curLine = $(this);
+        var lintRowId = $curLine.attr('rowId');
+        var lintCurRow = parseFloat(lintRowId) - 1;
+        var lintTotLineCtns = $("#tot_line_ctns_" + lintCurRow).val();
+        var lintPrevAlocCtns = $("#prev_aloc_ctns_" + lintCurRow).val();
+        var lintDueQty = $("#ace_due_qty").val();
+        var lintReqdQty = $("#lintReqdQty").val();
+        if (parseInt(lintAlocCtns) != parseInt(lintPrevAlocCtns))
+            {
+        if (parseInt(lintAlocCtns) > parseInt(lintTotLineCtns))
+        {
+            swal("", "Allocated Ctn(s) can not be greater than Total Ctn(s)", "");
+            $("#aloc_ctns_" + lintCurRow).val(lintPrevAlocCtns);
+            return false;
+        }
+        else
+        {
+            var lintPPK = $("#itm_qty_" + lintCurRow).val();
+            var lintTotAlocQty = $("#lintAlocQty").val();
+            var lintSplitCount = $("#lintSplitCount").val();
+            var lintDiffQty = (parseInt(lintAlocCtns) - parseInt(lintPrevAlocCtns)) * parseInt(lintPPK);
+            var lintTotReqdQty = parseInt(lintReqdQty) - parseInt(lintDiffQty);
+            lintTotAlocQty = parseInt(lintTotAlocQty) + parseInt(lintDiffQty);
+            if (parseInt(lintTotAlocQty) >= parseInt(lintDueQty) + parseInt(lintPPK))
+            {
+                swal("", "Allocated Quantity can not be greater than Ship Requestd Quantity", "");
+                $("#aloc_ctns_" + lintCurRow).val(lintPrevAlocCtns);
+                return false;
+            }
+           
+            if (parseInt(lintTotAlocQty) > parseInt(lintDueQty) && parseInt(lintSplitCount) > 1) {
+                swal("", "Split Ctn Already exists. Please remove the Existing split and try again ", "");
+                $("#aloc_ctns_" + lintCurRow).val(lintPrevAlocCtns);
+                return false;
+            }
+            else
+            {
+                $("#lintSplitCount").val('1');
+                $("#avail_qty_" + lintCurRow).val(lintAvailQty);
+            }
+
+            var lintAvailCtns = parseInt(lintTotLineCtns) - parseInt(lintAlocCtns);
+            var lintAvailQty = parseInt(lintAvailCtns) * parseInt(lintPPK);
+            var lintAlocQty = parseInt(lintAlocCtns) * parseInt(lintPPK);
+            var lintSplitQty = parseInt(lintTotAlocQty) - parseInt(lintDueQty);
+            if (parseInt(lintSplitQty) > 0)
+            {
+                $("#split_qty_" + lintCurRow).val(lintSplitQty);
+            }
+            else
+            {
+                $("#split_qty_" + lintCurRow).val('0');
+            }
+
+            $("#chkAlocLine_" + lintCurRow).prop('checked', true);
+            $("#avail_ctns_" + lintCurRow).val(lintAvailCtns);
+            $("#avail_qty_" + lintCurRow).val(lintAvailQty);
+            $("#aloc_qty_" + lintCurRow).val(lintAlocQty);
+            $("#prev_aloc_ctns_" + lintCurRow).val(lintAlocCtns);
+
+           
+            $("#lintIsCtnDtlChanged").val('1');
+            $("#lintAlocQty").val(lintTotAlocQty);
+            $("#lintReqdQty").val(lintTotReqdQty);
+            document.getElementById('lblAllocatedQty').innerHTML = $('#lintAlocQty').val();
+            document.getElementById('lblReqdQty').innerHTML = $('#lintReqdQty').val();
+        }
+        }
+    });
+
+</script>
+<script type="text/javascript">
+    $("#btnAlocCtnEditReject").click(function () {
+        $("#btnAlocEditSave").removeAttr('disabled');
+        $('#btnAlocCtnEditAcpt').removeAttr('disabled');
+        $('#divAlocCtnGrid').show();
+        $('#divAlocCtnLineEdit').html("");
+        $('#divAlocCtnLineEdit').hide();
+        $("#childtabsAloc").tabs("option", "active", $("#childtabsAloc").tabs('option', 'active') - 1);
+    });
+</script>
+
+<script type="text/javascript">
+    $("#btnAlocCtnEditAcpt").click(function () {
+        var lintReqdQty = $("#lintReqdQty").val();
+        var lintIsCtnDtlChanged = $("#lintIsCtnDtlChanged").val();
+        var urlGetAlocCtnList = '/OBAllocation/getAlocCtnList';
+        if (parseInt(lintIsCtnDtlChanged) == 0) {
+            swal("", "No change in the allocation details.", "");
+            return false;
+        }
+        if (parseInt(lintReqdQty) >0) {
+            swal("", "Allocated Qty is less than SR Quantity", "");
+            return false;
+        }
+
+        var pstrCmpId = $("#ae_cmp_id").val();
+        var pstrAlocDocId = $("#ae_aloc_doc_id").val();
+        var pstrAlocLineNum = $("#ace_line_num").val();
+       
+        $("#ajaxLoadingEdit").show();
+
+
+        var lintSelectedRecs = $("input[name='chkAlocLine']:checked").length;
+
+       
+        if (lintSelectedRecs == 0) {
+            swal("", "No Records selected.", "");
+            return false;
+        }
+        $('#btnAlocCtnEditAcpt').attr('disabled', 'disabled');
+
+        var lstAlocCtnList = new Array();
+        debugger;
+        var lintTotLines = $("#lintTotLines").val();
+        var l_str_itm_code = $("#ace_itm_code").val();
+        var l_str_itm_num = $("#ace_so_itm_num").val();
+        var l_str_itm_color = $("#ace_so_itm_color").val();
+        var l_str_itm_size = $("#ace_so_itm_size").val();
+        var l_int_so_dtl_line = $("#ace_so_dtl_line").val();
+        var l_str_whs_id = $("#ace_whs_id").val();
+        var l_str_so_num = $("#ace_so_num").val();
+        var pstrAlocDocDt = $("#ae_aloc_dt").val();
+        
+        for (var i = 0; i < lintTotLines; i++) {
+            debugger
+            var l_int_aloc_ctns = $("#aloc_ctns_" + i).val();
+            var l_int_old_aloc_ctns = $("#old_aloc_ctns_" + i).val();
+            if (l_int_aloc_ctns != 0 || l_int_old_aloc_ctns != 0) {
+                var l_int_itm_qty = $("#itm_qty_" + i).val();
+                var l_str_loc_id = $("#ace_loc_id_" + i).val();
+                var l_str_lot_id = $("#ace_lot_id_" + i).val();
+                var l_str_rcvd_dt = $("#ace_rcvd_dt_" + i).val();
+                var l_str_po_num = $("#ace_po_num_" + i).val();
+                var l_str_palet_id = $("#ace_palet_id_" + i).val();
+                var l_int_split_qty = $("#split_qty_" + i).val();
+                var l_int_ctn_line_num = parseInt(i) + 1;
+                var aryAlocCtn = {};
+                aryAlocCtn.ref_num = '';
+                 aryAlocCtn.cmp_id = pstrCmpId;
+                 aryAlocCtn.whs_id = l_str_whs_id;
+                 aryAlocCtn.aloc_doc_id = pstrAlocDocId;
+                 aryAlocCtn.so_num = l_str_so_num;
+                 aryAlocCtn.line_num = pstrAlocLineNum;
+                 aryAlocCtn.so_line_num = l_int_so_dtl_line;
+                 aryAlocCtn.ctn_line = l_int_ctn_line_num;
+                 aryAlocCtn.itm_code = l_str_itm_code;
+                 aryAlocCtn.itm_num = l_str_itm_num;
+                 aryAlocCtn.itm_color = l_str_itm_color;
+                 aryAlocCtn.itm_size = l_str_itm_size;
+                 aryAlocCtn.loc_id = l_str_loc_id;
+                 aryAlocCtn.lot_id = l_str_lot_id;
+                 aryAlocCtn.rcvd_dt = l_str_rcvd_dt;
+                 aryAlocCtn.palet_id = l_str_palet_id;
+                 aryAlocCtn.po_num = l_str_po_num;
+                 aryAlocCtn.itm_qty = l_int_itm_qty;
+                 aryAlocCtn.old_aloc_ctns = l_int_old_aloc_ctns;
+                 aryAlocCtn.aloc_ctns = l_int_aloc_ctns;
+                 aryAlocCtn.split_qty = l_int_split_qty;
+                lstAlocCtnList.push(aryAlocCtn);
+            }
+        }
+
+       
+        $.ajax({
+
+            type: "POST",
+            url: '@Url.Content("~/OBAllocation/saveAlocCtnEditByLine")',
+            data: JSON.stringify({
+                "pstrCmpId": pstrCmpId,
+                "pstrAlocDocId": pstrAlocDocId,
+                "pstrAlocDocDt":pstrAlocDocDt,
+                "pstrAlocLineNum": pstrAlocLineNum,
+                "lstAlocCtnList": lstAlocCtnList
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+
+
+                setTimeout(function () {
+
+                        $.ajax({
+                        type: "get",
+                        url: urlGetAlocCtnList,
+                        data: {
+                                "pstrCmpId": pstrCmpId,
+                                "pstrAlocDocId": pstrAlocDocId
+                        },
+                        datatype: 'html',
+                        success: function (e) {
+                            debugger
+                            $("#btnAlocEditSave").removeAttr('disabled');
+                            $('#divAlocCtnGrid').show();
+                            $('#divAlocCtnLineEdit').html("");
+                            $('#divAlocCtnLineEdit').hide();
+                            $('#ajaxLoadingEdit').hide();
+                            $('#divAlocCtnGrid').html("");
+                            $('#divAlocCtnGrid').html(e);
+                            $("#childtabsAloc").tabs("option", "active", $("#childtabsAloc").tabs('option', 'active') - 1);
+                        },
+                    })
+                });
+            }
+        });
+
+             
+
+    });
+</script>

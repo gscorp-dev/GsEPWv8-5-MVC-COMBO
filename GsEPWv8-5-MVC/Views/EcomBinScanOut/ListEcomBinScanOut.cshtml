@@ -1,0 +1,428 @@
+﻿@model GsEPWv8_5_MVC.Model.EcomBinScanOutModel
+@{
+    ViewBag.Title = "ListEcomBinScanOut";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .btn-info {
+        background: red;
+        border: none;
+        border-radius: 0px;
+    }
+
+        .btn-info:hover {
+            background: white;
+            color: red;
+            border: red solid 1px;
+        }
+
+    .modal-header {
+        background: #ff3333;
+        color: white;
+    }
+
+    .btn-default {
+        background: #ff3333;
+        color: white;
+    }
+    /*.buttonclass
+    {
+    padding-left: 10px;
+    font-weight: bold;
+    }
+    .buttonclass:hover
+    {
+    color: white;
+    background-color:Orange;
+    }*/
+</style>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+@using (Html.BeginForm("ListEcomBinScanOut", "EcomBinScanOut", FormMethod.Get, new { @id = "form", @class = "col-xs-6", @enctype = "multipart/form-data" }))
+{
+
+    @Html.HiddenFor(model => model.cmp_id)
+    @Html.HiddenFor(model => model.so_num)
+
+    <div class="row pull-left" style="border:1px solid;">
+        <div class="box box-default">
+
+            <label style="color:cornflowerblue; padding-left:60px;"><b>Rapid Pick Fulfillment – Process</b></label>
+            <button type="button" id="btnClose" class="btn btn-default myHoverButton" style="background-color:#ff7500; height:27px; width:56px; border-radius:7px;font-size:13px; font-family:bold;">Close</button>
+
+
+            <div class="box-header" style="background-color:cornflowerblue; height:27px;">
+                <h6 class="box-title" style="color:white;">@*Filter Details*@</h6>
+                <div class="box-tools">
+
+                    <input type="button" class="btn btn-box-tool" style="color:white;font-size:12px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label style="color:blue;"><b>Company: </b></label>
+                        </div>
+                        <div class="col-xs-5">
+                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.GetCompanyNameDetails, "cmp_id", "cmp_name"), "---Select---", new { @class = "form-control", @style = "height:28px;border:1px solid #0082ff; width:160px;Background:#eae7e7; font-size:12px; font-weight:bold;" })
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="box-header">
+                    <div class="row">
+
+                        <div class="col-xs-4">
+                            <label style="color:blue;"><b>Reservation#: </b></label>
+                        </div>
+
+                        <div class="col-xs-5">
+                            @Html.TextBoxFor(x => x.AlocNo, new { @class = "form-control", placeholder = "Reservation#", @maxlength = "50", @style = "background:#ffff99; border:1px solid #0082ff; height:25px; width:110px;" , @onkeydown = "enterToTab(event);" })
+
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-default myHoverButton" id="btnShow" data-toggle="modal" style="background-color:#ff006c; height:30px; border-radius:7px;font-size:16px; font-family:bold; display:none;">Scan</button>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- /.box-header -->
+        @*<div class="box-header" style="background-color:white;">
+                <div>
+                    <button type="button" id="btnSearch" class="btn btn-default myHoverButton" style="background-color:#0094ff; height:30px; width:70px; border-radius:7px;font-size:16px; font-family:bold;">Search</button>
+                    <button type="reset" id="btnClear" class="btn btn-default myHoverButton" style="background-color:#00e4ff; height:30px; width:70px; border-radius:7px;font-size:16px; font-family:bold;">Clear</button>
+
+
+                </div>
+            </div>*@
+        <div style="background-color:white; width:auto; height:auto;">
+            <div style="overflow-y:auto; height:auto; width:auto;">
+
+                <table id="example1" class="table table-bordered table-striped" style="border:1px solid blue;">
+                    <thead style="background-color:#d6e8ff;">
+                        <tr>
+                            <th style="font-size:12px; color:blueviolet;">Reservation#</th>
+                            <th style="font-size:12px; color:blueviolet;">SO#</th>
+                            <th style="font-size:12px; color:blueviolet;">SoDate</th>
+                            <th style="font-size:12px; color:blueviolet;">CustPo#</th>
+                            <th style="font-size:12px; color:blueviolet; display:none;">FullfillType</th>
+
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                        @for (int i = 0; i < Model.GetListEcomBinScanOutHeader.Count; i++)
+                        {
+                            <tr>
+                                <td style="font-size:15px; color:crimson; font-weight:bold; font-style:italic;">@Model.GetListEcomBinScanOutHeader[i].AlocNo</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.GetListEcomBinScanOutHeader[i].SoNum</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.GetListEcomBinScanOutHeader[i].SoDt.ToString("MM/dd/yyyy")</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.GetListEcomBinScanOutHeader[i].Custpo</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; display:none;">@Model.GetListEcomBinScanOutHeader[i].FullfillType</td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+                <!-- /.box-body -->
+            </div>
+        </div>
+
+        <!-- /.box-body -->
+        <!-- /.box -->
+        <!-- /.col -->
+    </div>
+
+    <div class="container">
+        <div id="myModal" class="modal fade  row pull-left" role="dialog" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#03277C; height:40px;">
+                        <button type="button" class="close" onclick="closeModal(); return false;" data-dismiss="modal">×</button>
+                        <label>Reservation details</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn_save" type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal(); return false;">Close</button>
+                    </div>
+                    <div id="loadUploadImgPartial">
+                        @*@Html.Partial("_EcomBinScanOutListBox", Model)*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+    //function enterToTab(e) {
+   
+    //    var intKey = window.Event ? e.which : e.KeyCode;
+
+        
+    //    if (intKey == 13)
+    //       alert('hit')
+       
+    //}
+ 
+    function closeModal() {
+        $.ajax({
+            //url: AppVirtualPath + '/Users/DeleteUsers',
+            url: '@Url.Action("DeleteEcomBinScanOut", "EcomBinScanOut")',
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                if (data > 0) {
+                    //alert('d')
+                }
+            }
+        });
+    }
+    $('#AlocNo').focusout(function () {
+        var AlocNo = $("#AlocNo").val();
+        if (AlocNo == "") {
+            not2("Enter Reservation No.")
+            //$('#AlocNo').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var text = $('#AlocNo').val();
+            $.ajax({
+                type: "GET",
+                url: "/EcomBinScanOut/ListEcomBinScan",
+                data: { "text": text },
+                success: function (e) {
+                    //debugger
+                    // alert(e);
+
+                    $("#loadUploadImgPartial").html("");
+                    $("#loadUploadImgPartial").html(e);
+                    if (e == "Wrong Reservation Code, Please enter a valuable reservation code.") {
+                        not2("Invalid Reservation Number, Please Change!")
+                    }
+                    else if (e == "S")
+                    {
+                        not2("Reservation ALREADY Posted, Please Change!")
+                    }
+                    else {
+                        $("#myModal").modal('show');
+                    }
+                    //
+                },
+
+            })
+            return true;
+            @*debugger
+            $('#loadUploadImgPartial').load('@(Url.Action("ListEcomBinScan", "EcomBinScanOut"))?text=' + text)
+            {
+
+                $("#myModal").modal('show');
+            }*@
+
+        }
+    });
+    //$("#btnSearch").click(function () {
+    //    $('#example1').DataTable().ajax.reload();
+    //});
+    //For Table Below
+    //$("#example1").DataTable();
+    //$("#example3").DataTable();
+    $('#example1').DataTable({
+        //"paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false
+    });
+    //For Table Below
+
+    //Post dropdown value below
+    //$("#cmp_id").change(function () {
+    //    var id = $(this).find(":selected").val()
+    //    var clientID = { "clientID": id }
+    //    console.log(id)
+    //    $.ajax({
+    //        url: "/EcomBinScanOut/GetEcomBinScanOutDetails",
+    //        data: JSON.stringify(clientID),
+    //        type: 'POST',
+    //        contentType: 'application/json; charset=utf-8',
+    //        success: function (data) {
+    //            // Variable data contains the data you get from the action method
+    //        }
+    //    });
+    //});
+    //Post dropdown value Above
+
+    $("#btnShow").click(function () {
+        var AlocNo = $("#AlocNo").val();
+        if (AlocNo == "") {
+            not2("Enter Reservation No.")
+            $('#AlocNo').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var text = $('#AlocNo').val();
+
+            $("#myModal").modal('show');
+            $('#loadUploadImgPartial').load('@(Url.Action("ListEcomBinScan", "EcomBinScanOut"))?text=' + text);
+
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/EcomBinScanOut/ListEcomBinScanOut",
+            //    data: { "text": text },
+            //    e: $('#form').serialize(),
+            //    dataType: 'html',
+            //    success: function (e) {
+
+            //        //if (e == '"You are Enter Wrong Reservation Code, Empty data has been displayed"')
+            //        //{
+
+            //        //}
+            //        //else if(e == e)
+            //        //{
+            //            $("#loadUploadImgPartial").html("");
+            //            $("#loadUploadImgPartial").html(e);
+            //            $("#myModal").modal('show');
+            //        //}
+
+
+
+
+            //    },
+            //    //complete: function (e) {
+            //    //    $("#myModal").modal('show');
+            //    //},
+            //    //error: function (e) {
+
+            //    //}
+
+            //})
+        }
+    });
+    //$("#btnShow").click(function () {
+    //    var AlocNo = $("#AlocNo").val();
+    //    if (AlocNo == "") {
+    //        not2("Enter Reservation No.")
+    //        $('#AlocNo').focus();
+    //        $('body,html').animate({ scrollTop: 0 }, 0);
+    //        er = 1;
+    //        return false;
+    //    }
+    //    else {
+    //        var text = $('#AlocNo').val();
+    //        //alert(text)
+    //        //debugger
+    //        $.ajax({
+    //            url: '/EcomBinScanOut/ListEcomBinScanOutJson/',
+    //            data: { "text": text },
+    //            //url: URL,
+    //            type: 'POST',
+    //            dataType: 'json',
+    //            dataset: $("#form").serialize(),
+    //            cache: false,
+    //            success: function (dataset) {
+    //                $("#loadUploadImgPartial").html("");
+    //                $("#loadUploadImgPartial").html(dataset);
+    //                $("#myModal").modal('show');
+
+    //            }//End of Success data
+    //      ,
+    //        });
+    //    }
+    //});
+
+
+    //$('#cmp_id').attr('disabled', true);
+    function change(el) {
+        if (el.value === "(Click to hide...)")
+            el.value = "(Click to show...)";
+        else
+            el.value = "(Click to hide...)";
+    }
+
+
+
+    $("#btnSearch").click(function () {
+        location.reload();
+    });
+
+     $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+    })
+
+
+    setTimeout(function () {
+        $('#AlocNo').focus();
+    }, 1000);
+    $("#btn_save").click(function () {
+        var ScanBin = $("#ScanBin").val();
+        if (ScanBin == "") {
+            not2("Enter ScanBin No.")
+            $('#ScanBin').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        var ScanUPC = $("#ScanUPC").val();
+        if (ScanUPC == "") {
+            not2("Enter ScanUPC No.")
+            $('#ScanUPC').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            //debugger
+            $.ajax({
+                type: "POST",
+                url: "/EcomBinScanOut/SaveEcomBinScanOutHeader",
+                success: function (data) {
+                    if (data > 0) {
+
+
+
+                    }
+                    else {
+
+                    }
+                    //alert('Reservation No: '+$('#AllocateNumber').val());
+                    not4('Reservation No:' + $('#AllocateNumber').val() + '_' + "Reservation filled up successfully.")
+                    setTimeout(
+                            function RoleCreateMove() {
+                                window.location.href = '@Url.Action("ListEcomBinScanOut", "EcomBinScanOut")';
+                            }, 1000);
+
+                }
+
+            });
+
+            setTimeout(RoleCreateMove(), 1000);
+        }
+    })
+
+
+</script>
+
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}

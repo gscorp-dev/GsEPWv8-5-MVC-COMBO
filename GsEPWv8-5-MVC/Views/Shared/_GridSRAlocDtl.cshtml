@@ -1,0 +1,54 @@
+﻿<div id="divAlocSummary" class="box-header" style="padding:4px;margin-top: -1%; width:auto">
+    <div>
+        <input type="hidden" id="isBackOrder" value=@ViewBag.IsBackOrder />
+        <fieldset>
+            <legend>Allocation Detail</legend>
+            <table id="grdAlocSummary" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:10%;">SR#</th>
+                        <th class="grid_header_backcolor" style="width:6%;">Line#</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Style</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Color</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Size</th>
+                        <th class="grid_header_backcolor" style="width:20%;">ItemName</th>
+                        <th class="grid_header_backcolor" style="width:8%;">SR Qty</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Avail Qty</th>
+    
+                        <th class="grid_header_backcolor" style="width:8%;">Aloc Qty</th>
+                        <th class="grid_header_backcolor" style="width:8%;">B/O qty</th>
+                        <th class="grid_header_backcolor" style="width:8%;">Balance Qty</th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12); display:table; width:100%; max-height:600px; overflow-y:scroll;">
+                    @for (int i = 0; i < Model.lstOBSRAlocDtl.Count; i++)
+                    {
+                        <tr>
+                            <td style="width:10%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtl[i].sr_num</td>
+                            <td style="width:6%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtl[i].line_num</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtl[i].itm_num</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtl[i].itm_color</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtl[i].itm_size</td>
+                            <td style="width:20%; color:black; font-weight:bold;text-align:left;">@Model.lstOBSRAlocDtl[i].itm_name</td>
+                            <td style="width:8%; color:black; font-weight:bold;text-align:right;">@Model.lstOBSRAlocDtl[i].due_qty</td>
+                            <td style="width:8%;color:black; font-weight:bold;text-align:right;color:green;">@Model.lstOBSRAlocDtl[i].avail_qty</td>
+                            <td style="width:8%;color:black; font-weight:bold;text-align:right;color:green;">@Model.lstOBSRAlocDtl[i].aloc_qty</td>
+                            @if (@Model.lstOBSRAlocDtl[i].bo_qty > 0 )
+                            {
+                            <td style="width:8%; color:black; font-weight:bold;text-align:right;color:red;">@Model.lstOBSRAlocDtl[i].bo_qty</td>
+                            }
+                            else 
+                            {
+                            <td style="width:8%; color:black; font-weight:bold;text-align:right;color:green;">@Model.lstOBSRAlocDtl[i].bo_qty</td>
+                            }
+                            <td style="width:8%;color:black; font-weight:bold;text-align:right;color:green;">@Model.lstOBSRAlocDtl[i].bal_qty</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </fieldset>
+</div>
+</div>
+
+

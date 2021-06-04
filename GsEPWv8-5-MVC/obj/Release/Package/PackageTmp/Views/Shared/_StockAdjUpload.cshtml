@@ -1,0 +1,426 @@
+﻿@model GsEPWv8_5_MVC.Model.InvStkAdjModel
+@{
+  
+}
+<style type="text/css">
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    fieldset {
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: Trebuchet;
+        font-size: 1.8em;
+        left: 10px;
+        width: 56px;
+    }
+
+    .text-muted {
+        color: black;
+    }
+
+</style>
+
+<div class="modal-header">
+    <center>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inventory Physical count </h4>
+    </center>
+    <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+
+    <button type="button" id="btnStkAdjSaveUpload" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+</div>
+
+<div class="box box-default">
+    <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+        <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+        <div class="box-tools">
+            <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row" style="margin-bottom:18px;margin-top: 19px;">
+  
+                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                    <tr>
+                        <td style="text-align: right;  margin-top: 6px;">
+                            <label class="Lblmanual"><b>Company: </b></label>
+                        </td>
+                        <td style="text-align: right;padding-left: 2%;">
+                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "adj_cmp_id", @class = "form-control txtlbl", @style = "width:400px;background-color:lightyellow;" })
+                            
+                        </td>
+                        <td style="text-align: right; width: 120px; margin-top: 6px;">
+                            <label class="Lblmanual" style="width: 100%;"><b>File Name: </b></label>
+                        </td>
+                        <td style="text-align: right;padding-left: 1%;">
+                            <input type="file" name="FileUpload" id="upload_file_name" onchange="updateFileName()" style="display:none" title="" />
+
+                            @Html.TextBoxFor(x => x.objInvAdjUploadFileInfo.file_name, new { @class = "form-control", @name = "file_name", @id = "file_name" })
+                        </td>
+
+                        <td style="text-align: left;padding-left: 1%;">
+                            <button type="button" style="background-color:#1a45bf" id="btnBrowse" class="btn_browse" onclick="document.getElementById('upload_file_name').click();">Browse</button>
+                            <button type="submit" id="btnImport" class="btn_upload">Import </button>
+                        </td>
+                    </tr>
+                </table>
+
+                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                    <tr>
+
+                    
+                        <td style="text-align: left; width: 17%; margin-top: 6px;">
+                            <a id="upload" href="@Url.Action("SampleInvPhyCoutFile", "InvStkAdj")" target="_blank" style="text-decoration:underline; color:#4c8cff;"><b style="font-size:13px;">Inv Phy Count Sample Upload File</b></a>
+
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+
+   
+
+    </div>
+    <div id="grdInvAdjUpload" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+        <div>
+
+            <div>
+                <table id="grdStyle" class="table table-bordered table-striped" style="border:1px solid #121213 ;width:120%">
+                    <thead class="grid_backcolor">
+                        <tr>
+                          @*  <th class="grid_header_backcolor" style="width:3%"><input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" />SelAll</th>*@
+                            <th class="grid_header_backcolor" style="width:3%">Ln#</th>
+                            <th class="grid_header_backcolor" style="width:7%">Style</th>
+                            <th class="grid_header_backcolor" style="width:6%">color </th>
+                            <th class="grid_header_backcolor" style="width:5%">Size</th>
+                            <th class="grid_header_backcolor" style="width:10%">Desc</th>
+                            <th class="grid_header_backcolor" style="width:6%">Lot# </th>
+                            <th class="grid_header_backcolor" style="width:6%">PO#</th>
+                            <th class="grid_header_backcolor" style="width:5%">Action</th>
+                            <th class="grid_header_backcolor" style="width:6%">Location</th>
+                            <th class="grid_header_backcolor" style="width:6%">New Location</th>
+                            <th class="grid_header_backcolor" style="width:5%">Ctn(s)</th>
+                            <th class="grid_header_backcolor" style="width:5%">New Ctn(s)</th>
+                            <th class="grid_header_backcolor" style="width:4%">PPK</th>
+                            <th class="grid_header_backcolor" style="width:4%">New PPK</th>
+
+                            <th class="grid_header_backcolor" style="width:6%">Reason</th>
+                            <th class="grid_header_backcolor" style="width:14%">Note</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (int i = 0; i < Model.ListInvStkAdjUpload.Count; i++)
+                        {
+
+                            <tr class="row-select">
+                                @*<td class="col-xs-1" style="text-align:center">
+                                    <input class="checkbox" id="chkdd_@i" name="tblcheckboxItemCode" type="checkbox" value="@Model.ListInvStkAdjUpload[i].ref_num" />
+                                </td>*@
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListInvStkAdjUpload[i].dtl_line</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListInvStkAdjUpload[i].itm_num</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:left"> @Model.ListInvStkAdjUpload[i].itm_color</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].itm_size</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListInvStkAdjUpload[i].itm_name</td>
+
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].lot_id</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].po_num</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].action_flag</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].cur_loc_id</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].new_loc_id</td>
+
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListInvStkAdjUpload[i].cur_avail_ctn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListInvStkAdjUpload[i].new_avail_ctn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListInvStkAdjUpload[i].cur_itm_qty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListInvStkAdjUpload[i].new_itm_qty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListInvStkAdjUpload[i].adj_reason</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].adj_note</td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<script type="text/javascript">
+
+    $("#btnStkAdjSaveUpload").click(function () {
+
+    });
+
+    $(document).ready(function () {
+        document.getElementById("btnStkAdjSaveUpload").setAttribute("hidden", "");
+        $("#adj_cmp_id").attr('disabled', 'disabled');
+    });
+
+    function updateFileName() {
+        debugger
+        var upload_file_name = document.getElementById('upload_file_name');
+        var file_name = document.getElementById('file_name');
+        var fileNameIndex = upload_file_name.value.lastIndexOf("\\");
+        file_name.value = upload_file_name.value.substring(fileNameIndex + 1);
+        $('#btnImport').removeAttr('disabled');
+        $('#btnSearch').attr('disabled', 'disabled');
+    }
+
+
+    $('#btnImport').click(function () {
+        debugger
+        var p_str_cmp_id = $('#adj_cmp_id').val();
+        var l_str_file_name = $('#file_name').val();
+        var fileExtension = l_str_file_name.substr((l_str_file_name.lastIndexOf('.') + 1));
+        $('#btnStkAdjSaveUpload').removeAttr('disabled');
+        $('#btnSearch').attr('disabled', 'disabled');
+        if (fileExtension != "csv") {
+            sweetAlert("", "Please Check the File Format, Upload only .CSV File", "");
+            $('#file_name').val('');
+            $('#upload_file_name').val('');
+            $('#grdInvAdjUpload').show();
+            return false;
+
+        }
+      
+        if (l_str_file_name == "") {
+            swal("", "please select the File.", "");
+            $('#file_name').focus();
+            $('body,html').animate({ scrolltop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        $(document).ready(function () {
+            $("#btnStkAdjSaveUpload :input").attr("disabled", false);
+        });
+
+        var postbackurl = '/InvStkAdj/loadPhyCountFile';
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InvStkAdj/CheckPhyUploadFileExists")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_file_name": l_str_file_name
+            },
+            dataType: 'html',
+            success: function (e) {
+                debugger
+                $("#ajaxLoading").hide();
+                if (e == "true") {
+                    sweetAlert({
+                        title: "",
+                        text: "File Already Exist, Do you want to Continue?",
+                        type: "",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "No",
+                        cancelButtonText: "Yes",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#file_name').focus();
+
+                        }
+                        else {
+                            if (window.FormData !== undefined) {
+
+                                var fileUpload = $("#upload_file_name").get(0);
+                                var files = fileUpload.files;
+
+                                // Create FormData object
+                                var fileData = new FormData();
+
+                                // Looping over all files and add it to FormData object
+                                for (var i = 0; i < files.length; i++) {
+                                    fileData.append(files[i].name, files[i]);
+                                }
+
+                                // Adding one more key to FormData object
+                                fileData.append('username', 'Manas');
+                                $("#ajaxLoading").show();
+
+                                $.ajax({
+
+                                    url: postbackurl + '?l_str_cmp_id=' + l_str_new_cmp_id,
+                                    type: "POST",
+                                    contentType: false, // Not to set any content header
+                                    processData: false, // Not to process data
+                                    data: fileData,
+                                    success: function (result) {
+                                        $("#ajaxLoading").hide();
+                                        debugger
+                                        if (result.error_mode == true) {
+                                            $("#error_desc").val(this.error_desc);
+                                            $('#IB943ErrorGrid').show();
+                                            $('#IB943ErrorGrid').html("");
+                                            $('#IB943ErrorGrid').html(result);
+                                            $('#IB943ErrorGrid').html(this.error_desc);
+                                            $("#error_desc").val(this.error_desc);
+                                            if (result.Error_flag = "O") {
+                                                alert(result.error_desc);
+                                                if (result.error_desc == "Invalid File Name") {
+                                                    sweetAlert("", "Invalid File Name", "");
+                                                }
+                                                else {
+                                                    sweetAlert("", "Exception found.Please correct the File and Reupload", "");
+                                                }
+                                                $("#ajaxLoading").hide();
+                                                return false;
+                                            }
+                                        }
+                                        else {
+                                            $("#ajaxLoading").hide();
+                                            $('#grdInvAdjUpload').html("");
+                                            $('#grdInvAdjUpload').html(result);
+                                            document.getElementById("btnStkAdjSaveUpload").removeAttribute("hidden");
+                                        }
+
+                                    },
+                                    error: function (err) {
+                                        sweetAlert('Exception found.Please correct the File and Reupload');
+                                        $("#ajaxLoading").hide();
+                                    }
+                                });
+                            }
+                            else {
+                                sweetAlert("FormData is not supported.");
+                                $("#ajaxLoading").hide();
+                            }
+                        }
+
+                    }
+                    )
+                }
+                else {
+                    if (window.FormData !== undefined) {
+
+                        var fileUpload = $("#upload_file_name").get(0);
+                        var files = fileUpload.files;
+
+                        // Create FormData object
+                        var fileData = new FormData();
+
+                        // Looping over all files and add it to FormData object
+                        for (var i = 0; i < files.length; i++) {
+                            fileData.append(files[i].name, files[i]);
+                        }
+
+                        // Adding one more key to FormData object
+                        fileData.append('username', 'Manas');
+                        $("#ajaxLoading").show();
+                        $.ajax({
+                            url: postbackurl + '?p_str_cmp_id=' + p_str_cmp_id,
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: fileData,
+                            success: function (result) {
+                                $("#ajaxLoading").hide();
+                                debugger
+                                if (result.error_mode == true) {
+                                    alert("Error");
+                                    var p_str_error_desc = this.error_desc;
+                                    $('#divgrdInvAdjUploadError').show();
+                                    $('#divgrdInvAdjUploadError').html("");
+                                    $('#divgrdInvAdjUploadError').html(result);
+                                    $('#divgrdInvAdjUploadError').html(this.error_desc);
+                                    $("#error_desc").val(this.error_desc);
+                                    if (result.Error_flag = "O") {
+                                        if (result.error_desc == "Invalid File Name") {
+                                            sweetAlert("", "Invalid File Name", "");
+                                        }
+                                        else {
+
+                                            sweetAlert("", "Exception found.Please correct the File and Reupload", "");
+                                        }
+                                        $("#ajaxLoading").hide();
+                                        return false;
+                                    }
+
+                                }
+                                else {
+                                    $("#ajaxLoading").hide();
+                                    $('#grdInvAdjUpload').html("");
+                                    $('#grdInvAdjUpload').html(result);
+                                    document.getElementById("btnStkAdjSaveUpload").removeAttribute("hidden");
+                                }
+
+
+
+                            },
+                            error: function (err) {
+
+                                sweetAlert('Exception found.Please correct the File and Reupload');
+                                $("#ajaxLoading").hide();
+                            }
+                        });
+                    } else {
+                        sweetAlert("FormData is not supported.");
+                        $("#ajaxLoading").hide();
+                    }
+                }
+            }
+        })
+
+
+    });
+
+    </script>
+
+

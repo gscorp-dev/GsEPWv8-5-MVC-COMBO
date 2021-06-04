@@ -1,0 +1,401 @@
+﻿@model GsEPWv8_5_MVC.Model.InvStkAdjModel
+@{
+
+}
+<style type="text/css">
+    div#ajaxLoadingInq {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    fieldset {
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: Trebuchet;
+        font-size: 1.8em;
+        left: 10px;
+        width: 56px;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+
+<div class="modal-header">
+    <center>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inventory Ctn(s) Merge </h4>
+    </center>
+    <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+
+</div>
+<div id="ajaxLoadingInq" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+<div class="box box-default" style="box-shadow: 0 1px 1px white;">
+    <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+        <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+        <div class="box-tools">
+
+            <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+        </div>
+    </div>
+    <div id="childtabs">
+      
+
+
+        <div id="childtabs-1">
+            <div class="box box-default">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-10 col-sm-10 col-xs-10">
+                                <table style="border-collapse: separate;border-spacing: 0px 0.5em;    ">
+                                    <tr>
+                                        <td style="text-align: right;width: 6%;">
+                                            <label><b class="Lblmanual">Cmp Id </b></label>
+                                        </td>
+
+                                        <td style="width: 15%; padding-left: 1%;">
+                                           @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "mrg_cmp_id", @class = "form-control txtlbl", @style = "width:400px;background-color:lightyellow;" })
+
+
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            <label><b class="Lblmanual">IB Doc Id</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.ib_doc_id, new { @id = "mrg_ib_doc_id", @class = "form-control txtlbl", @maxlength = "10" })
+                                        </td>
+
+                                        <td style="text-align: right; width: 5%;">
+                                            <label><b class="Lblmanual">PO No</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.po_num, new { @id = "mrg_po_num", @class = "form-control txtlbl", @maxlength = "30" })
+                                        </td>
+                                        <td style="text-align: right;    width: 5%;">
+                                            <label><b class="Lblmanual">Ref No</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%; ">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.ref_no, new { @id = "mrg_ref_no", @class = "form-control txtlbl", @maxlength = "10" })
+                                        </td>
+                                        <td colspan="2" style="width: 11%;"></td>
+
+                                    </tr>
+                                    <tr style="padding-bottom:2%">
+                                        <td style="text-align: right;width: 6%;">
+                                            <label><b class="Lblmanual">Cont ID</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.cont_id, new { @id = "mrg_cont_id", @class = "form-control txtlbl", @maxlength = "30" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            <label><b class="Lblmanual">Lot ID</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.lot_id, new { @id = "mrg_lot_id", @class = "form-control txtlbl", @maxlength = "10" })
+                                        </td>
+                                        <td style="text-align: right; width: 5%;">
+                                            <label><b class="Lblmanual">Loc ID</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.loc_id, new { @id = "mrg_loc_id", @class = "form-control txtlbl", @maxlength = "10", @style = "background-color:lightyellow;" })
+                                        </td>
+                                        <td style="text-align: right; width: 5%;">
+                                            <label><b class="Lblmanual">WhsId</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.whs_id, new { @id = "mrg_whs_id", @class = "form-control txtlbl", @maxlength = "10" })
+                                        </td>
+                                    </tr>
+
+                             
+                                    <tr>
+                                        <td style="text-align: right;width: 5.4%;">
+                                            <label><b class="Lblmanual">Fm Dt</b></label>
+                                        </td>
+                                        <td style="width:15%; padding-left:1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.rcvd_from_dt, new { @id = "mrg_rcvd_from_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10" })
+                                        </td>
+                                        <td style="text-align: right; width: 6.2%;">
+                                            <label><b class="Lblmanual"> To</b></label>
+                                        </td>
+                                        <td style="width: 9%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.rcvd_to_dt, new { @id = "mrg_rcvd_to_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10" })
+                                        </td>
+                                        <td colspan="9" style="width: 71%;">
+                                            <button type="button" id="btnSearchMergeInv" class="btn_search" style="margin-left: 20px;">Search </button>
+                                            <button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                        </td>
+
+                                    </tr>
+
+
+                                </table>
+                                <br />
+                                <hr />
+                                <table>
+
+                                    <tr>
+                                        <td style="text-align: right;width: 6%;">
+                                            <label><b class="Lblmanual">Style</b></label>
+                                        </td>
+                                        <td style="width: 15%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.itm_num, new { @id = "mrg_itm_num", @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            <label><b class="Lblmanual">Color</b></label>
+                                        </td>
+                                        <td style="width: 8%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.itm_color, new { @id = "mrg_itm_color", @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                        </td>
+                                        <td style="text-align: right; width: 5%;">
+                                            <label><b class="Lblmanual">Size</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.itm_size, new { @id = "mrg_itm_size", @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                        </td>
+                                        <td style="text-align: right; width: 5%;">
+                                            <label><b class="Lblmanual">Desc</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.objInvStkAdjInquiry.itm_name, new { @id = "mrg_itm_name", @class = "form-control txtlbl", @disabled = "true", @maxlength = "75", @style = "background-color:lightyellow;" })
+                                        </td>
+
+                                        <td style="width: 11%; padding-left: 1%;">
+                                            @Html.DropDownListFor(model => model.objInvStkAdjInquiry.status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @id = "mrg_status", @disabled = "true", @class = "form-control txtlbl" })
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+ 
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="gridEmpty" class="box-header" style="padding:5px;">
+                <div class="box-body">
+                    <br />
+         
+                    <table id="grd_inv_stk_mrg_inq" class="table table-bordered table-striped">
+
+                        <thead class="grid_backcolor">
+                            <tr>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Sel</th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:13%;">Style</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Color</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:9%;">Size</th>
+                                <th style="display:none;"></th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Lot#</th>
+                                <th style="display:none;"></th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">PoNumber</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">LocID</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Ctn</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">PPK</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Qty</th>
+                                <th style="display:none;"></th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Merge Ctns(s)</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Bal Qty</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="grdInvMove" class="box-header" style="padding:0px; ">
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        //document.getElementById("cmdMergeInv").setAttribute("hidden", "");
+        $("#mrg_cmp_id").attr('disabled', 'disabled');
+    });
+
+
+    
+
+    $("#btnSearchMergeInv").click(function () {
+        debugger
+        var cmp_id = $("#mrg_cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please Select The Company", "");
+            $('#mrg_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        var p_str_itm_num = $('#mrg_itm_num').val();
+        var p_str_itm_color = $('#mrg_itm_color').val();
+        var p_str_itm_size = $('#mrg_itm_size').val();
+
+        if ((p_str_itm_num == "") || (p_str_itm_color == "") || (p_str_itm_size == "")) {
+            sweetAlert("", "Please Select The Item to Merge", "");
+            $('#mrg_itm_num').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        else {
+            var p_str_cmp_id = $('#mrg_cmp_id').val();
+            var p_str_itm_num = $('#mrg_itm_num').val();
+            var p_str_itm_color = $('#mrg_itm_color').val();
+            var p_str_itm_size = $('#mrg_itm_size').val();
+            var p_str_itm_name = $('#mrg_itm_name').val();
+            var p_str_status = 'SEARCH_EXACT';
+            var p_str_ib_doc_id = $('#mrg_ib_doc_id').val();
+            var p_str_cont_id = $('#mrg_cont_id').val();
+            var p_str_lot_id = $('#mrg_lot_id').val();
+            var p_str_loc_id = $('#mrg_loc_id').val();
+            var p_str_ref_no = $('#mrg_ref_no').val();
+            var p_str_whs_id = $('#mrg_whs_id').val();
+            var p_str_rcvd_from_dt = $('#mrg_rcvd_from_dt').val();
+            var p_str_rcvd_to_dt = $('#mrg_rcvd_to_dt').val();
+            var p_str_po_num = $('#mrg_po_num').val();
+
+
+            $("#ajaxLoadingInq").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InvStkAdj/GeInvMergeGridDetails")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_itm_num": p_str_itm_num,
+                    "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size,
+                    "p_str_itm_name": p_str_itm_name,
+                    "p_str_status": p_str_status,
+                    "p_str_ib_doc_id": p_str_ib_doc_id,
+                    "p_str_cont_id": p_str_cont_id,
+                    "p_str_lot_id": p_str_lot_id,
+                    "p_str_loc_id": p_str_loc_id,
+                    "p_str_ref_no": p_str_ref_no,
+                    "p_str_whs_id": p_str_whs_id,
+                    "p_str_rcvd_from_dt": p_str_rcvd_from_dt,
+                    "p_str_rcvd_to_dt": p_str_rcvd_to_dt,
+                    "p_str_po_num": p_str_po_num
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoadingInq").hide();
+                    $('#gridEmpty').hide();
+                    $('#grdInvMove').html("");
+                    $('#grdInvMove').html(e);
+                },
+
+            })
+        }
+    });
+   
+  
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+<script type="text/javascript">
+    
+    $("#mrg_loc_id").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/InvStkAdj/ItemXGetLocDtl?cmp_id=" + $('#mrg_cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#mrg_loc_id").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+
+
+
+ $(function () {
+     $("#mrg_itm_num").autocomplete({
+            source: function (request, response) {
+                $.getJSON("/InvStkAdj/ItemXGetitmDtl", {
+                    term: request.term,
+                    cmp_id: $('#cmp_id').val(),
+                },
+                          response);
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                $("#mrg_itm_num").val(ui.item.itm_num);
+                $("#mrg_itm_color").val(ui.item.itm_color);    //action
+                $("#mrg_itm_size").val(ui.item.itm_size);
+                $("#mrg_itm_name").val(ui.item.itm_name);
+            }
+        });
+
+    });
+
+    $('#mrg_rcvd_from_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#mrg_rcvd_to_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+</script>
+

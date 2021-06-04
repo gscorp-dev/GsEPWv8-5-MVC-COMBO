@@ -1,0 +1,372 @@
+﻿
+@model GsEPWv8_5_MVC.Model.LocationMasterModel
+
+@{
+    ViewBag.Title = "CompanyMaster";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+    div#ajaxLoadinglocationmaster {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .ItemSummary {
+        height: 49px;
+        background: #d2d6de;
+    }
+</style>
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+
+@Html.HiddenFor(model => model.cmp_id)
+@using (Html.BeginForm("LocationMaster", "LocationMaster", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    @*<h3>Doc Entry & Visibility</h3>*@
+                    Location Master
+
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="box box-default">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+            </div>
+        </div>
+        <div id="ajaxLoadinglocationmaster" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-8 col-sm-8 col-xs-8">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-3 Lblmanual" for="first-name" style="left:106px;padding-top:6px">
+                                    Comp Id
+                                </label>
+                                <div class="col-md-4 col-sm-4 col-xs-4">
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl", @style = "width:315px;", @id = "newcmpid" })
+                                </div>
+                                <label class="control-label col-md-1 col-sm-1 col-xs-1 Lblmanual" for="first-name" style="padding-top:5px;left:-39px">
+                                    Whs Id
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-56px">
+                                    @Html.DropDownListFor(model => model.Whs_id, new SelectList(Model.ListWareHousePickdtl, "Whs_id", "Whs_name"), "---Select All---", new {@id="Fob", @class = "form-control txtlbl", @style = "width:165px;" })
+                                   
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding-top:26px">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="left:118px;padding-top:6px">
+                                    Loc Id
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                    @Html.DropDownListFor(model => model.loc_id, new SelectList(Model.ListLocationMasterDetails, "loc_id", "loc_id"), "---Select All---", new { @class = "form-control txtlbl", @style = "width:165px;" })
+                                </div>
+                                <label class="control-label col-md-1 col-sm-1 col-xs-1 Lblmanual" for="first-name" style="padding-top:6px">
+                                    Desc
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-39px">
+                                    @Html.TextBoxFor(model => model.loc_desc, new { @class = "form-control txtlbl", @maxlength = "100", @style = "width:337px;" })
+                                </div>
+                            </div>
+                        </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3" style="margin-left: 820px;">
+                                    <button type="button" id="btnLocationMasterSearch" class="btn_search" style="margin-left: 20px;font-size: 13px;">Search </button>
+                                    <button type="reset" id="btnClear" class="btn-Clear" style="font-size: 13px;">Clear </button>
+                                    <button type="reset" id="btnNewLocationEntry" class="btn-Clear" style="background-color:#5ae77e;width: 130px;font-size: 13px;">NewLocationEntry</button>
+                                </div>
+                           
+
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="showLocationMaingrid" class="box-header" style="padding:5px;">
+            <div class="box-body">
+                <div class="ItemSummary">
+                    <br />
+                    <table>
+                        <tr>
+                            <td style="width: 5%;"></td>
+                            <td style="width:22%;">
+                                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                    Total Records:
+                                </span>
+                                <label class="totalCount" style="text-align:left">
+                                    @*@hdrcount*@
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br />
+                <table id="GridLocationMaster" class="table table-bordered table-striped">
+
+                    <thead class="grid_backcolor">
+                        <tr>
+
+                            <th class="grid_header_backcolor" style="font-size:11px;width:8%">WhsId</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:10%">LocId</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:17%">LocDesc</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:10%">Action</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:8%">Status</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:40%">Note</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div id="showLocationPartalgrid" class="box-header" style="padding:5px; ">
+        </div>
+
+    </div>
+}
+
+<div id='myModalAddLocation' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%; left:-365px;">
+            <div id='myModalContentAddLocation' style="width: 100%; height:600px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalEditLocation' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%; left:-365px;">
+            <div id='myModalContentEditLocation' style="width: 100%; height: 600px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalDelLocation' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%; left:-365px;">
+            <div id='myModalContentDelLocation' style="width: 100%; height: 600px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalViewLocation' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%; left:-365px;">
+            <div id='myModalContentViewLocation' style="width: 100%; height: 600px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+    $('#GridLocationMaster').DataTable({
+        "paging": true,
+        "pageLength": 50,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+    $("#Fob").autocomplete({
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/LocationMaster/PickWhsDtl?cmp_id=" + $('#cmp_id').val() + "&",
+
+        select: function (event, ui) {
+            debugger
+            $("#Fob").val(ui.item.Whs_id);
+        }
+    });
+    $("#btnLocationMasterSearch").click(function () {
+        debugger
+        var p_str_cmp_id = $("#newcmpid").val();
+        var p_str_whs_id = $("#Fob").val();
+        var p_str_loc_id = $("#loc_id").val();
+        var p_str_loc_desc = $("#loc_desc").val();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            return false;
+        }
+        else {
+            $("#ajaxLoadinglocationmaster").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/LocationMaster/GetLocationMasterDetail")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id, "p_str_loc_id": p_str_loc_id, "p_str_loc_desc": p_str_loc_desc,
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoadinglocationmaster").hide();
+                    $('#showLocationMaingrid').html("");
+                    $('#showLocationMaingrid').html(e);
+                },
+
+            })
+        }
+    });
+    var TeamDetailPostBackLOcationAddURL = '/LocationMaster/LocationMasterDetailView';
+
+    $("#btnNewLocationEntry").click(function () {
+        var p_str_cmp_id = $("#newcmpid").val();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            return false;
+        }
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoadinglocationmaster").show();
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackLOcationAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id
+            },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoadinglocationmaster").hide();
+                $('#myModalContentAddLocation').html(data);
+                $('#myModalAddLocation').modal(options);
+                $('#myModalAddLocation').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoadinglocationmaster").hide();
+            }
+        });
+    });
+
+    $("#btnDashboard").click(function () {
+        debugger
+        var p_str_cmpid = $('#newcmpid').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_cmpid = $('#newcmpid').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_cmpid = $('#newcmpid').val();
+         var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+</script>
+
+<script>
+             $('#newcmpid').on('change', function () {
+            debugger
+            var p_str_cmp_id = $(this).find(":selected").val();
+                $("#ajaxLoadinglocationmaster").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/LocationMaster/CompanyOnChange")',
+                data: '{p_str_cmp_id: "' + p_str_cmp_id + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (r) {
+                    debugger
+                    $("#ajaxLoadinglocationmaster").hide();
+                    var Warehouseid = $('#Fob');
+                    Warehouseid.empty();
+                    $.each(r.ListWareHousePickdtl, function (key, value) {
+                        Warehouseid.append('<option value=' + value.Whs_id + '>' + value.Whs_name + '</option>');
+                    });
+                    var Locationid = $('#loc_id');
+                    Locationid.empty();
+                    $.each(r.ListLocationMasterDetails, function (key, value) {
+                        Locationid.append('<option value=' + value.loc_id + '>' + value.loc_id + '</option>');
+                    });
+
+                },
+
+                failure: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadinglocationmaster").hide();
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadinglocationmaster").hide();
+
+                }
+            });
+
+
+        });
+</script>

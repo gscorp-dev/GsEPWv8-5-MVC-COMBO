@@ -1,0 +1,738 @@
+﻿@model GsEPWv8_5_MVC.Model.DataUpdateModel
+@{
+    ViewBag.Title = "DataUpdate";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/plugins/jQueryUI/jquery-ui.js"></script>
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+    .ui-widget-header {
+        border: 1px solid #dddddd;
+        background: #f39c12;
+        color: #007fff;
+        font-weight: bold;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+@using (Html.BeginForm("UserProfile", "UserProfile", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{ <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                   Data Update
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                  @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                  {
+                    <button type="button" id="btnClose" class="btn-Close">Close</button>
+                  }
+                @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                {
+                    <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <div id="DataUpdatetabs">
+                <ul>
+                    <li><a href="#DataUpdatetabs-1" style="font-size:12px;">Received Date</a></li>
+                    <li><a href="#DataUpdatetabs-2" style="font-size:12px;">Item Detail</a></li>
+                </ul>
+                <div id="DataUpdatetabs-1">
+                    <div class="box-body">
+                        <div class="box-header">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-md-8 col-sm-8 col-xs-8">
+                                        <table style="border-collapse: separate;border-spacing: 0px 0.5em;">
+                                            <tr>
+
+                                                <td style="text-align: right; width:5%;">
+                                                    <label><b class="Lblmanual">Comp ID:</b></label>
+                                                </td>
+                                                <td style="width: 8%; padding-left: 1%;padding-bottom:1%;">
+                                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl", @id = "cmb_e_cmp_id" })
+                                                </td>
+                                                <td style="text-align: right; width: 3%;"></td>
+                                                <td style="width: 7%; padding-left: 1%;"></td>
+
+                                            </tr>
+                                            <tr>
+
+                                                <td style="text-align: right;width:5%;">
+                                                    <label><b class="Lblmanual">IB DocID:</b></label>
+                                                </td>
+                                                <td style="width: 8%; padding-left: 1%;">
+                                                    @Html.TextBoxFor(model => model.ib_doc_id, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @id = "txt_e_ib_doc_id" })
+                                                </td>
+                                                <td style="text-align: right; width: 3%;">
+                                                    <label><b class="Lblmanual">Old Rcvd Dt:</b></label>
+                                                </td>
+                                                <td style="width: 7%; padding-left: 1%;">
+                                                    @Html.TextBoxFor(model => model.ib_doc_rcvd_dt, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @id = "txt_e_ib_doc_rcvd_dt",@disabled="true" })
+                                                </td>
+                                                <td style="text-align: right; width: 3%;">
+                                                    <label><b class="Lblmanual">New Rcvd Dt:</b></label>
+                                                </td>
+                                                <td style="width: 7%; padding-left: 1%;">
+                                                    @Html.TextBoxFor(model => model.ib_doc_new_rcvd_dt, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @id = "txt_e_ib_doc_new_rcvd_dt" })
+                                                </td>
+
+                                            </tr>
+                                        </table>  
+                                    </div>
+                                    <br />
+                                    </div>
+                                    <table>
+                                        <tr>
+                                            <td style="width: 65%; "></td>
+                                            <td> <button type="button" id="btnUpdateRcvdDt" class="btn_NewEntry" style="width:210px">Update Received Date</button></td>
+                                            <td><button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div id="DataUpdatetabs-2">
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-8 col-sm-8 col-xs-8">
+                                    <table style="border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="text-align: right; width:5%;">
+                                                <label><b class="Lblmanual">Comp ID:</b></label>
+                                            </td>
+                                            <td style="width: 8%; padding-left: 1%;padding-bottom:1%;">
+                                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl", @id = "cmb_e_cmp_id",@style="width:178%" })
+                                            </td>
+                                            <td style="text-align: right;width:9%;">
+                                                <label><b class="Lblmanual">Style:</b></label>
+                                            </td>
+                                            <td style="width: 8%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control txtlbl", @maxlength = "50", @id = "txt_e_itm_num",@style="width:136%" })
+                                            </td>
+                                            <td style="text-align: right; width: 3%;">
+                                                <label><b class="Lblmanual">Color:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl", @maxlength = "50", @id = "txt_e_itm_color" })
+                                            </td>
+                                            <td style="text-align: right; width: 3%;">
+                                                <label><b class="Lblmanual">Size:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl", @maxlength = "50", @id = "txt_e_itm_size" })
+                                            </td>
+                                            <td style="text-align: right; width: 3%;">
+                                                <label><b class="Lblmanual">Desc:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", @maxlength = "50", @id = "txt_e_itm_name", @style = "width:331%" })
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;width:5%;">
+                                                <label><b class="Lblmanual">OldLength:</b></label>
+                                            </td>
+                                            <td style="width: 8%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.length, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; text-align: right;width:104%" })
+                                            </td>
+                                            <td style="text-align: right; width: 3%;">
+                                                <label><b class="Lblmanual">OldWidth:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.width, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="text-align: right; width: 4%;">
+                                                <label><b class="Lblmanual">OldHeight:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.depth, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="text-align: right; width: 3%;">
+                                                <label><b class="Lblmanual">OldCube:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.cube, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="text-align: right; width: 3%;">
+                                                <label><b class="Lblmanual">OldWgt:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.wgt, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align: right;width:5%;">
+                                                <label><b class="Lblmanual">Length:</b></label>
+                                            </td>
+                                            <td style="width: 8%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.length, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @id = "txt_e_new_length", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="text-align: right; width: 3%;">
+                                                <label><b class="Lblmanual">Width:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.width, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @id = "txt_e_new_width", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="text-align: right; width:5%;">
+                                                <label><b class="Lblmanual">Height:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.depth, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @id = "txt_e_new_depth", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="text-align: right; width: 4%;">
+                                                <label><b class="Lblmanual">Cube:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.cube, new { @class = "form-control txtlbl two-numericOnly", @maxlength = "50", @id = "txt_e_new_cube", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="text-align: right; width:5%;">
+                                                <label><b class="Lblmanual">Wgt:</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.wgt, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @id = "txt_e_new_wgt", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;"></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <br />
+                            </div>
+                            <table>
+                                <tr>
+                                    <td style="width: 65%; "></td>
+                                    <td> <button type="button" id="btnUpdateItmDtl" class="btn_NewEntry" style="width:210px">Update Item Details</button></td>
+                                    <td><button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button></td>
+                                </tr>
+                            </table>
+                        </div>
+                            </div>
+                        </div>
+            </div>
+            </div>
+            </div>
+            }
+<script type="text/javascript">
+    $(function (){
+      $("#tabs").tabs();
+    });
+    $(function () {
+        $("#DataUpdatetabs").tabs();
+     });
+</script>
+<script>
+    $("#btnUpdateRcvdDt").click(function () {
+        debugger
+        $("#ajaxloading").show();
+        var l_str_cmp_id = $('#cmb_e_cmp_id').val();
+        var l_str_ib_doc_id = $('#txt_e_ib_doc_id').val();
+        var l_str_old_rcvd_dt = $('#txt_e_ib_doc_rcvd_dt').val();
+        var l_str_new_rcvd_dt = $('#txt_e_ib_doc_new_rcvd_dt').val();
+        if (l_str_cmp_id == "") {
+            swal("", "Please Select the Company", "");
+            $('#cmb_e_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_ib_doc_id == "") {
+            swal("", "Please Enter the IBDocID", "");
+            $('#txt_e_ib_doc_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_old_rcvd_dt == "") {
+            swal("", "Please Enter the Current Received Date", "");
+            $('#txt_e_ib_doc_rcvd_dt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_new_rcvd_dt == "") {
+            swal("", "Please Enter the New Received Date", "");
+            $('#txt_e_new_rcvd_dt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/DataUpdate/UpdateIBDocRcvdDate")',
+            data: {"l_str_cmp_id": l_str_cmp_id, "l_str_ib_doc_id": l_str_ib_doc_id, "l_str_new_rcvd_dt": l_str_new_rcvd_dt },
+            contentType:"application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+                swal("", "Received Date Updated Successfully", "");
+                $('#txt_e_ib_doc_id').val('');
+                $('#txt_e_ib_doc_rcvd_dt').val('');
+                $('#txt_e_ib_doc_new_rcvd_dt').val('');
+                $("#ajaxLoading").hide();
+            }
+        })
+    });
+    </script>
+<script>
+    $("#btnUpdateItmDtl").click(function () {
+        debugger
+        $("#ajaxloading").show();
+        var l_str_cmp_id = $('#cmb_e_cmp_id').val();
+        var l_str_style = $('#txt_e_itm_num').val();
+        var l_str_color = $('#txt_e_itm_color').val();
+        var l_str_size = $('#txt_e_itm_size').val();
+        var l_str_length = $('#txt_e_new_length').val();
+        var l_str_width = $('#txt_e_new_width').val();
+        var l_str_depth = $('#txt_e_new_depth').val();
+        var l_str_cube = $('#txt_e_new_cube').val();
+        var l_str_wgt = $('#txt_e_new_wgt').val();
+        if (l_str_cmp_id == "") {
+            swal("", "Please Select the Company", "");
+            $('#cmb_e_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_style == "") {
+            swal("", "Please Enter the Style", "");
+            $('#txt_e_itm_num').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_color == "") {
+            swal("", "Please Enter the Color", "");
+            $('#txt_e_itm_color').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_size == "") {
+            swal("", "Please Enter the Size", "");
+            $('#txt_e_itm_size').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_length == "") {
+            swal("", "Please Enter the New Length", "");
+            $('#txt_e_new_length').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_width == "") {
+            swal("", "Please Enter the New Width", "");
+            $('#txt_e_new_width').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_depth == "") {
+            swal("", "Please Enter the New Depth", "");
+            $('#txt_e_new_depth').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_cube == "") {
+            swal("", "Please Enter the New Cube", "");
+            $('#txt_e_new_cube').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_wgt == "") {
+            swal("", "Please Enter the New Weight", "");
+            $('#txt_e_new_wgt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/DataUpdate/CheckItemExist")',
+            data: { "l_str_cmp_id": l_str_cmp_id, "l_str_style": l_str_style, "l_str_color": l_str_color, "l_str_size": l_str_size },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+                if (e == 1) {
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/DataUpdate/UpdateItemDetails")',
+                        data: {
+                            "l_str_cmp_id": l_str_cmp_id, "l_str_style": l_str_style, "l_str_color": l_str_color, "l_str_size": l_str_size,
+                            "l_str_length": l_str_length, "l_str_width": l_str_width, "l_str_depth": l_str_depth, "l_str_cube": l_str_cube, "l_str_wgt": l_str_wgt
+                        },
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (e) {
+                            swal("", "Item Details Updated Successfully", "");
+                            $('#txt_e_itm_num').val('');
+                            $('#txt_e_itm_color').val('');
+                            $('#txt_e_itm_size').val('');
+                            $('#txt_e_itm_desc').val('');
+                            $('#txt_e_new_length').val('');
+                            $('#txt_e_new_width').val('');
+                            $('#txt_e_new_depth').val('');
+                            $('#txt_e_new_cube').val('');
+                            $('#txt_e_new_wgt').val('');
+                            $('#length').val('');
+                            $('#width').val('');
+                            $('#depth').val('');
+                            $('#cube').val('');
+                            $('#wgt').val('');
+                            $('#txt_e_itm_name').val('');
+                            $("#ajaxLoading").hide();
+                        }
+                    })
+                }
+                else {
+
+                    swal("", "Invalid Style", "");
+                    $('#txt_e_itm_num').val('');
+                    $('#txt_e_itm_color').val('');
+                    $('#txt_e_itm_size').val('');
+                    $('#txt_e_itm_desc').val('');
+                    $('#txt_e_new_length').val('');
+                    $('#txt_e_new_width').val('');
+                    $('#txt_e_new_depth').val('');
+                    $('#txt_e_new_cube').val('');
+                    $('#txt_e_new_wgt').val('');
+                    $('#length').val('');
+                    $('#width').val('');
+                    $('#depth').val('');
+                    $('#cube').val('');
+                    $('#wgt').val('');
+                    $('#txt_e_itm_name').val('');
+                    $("#ajaxLoading").hide();
+                }
+            }
+
+        });
+
+    });
+    </script>
+<script>
+    $('#txt_e_ib_doc_id').focusout(function () {
+        debugger
+        var l_str_cmp_id = $('#cmb_e_cmp_id').val();
+        var l_str_ib_doc_id = $('#txt_e_ib_doc_id').val();
+        if (l_str_cmp_id == "") {
+            swal("", "Please Select the Company", "");
+            $('#cmb_e_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_ib_doc_id == "") {
+          swal("", "Please Enter the IBDocID", "");
+            $('#txt_e_ib_doc_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/DataUpdate/CheckIBDocIDExist")',
+            data: { "l_str_cmp_id": l_str_cmp_id, "l_str_ib_doc_id": l_str_ib_doc_id },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+                if (e=="")
+                {
+
+                    $("#btnUpdateRcvdDt").prop("disabled", true);
+                    $("#txt_e_ib_doc_new_rcvd_dt").prop("disabled", true);
+                    $("#txt_e_ib_doc_rcvd_dt").prop("disabled", true);
+                    $("#txt_e_ib_doc_rcvd_dt").val('');
+                    $("#txt_e_ib_doc_id").focus();
+                    $("#ajaxLoading").hide();
+
+                }
+               else {
+                    $("#btnUpdateRcvdDt").prop("disabled", false);
+                    $("#txt_e_ib_doc_new_rcvd_dt").prop("disabled", false);
+                    $('#txt_e_ib_doc_rcvd_dt').val(e);
+                    $('#txt_e_ib_doc_rcvd_dt').focus();
+                    $("#ajaxLoading").hide();
+                }
+
+            }
+
+        });
+    });
+    $('#txt_e_itm_num').focusout(function () {
+        debugger
+        var l_str_cmp_id = $('#cmb_e_cmp_id').val();
+        var l_str_style = $('#txt_e_itm_num').val();
+        var l_str_color = $('#txt_e_itm_color').val();
+        var l_str_size = $('#txt_e_itm_size').val();
+        if (l_str_cmp_id == "") {
+            swal("", "Please Select the Company", "");
+            $('#cmb_e_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/DataUpdate/LoadItemList")',
+            data: { "l_str_cmp_id": l_str_cmp_id,"l_str_style":l_str_style, "l_str_color": l_str_color, "l_str_size": l_str_size },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+                if (e == '') {
+                    $("#ajaxLoading").hide();
+                }
+                else
+                {
+                    $.each(e, function () {
+                        $("#length").val(this.length);
+                        $("#width").val(this.width);
+                        $("#depth").val(this.depth);
+                        $("#wgt").val(this.wgt);
+                        $("#cube").val(this.cube);
+                        $('#txt_e_new_length').focus();
+                        $("#ajaxLoading").hide();
+
+                    });
+                }
+            }
+
+        });
+    });
+
+    $('#txt_e_ib_doc_rcvd_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#txt_e_ib_doc_new_rcvd_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $("#btnClose").click(function () {
+        var p_str_cmp_id = $('#cmb_e_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+    })
+
+    $("#btnCloseecom").click(function () {
+        var p_str_cmp_id = $('#cmb_e_cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+    })
+    $(document).ready(function () {
+        $("btnwhsClear").each(function () {
+            $(this).val("");
+        });
+    });
+    $("#btnDashboard").click(function () {
+        var p_str_cmp_id = $('#cmb_e_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+        window.location.href = url;
+
+    });
+
+</script>
+
+
+<script type="text/javascript">
+
+    $("#txt_e_itm_num").autocomplete({
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/DataUpdate/GetItemDetails?cmp_id=" + $('#cmb_e_cmp_id').val() + "&",
+        select: function (event, ui) {
+
+            $("#txt_e_itm_num").val(ui.item.itm_num);
+            $("#txt_e_itm_color").val(ui.item.itm_color);
+            $("#txt_e_itm_size").val(ui.item.itm_size);
+            $("#txt_e_itm_name").val(ui.item.itm_size);
+            closeOnSelect: false
+        }
+
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+    $(".two-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(2);
+        if (this.value == 'NaN') {
+            $('#txt_e_new_cube').val(0);
+        }
+    });
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+</script>
+<script>
+    $('#txt_e_new_length,#txt_e_new_width,#txt_e_new_depth,#txt_e_new_wgt,#txt_e_new_cube').keyup(function () {
+        var val = $(this).val();
+        if (isNaN(val)) {
+            val = val.replace(/[^0-9\.]/g, '');
+            if (val.split('.').length > 2)
+                val = val.replace(/\.+$/, "");
+        }
+        $(this).val(val);
+        $('#txt_e_new_cube').val(($('#txt_e_new_length').val() * $('#txt_e_new_width').val() * $('#txt_e_new_depth').val()) / 1728);
+        $('#txt_e_new_cube').val(parseFloat($('#txt_e_new_cube').val()).toFixed(3));
+    });
+
+    $('#txt_e_new_length').focusout(function () {
+        debugger
+        var a = $('#txt_e_new_length').val();
+
+        if (a == 'NaN') {
+            $('#txt_e_new_length').val(0);
+            return false;
+        }
+    });
+
+    $('#txt_e_new_width').focusout(function () {
+        debugger
+        var a = $('#txt_e_new_width').val();
+
+        if (a == 'NaN') {
+            $('#txt_e_new_width').val(0);
+            return false;
+        }
+    });
+    $('#txt_e_new_depth').focusout(function () {
+        debugger
+        var a = $('#txt_e_new_depth').val();
+
+        if (a == 'NaN') {
+            $('#txt_e_new_depth').val(0);
+            return false;
+        }
+    });
+    $('#txt_e_new_wgt').focusout(function () {
+        debugger
+        var a = $('#txt_e_new_wgt').val();
+
+        if (a == 'NaN') {
+            $('#txt_e_new_wgt').val(0);
+            return false;
+        }
+    });
+
+</script>
+<script>
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+</script>

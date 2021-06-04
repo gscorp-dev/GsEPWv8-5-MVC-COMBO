@@ -1,0 +1,214 @@
+﻿@model GsEPWv8_5_MVC.Model.eComSR940Model
+
+@{
+    var Ordercount = Model.ListeCom940SRUploadDtl.Count;
+    string l_str_prev_color = "R";
+    var hdr_Ordercount = Model.Header_count;
+}
+@*@for (int j = 0; j < Model.ListNo_Of_Records.Count(); j++)
+{
+    var bill_amt = (Model.ListNo_Of_Records[j].bill_amt);
+    decimal l_dec_bill_amnt = bill_amt;
+    if (l_dec_bill_amnt > 0)
+    {
+        l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+    }
+}*@
+
+<style>
+
+</style>
+<div id="SR940Partialshowgrid" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+   
+        <div class="gridSummary">
+            <table style="width:100%">
+                <tr>
+                    <td style="width:20%;text-align:right">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            Total Records:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @Ordercount
+                        </label>
+                    </td>
+                    <td style="width:20%;text-align:right">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            No.Of Orders:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @hdr_Ordercount
+                        </label>
+                    </td>
+                    <td style=" width:105px;"></td>
+                    <td style=" width:105px;"></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+<div>
+
+    <div class="">
+     
+            <table class="table table-bordered table-striped " style="border:1px solid #121213 ;width:100%" id="GridEcomSR940Main">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">Po Line</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Cust SKU</th>
+                        <th class="grid_header_backcolor">Qty</th>
+                        <th class="grid_header_backcolor">Carton#</th>
+                        <th class="grid_header_backcolor">PPK</th>
+                        <th class="grid_header_backcolor">Cube</th>
+                        <th class="grid_header_backcolor">Wgt</th>
+                        <th class="grid_header_backcolor">Desc</th>
+                        <th class="grid_header_backcolor">HeaderInfo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @for (int i = 0; i < Model.ListeCom940SRUploadDtl.Count; i++)
+                {
+                    var wgt = (Model.ListeCom940SRUploadDtl[i].StyleWgt);
+                    var cube = (Model.ListeCom940SRUploadDtl[i].StyleCube);
+                    var l_dec_wgt = wgt.ToString("F2");
+                    var l_dec_cube = cube.ToString("F3");
+                    var l_str_po_line = Model.ListeCom940SRUploadDtl[i].POLine;
+                    if (l_str_po_line == 1)
+                    {
+                        if (l_str_prev_color == "R")
+                        {
+                            l_str_prev_color = "Y";
+                        }
+                        else
+                        {
+                            l_str_prev_color = "R";
+                        }
+                    }
+                    if (l_str_prev_color == "R")
+                    {
+
+
+                            <tr style="background-color:#e6e02224;" class="row-select">
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListeCom940SRUploadDtl[i].POLine</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].Style</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].CustSKU</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right"> @Model.ListeCom940SRUploadDtl[i].StyleQty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right ">@Model.ListeCom940SRUploadDtl[i].StyleCarton</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListeCom940SRUploadDtl[i].StylePPK</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@l_dec_cube</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@l_dec_cube</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].StyleDesc</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].HeaderInfo</td>
+                            </tr>
+                    }
+                    else
+                    {
+                            <tr style="background-color:#3790ff54;" class="row-select">
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListeCom940SRUploadDtl[i].POLine</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].Style</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].CustSKU</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right"> @Model.ListeCom940SRUploadDtl[i].StyleQty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right ">@Model.ListeCom940SRUploadDtl[i].StyleCarton</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListeCom940SRUploadDtl[i].StylePPK</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@l_dec_cube</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@l_dec_wgt</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].StyleDesc</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].HeaderInfo</td>
+
+                            </tr>
+                    }
+                }
+
+                </tbody>
+            </table>
+
+    </div>
+    <div id="SR940Errorgrid" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+        <div style="font-size:14px; color:red; font-weight:bold;">
+            940 File Upload Error Summary:
+        </div>
+        <br />
+        <div>
+            <table class="table table-bordered table-striped " style="border:1px solid #121213 ;width:100%" id="GridEcomSR940Error">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:10%">File Line No</th>
+                        <th class="grid_header_backcolor"style="width:35%">Error Desc</th>
+                        <th class="grid_header_backcolor"style="width:55%">File Content</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @for (int z = 0; z < Model.ListEcomError.Count; z++)
+                    {
+
+
+                        <tr style="background-color:white;" class="row-select">
+                            <td style="font-size:13px; color:red; font-weight:bold; text-align:right ;width:10%">@Model.ListEcomError[z].File_Line_No</td>
+                                <td style="font-size:13px; color:red; font-weight:bold; width:25%">@Model.ListEcomError[z].File_Length</td>
+
+                            <td style="font-size:13px; color:red; font-weight:bold; width:65%">@Model.ListEcomError[z].Header_Info</td>
+
+                        </tr>
+
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@*@if (Model.error_mode == true )
+{*@
+    
+
+@*}*@
+
+    <script>
+
+
+        $(function () {
+            $('#GridEcomSR940Main').DataTable({
+                "paging": true,
+                "pageLength": 50,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": false,
+                "info": true,
+                "autoWidth": true,
+                // "scrollY": "280px",
+                "scrollCollapse": true,
+                //true
+                //"sDom": 't',
+                "sScrollY": "360px",
+                "sScrollX": "99%",
+            })
+        })
+        $(function () {
+            $('#GridEcomSR940Error').DataTable({
+                "paging": false,
+             //   "lengthChange": true,
+                "searching": false,
+               "ordering": false,
+               "info": false,
+               // "autoWidth": true,
+                // "scrollY": "280px",
+                "scrollCollapse": true,
+                //true
+                //"sDom": 't',
+                "sScrollY": "360px",
+                "sScrollX": "99%",
+            })
+        })
+    </script>
+
+
+
+
+

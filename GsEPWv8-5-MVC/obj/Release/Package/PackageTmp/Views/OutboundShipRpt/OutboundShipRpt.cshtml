@@ -1,0 +1,702 @@
+﻿@model  GsEPWv8_5_MVC.Model.OutboundShipRptModel
+@{
+    ViewBag.Title = "OutboundShipRpt";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var Ordercount = Model.LstOutboundShipRptInqdetail.Count;
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+     .fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 12px;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+  
+}   
+       .ui-autocomplete {
+          color:black; 
+    font-family: verdana;
+    font-size: 12px;
+    font-weight:bold;
+    }  
+       .ScreenTitle {
+    font-size: 18px;
+    font-family: Verdana;
+    font-weight: bold;
+    padding-top: 13px;
+}
+</style>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+@using (Html.BeginForm("OutboundShipRpt", "OutboundShipRpt", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table>
+            <tr>
+                <td style="padding-top: 13px;width:120px;">
+                    <a href="#" id="btnDashboard">
+                        <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </td>
+                <td style="width: 90%;padding-left:2px;"class="ScreenTitle">
+                   @* <h3>Shipping Reports </h3>*@
+                    Shipping Reports
+                </td>
+                <td style="padding-top: 11px;" class="ScreenTitle">
+                    <button type="button" id="btnClose" class="btn-Close">Close</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-8 col-sm-8 col-xs-8">
+                        <table style="border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr>
+                                <td style="text-align: right;">
+                                    <label><b class="Lblmanual">Cust Id </b></label>
+                                </td>
+                                @Html.HiddenFor(model => model.p_str_cmpid, new { @id = "p_str_cmpid" })
+                                <td style="width: 15%; padding-left: 1%;padding-bottom: 1%;">
+                                    @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                    {
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                    }
+                                </td>
+                                <td style="text-align: right; width: 6%;">
+                                    <label><b class="Lblmanual">Whs Id </b></label>
+                                </td>
+                                <td style="width:20%; padding-left: 1%;">
+                                    @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListwhsPickDtl, "whs_id", "whs_name"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;background-color:lightyellow;" })
+                                   @*@Html.TextBoxFor(model => model.whs_id, new { @class = "form-control txtlbl", @maxlength = "50" })*@
+                                </td>
+                                <td style="text-align: right; width: 6%;">
+                                    <label><b class="Lblmanual">Cust PO#</b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.cust_ord, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </td>
+                               
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: right;">
+                                    <label><b class="Lblmanual">Ship Dt Fm </b></label>
+                                </td>
+                                <td style="width: 15%; padding-left: 1%;padding-bottom: 1%;">
+                                    @Html.TextBoxFor(model => model.ship_dt_fm, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                </td>
+                                <td style="text-align: right; width: 6%;">
+                                    <label><b class="Lblmanual">To </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.ship_dt_to, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                                </td>
+                                <td style="text-align: right; width: 6%;">
+                                    <label><b class="Lblmanual">BoL# </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.ship_doc_id, new { @class = "form-control txtlbl", @maxlength = "50", })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">
+                                    <label><b class="Lblmanual">Style </b></label>
+                                </td>
+                                <td style="width: 15%; padding-left: 1%;padding-bottom: 1%;">
+                                    @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                </td>
+                                <td style="text-align: left; width: 6%;padding-left: 2%;">
+                                    <label><b class="Lblmanual">Color</b></label>
+                                </td>
+                                <td style="width: 12%;">
+                                    @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                </td>
+                                <td style="text-align: left; width: 6%;padding-left:2%;">
+                                    <label><b class="Lblmanual">Size </b></label>
+                                </td>
+                                <td style="width: 13%; padding-left: -1%;">
+                                    @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;margin-left: -10%;" })
+                                </td>
+                                <td style="text-align: left; width: 5%;">
+                                    <label><b class="Lblmanual">Desc </b></label>
+                                </td>
+                                <td style="width: 15%; padding-left:-1%;">
+                                    @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;margin-left: -12%;width: 115%;" })
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.DropDownListFor(model => model.Status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @class = "form-control txtlbl" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">
+                                    <label><b class="Lblmanual">Carrier</b></label>
+                                </td>
+                                <td style="width: 15%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.ship_via_name, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </td>
+
+                                <td style="padding-right: 5px;"><button type="button" id="btnSearch" class="btn_search" style="margin-left: 15%;">Search </button></td>
+                                <td style="padding-right: 5px;"><button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 5%;">Clear </button></td>
+                            </tr>
+                        </table>
+                    </div>
+                        <div class="col-md-1 col-sm-1 col-xs-1">
+
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                            <table>
+                                <tr>
+                                    <td style="width: 5%;">
+                                        <fieldset>
+                                            <legend style="padding-bottom: 10px;">Report Selection</legend>
+
+                                            <table style="margin-top:-16px;">
+                                                <tr>
+                                                    <td style="padding-left: 10px;padding-bottom:8px;font-size: 1.2em;"><input type="radio"  value="OutbndDate" name="radio1" checked /> <b>Shipping Report by Date</b></td>
+                                                    <td style="padding-left: 26px;padding-bottom:8px;font-size: 1.2em;"><input type="radio"  value="OutbndStyle" name="radio1" /> <b>Shipping Report by Style</b></td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="padding-left: 10px;"></td>
+                                                    <td></td>
+                                                </tr>
+
+
+
+                                            </table>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                                    </td>
+                                                    <td>
+
+                                                        <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                            <option>PDF</option>
+                                                            <option>XLS</option>
+                                                            @*<option>DOC</option>
+                                                            <option>CSV</option>*@
+                                                        </select>
+
+                                                    </td>
+                                                    <td>
+                                                        <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                                    </td>
+                                                    <td>
+
+                                                        <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                            <option>VIEW</option>
+                                                            @*<option>EXPORT</option>*@
+                                                            <option>EMAIL</option>
+
+                                                        </select>
+
+
+                                                    </td>
+                                                    <td>
+
+                                                        <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                    </td>
+
+                                                </tr>
+                                            </table>
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                </div>
+
+                </div>
+                        </div>
+                    </div>
+                </div>
+    <div id="showgrid" class="box-header" style="padding: 5px; ">
+        <div class="gridSummary">
+           
+            <table style="width:100%">
+                <tr>
+                    <td style="width:20%;text-align:right">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                            Total Records:
+                        </span>
+                       
+                    </td>
+                    <td>
+                        <label class="totalCount" style="text-align:left">
+                            @Ordercount
+                        </label>
+                    </td>
+                    <td style="font-size:12px;color:black;font-weight: bold;text-align:left;padding-right: 10px;width:6%;padding-left: 12px;">
+                        <label><b>Total Ctn(s)</b></label>
+                    </td>
+                    <td style="width:8%;">
+                        @Html.TextBoxFor(model => model.TotalCtn, new { @class = "form-control txtlbl", @style = "width:180px;font-weight: 900;font-family: verdana;color: red;font-size: 16px;" }) @*CR_3PL_MVC_OB_2018_0316_002*@
+                    </td>
+                    <td style="font-size:12px;color:black;font-weight: bold;text-align:left;padding-right: 10px;width:6%;padding-left: 13px;">
+                        <label><b>Total Qty(s)</b></label>
+                    </td>
+                    <td style="width:8%;">
+                        @Html.TextBoxFor(model => model.TotalQty, new { @class = "form-control txtlbl", @style = "width:180px;font-weight: 900;font-family: verdana;color: red;font-size: 16px;" }) @*CR_3PL_MVC_OB_2018_0316_002*@
+                    </td>
+                    <td style="width:40%;"></td>
+                    <td style=" width:105px;"></td>
+                    <td style=" width:105px;"></td>
+                    <td>
+                        @*<button type="button" id="btnClose" class="btn-Close">Close</button>*@
+
+                    </td>
+                </tr>
+
+            </table>
+            <br />
+        </div>
+        <hr class="break" />
+
+        <div class="box-body">
+           
+            <table id="GridShipRpt" class="table table-bordered table-striped">
+
+                <thead class="grid_backcolor">
+                    <tr>
+
+                        <th class="grid_header_backcolor">BoL#</th>
+                        <th class="grid_header_backcolor">Ship Dt</th>
+                        <th class="grid_header_backcolor">REF#</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">Ctns</th>
+                        <th class="grid_header_backcolor">Pcs</th>
+                        <th class="grid_header_backcolor">Cust PO#</th>
+                        <th class="grid_header_backcolor">Carrier</th>
+                        <th class="grid_header_backcolor">Whs Id</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.LstOutboundShipRptInqdetail.Count; i++)
+                    {
+                        <tr class="row-select">
+
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].ship_doc_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].ship_dt</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].itm_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].itm_color</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstOutboundShipRptInqdetail[i].itm_size</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstOutboundShipRptInqdetail[i].Ctns</td>  @*CR_3PL_MVC_OB_2018_0316_002*@
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstOutboundShipRptInqdetail[i].Pcs</td> @*CR_3PL_MVC_OB_2018_0316_002*@
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.LstOutboundShipRptInqdetail[i].cust_ord</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.LstOutboundShipRptInqdetail[i].ship_via_name</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.LstOutboundShipRptInqdetail[i].whs_id</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 1000px; height: 650px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" style="margin-top: -38px;" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="load" class="modal-body">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id='myModalEmail' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 198%; left:-160px;">
+                <div id='myModalEmailContent' style="width: 100%; height: 700px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script type="text/javascript">
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    @*$("#btnDashboard").click(function () {
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })*@
+    function change(el) {
+        if (el.value === "(Click to hide...)")
+            el.value = "(Click to show...)";
+        else
+            el.value = "(Click to hide...)";
+    }
+    $('#ship_dt_fm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#ship_dt_to').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#example1').DataTable({
+        //"paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false
+    });
+    $('#example4').DataTable({
+        //"paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false
+    });
+    $(function () {
+
+        $('#GridShipRpt').DataTable({
+            "paging": true,
+            "pageLength": 50,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            "sScrollY": "460px",
+            "sScrollX": "100%",
+        })
+    })
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    $("#btnSearch").click(function () {
+
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            // not2("Please Select The Company.")
+            sweetAlert("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_whs_id = $('#whs_id').val();
+            var p_str_cust_po = $('#cust_ord').val();
+            var p_str_ship_dt_fm = $('#ship_dt_fm').val();
+            var p_str_ship_dt_to = $('#ship_dt_to').val();
+            var p_str_BoL = $('#ship_doc_id').val();
+            var p_str_Carrier = $('#ship_via_name').val();
+            var p_str_Style = $('#Itmdtl').val();
+            var p_str_Color = $('#itm_color').val();
+            var p_str_Size = $('#itm_size').val();
+            var p_str_status = $('#Status').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundShipRpt/OutboundShipRptInqDetail")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id, "p_str_cust_po": p_str_cust_po, "p_str_ship_dt_fm": p_str_ship_dt_fm, "p_str_ship_dt_to": p_str_ship_dt_to,
+                    "p_str_BoL": p_str_BoL,
+                    "p_str_Carrier": p_str_Carrier,
+                    "p_str_Style": p_str_Style,
+                    "p_str_Color": p_str_Color,
+                    "p_str_Size": p_str_Size,
+                    "p_str_status": p_str_status,
+
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#showgrid').html("");
+                    $('#showgrid').html(e);
+                },
+
+            })
+        }
+    });
+    function GetRes() {
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var chkbtn = $(this).html();
+        var var_name = $("input[name='radio1']:checked").val();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_whs_id = $('#whs_id').val();
+        var p_str_cust_po = $('#cust_ord').val();
+        var p_str_ship_dt_fm = $('#ship_dt_fm').val();
+        var p_str_ship_dt_to = $('#ship_dt_to').val();
+        var p_str_BoL = $('#ship_doc_id').val();
+        var p_str_Carrier = $('#ship_via_name').val();
+        var p_str_Style = $('#Itmdtl').val();
+        var p_str_Color = $('#itm_color').val();
+        var p_str_Size = $('#itm_size').val();
+        if (var_name == "OutbndDate") {
+
+            window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                '&p_str_Size=' + p_str_Size, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+        }
+        else if (var_name == "OutbndStyle") {
+            window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                '&p_str_Size=' + p_str_Size, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+        }
+    }
+
+    $("#Itmdtl").autocomplete({
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/OutboundShipRpt/ItemXGetitmDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+
+            $("#itm_color").val(ui.item.itm_color);
+            $("#itm_size").val(ui.item.itm_size);
+            $("#itm_name").val(ui.item.itm_name);
+        }
+    });
+    $("#cmp_id").change(function () {
+        var end = this.value;
+        //alert(end)
+        $("#p_str_cmpid").val(end);
+    });
+</script>
+<script>
+
+    $("#btnprocesss").click(function () {
+        debugger
+        var getFormat = $('#id_format').find(":selected").text();
+        var getMode = $('#id_mode').find(":selected").text();
+
+        if(getFormat =='XLS' && getMode=='VIEW')
+        {
+            var type = "Excel";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var chkbtn = $(this).html();
+            var var_name = $("input[name='radio1']:checked").val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_whs_id = $('#whs_id').val();
+            var p_str_cust_po = $('#cust_ord').val();
+            var p_str_ship_dt_fm = $('#ship_dt_fm').val();
+            var p_str_ship_dt_to = $('#ship_dt_to').val();
+            var p_str_BoL = $('#ship_doc_id').val();
+            var p_str_Carrier = $('#ship_via_name').val();
+            var p_str_Style = $('#Itmdtl').val();
+            var p_str_Color = $('#itm_color').val();
+            var p_str_Size = $('#itm_size').val();
+            if (var_name == "OutbndDate") {
+
+                //window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                //    '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                //    '&p_str_Size=' + p_str_Size, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+
+
+                window.location.replace("/OutboundShipRpt/ShowReport?var_name=" + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                    '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                    '&p_str_Size=' + p_str_Size + '&type=' + type)
+
+            }
+            else if (var_name == "OutbndStyle") {
+                //window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                //    '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                //    '&p_str_Size=' + p_str_Size, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+                window.location.replace("/OutboundShipRpt/ShowReport?var_name=" + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                    '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                    '&p_str_Size=' + p_str_Size + '&type=' + type)
+
+            }
+        }
+        if(getFormat =='PDF' && getMode=='VIEW')
+        {
+            var type = "PDF";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var chkbtn = $(this).html();
+            var var_name = $("input[name='radio1']:checked").val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_whs_id = $('#whs_id').val();
+            var p_str_cust_po = $('#cust_ord').val();
+            var p_str_ship_dt_fm = $('#ship_dt_fm').val();
+            var p_str_ship_dt_to = $('#ship_dt_to').val();
+            var p_str_BoL = $('#ship_doc_id').val();
+            var p_str_Carrier = $('#ship_via_name').val();
+            var p_str_Style = $('#Itmdtl').val();
+            var p_str_Color = $('#itm_color').val();
+            var p_str_Size = $('#itm_size').val();
+            if (var_name == "OutbndDate") {
+
+                window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                    '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                    '&p_str_Size=' + p_str_Size + '&type=' + type, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+            }
+            else if (var_name == "OutbndStyle") {
+                window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                    '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                    '&p_str_Size=' + p_str_Size + '&type=' + type, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+            }
+        }
+
+        if (getFormat == 'PDF' && getMode == 'EMAIL') {
+            var options = { "backdrop": "static", keyboard: true };
+
+            var TeamDetailPostemailBackURL = '/OutboundShipRpt/EmailShowReport';
+            var type = "PDF";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var chkbtn = $(this).html();
+            var var_name = $("input[name='radio1']:checked").val();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_whs_id = $('#whs_id').val();
+            var p_str_cust_po = $('#cust_ord').val();
+            var p_str_ship_dt_fm = $('#ship_dt_fm').val();
+            var p_str_ship_dt_to = $('#ship_dt_to').val();
+            var p_str_BoL = $('#ship_doc_id').val();
+            var p_str_Carrier = $('#ship_via_name').val();
+            var p_str_Style = $('#Itmdtl').val();
+            var p_str_Color = $('#itm_color').val();
+            var p_str_Size = $('#itm_size').val();
+            if (var_name == "OutbndDate") {
+
+                //window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                //    '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                //    '&p_str_Size=' + p_str_Size + '&type=' + type, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_cust_po": p_str_cust_po, "p_str_ship_dt_fm": p_str_ship_dt_fm, "p_str_ship_dt_to": p_str_ship_dt_to, "p_str_BoL": p_str_BoL,
+                        "p_str_Carrier": p_str_Carrier, "p_str_Style": p_str_Style, "p_str_Color": p_str_Color, "p_str_Size": p_str_Size, "type": type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+            else if (var_name == "OutbndStyle") {
+                //window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                //    '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                //    '&p_str_Size=' + p_str_Size + '&type=' + type, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_cust_po": p_str_cust_po, "p_str_ship_dt_fm": p_str_ship_dt_fm, "p_str_ship_dt_to": p_str_ship_dt_to, "p_str_BoL": p_str_BoL,
+                        "p_str_Carrier": p_str_Carrier, "p_str_Style": p_str_Style, "p_str_Color": p_str_Color, "p_str_Size": p_str_Size, "type": type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+        }
+
+
+    })
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+
+

@@ -1,0 +1,201 @@
+﻿
+@model  GsEPWv8_5_MVC.Model.DailyFlashExceptionReportModel
+
+@{
+    ViewBag.Title = "DailyFlashExceptionReport";
+
+
+}
+<style>
+    div#ajaxLoadingLoadCompany {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+</style>
+@Html.HiddenFor(model => model.selected_company,new{@id="selectedcompanies"})
+<div class="modal-header" style="height:63px">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">Company List</h4>
+    <button type="button" id="btnCompanyClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+    <button type="button" id="btnCompanySubmit" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;margin-left:-28px;background-color: #00c0ef;">OK</button>
+
+    <div id="ajaxLoadingLoadCompany" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+</div>
+<div class="box-body">
+    <div id="mydiv">
+        <table id="GridCompanyList" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="width:5%">Select</th>
+                    <th class="grid_header_backcolor" style="width:5%">Company ID</th>
+                    <th class="grid_header_backcolor" style="width:5%">Company Name</th>
+
+                </tr>
+            </thead>
+            <tbody style="background-color:white">
+                @for (int i = 0; i < Model.ListCompanyPickDtl.Count; i++)
+            {
+                    <tr>
+                        <td style="width:10%">
+                            <input class="checkbox" id="chkdd_@i" name="tblcompanycheckbox" type="checkbox" value="@Model.ListCompanyPickDtl[i].cmp_id" />
+                        </td>
+                        <td style="font-size:12px; color:black; font-weight:bold;width:10%">@Model.ListCompanyPickDtl[i].cmp_id</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;width:10%">@Model.ListCompanyPickDtl[i].cmp_name</td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+    <div class="col-xs-2">
+
+    </div>
+</div>
+
+
+<script>
+    var SelectedCompanies=  @{@Html.Raw(Json.Encode(Model.selected_company));};
+    $("#btnCompanySubmit").click(function (e) {
+        debugger
+        $("#ajaxLoadingLoadCompany").show();
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var numberOfCheckboxes = $("input[name='tblcompanycheckbox']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            sweetAlert("", "Please select the Record.", "");
+            $("#ajaxLoadingLoadCompany").hide();
+        }
+        else {
+            $("input[name='tblcompanycheckbox']:checked").each(function () {
+                var check = $(this);
+                var id=$('#selectedcompanies').val();
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    if(id==check.val())
+                    {
+                        sweetAlert("", "Item already selected.", "");
+                    }
+                    else
+                    {
+                        SelectedRow.push(check.val());
+                    }
+                    
+                }
+            });
+            var Count = $("input[name='tblcompanycheckbox']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                var NewSelectdID = $('#selectedcompanies').val();
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == ''&& NewSelectdID=='')
+                        SelectdID = v;
+                    else if (SelectdID != '') {
+                        SelectdID =  SelectdID + ',' + v;
+                    }
+                    else{
+                        SelectdID = NewSelectdID + SelectdID + ',' + v;
+                    }
+                });
+                $('#new_cmp_id').val(SelectdID);
+                $('#SelectCompanyList').val(SelectdID);
+                $("#ajaxLoadingLoadCompany").hide();
+                $('#myModalCompanyList').modal('hide');
+            }
+        }
+    })
+</script>
+<script>
+    $("#btnCompanyClose").click(function (e) {
+        $('#myModalCompanyList').modal('hide');
+        $("#ajaxLoadingLoadCompany").hide();
+    })
+
+</script>
+<script>
+    var selected_companies= @{@Html.Raw(Json.Encode(Model.selected_company));};
+ $(document).ready(function () {
+    
+            var SelectedeCategoryIds_array = selected_companies.split(";");
+            if (SelectedeCategoryIds_array != null) {
+                $.each(SelectedeCategoryIds_array, function (i) {
+                    $("input[name='tblcompanycheckbox'][value='" + SelectedeCategoryIds_array[i] + "']").attr('checked', true);
+                });
+
+
+            }
+ });
+
+</script>
+<script>
+    $(function () {
+    $('#GridCompanyList').DataTable({
+        "pageLength": 10,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "160px",
+        "sScrollX": "30%",
+    });
+    $('#GridCompanyList_paginate').hide();
+    })
+</script>
+

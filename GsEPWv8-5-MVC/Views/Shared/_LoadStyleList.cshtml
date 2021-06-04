@@ -1,0 +1,363 @@
+﻿
+
+@model  GsEPWv8_5_MVC.Model.OutboundInqModel
+
+@{
+    ViewBag.Title = "OutboundInq";
+
+
+}
+<style>
+    div#ajaxLoadingLoadStyle {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<div class="modal-header" id="header" style="height:38px">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">Style List</h4>
+    <button type="button" id="btnStyleClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+    <div id="ajaxLoadingLoadStyle" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+</div>
+<div>
+
+</div>
+<div class="box-body">
+        <div id="mydiv" style="padding-top:47px">
+  <table>
+      <tr>
+          <td style="text-align: right;width:10%">
+              <label class="Lblmanual">Style</label>
+          </td>
+          <td colspan="1" style="padding-left: 5px;">
+              @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-weight: bold;font-size: 12px; font-family: verdana; width: 190px;height: 28px;background-color:lightyellow;",@id= "newItmdtl" })
+          </td>
+          <td style="text-align: right;">
+              <label class="Lblmanual">Color</label>
+          </td>
+          <td style="padding-left: 5px;">
+              @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-weight: bold;font-size: 12px; font-family: verdana; width: 120px;height: 28px;background-color:lightyellow;", @id = "newitm_color" })
+          </td>
+          <td style="text-align: right;">
+              <label class="Lblmanual">Size</label>
+          </td>
+          <td style="padding-left: 5px;">
+              @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-weight: bold;font-size: 12px; font-family: verdana; width: 120px;height: 28px;background-color:lightyellow;", @id = "newitm_size" })
+          </td>
+          <td style="text-align:right;">
+             
+          </td>
+          <td colspan="3" style="padding-left: 5px;">
+              <button type="button" id="btnStyleSearch" class="btn-Close" style="float:right;background-color: #0094ff;">Search</button>
+          </td>
+          <td colspan="3" style="padding-left: 5px;">
+              <button type="reset" id="btnStyleClear" class="btn-Clear">Clear</button>
+          </td>
+      </tr>
+   
+  </table>
+        </div>
+        <div id="stylegrid"  class="box-header" style="padding: 5px; ">
+            <table id="GridStyleList" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:10%">Select</th>
+                        <th class="grid_header_backcolor" style="width:20%">Style</th>
+                        <th class="grid_header_backcolor" style="width:20%">Color</th>
+                        <th class="grid_header_backcolor" style="width:20%">Size</th>
+                        <th class="grid_header_backcolor" style="width:30%">Description</th>
+
+                    </tr>
+                </thead>
+                <tbody style="background-color:white">
+                    @for (int i = 0; i < Model.LstItmDtls.Count; i++)
+                    {
+                        <tr>
+                            <td style="width:10%">
+                                <input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.LstItmDtls[i].itm_num" data-id1="@Model.LstItmDtls[i].itm_num" data-id2="@Model.LstItmDtls[i].itm_color" data-id3="@Model.LstItmDtls[i].itm_size" data-id4="@Model.LstItmDtls[i].itm_name" data-id5="@Model.LstItmDtls[i].avail_qty" data-id6="@Model.LstItmDtls[i].itm_code" />
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstItmDtls[i].itm_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstItmDtls[i].itm_color</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstItmDtls[i].itm_size</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstItmDtls[i].itm_name</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    <div class="col-xs-2">
+
+    </div>
+</div>
+
+<script>
+    $('#GridStyleList').DataTable({
+        "paging": true,
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": false,
+        "info": false,
+        "autoWidth": true
+    });
+    $('#GridStyleList_paginate').hide();
+</script>
+<script>
+    $("#btnStyleClose").click(function (e) {
+        $('#myModalStyleList').modal('hide');
+        $("#ajaxLoadingLoadmail").hide();
+    })
+
+</script>
+
+
+<script type="text/javascript">
+    $("input[name='tblcheckbox']").on('change', function () {
+        $("input[name='tblcheckbox']").not(this).prop('checked', false);
+    });
+</script>
+<script>
+    $('#GridStyleList').on('click','tr',function (event) {
+        debugger
+        $("#ajaxLoadingLoadmail").show();
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var SelectedRow1 = [];
+        var checkboxIDArray1 = [];
+        var SelectedRow2 = [];
+        var checkboxIDArray2 = [];
+        var SelectedRow3 = [];
+        var checkboxIDArray3 = [];
+        var SelectedRow4 = [];
+        var checkboxIDArray4 = [];
+        var SelectedRow5 = [];
+        var checkboxIDArray5 = [];
+        var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+            $("input[name='tblcheckbox']:checked").each(function () {
+                var check = $(this);
+                var check1 = $(this);
+                var check2 = $(this);
+                var check3 = $(this);
+                var check4 = $(this);
+                var check5 = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('data-id1'));
+                    SelectedRow.push(check.val());
+                    checkboxIDArray1.push(check.attr('data-id2'));
+                    SelectedRow1.push(check1.val());
+                    checkboxIDArray2.push(check2.attr('data-id3'));
+                    SelectedRow2.push(check2.val());
+                    checkboxIDArray3.push(check3.attr('data-id4'));
+                    SelectedRow3.push(check3.val());
+                    checkboxIDArray4.push(check4.attr('data-id5'));
+                    SelectedRow4.push(check4.val());
+                    checkboxIDArray5.push(check5.attr('data-id6'));
+                    SelectedRow5.push(check5.val());
+
+
+                }
+            });
+            var Count = $("input[name='tblcheckbox']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == '')
+                        SelectdID = v;
+                    else {
+                        SelectdID = SelectdID + ',' + v;
+                    }
+                });
+                var SelectdID1 = '';
+                $.each(checkboxIDArray1, function (i, v) {
+
+                    if (SelectdID1 == '')
+                        SelectdID1 = v;
+                    else
+                        SelectdID1 = SelectdID1 + ',' + v;
+
+                });
+                var SelectdID2 = '';
+                $.each(checkboxIDArray2, function (i, v) {
+
+                    if (SelectdID2 == '')
+                        SelectdID2 = v;
+                    else
+                        SelectdID2 = SelectdID2 + ',' + v;
+
+                });
+                var SelectdID3 = '';
+                $.each(checkboxIDArray3, function (i, v) {
+
+                    if (SelectdID3 == '')
+                        SelectdID3 = v;
+                    else
+                        SelectdID3 = SelectdID3 + ',' + v;
+
+                });
+                var SelectdID4 = '';
+                $.each(checkboxIDArray4, function (i, v) {
+
+                    if (SelectdID4 == '')
+                        SelectdID4 = v;
+                    else
+                        SelectdID4 = SelectdID4 + ',' + v;
+
+                });
+                var SelectdID5 = '';
+                $.each(checkboxIDArray5, function (i, v) {
+
+                    if (SelectdID5 == '')
+                        SelectdID5 = v;
+                    else
+                        SelectdID5 = SelectdID5 + ',' + v;
+
+                });
+                $('#Itmdtl').val(SelectdID);
+                $('#itm_color').val(SelectdID1);
+                $('#itm_size').val(SelectdID2);
+                $('#itm_name').val(SelectdID3);
+                $("#avlqty").val(SelectdID4);
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_Itmcode = SelectdID5;
+                var p_str_style = SelectdID;
+                var p_str_color = SelectdID1;
+                var p_str_size = SelectdID2
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/OutboundInq/LoadAvailQty")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_Itmcode": p_str_Itmcode, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size
+                    },
+
+                    dataType: "json",
+                    success: function (e) {
+                        debugger
+                        $.each(e, function () {
+                            $("#avlqty").val(this.avail_qty);
+                            $("#due_qty").val((this.avail_qty) - (this.due_qty));
+                            $("#SRqty").val(this.due_qty);
+                            $("#shiplength").val(this.length);
+                            $("#shipwidth").val(this.width);
+                            $("#shipheight").val(this.depth);
+                            $("#shipweight").val(this.wgt);
+                            $("#shipcube").val(this.cube);
+                            $("#shipppk").val(this.ctn_qty);
+                            $('#ord_qty').focus();
+
+                        });
+                    },
+
+                });
+                $('#myModalStyleList').modal('hide');
+                $('#ord_qty').focus();
+            }
+            else {
+
+                $("input:tblcheckbox").each(function () {
+                    var check = $(this);
+                    if (check.is(':checked')) {
+                        this.checked = !this.checked;
+                    }
+                });
+
+            }
+         
+
+    });
+</script>
+<script>
+    $("#btnStyleSearch").click(function () {
+        debugger
+        var cmp_id = $('#cmp_id').val();
+        var itm_num = $('#newItmdtl').val();
+        var itm_color = $('#newitm_color').val();
+        var itm_size = $('#newitm_size').val();
+        var act = "Partial";
+        $("#ajaxLoadingLoadmail").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/LoadStyleList")',
+                data: {
+                    "cmp_id": cmp_id, "itm_num": itm_num, "itm_color": itm_color, "itm_size": itm_size, "act": act
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoadingLoadmail").hide();
+                    $('#stylegrid').html("");
+                    $('#stylegrid').html(e);
+                }
+                  
+            })
+        
+    });
+</script>
+<script>
+    $('#btnStyleClear').click(function () {
+        debugger;
+        $('#newItmdtl').val('');
+        $('#newitm_color').val('');
+        $('#newitm_size').val('');
+    })
+</script>
+

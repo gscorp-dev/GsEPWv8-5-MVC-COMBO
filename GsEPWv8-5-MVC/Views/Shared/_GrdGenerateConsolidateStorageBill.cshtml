@@ -1,0 +1,129 @@
+﻿
+@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+
+@{
+    var Ordercount = Model.ListGetSTRGBillByPcsRpt.Count;
+    decimal l_dec_tot_bill_amnt = 0;
+
+}
+@for (int j = 0; j < Model.ListGetSTRGBillByPcsRpt.Count(); j++)
+{
+    var bill_amt = (Model.ListGetSTRGBillByPcsRpt[j].TotAmount);
+    decimal l_dec_bill_amnt = bill_amt;
+    if (l_dec_bill_amnt > 0)
+    {
+        l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+    }
+}
+
+<div class="box-body">
+    <div class="row">
+        <table>
+            <tr>
+                <td >
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Records:
+                    </span>
+                </td>
+                <td style="width: 5%;">
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </td>
+                <td>
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Invoice Amount:
+                    </span>
+                </td>
+                <td style="width: 64%;">
+                    <label class="totalCount" style="text-align:left">
+                       $ @l_dec_tot_bill_amnt.ToString("0.00")
+                    </label>
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <table id="GrdConsolidatedPartialStrgBillingInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Style</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Color</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Size</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:12%;">PPK</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:12%;">Avail Qty</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:12%;">Loc</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:12%;">Ctns</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Cube</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Weight</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Rate</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Amount</th>
+            </tr>
+        </thead>
+        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+            @for (int i = 0; i < Model.ListGetSTRGBillByPcsRpt.Count; i++)
+            {
+                var bill_amt = (Model.ListGetSTRGBillByPcsRpt[i].TotAmount);
+                var bill_Rate = (Model.ListGetSTRGBillByPcsRpt[i].Rate);
+                decimal l_dec_bill_Rate = bill_Rate;
+                decimal l_dec_bill_amnt = bill_amt;
+                var l_dec_bill_amt = bill_amt.ToString("F2");
+                var l_dec_bill_Rates = bill_Rate.ToString("F2");
+
+                <tr style="background-color:white;">
+                    @*<td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox4" type="checkbox" value="@Model.ListGetSTRGBillByPcsRpt[i].cmp_id" /></td>*@
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListGetSTRGBillByPcsRpt[i].itm_num</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListGetSTRGBillByPcsRpt[i].itm_color</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListGetSTRGBillByPcsRpt[i].itm_size</td>
+                    @*<td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListGetSTRGBillByPcsRpt[i].RateType</td>
+                      <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListGetSTRGBillByPcsRpt[i].st_rate_id</td>*@
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListGetSTRGBillByPcsRpt[i].itm_qty</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListGetSTRGBillByPcsRpt[i].avail_qty</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListGetSTRGBillByPcsRpt[i].loc_id</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@Model.ListGetSTRGBillByPcsRpt[i].TotCtns</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@Model.ListGetSTRGBillByPcsRpt[i].TotCube</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@Model.ListGetSTRGBillByPcsRpt[i].TotWeight</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@l_dec_bill_Rates</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@l_dec_bill_amt</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+<script>
+    $(function () {
+        $('#GrdConsolidatedPartialStrgBillingInq').DataTable({
+     
+             'lengthChange': false,
+            'searching': true,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+            "scrollY": "650px",
+            "scrollCollapse": true,
+            "paging": false
+        });
+        $('#GrdConsolidatedPartialStrgBillingInq_paginate').hide();
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $("#ckbCheckAll").click(function () {
+            $(".checkbox").prop('checked', $(this).prop('checked'));
+        });
+
+        $(".checkbox").change(function () {
+            if (!$(this).prop("checked")) {
+                $("#ckbCheckAll").prop("checked", false);
+            }
+        });
+    });
+</script>
+

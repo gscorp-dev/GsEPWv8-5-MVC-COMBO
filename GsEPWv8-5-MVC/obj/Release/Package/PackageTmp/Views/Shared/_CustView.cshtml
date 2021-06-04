@@ -1,0 +1,871 @@
+﻿
+@model GsEPWv8_5_MVC.Model.CustMasterModel
+@{
+    var lstrLogoFileName = Model.file_name;}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+
+    .ui-state-active,
+    .ui-widget-content .ui-state-active,
+    .ui-widget-header .ui-state-active,
+    a.ui-button:active,
+    .ui-button:active,
+    .ui-button.ui-state-active:hover {
+        border: 1px solid #f39c12;
+        background: #f39c12;
+        font-weight: normal;
+        color: #ffffff;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    fieldset {
+        /* margin: 8px; */
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+        width:100%;
+    }
+</style>
+@Html.HiddenFor(model => model.Image_Path, new { })
+
+<center>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">Customer Master - View</h3></center>
+        <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+    </div>
+    <div id="childtabsview">
+        <ul>
+            <li><a href="#childtabsview-1" style="font-size:12px;">Header</a></li>
+            <li><a href="#childtabsview-2" style="font-size:12px;">Credit & Detail</a></li>
+            <li><a href="#childtabsview-3" style="font-size:12px;" id="hob">Config</a></li>
+            <li><a href="#childtabsview-4" style="font-size:12px;" id="hob">Users List</a></li>
+        </ul>
+        <div id="childtabsview-1">
+            <div class="box-body">
+                <div class="box-header">
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: 5px;">
+                            <div class="col-xs-1" style="text-align: right;  margin-top: 4px;font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Cust Id:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -22px;">
+                                @Html.TextBoxFor(model => model.cmp_id, new { @id = "v_add_cmp_id", @disabled = "true", @class = "form -control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:155px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-2" style="margin-left:-4px;">
+                                @Html.TextBoxFor(model => model.cmp_name, new { @id = "v_add_cmp_name", @disabled = "true", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:520px;background-color:lightyellow;" })
+                            </div>
+                            @*<div class="col-xs-4">
+                    <table>
+                        <tr>
+                            <td>
+                                <button type="button" style="background-color:#1a45bf" id="btnBrowse" class="btn_browse" onclick="document.getElementById('img1').click();">Browse</button>
+                            </td>
+                            <td>
+                                <button type="submit" id="btnImport" class="btn_upload" style="display:none;">Import</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: 25px;">
+                            <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Logo File Name:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left:-22px;">
+                                <input type="file" name="FileUpload" id="img1" onchange="updateFileName()" style="display:none" title="" />
+                                @Html.TextBoxFor(x => x.file_name, new { @class = "form-control txtlbl", @disabled = "true", @name = "file_name", @id = "a_file_name", @style = "width: 275%;" })
+                            </div>
+                            <div class="col-xs-6" style="margin-left:7%;">
+     
+                            </div>
+                            <div class="col-xs-3" style="margin-left:500px;margin-top: -39px;">
+                        
+                                <img src=@lstrLogoFileName id="profile-img-tag" width="100" height="50" style="margin-bottom:16px;">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: 4px;">
+                            <div class="col-xs-1" style="text-align: right; margin-top: 4px; font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Cust Of:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -22px;">
+                                @Html.DropDownListFor(model => model.cust_of_cmpid, new SelectList(Model.ListCustofCompanyPickDtl, "cust_of_cmpid", "cust_of_cmpname"), new { @id = "v_add_cust_of_cmpid", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:460px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-5" style="margin-left:21%;margin-top: -2%;">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: -8px;">
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                <label><b class="Lblmanual">Cust Group Id:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -28px;">
+                                @Html.TextBoxFor(model => model.cust_grp_id, new { @id = "v_add_cust_grp_id", @disabled = "true", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:125px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                                <label><b class="Lblmanual">Status:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.DropDownListFor(model => model.status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @id = "v_add_status", @disabled = "true", @class = "form-control txtlbl", @style = "width:138px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                <label><b class="Lblmanual">Source:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.source, new { @id = "v_add_source", @disabled = "true", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:175px;" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: -8px;">
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                <label><b class="Lblmanual">Date Of Entry:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -28px;">
+                                @Html.TextBoxFor(model => model.dt_of_entry, new { @id = "v_add_date_of_entrys", @disabled = "true", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "80", @style = "width:125px;background-color:lightyellow;" })
+                            </div>
+                            <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                                <label><b class="Lblmanual">Last Chg Dt:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.last_chg_dt, new { @id = "v_add_last_of_entrys", @disabled = "true", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", @style = "width:138px;background-color:lightyellow;" })
+
+                            </div>
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                <label><b class="Lblmanual">Region:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.region, new { @id = "v_add_region", @disabled = "true", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:175px;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: -8px;">
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                <label><b class="Lblmanual">Territory:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -28px;">
+                                @Html.TextBoxFor(model => model.territory, new { @id = "v_add_territory", @disabled = "true", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:125px;" })
+                            </div>
+                            <div class="col-xs-2">
+                                <label for="chkPassport">
+                                    <input type="checkbox" value="NewWhsId" name="radioaddrs" /><b class="Lblmanual">New WhsId</b>
+                                </label>
+                            </div>
+                            <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                                <label><b class="Lblmanual">Dflt Whs Id:</b></label>
+                            </div><div class="col-xs-2" style="margin-left: -23px;" id="CustWhsList">
+                                @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListPick, "whs_id", "whs_id"), new { @id = "v_add_whs_id", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:138px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;display:none;" id="CustWhs">
+                                @Html.TextBoxFor(model => model.whs_id, new { @id = "v_add_new_whs_id", @disabled = "true", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:138px;background-color:lightyellow;" })
+                            </div>
+
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                <label><b class="Lblmanual">Contact:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.contact, new { @id = "v_add_contact", @disabled = "true", @class = "form-control txtlbl", @maxlength = "20", @style = "width:175px;" })
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: -8px;">
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                <label><b class="Lblmanual">Tel:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.Tel, new { @id = "v_add_Tel", @disabled = "true", @class = "form-control txtlbl numericOnly", @maxlength = "15", @style = "width:200px;" })
+                            </div>
+                            <div class=" col-xs-1" style="text-align:right;font-size:20px;width: 120px;margin-left: 38px;">
+                                <label><b class="Lblmanual">Cell:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.cell, new { @id = "v_add_cell", @disabled = "true", @class = "form-control txtlbl numericOnly", @maxlength = "15", @style = "width:200px;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                <label><b class="Lblmanual">Fax:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.fax, new { @id = "v_add_fax", @disabled = "true", @class = "form-control txtlbl numericOnly", @maxlength = "15", @style = "width:175px;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: -11px;">
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Email:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.email, new { @id = "v_add_email", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:400px;" })
+
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 280px;margin-left:28px;">
+                                <label><b class="Lblmanual">Web:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.TextBoxFor(model => model.web, new { @id = "v_add_web", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:420px;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: 1px;">
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Cust Catg:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                                @Html.DropDownListFor(model => model.catg, new SelectList(Model.ListCustCatg, "name", "description"), new { @disabled = "true", @class = "form-control txtlbl", @style = "width:175px;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 280px;margin-left:28px;">
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -23px;">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+        <div id="childtabsview-2">
+            <fieldset>
+                <legend style="text-align:left;color:orange;margin-bottom:10px;">Other detail</legend><hr style="margin-bottom:0px;margin-top:0px;" />
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                                    <label><b class="Lblmanual">Mail Name:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -22px;">
+                                    @Html.TextBoxFor(model => model.mail_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:385px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;margin-left:185px;">
+                                    <label><b class="Lblmanual">Attn:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -22px;">
+                                    @Html.TextBoxFor(model => model.attn, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:425px;" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: -7px;">
+                                <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                                    <label><b class="Lblmanual">Addr1:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -22px;">
+                                    @Html.TextBoxFor(model => model.addr1, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:385px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;margin-left:185px;">
+                                    <label><b class="Lblmanual">Addr2:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -22px;">
+                                    @Html.TextBoxFor(model => model.addr2, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:425px;" })
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: -8px;">
+                                <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                    <label><b class="Lblmanual">City:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -28px;">
+                                    @Html.TextBoxFor(model => model.city, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:125px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -33px;">
+                                    <label><b class="Lblmanual">State:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.state, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:125px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 120px;margin-left:-40px;">
+                                    <label><b class="Lblmanual">Zip:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.zip, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:175px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                    <label><b class="Lblmanual">Country:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.country, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:175px;" })
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: -8px;">
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                    <label><b class="Lblmanual">Frieght Id:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -28px;">
+                                    @Html.TextBoxFor(model => model.frieght_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:125px;" })
+                                </div>
+                                <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -32px;">
+                                    <label><b class="Lblmanual">Ship Via Id:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.ship_via_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:125px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-40px;">
+                                    @*<label><b class="Lblmanual">Cust Catg:</b></label>*@
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @*@Html.DropDownListFor(model => model.catg, new SelectList(Model.ListCustCatg, "name", "description"), new { @class = "form-control txtlbl", @disabled = "true", @style = "width:175px;" })*@
+
+
+                                </div>
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                    @*<label><b class="Lblmanual">Bill Cycle:</b></label>*@
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @*@Html.DropDownListFor(model => model.bl_cycle, new SelectList(Model.ListBillCycle, "name", "description"), new { @disabled = "true", @class = "form-control txtlbl", @style = "width:175px;" })*@
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <br />
+            <fieldset>
+                <legend style="text-align:left;color:orange;margin-bottom:10px;">Credit</legend><hr style="margin-bottom:0px;margin-top:0px;" />
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: -8px;">
+                                <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                    <label><b class="Lblmanual">Credit Code:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -28px;">
+                                    @Html.TextBoxFor(model => model.code, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:125px;" })
+                                </div>
+                                <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                                    <label><b class="Lblmanual">Credit Type:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.DropDownListFor(model => model.type, new SelectList(Model.ListCreditType, "name", "description"), new { @disabled = "true", @class = "form-control txtlbl", @style = "width:125px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                    <label><b class="Lblmanual">Credit Limit:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.credit_lt, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:175px;text-align:right;" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: -8px;">
+                                <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                    <label><b class="Lblmanual">Credit Msg:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.msg, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:378px;" })
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: -6px;">
+                                <div class=" col-xs-1" style="text-align:right;font-size:20px;width: 120px;margin-left: 2px;">
+                                    <label><b class="Lblmanual">Discount:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.disc, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:200px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:66px;">
+                                    <label><b class="Lblmanual">Terms Code:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.term_code, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:200px;" })
+
+                                </div>
+                                <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:28px;">
+                                    <label><b class="Lblmanual">Order Value:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.ord_val, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:200px;" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: -11px;">
+                                <div class=" col-xs-1" style="text-align:right;font-size:20px;width: 120px;margin-left: 2px;">
+                                    <label><b class="Lblmanual">Tax Code:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.tax_code, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:200px;" })
+                                </div>
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:66px;">
+                                    <label><b class="Lblmanual">Tax Exempt:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.DropDownListFor(model => model.tax_exempt, new SelectList(Model.ListTaxExempt, "name", "description"), new { @disabled = "true", @class = "form-control txtlbl", @style = "width:200px;" })
+
+                                </div>
+                                <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:28px;">
+                                    <label><b class="Lblmanual">GL Number:</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -23px;">
+                                    @Html.TextBoxFor(model => model.gl_num, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "width:200px;" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div id="childtabsview-3">
+            <div class="box box-default">
+                <div class="box-header">
+                    <div class="container">
+                        <fieldset>
+                            <legend style="text-align: left;">Billing Settings</legend>
+                            <div style="width:100%">
+                                <center>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: -22px;">
+
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">Bill Free Days</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -22px;">
+                                                @Html.TextBoxFor(model => model.bl_free_days, new { @id = "v_edit_bl_free_days", @class = "form-control txtlbl numericOnly", @maxlength = "4", @style = "width:150px;" })
+                                            </div>
+
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">Bill Cycle:</b></label>
+
+                                            </div>
+                                            <div class="col-xs-2">
+                                                @Html.DropDownListFor(model => model.bl_cycle, new SelectList(Model.ListBillCycle, "name", "description"), new { @class = "form-control txtlbl", @style = "width:160px;" })
+                                            </div>
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">Payment Terms</b></label>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                @Html.TextBoxFor(model => model.pmt_term, new { @id = "v_edit_pmt_term", @class = "form-control txtlbl", @maxlength = "100", @style = "width:300px;" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">IO RateId</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -22px;">
+                                                @Html.TextBoxFor(model => model.io_rate_id, new { @id = "v_edit_io_rate_id", @class = "form-control txtlbl", @maxlength = "20", @style = "width:150px;" })
+                                            </div>
+
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">I/O Rate Desc</b></label>
+                                            </div>
+                                            <div class="col-xs-5">
+                                                @Html.TextBoxFor(model => model.io_rate_name, new { @id = "v_edit_io_rate_name", @class = "form-control txtlbl", @maxlength = "75", @style = "width:480px;" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">I/O Billing By</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -22px;">
+                                                @Html.DropDownListFor(model => model.inout_bill, new SelectList(Model.ListInout, "name", "description"), new { @id = "v_edit_inout_bill", @class = "form-control txtlbl", @maxlength = "50", @style = "width:150px;" })
+                                            </div>
+
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual"> I/O Rate Price </b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left:4px;">
+                                                @Html.TextBoxFor(model => model.io_rate_price, new { @id = "v_edit_io_rate_price", @class = "form-control three-decimals", @maxlength = "10", @style = "font-weight: bold;font - size: 12px; width:160px;" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">STRG Rate Id</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -22px;">
+                                                @Html.TextBoxFor(model => model.strg_rate_id, new { @id = "v_edit_strg_rate_id", @class = "form-control txtlbl", @maxlength = "20", @style = "width:150px;" })
+                                            </div>
+
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">STRG Rate Desc</b></label>
+                                            </div>
+                                            <div class="col-xs-5">
+                                                @Html.TextBoxFor(model => model.strg_rate_name, new { @id = "v_edit_strg_rate_name", @class = "form-control txtlbl", @maxlength = "75", @style = "width:480px;" })
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">STRG Billing By</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -22px;">
+                                                @Html.DropDownListFor(model => model.strg_bill, new SelectList(Model.ListSrtg, "name", "description"), new { @id = "v_edit_strg_bill", @class = "form-control txtlbl", @maxlength = "50", @style = "width:150px;" })
+                                            </div>
+
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">STRG Rate Price</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left:4px;">
+                                                @Html.TextBoxFor(model => model.strg_rate_price, new { @id = "v_edit_strg_rate_price", @class = "form-control three-decimals", @maxlength = "10", @style = "font-weight: bold;font - size: 12px; width:160px;" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+
+                                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">Include Initial Storage</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -22px;">
+                                                @Html.DropDownListFor(model => model.initstrg, new SelectList(Model.ListIncludeInitStrg, "name", "description"), new { @id = "v_edit_initstrg", @class = "form-control txtlbl", @maxlength = "50", @style = "text-align:right;width:160px;" })
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+
+                                            <div class="col-xs-2" style="text-align:left; width: 16.67%;">
+                                                <label><b class="Lblmanual">Cube Rounded</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left:-17px;">
+                                                @Html.DropDownListFor(model => model.is_bill_by_cube_rounded, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "e_is_bill_by_cube_rounded", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                            </div>
+                                            <div class="col-xs-2" style="text-align:right; margin-top:3px;font-size:12px;width: 130px;margin-left:28px;">
+                                                <label><b class="Lblmanual"> Min Inout Cube</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -15px;">
+                                                @Html.TextBoxFor(model => model.min_inout_cube, new { @id = "e_min_inout_cube", @class = "form-control txtlbl two-decimals", @maxlength = "6", @style = "text-align:right;width:160px;" })
+                                            </div>
+                                            <div class="col-xs-1" style="text-align:right; margin-top:1px;font-size:12px;width: 150px;margin-left:28px;">
+                                                <label><b class="Lblmanual"> Min Stroage Cube</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -10px;">
+                                                @Html.TextBoxFor(model => model.min_strg_cube, new { @id = "e_min_strg_cube", @class = "form-control txtlbl numericOnly", @maxlength = "6", @style = "text-align:right;width:160px;" })
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+
+                                </center>
+                                @*<center>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: -22px;">
+
+                                            <div class="col-xs-1" style="text-align:left;margin-top:4px;font-size:12px;width: 140px;">
+                                                <label><b class="Lblmanual">Bill Free Days</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left:4px;">
+                                                @Html.TextBoxFor(model => model.bl_free_days, new { @id = "v_add_bl_free_days", @disabled = "true", @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "width:160px;" })
+                                            </div>
+                                            <div class="col-xs-1" style="text-align:right; margin-top:3px;font-size:12px;width: 130px;margin-left:28px;">
+                                                <label><b class="Lblmanual">Storage Billing By</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -15px;">
+                                                @Html.DropDownListFor(model => model.strg_bill, new SelectList(Model.ListSrtg, "name", "description"), new { @id = "v_add_strg_bill", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                            </div>
+                                            <div class="col-xs-1" style="text-align:right; margin-top:3px;font-size:12px;width: 150px;margin-left:28px;">
+                                                <label><b class="Lblmanual">Inout Billing By</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -10px;">
+                                                @Html.DropDownListFor(model => model.inout_bill, new SelectList(Model.ListInout, "name", "description"), new { @id = "v_add_inout_bill", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+
+                                            <div class="col-xs-2" style="text-align:left; width: 16.67%;">
+                                                <label><b class="Lblmanual">Cube Rounded</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left:-17px;">
+                                                @Html.DropDownListFor(model => model.is_bill_by_cube_rounded, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "v_is_bill_by_cube_rounded", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                            </div>
+                                            <div class="col-xs-2" style="text-align:right; margin-top:3px;font-size:12px;width: 130px;margin-left:28px;">
+                                                <label><b class="Lblmanual"> Min Inout Cube</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -15px;">
+                                                @Html.TextBoxFor(model => model.min_inout_cube, new { @id = "v_min_inout_cube", @class = "form-control txtlbl numericOnly", @maxlength = "6", @disabled = "true", @style = "text-align:right;width:160px;" })
+                                            </div>
+                                            <div class="col-xs-1" style="text-align:right; margin-top:1px;font-size:12px;width: 150px;margin-left:28px;">
+                                                <label><b class="Lblmanual"> Min Stroage Cube</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -10px;">
+                                                @Html.TextBoxFor(model => model.min_strg_cube, new { @id = "v_min_strg_cube", @class = "form-control txtlbl numericOnly", @maxlength = "6", @disabled = "true", @style = "text-align:right;width:160px;" })
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+
+                                            <div class="col-xs-2" style="text-align:left; width: 16.67%;">
+                                                <label><b class="Lblmanual">Include Initial Storage</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left:-17px;">
+                                                @Html.DropDownListFor(model => model.initstrg, new SelectList(Model.ListIncludeInitStrg, "name", "description"), new { @id = "new_initstrg", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "text-align:right;width:160px;" })
+                                            </div>
+                                            <div class="col-xs-2" style="text-align:right; margin-top:3px;font-size:12px;width: 130px;margin-left:28px;">
+                                                <label><b class="Lblmanual">Payment Terms</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -15px;">
+                                                @Html.TextBoxFor(model => model.pmt_term, new { @id = "v_edit_pmt_term", @class = "form-control txtlbl", @maxlength = "100", @disabled = "true", @style = "width:487px;" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="margin-top: 10px;">
+
+                                            <div class="col-xs-2" style="text-align:left; width: 16.67%;">
+                                                <label><b class="Lblmanual">Bill Cycle:</b></label>
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left:-17px;">
+                                                @Html.DropDownListFor(model => model.bl_cycle, new SelectList(Model.ListBillCycle, "name", "description"), new { @class = "form-control txtlbl", @disabled = "true", @style = "width:160px;" })
+                                            </div>
+                                            <div class="col-xs-2" style="text-align:right; margin-top:3px;font-size:12px;width: 130px;margin-left:28px;">
+
+                                            </div>
+                                            <div class="col-xs-2" style="margin-left: -15px;">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </center>*@
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend style="text-align: left;">IB Receiving Entry</legend>
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -22px;">
+
+                                    <div class="col-xs-1" style="text-align:left;margin-top:6px;font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">Allow IB New Item</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left:4px;">
+                                        @Html.DropDownListFor(model => model.allow_new_item, new SelectList(Model.ListDocAllowNewItm, "name", "description"), new { @id = "v_add_allow_new_item", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:28px;">
+                                        <label><b class="Lblmanual">Item List by</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -15px;">
+                                        @Html.DropDownListFor(model => model.itemlistby, new SelectList(Model.ListItmListBy, "name", "description"), new { @id = "v_add_itemlistby", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 135px;margin-left:28px;">
+                                        <label><b class="Lblmanual">Cube Auto Calc</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -10px;">
+                                        @Html.DropDownListFor(model => model.cube_auto_calc, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "v_add_cube_autocalc", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:100px;" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: 10px;">
+
+                                    <div class="col-xs-2" style="text-align:left; width: 16.67%;">
+                                        <label><b class="Lblmanual">Document AutoIncrement</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left:-17px;">
+                                        @Html.DropDownListFor(model => model.autoincre, new SelectList(Model.ListAutoIncrement, "name", "description"), new { @id = "v_add_autoincre", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                    </div>
+                                    <div class="col-xs-2" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:28px;">
+                                        <label><b class="Lblmanual">Receive Lot By</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -15px;">
+                                        @Html.DropDownListFor(model => model.recv_lot_by, new SelectList(Model.ListRcvLot, "name", "description"), new { @id = "new_recv_lot_by", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right; margin-top:1px;font-size:12px;width: 125px;margin-left:28px;">
+                                        <label><b class="Lblmanual">Receive Non document Item</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: 5px;">
+                                        @Html.DropDownListFor(model => model.Recv_non_doc_itm, new SelectList(Model.ListIncludeInitStrg, "name", "description"), new { @id = "new_Rcev_non_doc_itm", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <br />
+                        </fieldset>
+                        <fieldset>
+                            <legend style="text-align: left;">Outbound Settings</legend>
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -20px;">
+                                    <div class="col-xs-1" style="text-align:left; width: 16.67%;">
+                                        <label><b class="Lblmanual">Allow SR Qty more than Stock qty</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -16px;">
+                                        @Html.DropDownListFor(model => model.Stk_Chk_Reqt, new SelectList(Model.ListIncludeInitStrg, "name", "description"), new { @id = "new_Stk_Chk_Reqt", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right; width: 16.67%;">
+                                        <label><b class="Lblmanual">Allocation By</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -15px;">
+                                        @Html.DropDownListFor(model => model.aloc_by, new SelectList(Model.ListAlocBy, "name", "description"), new { @id = "new_aloc_by", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right;margin-left:15px; width: 16.67%;">
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -10px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend style="text-align: left;">First Time Settings</legend>
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -20px;">
+                                    <div class="col-xs-1" style="text-align:left;">
+                                        <label><b class="Lblmanual">Customer Initials</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -16px;">
+                                        @Html.TextBoxFor(model => model.con_string, new { @id = "v_add_custin_id", @class = "form-control txtlbl VLDTITMFILD", @disabled = "true", @maxlength = "2", @style = "width:100px;background-color:lightyellow;" })
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <label><b class="Lblmanual"> Ecom Reciving by Bin </b></label>
+                                        @Html.CheckBoxFor(model => model.ecom_recv_by_bin)
+                                    </div>
+
+                                    <div class="col-xs-3">
+                                        <label><b class="Lblmanual"> 940-Allow New item  </b></label>
+                                        @Html.CheckBoxFor(model => model.allow_940_new_item, new { @id = "v_view_allow_940_new_item" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align:left; ">
+                                        <label><b class="Lblmanual">Cust.Type</b></label>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.DropDownListFor(model => model.cust_type, new SelectList(Model.ListCustType, "name", "description"), new { @id = "v_add_cust_type", @class = "form-control txtlbl", @maxlength = "10", @style = "width:160px;" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="childtabsview-4">
+            <div class="box-body">
+                <div class="box-header">
+                    <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                        <table id="grdAddUser" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                            <thead class="grid_backcolor">
+                                <tr>
+                                    <th class="grid_header_backcolor">Sel</th>
+                                    <th class="grid_header_backcolor">User Id</th>
+                                    <th class="grid_header_backcolor">User Type</th>
+                                    <th class="grid_header_backcolor">First Name</th>
+                                    <th class="grid_header_backcolor">Last Name</th>
+                                    <th class="grid_header_backcolor">Email ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int j = 0; j < Model.ListAppUsers.Count; j++)
+                                {
+                                    var a_user_id = @Model.ListAppUsers[j].user_id;
+                                    var ColCheck = @Model.ListAppUsers[j].user_perm;
+                                    <tr id="@Model.ListAppUsers[j].user_id ">
+                                        <td id="chkboxclickAdd" id1="@a_user_id" id2="@ColCheck" style="text-align:center">
+                                            <input id="test" name="selUserId" class="attribute" type="checkbox" value="@Model.ListAppUsers[j].user_id" />
+                                        </td>
+                                        <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListAppUsers[j].user_id</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListAppUsers[j].user_type</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListAppUsers[j].user_fst_name</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListAppUsers[j].user_lst_name</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListAppUsers[j].email</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</center>
+
+<script type="text/javascript">
+    $('#last_date').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#date_entry').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+    $(function () {
+        $("#childtabsview").tabs();
+    });
+</script>
+
+
+
+
+
+

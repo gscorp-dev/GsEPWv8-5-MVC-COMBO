@@ -1,0 +1,1142 @@
+﻿@model GsEPWv8_5_MVC.Model.eComSR940Model
+@{
+    ViewBag.Title = "940 Ship Request Upload";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    //WebGrid grid = new WebGrid(source: Model, canSort: false);
+    var Ordercount = Model.ListeCom940SRUploadDtl.Count;
+    bool modeflag = false;
+}
+<style type="text/css">
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: Trebuchet;
+        font-size: 1.8em;
+        left: 10px;
+        width: 56px;
+    }
+
+    .text-muted {
+        color: black;
+    }
+
+    /*#GridEcomSR940Main tr td:nth-child(1) {
+        width: 4%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(2) {
+        width: 8%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(3) {
+        width: 8%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(4) {
+        width: 5%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(5) {
+        width: 5%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(6) {
+        width: 5%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(7) {
+        width: 7%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(8) {
+        width: 7%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(9) {
+        width: 20%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(10) {
+        width: 40%;
+    }*/
+
+
+
+     #GridEcomSR940Main tr td:nth-child(1) {
+        width: 10%;
+    }
+
+     #GridEcomSR940Main tr td:nth-child(2) {
+        width: 4%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(3) {
+        width: 8%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(4) {
+        width: 8%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(5) {
+        width: 3%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(6) {
+        width: 3%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(7) {
+        width: 5%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(8) {
+        width: 7%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(9) {
+        width: 7%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(10) {
+        width: 20%;
+    }
+
+    #GridEcomSR940Main tr td:nth-child(11) {
+        width: 35%;
+    }
+   
+</style>
+<meta name="viewport" content="width=device-width" />
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<table style="width: 100%;">
+    <tr>
+        <td style="padding-top: 13px;width:10%;">
+          @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+          {
+            <a href="/DashBoard/DashBoard" id="btnDashboard">
+                <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                <i class="fa fa-arrow-circle-right"></i>
+            </a>
+          }
+            @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+            {
+                <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                    <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            }
+        </td>
+
+        <td style="width: 60%" class="ScreenTitle">
+            940 SHIP REQUEST UPLOAD
+            <input type="hidden" id="screenTitle" value="IBInquiry" />
+        </td>
+
+
+        <td style="padding-top: 11px;width:30%;text-align:right">
+
+            @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+            {
+                <button type="button" id="btnClose" class="btn-Close">Close</button>
+            }
+            @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+            {
+                <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+            }
+        </td>
+    </tr>
+</table>
+<div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+<div class="box box-default">
+    <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+        <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+        <div class="box-tools">
+            <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row" style="margin-bottom:18px;margin-top: 19px;">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-9 col-sm-9 col-xs-9">
+                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                        <tr>
+                            <td style="text-align: right;  margin-top: 6px;">
+                                <label class="Lblmanual"><b>Company: </b></label>
+                            </td>
+                            <td style="text-align: right;padding-left: 2%;">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select---", new { @class = "form-control" })
+                            </td>
+                            <td style="text-align: right; width: 120px; margin-top: 6px;">
+                                <label class="Lblmanual" style="width: 100%;"><b>File Name: </b></label>
+                            </td>
+                            <td style="text-align: right;padding-left: 1%;">
+                                <input type="file" name="FileUpload" id="img1" onchange="updateFileName()" style="display:none" title="" />
+
+                                @Html.TextBoxFor(x => x.file_name, new { @class = "form-control", @name = "file_name", @id = "file_name" })
+                            </td>
+
+                            <td style="text-align: left;padding-left: 1%;">
+                                <button type="button" style="background-color:#1a45bf" id="btnBrowse" class="btn_browse" onclick="document.getElementById('img1').click();">Browse</button>
+                                <button type="submit" id="btnImport" class="btn_upload">Import </button>
+                                <button type="button" id="btnSave" class="btn_Receive" style="width:80px;">Save </button>
+                                <button type="reset" id="btnClear" class="btn-Clear">Clear </button>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                        <tr>
+                            <td style="text-align: right;  margin-top: 6px;padding-left: 1%;width:7%">
+                                <label><b class="Lblmanual">BatchId </b></label>
+                            </td>
+                            <td style="text-align: right;padding-left:1%; width:17%">
+                                @Html.TextBoxFor(model => model.quote_num, new { @class = "form-control txtlbl", @maxlength = "50", })
+                            </td>
+                            <td style="text-align: right;margin-top: 6px;width:7%">
+                                <label><b class="Lblmanual">Upload Dt Fm </b></label>
+                            </td>
+                            <td style="text-align: right;padding-left:1%;width: 12%;">
+                                @Html.TextBoxFor(model => model.so_dtFm, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                            </td>
+                            <td style="text-align: right;margin-top: 6px;width:2%">
+                                <label><b class="Lblmanual">To</b></label>
+                            </td>
+                            <td style="text-align: left;padding-left:1%;width: 12%;">
+                                @Html.TextBoxFor(model => model.so_dtTo, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                            </td>
+                            <td style="text-align: left;width: 10%;padding-left: 2%;">
+                                <button type="button" id="btnSearch" class="btn_search">Search </button>
+                            </td>
+                            <td style="text-align: left; width: 15%; margin-top: 6px;">
+                                <a id="upload" href="@Url.Action("SampleTemplatedownload", "eComSR940")" target="_blank" style="text-decoration:underline; color:#4c8cff;"><b style="font-size:13px;">OB EcomUploadTemplate WithSample</b></a>
+
+                            </td>
+                           
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="container" style="margin-left:-30px; width:100%;">
+                                    <fieldset>
+                                        <legend>Report Selection</legend>
+
+                                        <table style="margin-top:-25px;">
+                                            <tr>
+                                                <td style="padding-left: 10px;font-size: 1.2em;padding-bottom: 8px;"><input type="radio" value="GridSRRpt" name="radio1" checked /><b>SR940 Summary Report</b></td>
+
+                                            </tr>
+                                        </table>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                                    <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                        <option>PDF</option>
+                                                    </select>
+
+                                                </td>
+                                                <td>
+                                                    <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                                    <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                        <option>VIEW</option>
+                                                        <option>EMAIL</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        @*<div class="row" style="margin-bottom:18px;margin-top: 19px;">
+                <div class="col-xs-12">
+                    <div class="col-md-7 col-sm-7 col-xs-7">
+
+                    </div>
+
+                    <div class="col-md-2 col-sm-2 col-xs-2"></div>
+                </div>
+            </div>*@
+    </div>
+</div>
+<div id="SR940showgrid" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+    <div>
+
+        <div>
+            <table id="GridEcomSR940Main" class="table table-bordered table-striped" style="border:1px solid #121213 ;width:100%">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">Po Line</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Cust SKU</th>
+                        <th class="grid_header_backcolor">Qty</th>
+                        <th class="grid_header_backcolor">Carton#</th>
+                        <th class="grid_header_backcolor">PPK</th>
+                        <th class="grid_header_backcolor">Cube</th>
+                        <th class="grid_header_backcolor">Wgt</th>
+                        <th class="grid_header_backcolor">Desc</th>
+                        <th class="grid_header_backcolor">HeaderInfo</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (int i = 0; i < Model.ListeCom940SRUploadDtl.Count; i++)
+                    {
+                        var wgt = (Model.ListeCom940SRUploadDtl[i].StyleWgt);
+                        var cube = (Model.ListeCom940SRUploadDtl[i].StyleCube);
+                        var l_dec_wgt = wgt.ToString("F2");
+                        var l_dec_cube = cube.ToString("F3");
+                        <tr class="row-select">
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListeCom940SRUploadDtl[i].POLine</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].Style</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].CustSKU</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align:right"> @Model.ListeCom940SRUploadDtl[i].StyleQty</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListeCom940SRUploadDtl[i].StyleCarton</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListeCom940SRUploadDtl[i].StylePPK</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@l_dec_cube</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@l_dec_wgt</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].StyleDesc</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940SRUploadDtl[i].HeaderInfo</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<div id='myModalEmail' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalEmailContent' style="width: 100%; height: 605px;"></div>
+        </div>
+    </div>
+
+</div>
+<script src="~/Scripts/sweetalert.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+<script type="text/javascript">
+    function updateFileName() {
+        debugger
+        var img1 = document.getElementById('img1');
+        var file_name = document.getElementById('file_name');
+        var fileNameIndex = img1.value.lastIndexOf("\\");
+        file_name.value = img1.value.substring(fileNameIndex + 1);
+        $('#btnImport').removeAttr('disabled');
+        $('#btnSearch').attr('disabled', 'disabled');
+    }
+
+</script>
+<script type="text/javascript">
+
+    var file_name = $('#file_name').val();
+
+    $('#btnClear').click(function () {
+        $('#file_name').val('');
+        $('#img1').val('');
+        $('#quote_num').val('');
+        $('#so_dtFm').val('');
+        $('#so_dtTo').val('');
+        var l_str_new_cmp_id = $('#cmp_id').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/eComSR940/GridClear")',
+            data: {
+                "p_str_cmp_id": l_str_new_cmp_id
+            },
+            dataType: 'html',
+            success: function (result) {
+
+                $("#ajaxLoading").hide();
+                $('#SR940showgrid').html("");
+                $('#SR940showgrid').html(result);
+                $('#btnBrowse').removeAttr('disabled');
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    });
+    $(document).ready(function () {
+
+        $('#btnImport').click(function () {
+            debugger
+            var l_str_new_cmp_id = $('#cmp_id').val();
+            var l_str_file_name = $('#file_name').val();
+            var fileExtension = l_str_file_name.substr((l_str_file_name.lastIndexOf('.') + 1));
+            $('#btnSave').removeAttr('disabled');
+            $('#btnSearch').attr('disabled', 'disabled');
+            if (fileExtension != "csv")
+            {
+                swal("", "Please Check the File Format, Upload only .CSV File", "");
+                $('#file_name').val('');
+                $('#img1').val('');
+                $('#SR940showgrid').show();
+                return false;
+
+            }
+            if (l_str_new_cmp_id == "") {
+                swal("", "please select the company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            if (l_str_file_name == "") {
+                swal("", "please select the File.", "");
+                $('#file_name').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            $(document).ready(function () {
+                $("#btnSave :input").attr("disabled", false);
+            });
+
+            var l_str_new_cmp_id = $('#cmp_id').val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/eComSR940/GridClear")',
+                data: {
+                    "p_str_cmp_id": l_str_new_cmp_id
+                },
+                dataType: 'html',
+                success: function (result) {
+
+                 
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/eComSR940/CheckExist940SRUploadFile")',
+                data: {
+                    "p_str_cmp_id": l_str_new_cmp_id, "p_str_file_name": l_str_file_name
+                },
+                dataType: 'html',
+                success: function (e) {
+                    debugger
+                    $("#ajaxLoading").hide();
+                    if (e == "true") {
+                        sweetAlert({
+                            title: "",
+                            text: "File Already Exist, Do you want to Continue?",
+                            type: "",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "No",
+                            cancelButtonText: "Yes",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+              function (isConfirm) {
+                  if (isConfirm) {
+                      $('#file_name').focus();
+
+                  }
+
+                  else {
+
+                      $("#ajaxLoading").show();
+                      if (window.FormData !== undefined) {
+
+                          var fileUpload = $("#img1").get(0);
+                          var files = fileUpload.files;
+
+                          // Create FormData object
+                          var fileData = new FormData();
+
+                          // Looping over all files and add it to FormData object
+                          for (var i = 0; i < files.length; i++) {
+                              fileData.append(files[i].name, files[i]);
+                          }
+
+                          // Adding one more key to FormData object
+                          fileData.append('username', 'Manas');
+                          $("#ajaxLoading").show();
+                          $.ajax({
+                              url: '/eComSR940/UploadFiles?l_str_cmp_id=' + l_str_new_cmp_id,
+                              type: "POST",
+                              contentType: false, // Not to set any content header
+                              processData: false, // Not to process data
+                              data: fileData,
+                              success: function (result) {
+                                  $("#ajaxLoading").hide();
+                                  debugger
+                                  if (result.error_mode == true) {
+                                      $("#error_desc").val(this.error_desc);
+                                      $('#SR940Errorgrid').show();
+                                      $('#SR940Errorgrid').html("");
+                                      $('#SR940Errorgrid').html(this.error_desc);
+                                      $("#error_desc").val(this.error_desc);
+                                      if (result.Error_flag == "A") {
+                                          swal("", "batchid already allocated, do you want to continue please delete the allocation?", "");
+                                          $("#ajaxLoading").show();
+                                          if (window.FormData !== undefined) {
+
+                                              var fileUpload = $("#img1").get(0);
+                                              var files = fileUpload.files;
+
+                                              // Create FormData object
+                                              var fileData = new FormData();
+
+                                              // Looping over all files and add it to FormData object
+                                              for (var i = 0; i < files.length; i++) {
+                                                  fileData.append(files[i].name, files[i]);
+                                              }
+
+                                              // Adding one more key to FormData object
+                                              fileData.append('username', 'Manas');
+                                              $("#ajaxLoading").show();
+                                              $.ajax({
+                                                  url: '/eComSR940/UploadFilesupload?l_str_cmp_id=' + l_str_new_cmp_id,
+                                                  type: "POST",
+                                                  contentType: false, // Not to set any content header
+                                                  processData: false, // Not to process data
+                                                  data: fileData,
+                                                  success: function (result) {
+                                                      $("#ajaxLoading").hide();
+                                                      debugger
+                                                      if (result.error_mode == true) {
+                                                          $("#error_desc").val(this.error_desc);
+                                                          $('#SR940Errorgrid').show();
+                                                          $('#SR940Errorgrid').html("");
+                                                          $('#SR940Errorgrid').html(this.error_desc);
+                                                          $("#error_desc").val(this.error_desc);
+
+
+                                                      }
+
+                                                      $("#ajaxLoading").hide();
+                                                      $('#SR940showgrid').html("");
+                                                      $('#SR940showgrid').html(result);
+                                                      debugger
+                                                      $.ajax({
+                                                          type: "GET",
+                                                          url: '@Url.Content("~/eComSR940/ErrorDescCount")',
+                                                          contentType: "application/json; charset=utf-8",
+                                                          data: "",
+                                                          datatype: "json",
+                                                          success: function (result) {
+                                                              debugger
+                                                              if (result == "true") {
+                                                                  swal("", "Exception found.Please correct the File and Reupload ", "");
+                                                                  return false;
+                                                              }
+                                                          },
+                                                          error: function (err) {
+                                                              swal(err.statusText);
+                                                          }
+                                                      });
+
+                                                  },
+                                                  error: function (err) {
+                                                      swal(err.statusText);
+                                                  }
+                                              });
+
+                                          } else {
+                                              swal("FormData is not supported.");
+                                          }
+                                         // return false;
+                                      }
+                                      if (result.Error_flag == "O") {
+
+                                          sweetAlert({
+                                              title: "",
+                                              text: "batchid already exist, do you want to continue?",
+                                              type: "",
+                                              showCancelButton: true,
+                                              confirmButtonClass: "btn-danger",
+                                              confirmButtonText: "No",
+                                              cancelButtonText: "Yes",
+                                              closeOnConfirm: true,
+                                              closeOnCancel: true
+                                          },
+             function (isConfirm) {
+                 if (isConfirm) {
+                     $('#file_name').focus();
+                     return false
+                 }
+
+                 else {
+                     $("#ajaxLoading").show();
+                     if (window.FormData !== undefined) {
+
+                         var fileUpload = $("#img1").get(0);
+                         var files = fileUpload.files;
+
+                         // Create FormData object
+                         var fileData = new FormData();
+
+                         // Looping over all files and add it to FormData object
+                         for (var i = 0; i < files.length; i++) {
+                             fileData.append(files[i].name, files[i]);
+                         }
+
+                         // Adding one more key to FormData object
+                         fileData.append('username', 'Manas');
+                         $("#ajaxLoading").show();
+                         $.ajax({
+                             url: '/eComSR940/UploadFilesupload?l_str_cmp_id=' + l_str_new_cmp_id,
+                             type: "POST",
+                             contentType: false, // Not to set any content header
+                             processData: false, // Not to process data
+                             data: fileData,
+                             success: function (result) {
+                                 $("#ajaxLoading").hide();
+                                 debugger
+                                 if (result.error_mode == true) {
+                                     $("#error_desc").val(this.error_desc);
+                                     $('#SR940Errorgrid').show();
+                                     $('#SR940Errorgrid').html("");
+                                     $('#SR940Errorgrid').html(this.error_desc);
+                                     $("#error_desc").val(this.error_desc);
+                                 }
+                                 else {
+                                     $("#ajaxLoading").hide();
+                                     $('#SR940showgrid').html("");
+                                     $('#SR940showgrid').html(result);
+                                 }
+                                                                  debugger
+                                 @*$.ajax({
+                                     type: "GET",
+                                     url: '@Url.Content("~/eComSR940/ErrorDescCount")',
+                                     contentType: "application/json; charset=utf-8",
+                                     data: "",
+                                     datatype: "json",
+                                     success: function (result) {
+                                         debugger
+                                         if (result == "true") {
+                                             swal("", "Exception found.Please correct the File and Reupload ", "");
+                                             return false;
+                                         }
+                                     },
+                                     error: function (err) {
+                                         swal(err.statusText);
+                                     }
+                                 });*@
+
+                             },
+                             error: function (err) {
+                                 swal(err.statusText);
+                             }
+                         });
+
+                     } else {
+                         swal("FormData is not supported.");
+                     }
+                    
+                 }
+             });
+                                      }
+                                      else
+                                      {
+                                          $("#ajaxLoading").show();
+                                          if (window.FormData !== undefined) {
+
+                                              var fileUpload = $("#img1").get(0);
+                                              var files = fileUpload.files;
+
+                                              // Create FormData object
+                                              var fileData = new FormData();
+
+                                              // Looping over all files and add it to FormData object
+                                              for (var i = 0; i < files.length; i++) {
+                                                  fileData.append(files[i].name, files[i]);
+                                              }
+
+                                              // Adding one more key to FormData object
+                                              fileData.append('username', 'Manas');
+                                              $("#ajaxLoading").show();
+                                              $.ajax({
+                                                  url: '/eComSR940/UploadFilesupload?l_str_cmp_id=' + l_str_new_cmp_id,
+                                                  type: "POST",
+                                                  contentType: false, // Not to set any content header
+                                                  processData: false, // Not to process data
+                                                  data: fileData,
+                                                  success: function (result) {
+                                                      $("#ajaxLoading").hide();
+                                                      debugger
+                                                      if (result.error_mode == true) {
+                                                          $("#error_desc").val(this.error_desc);
+                                                          $('#SR940Errorgrid').show();
+                                                          $('#SR940Errorgrid').html("");
+                                                          $('#SR940Errorgrid').html(this.error_desc);
+                                                          $("#error_desc").val(this.error_desc);
+                                                      }
+
+                                                      $("#ajaxLoading").hide();
+                                                      $('#SR940showgrid').html("");
+                                                      $('#SR940showgrid').html(result);
+                                                      debugger
+                                                      $.ajax({
+                                                          type: "GET",
+                                                          url: '@Url.Content("~/eComSR940/ErrorDescCount")',
+                                                          contentType: "application/json; charset=utf-8",
+                                                          data: "",
+                                                          datatype: "json",
+                                                          success: function (result) {
+                                                              debugger
+                                                              if (result == "true") {
+                                                                  swal("", "Exception found.Please correct the File and Reupload ", "");
+                                                                  return false;
+                                                              }
+                                                          },
+                                                          error: function (err) {
+                                                              swal(err.statusText);
+                                                          }
+                                                      });
+
+                                                  },
+                                                  error: function (err) {
+                                                      swal(err.statusText);
+                                                  }
+                                              });
+
+                                          } else {
+                                              swal("FormData is not supported.");
+                                          }
+                                      }
+
+                                  }
+                                  else {
+                                      $("#ajaxLoading").hide();
+                                      $('#SR940showgrid').html("");
+                                      $('#SR940showgrid').html(result);
+                                  }
+                                 
+                                  debugger
+                                  $.ajax({
+                                      type: "GET",
+                                      url: '@Url.Content("~/eComSR940/ErrorDescCount")',
+                                      contentType: "application/json; charset=utf-8",
+                                      data: "",
+                                      datatype: "json",
+                                      success: function (result) {
+                                          debugger
+                                          if (result == "true") {
+                                              swal("", "Exception found.Please correct the File and Reupload ", "");
+                                              return false;
+                                          }
+                                      },
+                                      error: function (err) {
+                                          swal(err.statusText);
+                                      }
+                                  });
+
+                              },
+                              error: function (err) {
+                                  swal(err.statusText);
+                              }
+                          });
+
+                      } else {
+                          swal("FormData is not supported.");
+                      }
+                  }
+              });
+
+                        
+                    }
+                    else {
+                        if (window.FormData !== undefined) {
+
+                            var fileUpload = $("#img1").get(0);
+                            var files = fileUpload.files;
+
+                            // Create FormData object
+                            var fileData = new FormData();
+
+                            // Looping over all files and add it to FormData object
+                            for (var i = 0; i < files.length; i++) {
+                                fileData.append(files[i].name, files[i]);
+                            }
+
+                            // Adding one more key to FormData object
+                            fileData.append('username', 'Manas');
+                            $("#ajaxLoading").show();
+                            $.ajax({
+                                url: '/eComSR940/UploadFiles?l_str_cmp_id=' + l_str_new_cmp_id,
+                                type: "POST",
+                                contentType: false, // Not to set any content header
+                                processData: false, // Not to process data
+                                data: fileData,
+                                success: function (result) {
+                                    $("#ajaxLoading").hide();
+                                    debugger
+                                    if (result.error_mode == true) {
+                                       
+                                        $("#error_desc").val(this.error_desc);
+                                        $('#SR940Errorgrid').show();
+                                        $('#SR940Errorgrid').html("");
+                                        $('#SR940Errorgrid').html(result);
+                                        $('#SR940Errorgrid').html(this.error_desc);
+                                        $("#error_desc").val(this.error_desc);
+                                        if (result.Error_flag = "O") {
+                                            swal("", "Exception found.Please correct the File and Reupload ", "");
+                                            return false;
+                                        }
+
+                                    }
+                                    else {
+                                        $("#ajaxLoading").hide();
+                                        $('#SR940showgrid').html("");
+                                        $('#SR940showgrid').html(result);
+                                    }
+                                    
+                                    debugger
+                                    @*$.ajax({
+
+                                        type: "GET",
+                                        url: '@Url.Content("~/eComSR940/ErrorDescCount")',
+                                        contentType: "application/json; charset=utf-8",
+                                        data: "",
+                                        datatype: "json",
+                                        success: function (result) {
+                                            debugger
+                                            if (result == "true") {
+                                                swal("", "Exception found.Please correct the File and Reupload ", "");
+                                                return false;
+                                            }
+                                        },
+                                        error: function (err) {
+                                            swal(err.statusText);
+                                        }
+                                    });*@
+
+
+                                },
+                                error: function (err) {
+                                    swal(err.statusText);
+                                }
+                            });
+                        } else {
+                            swal("FormData is not supported.");
+                        }
+                    }
+                },
+
+            })
+
+        });
+    });
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnSave").click(function () {
+        debugger
+        var x = document.getElementById("GridEcomSR940Main").rows.length;
+        var l_int_error_count = document.getElementById("GridEcomSR940Error").rows.length;
+        var l_int_errorrowCount = $("#GridEcomSR940Error td").closest("tr").length;
+
+        $('#btnSearch').attr('disabled', 'disabled');
+
+        var l_str_Edit_flag = $('#l_bool_edit_flag').val();
+        var rowCount = $("#GridEcomSR940Main td").closest("tr").length;
+        if (rowCount == 0 || rowCount == null) {
+            swal("", "Pls. Include Before Save.", "");//CR_MVC_3PL_0317-001 Added By Nithya
+            return false;
+        }
+        //if (l_int_errorrowCount != 0 || rowCount != null) {
+        //    swal("", "Exception found.Please correct the File and Reupload ", "");//CR_MVC_3PL_0317-001 Added By Nithya
+        //    return false;
+        //}
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_file_name = $('#file_name').val();
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/eComSR940/SaveEComSR940")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_file_name": p_str_file_name
+                },
+                dataType: 'html',
+                success: function (e) {
+                    debugger
+                    if (e == "true") {
+                        $("#ajaxLoading").hide();
+                        swal("", "Exception found.Please correct the File and Reupload ", "");
+                        return false;
+                    }
+                    $("#ajaxLoading").hide();
+
+                    swal({
+                        title: "",
+                        text: " Ship Request 940  uploaded successfully",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+
+                     function () {
+                         setTimeout(function () {
+                             var p_str_cmpid = $('#cmp_id').val();
+                             var type = "PDF";
+
+                             window.open('ShowReport?p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'eComSR940', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport');
+                             window.location.href = '@Url.Action("eComSR940", "eComSR940")';
+                             $('#btnSearch').removeAttr('disabled');
+
+                         });
+                     });
+
+
+                },
+
+            })
+        }
+    });
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+
+    })
+
+    $('#so_dtFm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#so_dtTo').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+</script>
+<script type="text/javascript">
+    $("#btnSearch").click(function () {
+        debugger
+        var cmp_id = $("#cmp_id").val();
+        $('#btnSave').attr('disabled', 'disabled');
+        $('#btnImport').attr('disabled', 'disabled');
+        $('#btnBrowse').attr('disabled', 'disabled');
+        if (cmp_id == "") {
+            sweetAlert("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_file_name = $('#file_name').val();
+            var p_str_so_dt_frm = $('#so_dtFm').val();
+            var p_str_so_dt_to = $('#so_dtTo').val();
+            var p_str_batch_id = $('#quote_num').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/eComSR940/EComSR940InqDetail")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,"p_str_file_name":p_str_file_name, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to,
+                    "p_str_batch_id": p_str_batch_id
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#SR940showgrid').html("");
+                    $('#SR940showgrid').html(e);
+                    $('#SR940Errorgrid').hide();
+                },
+
+            })
+        }
+    });
+</script>
+<script type="text/javascript">
+    $("#btnprocesss").click(function () {
+        debugger
+        var getFormat = $('#id_format').find(":selected").text();
+        var getMode = $('#id_mode').find(":selected").text();
+        if (getFormat == 'PDF' && getMode == 'VIEW') {
+            debugger
+
+            {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var type = "PDF"
+                var var_name = $("input[name='radio1']:checked").val();
+                if (var_name == "GridSRRpt") {
+                    var p_str_cmpid = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_filename = $('#file_name').val();
+                    var p_str_so_dt_frm = $('#so_dtFm').val();
+                    var p_str_so_dt_to = $('#so_dtTo').val();
+                    var p_str_batch_id = $('#quote_num').val();
+                    window.open('Show940SRReport?var_name=' + var_name + '&SelectedID=' + p_str_batch_id + '&p_str_cmpid=' + p_str_cmpid + '&p_str_filename=' + p_str_filename +
+                        '&p_str_so_dt_frm=' + p_str_so_dt_frm + '&p_str_so_dt_to=' + p_str_so_dt_to, 'eComSR940', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'Show940SRReport?var_name=' + var_name)
+                }
+            }
+        }
+        if (getFormat == 'PDF' && getMode == 'EMAIL') {
+            debugger
+            {
+                var TeamDetailPostemailBackURL = '/eComSR940/Show940SREmailReport';
+                var options = { "backdrop": "static", keyboard: true };
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var type = "PDF"
+                var var_name = $("input[name='radio1']:checked").val();
+                if (var_name == "GridSRRpt") {
+                    var p_str_cmpid = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_so_dt_frm = $('#so_dtFm').val();
+                    var p_str_so_dt_to = $('#so_dtTo').val();
+                    var p_str_batch_id = $('#quote_num').val();
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostemailBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "SelectedID": p_str_batch_id, "p_str_cmpid": p_str_cmpid
+                            , "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to
+                            , "p_str_batch_id": p_str_batch_id
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            //alert("hjk")
+                            debugger;
+                            $("#ajaxLoading").hide();
+                            $('#myModalEmailContent').html(data);
+                            $('#myModalEmail').modal(options);
+                            $('#myModalEmail').modal('show');
+
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                }
+            }
+        }
+    })
+</script>
+<script>
+    $(function () {
+        $('#cmp_id').change(function () {
+            debugger;
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "eComSR940")',
+
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                   
+                },
+            });
+        });
+
+    });
+</script>

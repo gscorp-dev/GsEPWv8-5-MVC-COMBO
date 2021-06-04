@@ -1,0 +1,139 @@
+﻿@model GsEPWv8_5_MVC.Model.ETAInquiryModel
+
+@{
+    var Ordercount = Model.LstIBETAInqdetail.Count;
+    int TOTCTN = 0;
+    int TOTQTY = 0;
+    decimal TOTWGT = 0;
+    decimal TOTCUBE = 0;
+
+}
+@for (int j = 0; j < Model.LstIBETAInqdetail.Count(); j++)
+{
+    var WGT_amt = (Model.LstIBETAInqdetail[j].TOT_WGT);
+    var CUBE_amt = (Model.LstIBETAInqdetail[j].TOT_CUBE);
+    var CTN_amt = (Model.LstIBETAInqdetail[j].TOT_CTN);
+    var QTY_amt = (Model.LstIBETAInqdetail[j].TOT_QTY);
+    TOTCTN = TOTCTN + CTN_amt;
+    TOTQTY = TOTQTY + QTY_amt;
+    decimal TOTWGTAMT = WGT_amt;
+    decimal TOTCUBEAMT = CUBE_amt;
+    if (TOTWGTAMT > 0)
+    {
+        TOTWGT = TOTWGT + TOTWGTAMT;
+    }
+    if (TOTCUBEAMT > 0)
+    {
+        TOTCUBE = TOTCUBE + TOTCUBEAMT;
+    }
+}
+
+<div class="gridSummary">
+    <table>
+        <tr>
+            <td style="width:10%;text-align:center;">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label id="lblhdrcount" class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                TOT CTN:
+            </td>
+            <td>
+                <input id="txtAlocQty" type="text" name="AlocQty" class="form-control" value="@TOTCTN" style="font-size:16px;font-weight: 900;font-weight: 900;font-family: verdana;color: red;">
+            </td>
+            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-left:30px;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                TOT QTY:
+            </td>
+            <td>
+                <input id="txtAlocQty" type="text" name="AlocQty" class="form-control" value="@TOTQTY" style="font-size:16px;font-weight: 900;font-weight: 900;font-family: verdana;color: red;">
+            </td>
+            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left; padding-left:36px; padding-right: 10px;font-family:Verdana;font-weight:200;">
+                TOT WGT:
+            </td>
+            <td>
+                <input id="txtAlocQty" type="text" name="AlocQty" class="form-control" value="@TOTWGT.ToString("0.000")" style="font-size:16px;font-weight: 900;font-weight: 900;font-family: verdana;color: red;">
+            </td>
+            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left; padding-left:36px; padding-right: 10px;font-family:Verdana;font-weight:200;">
+                TOT CUBE:
+            </td>
+            <td>
+                <input id="txtAlocQty" type="text" name="AlocQty" class="form-control" value="@TOTCUBE.ToString("0.000")" style="font-size:16px;font-weight: 900;font-weight: 900;font-family: verdana;color: red;">
+            </td>
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box box-primary">
+    <br />
+    <table id="ParGrdETAInquiryRpt" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="width:3%;">Cmp_Id</th>
+                <th class="grid_header_backcolor" style="width:6%;">IB Doc Id</th>
+                <th class="grid_header_backcolor" style="width:6%;">Doc Dt</th>
+                <th class="grid_header_backcolor" style="width:6%;">ETA Dt</th>
+                <th class="grid_header_backcolor" style="width:5%;">Status</th>
+                <th class="grid_header_backcolor" style="width:7%;">Ord Type</th>
+                <th class="grid_header_backcolor" style="width:11%;">Cont Id</th>
+                <th class="grid_header_backcolor" style="width:7%;">Ref No</th>
+                <th class="grid_header_backcolor" style="width:9%;">Rcvd From</th>
+                <th class="grid_header_backcolor" style="width:15%;">Note</th>
+                <th class="grid_header_backcolor" style="width:5%;">TOT CTN</th>
+                <th class="grid_header_backcolor" style="width:5%;">TOT QTY</th>
+                <th class="grid_header_backcolor" style="width:5%;">TOT WGT</th>
+                <th class="grid_header_backcolor" style="width:5%;">TOT CUBE</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.LstIBETAInqdetail.Count; i++)
+            {
+                <tr class="row-select">
+                    <td style="font-size:12px; color:black;font-weight:bold; text-align:right;">@Model.LstIBETAInqdetail[i].CMP_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].IB_DOC_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].IB_DOC_DT.ToString("MM/dd/yyyy")</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].ETA_DT</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].STATUS</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].ORDR_TYPE</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].CNTR_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].REQ_NUM</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].VEND_NAME</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBETAInqdetail[i].NOTE</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBETAInqdetail[i].TOT_CTN</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBETAInqdetail[i].TOT_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBETAInqdetail[i].TOT_WGT</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBETAInqdetail[i].TOT_CUBE</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+
+    $('#ParGrdETAInquiryRpt').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+</script>
+
+
+
+
+
+
+

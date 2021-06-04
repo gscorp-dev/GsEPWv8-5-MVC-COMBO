@@ -1,0 +1,273 @@
+﻿@model  GsEPWv8_5_MVC.Model.OutboundInqModel
+
+@{
+    ViewBag.Title = "OutboundInq";
+
+
+}
+<style>
+    div#ajaxLoadingLoadStylePartial {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<div id="ajaxLoadingLoadStylePartial" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+<table id="GridStyleListPartial" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="width:10%">Select</th>
+                    <th class="grid_header_backcolor" style="width:20%">Style</th>
+                    <th class="grid_header_backcolor" style="width:20%">Color</th>
+                    <th class="grid_header_backcolor" style="width:20%">Size</th>
+                    <th class="grid_header_backcolor" style="width:30%">Description</th>
+
+                </tr>
+            </thead>
+            <tbody style="background-color:white">
+                @for (int i = 0; i < Model.LstItmDtls.Count; i++)
+                {
+                    <tr>
+                        <td style="width:10%">
+                            <input class="checkboxPartial" name="Partial" type="checkbox" value="@Model.LstItmDtls[i].itm_num" data-id1="@Model.LstItmDtls[i].itm_num" data-id2="@Model.LstItmDtls[i].itm_color" data-id3="@Model.LstItmDtls[i].itm_size" data-id4="@Model.LstItmDtls[i].itm_name" data-id5="@Model.LstItmDtls[i].avail_qty" data-id6="@Model.LstItmDtls[i].itm_code"  />
+                        </td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstItmDtls[i].itm_num</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstItmDtls[i].itm_color</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstItmDtls[i].itm_size</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstItmDtls[i].itm_name</td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+<div class="col-xs-2">
+
+</div>
+
+
+<script>
+    $('#GridStyleListPartial').DataTable({
+        "paging": true,
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": false,
+        "info": false,
+        "autoWidth": true
+    });
+    $('#GridStyleListPartial_paginate').hide();
+</script>
+
+<script type="text/javascript">
+    $("input[name='Partial']").on('change', function () {
+        $("input[name='Partial']").not(this).prop('checked', false);
+    });
+</script>
+<script>
+    $('#GridStyleListPartial').on('click', 'tr', function (event) {
+        debugger
+        $("#ajaxLoadingLoadStylePartial").show();
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var SelectedRow1 = [];
+        var checkboxIDArray1 = [];
+        var SelectedRow2 = [];
+        var checkboxIDArray2 = [];
+        var SelectedRow3 = [];
+        var checkboxIDArray3 = [];
+        var SelectedRow4 = [];
+        var checkboxIDArray4 = [];
+        var SelectedRow5 = [];
+        var checkboxIDArray5 = [];
+        var numberOfCheckboxes = $("input[name='Partial']:checked").length;
+        $("input[name='Partial']:checked").each(function () {
+                var check = $(this);
+                var check1 = $(this);
+                var check2 = $(this);
+                var check3 = $(this);
+                var check4 = $(this);
+                var check5 = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('data-id1'));
+                    SelectedRow.push(check.val());
+                    checkboxIDArray1.push(check.attr('data-id2'));
+                    SelectedRow1.push(check1.val());
+                    checkboxIDArray2.push(check2.attr('data-id3'));
+                    SelectedRow2.push(check2.val());
+                    checkboxIDArray3.push(check3.attr('data-id4'));
+                    SelectedRow3.push(check3.val());
+                    checkboxIDArray4.push(check4.attr('data-id5'));
+                    SelectedRow4.push(check4.val());
+                    checkboxIDArray5.push(check5.attr('data-id6'));
+                    SelectedRow5.push(check5.val());
+
+                }
+            });
+        var Count = $("input[name='Partial']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == '')
+                        SelectdID = v;
+                    else {
+                        SelectdID = SelectdID + ',' + v;
+                    }
+                });
+                var SelectdID1 = '';
+                $.each(checkboxIDArray1, function (i, v) {
+
+                    if (SelectdID1 == '')
+                        SelectdID1 = v;
+                    else
+                        SelectdID1 = SelectdID1 + ',' + v;
+
+                });
+                var SelectdID2 = '';
+                $.each(checkboxIDArray2, function (i, v) {
+
+                    if (SelectdID2 == '')
+                        SelectdID2 = v;
+                    else
+                        SelectdID2 = SelectdID2 + ',' + v;
+
+                });
+                var SelectdID3 = '';
+                $.each(checkboxIDArray3, function (i, v) {
+
+                    if (SelectdID3 == '')
+                        SelectdID3 = v;
+                    else
+                        SelectdID3 = SelectdID3 + ',' + v;
+
+                });
+                var SelectdID4 = '';
+                $.each(checkboxIDArray4, function (i, v) {
+
+                    if (SelectdID4 == '')
+                        SelectdID4 = v;
+                    else
+                        SelectdID4 = SelectdID4 + ',' + v;
+
+                });
+                var SelectdID5 = '';
+                $.each(checkboxIDArray5, function (i, v) {
+
+                    if (SelectdID5 == '')
+                        SelectdID5 = v;
+                    else
+                        SelectdID5 = SelectdID5 + ',' + v;
+
+                });
+                $('#Itmdtl').val(SelectdID);
+                $('#itm_color').val(SelectdID1);
+                $('#itm_size').val(SelectdID2);
+                $('#itm_name').val(SelectdID3);
+                $("#avlqty").val(SelectdID4);
+                $("#itm_code").val(SelectdID5);
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_Itmcode = SelectdID5;
+                var p_str_style = SelectdID;
+                var p_str_color = SelectdID1;
+                var p_str_size = SelectdID2
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/OutboundInq/LoadAvailQty")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_Itmcode": p_str_Itmcode, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size
+                    },
+
+                    dataType: "json",
+                    success: function (e) {
+                        debugger
+                        $.each(e, function () {
+                            $("#avlqty").val(this.avail_qty);
+                            $("#due_qty").val((this.avail_qty) - (this.due_qty));
+                            $("#SRqty").val(this.due_qty);
+                            $("#shiplength").val(this.length);
+                            $("#shipwidth").val(this.width);
+                            $("#shipheight").val(this.depth);
+                            $("#shipweight").val(this.wgt);
+                            $("#shipcube").val(this.cube);
+                            $("#shipppk").val(this.ctn_qty);
+                            $('#ord_qty').focus();
+
+                        });
+                    },
+
+                });
+                $('#myModalStyleList').modal('hide');
+                $('#ord_qty').focus();
+             
+            }
+            else {
+
+                $("input:Partial").each(function () {
+                    var check = $(this);
+                    if (check.is(':checked')) {
+                        this.checked = !this.checked;
+                    }
+                });
+
+            }
+             
+
+    });
+</script>

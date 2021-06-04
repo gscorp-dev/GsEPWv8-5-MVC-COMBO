@@ -1,0 +1,115 @@
+﻿@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+@{
+    decimal l_dbl_tot_bill_amount = 0;
+    int l_int_tot_ctns = 0;
+    decimal l_dbl_tot_cube = 0;
+    for (int j = 0; j < Model.ListSaveSTRGBillDetails.Count; j++)
+    {
+        l_dbl_tot_bill_amount = l_dbl_tot_bill_amount + (Model.ListSaveSTRGBillDetails[j].TotAmount);
+        l_int_tot_ctns = l_int_tot_ctns + (Model.ListSaveSTRGBillDetails[j].TotalCtns);
+        l_dbl_tot_cube = l_dbl_tot_cube + (Model.ListSaveSTRGBillDetails[j].TotCube);
+    }
+    var l_str_tot_bill_amount = l_dbl_tot_bill_amount.ToString("F2");
+}
+
+    <div class="box-body">
+        <div>
+            <table>
+                <tr>
+                    <td style="width: 15%; text-align:right">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Ctn(s):
+                        </span>
+                    </td>
+                    <td style="width: 15%;">
+                        <label class="totalCount" style="text-align:left">
+                            @l_int_tot_ctns
+                        </label>
+                    </td>
+                    <td style="width: 15%;text-align:right;">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Cube:
+                        </span>
+                    </td>
+                    <td style="width: 15%;text-align:left">
+                        <label class="totalCount" style="text-align:left">
+                            @l_dbl_tot_cube
+                        </label>
+                    </td>
+                    <td style="width: 25%;">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Invoice Amount (  Excluding IBS ):
+                        </span>
+                    </td>
+                    <td style="width:15%;">
+                        <label class="totalCount" style="text-align:left">
+                            $@l_str_tot_bill_amount
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div>
+            <table id="GrdBillRegenerate" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Select All&nbsp<input class="checkbox" id="CheckinoutAll" name="tblcheckbox5" type="checkbox" /></th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">IBDOC#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">IB Date</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cont ID</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Lot ID</th>
+
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cust PO</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Ctns</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cube</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:12%;">List Price</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:12%;">Total Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.ListSaveSTRGBillDetails.Count; i++)
+                    {
+                        var bill_amt = (Model.ListSaveSTRGBillDetails[i].TotAmount);
+                        decimal l_dec_bill_amnt = bill_amt;
+                        var tot_amnt = l_dec_bill_amnt.ToString("F2");
+                        var listprice = (Model.ListSaveSTRGBillDetails[i].list_price);
+                        decimal l_dec_list_price = listprice;
+                        var tot_list_price = l_dec_list_price.ToString("F2");
+                        <tr style="background-color:white;">
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox5" type="checkbox" value="@Model.ListSaveSTRGBillDetails[i].lot_id" /></td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">
+                                <a href="javascript:void(0);" class="anchorlotDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.ListSaveSTRGBillDetails[i].lot_id" data-id1="@Model.ListSaveSTRGBillDetails[i].ib_doc_id">@Model.ListSaveSTRGBillDetails[i].ib_doc_id</a>
+                            </td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListSaveSTRGBillDetails[i].RcvdDate</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListSaveSTRGBillDetails[i].cont_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListSaveSTRGBillDetails[i].lot_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListSaveSTRGBillDetails[i].po_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListSaveSTRGBillDetails[i].TotalCtns</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;width:60px;">@Model.ListSaveSTRGBillDetails[i].TotCube</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;width:60px;">@tot_list_price</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;width:60px;">@tot_amnt</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+<script>
+
+    $('#CheckinoutAll').click(function (event) {
+        if ($(this).is(":checked")) {
+            $('.checkbox').each(function () {
+                $(this).prop("checked", true);
+            });
+        }
+        else {
+            $('.checkbox').each(function () {
+                $(this).prop("checked", false);
+            });
+        }
+    });
+</script>

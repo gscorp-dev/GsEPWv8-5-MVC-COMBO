@@ -1,0 +1,739 @@
+﻿@model GsEPWv8_4_MVC.Model.StockChangeModel
+@{
+    var Ordercount = Model.ListGetItemMoveDetails.Count;
+    var TotalNumberoflst = Model.ListGetItemMoveDetails.Count();
+}
+@*//CR-3PL_MVC_IB_2018-03-13-003 Added By Meera For Container Upload*@
+
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: verdana;
+        font-size: 12px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+</style>
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .sweet-alert {
+        background-color: #8cd6f7; /*//CR20180531 Added by nithya*/ /*#f1e9e9;*/
+        width: 478px;
+        padding: 17px;
+        border-radius: 5px;
+        text-align: center;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -256px;
+        margin-top: -200px;
+        overflow: hidden;
+        display: none;
+        z-index: 2000;
+    }
+
+    .hdrgridItemMove {
+        height: 49px;
+        background: #d2d6de;
+        padding-top: 10px;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+@Html.HiddenFor(model => model.itm_code)
+@Html.HiddenFor(model => model.row_ctn)
+@Html.HiddenFor(model => model.move_ctns)
+@Html.HiddenFor(model => model.Toloc)
+
+<input type="hidden" id="one" />
+
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+
+<center>
+
+    <div class="box-body" style="display:none">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Cmp Id</label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl", @style = "background-color:lightyellow;" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Whs</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.TextBoxFor(model => model.whs_id, new { @class = "form-control txtlbl", @id = "WhsId", @maxlength = "25", @style = "font-size: 12px;font-family: verdana;" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Style</label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Color</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl", @maxlength = "25", @style = "font-size: 12px;font-family: verdana;" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;">
+                        <label class="Lblmanual">Size</label>
+                    </div>
+                    <div class="col-xs-1">
+                        @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <fieldset>
+                        <legend style="text-align: left;">Total Pallet Move</legend>
+                        <div class="col-xs-2">
+                            <table>
+                                <tr>
+                                    <td style="font-size: 1.2em;">
+                                        <input type="radio" id="TotalMove" value="TotalMove" name="radio1" />
+                                        <b> Total Move</b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-xs-2" style="text-align: right;">
+                            <label class="Lblmanual">Tot Of Ctns</label>
+                        </div>
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(model => model.tot_ctn, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                        </div>
+                        <div class="col-xs-2" style="width: 8%;text-align: right;">
+                            <label class="Lblmanual">Tot Of Qty</label>
+                        </div>
+                        <div class="col-xs-3">
+                            @Html.TextBoxFor(model => model.tot_qty, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <br />
+            <div id="PartialMove">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <fieldset>
+                            <legend style="text-align: left;">Selected Carton Move</legend>
+                            <div class="col-xs-2">
+                                <table>
+                                    <tr>
+                                        <td style="font-size: 1.2em;">
+                                            <input type="radio" id="PartialMove" value="PartialMove" name="radio2" checked />
+                                            <b>Partial Move</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Row Ctns</label>
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(model => model.row_ctn, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Move Ctns</label>
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(model => model.move_ctns, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Move Qty</label>
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.TextBoxFor(model => model.move_qty, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-1">
+                                <button type="button" id="btnUncheck" class="btn_search" style="font-size: 12px;">UnCheck All</button>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Itemgrid" class="box-header">
+        <div class="row" style="background-color:lightgrey">
+            <div style="width:100%;" class="container">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-5 col-sm-5 col-xs-5" style="text-align:right; padding-top:5px">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            Total Records:
+                        </span>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-3" style="text-align:left; padding-top:5px">
+                        <label class="totalCount" style="text-align:left">
+                            @Ordercount
+                        </label>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="text-align:left">
+
+                        <button type="button" id="btnItemSave" class="btn-Close" style="background-color: #00c0ef;padding-left:1%">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div id="hdrgridItemMove" class="container-fluid">
+            <table id="GridItemMove" class="table table-bordered table-striped table-responsive" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:4%">Sel</th>
+                        <th class="grid_header_backcolor" style="width:12%">IBDocId</th>
+                        <th class="grid_header_backcolor" style="width:12%">FmLoc</th>
+                        <th class="grid_header_backcolor" style="width:12%">Totctns</th>
+                        <th class="grid_header_backcolor" style="width:12%">Ppk</th>
+                        <th class="grid_header_backcolor" style="width:12%">TotQty</th>
+                        <th class="grid_header_backcolor" style="width:12%">ToLoc</th>
+                        <th class="grid_header_backcolor" style="width:12%">Move Ctn(s)</th>
+                        <th class="grid_header_backcolor" style="width:12%">Move Qty</th>
+
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.ListGetItemMoveDetails.Count; i++)
+                    {
+                        int line = i + 1;
+                        int ppk = (Model.ListGetItemMoveDetails[i].pkg_qty);
+                        //string chkCol = Model.ListGetItemMoveDetails[i].colChk;
+                        <tr id="GridID_@i" style="background-color:white;">
+                            @*@if (chkCol == "false")
+                                    {
+                                <td id="chkstk" id2="@Model.ListGetItemMoveDetails[i].LineNum" style="text-align:center"><input id="getcheck" class="checkbox" name="tblcheckbox5" type="checkbox" value="0" /></td>
+                                    }
+                                    else
+                                    {
+                                <td id="chkstk" id2="@Model.ListGetItemMoveDetails[i].LineNum" style="text-align:center"><input id="getcheck" class="checkbox" name="tblcheckbox5" type="checkbox" value="1" checked /></td>
+                                    }*@
+                            <td id="chkboxclick" id1="@line" id2="@ppk" style="text-align:center; width:4%">
+                                <input id="check_@i" name="attribute" class="attribute" type="checkbox" />
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                @Model.ListGetItemMoveDetails[i].ib_doc_id
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                @Model.ListGetItemMoveDetails[i].loc_id
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                @Model.ListGetItemMoveDetails[i].tot_ctns
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                @Model.ListGetItemMoveDetails[i].pkg_qty
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                @Model.ListGetItemMoveDetails[i].tot_qty
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                @Html.TextBoxFor(model => model.ListGetItemMoveDetails[i].to_loc, new { @class = "to_loc TableTextBox", @id = "to_loc_" + i, @data = @line })
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align :left; width:12%">@Html.TextBoxFor(model => model.ListGetItemMoveDetails[i].move_ctns, new { @class = " mvctn TableTextBox numericOnly", @id = "mvctn_" + i, @data = @line })</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align :left; width:12%">
+                                @Html.TextBoxFor(model => Model.ListGetItemMoveDetails[i].move_qty, new { @class = "mvqty TableTextBox", @id = "mvqty_" + i, @disabled = "true" })
+                            </td>
+
+                            <!--Display None - Region-->
+                            <td style="font-size:12px; color:black; font-weight:bold;display:none;">
+                                @Model.ListGetItemMoveDetails[i].rcvd_dt
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold;display:none;">
+                                @Model.ListGetItemMoveDetails[i].cont_id
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold;display:none;">
+                                @Model.ListGetItemMoveDetails[i].lot_id
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left; display:none;">
+                                @Model.ListGetItemMoveDetails[i].palet_id
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left; display:none;">
+                                @Model.ListGetItemMoveDetails[i].po_num
+                            </td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].tot_ctns, new { @class = "tot_ctns", @id = "tot_ctns_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].tot_ctns</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].pkg_qty, new { @class = "pkg_qty", @id = "pkg_qty_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].pkg_qty</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].tot_qty, new { @class = "tot_qty", @id = "tot_qty_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].tot_qty</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].po_num, new { @class = "po_num", @id = "po_num_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].po_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].cont_id, new { @class = "cont_id", @id = "cont_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].cont_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].ib_doc_id, new { @class = "ib_doc_id", @id = "ib_doc_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].ib_doc_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].lot_id, new { @class = "lot_id", @id = "lot_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].lot_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].palet_id, new { @class = "palet_id", @id = "palet_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].palet_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].loc_id, new { @class = "loc_id", @id = "loc_id_" + i, @style = "width:1px;text-align:right;" })@Model.ListGetItemMoveDetails[i].loc_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].rcvd_dt, new { @class = "rcvd_dt", @id = "rcvd_dt_" + i, @style = "width:1px;text-align:left;" })@Model.ListGetItemMoveDetails[i].rcvd_dt</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.Hidden("Count_Values", TotalNumberoflst)
+        </div>
+    </div>
+    <div id="hdrgridItemMoveshow"></div>
+
+
+    <div id='myModalDetailsPopUp' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 250%;">
+                <div id='myModalDetailsPopUpDetails' style="width: 100%; height: 650px;"></div>
+            </div>
+        </div>
+
+    </div>
+</center>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script type="text/javascript">
+    //$("#chkboxclick").prop("disabled", true);
+    $(".to_loc").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/StockChange/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#to_loc").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+<script>
+
+    var p_str_check_value = false;
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+    $('#GridItemMove').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+    });
+    $(".to_loc").focusout(function () {
+        debugger
+
+        var $buttonClicked = $(this);
+        var IDLINE = $buttonClicked.attr('data');
+        var tot = parseFloat(IDLINE) - 1;
+        var to_loc = $("#to_loc_" + tot).val();
+        var frm_loc = $("#loc_id_" + tot).val();
+        $.ajax({
+            type: "GET",
+            url: "/StockChange/SameLocID",
+            data: {
+                "frm_loc": frm_loc, "to_loc": to_loc
+            },
+            dataType: 'html',
+            success: function (e) {
+                if (e == 1) {
+                    sweetAlert("", "New Loc Id Can Not Be Same as The Original Loc Id", "");
+                    //return false;
+                }
+            },
+        })
+    });
+    $(".mvctn").blur(function () {
+        //alert('hit')
+        debugger
+        var QTYTEXT = $(this).val();
+        //var frm_loc = $("#frm_loc").val();
+        var $buttonClicked = $(this);
+        var IDLINE = $buttonClicked.attr('data');
+        var tot = parseFloat(IDLINE) - 1;
+        var MOVECTN = $("#mvctn_" + tot).val();
+        var MOVEQty = $("#mvqty_" + tot).val();
+        var TotQty = $("#tot_qty_" + tot).val();
+        var to_loc = $("#to_loc_" + tot).val();
+        var frm_loc = $("#loc_id_" + tot).val();
+        if (to_loc == "" || to_loc == null) {
+            sweetAlert("", "Please Select the Loc Id", "");
+            return false;
+        }
+
+        var IDLINEPPk = $("#pkg_qty_" + tot).val();
+        var sum_iv = parseInt(IDLINEPPk) * parseInt(MOVECTN);
+        var sum_i = parseInt(sum_iv);
+        $("#mvqty_" + tot).val(sum_i);
+        var newamount = $("#mvqty_" + tot).val(sum_i);
+        //if (parseInt(TotQty) > parseInt(MOVEQty)) {
+        //    sweetAlert("", "Move Qty Greater than Tot Qty", "");
+        //    return false;
+        //}
+        if (parseInt(sum_i) != 0) {//|| parseFloat(ITMTEXT) != 0
+            $("#check_" + tot).prop('checked', true);
+            $("#check_" + tot).click();
+            p_str_check_value = true;
+            $('#one').val(p_str_check_value);
+        }
+        else {
+            $("#check_" + tot).prop('checked', false);
+            $("#check_" + tot).click();
+            p_str_check_value = false;
+            $('#one').val(p_str_check_value);
+        }
+    });
+
+    $('#GridItemMove td[id="chkboxclick"]').click(function (event) {
+        debugger
+        var LINENUMBER = $(this).attr('id1');//CR-20180514-001 added by nithya
+        var Minus = LINENUMBER - 1;
+        var ImagesNewRowNumber = $("#Count_Values").val();
+        var cmpId = $("#cmp_id").val();
+        //var ibdocId = $("#IbdocId").val();
+        ////var rcvdate = $("#date").val();
+        //var paletId = $("#lot_num").val();
+        //var lot_id = $("#LotId").val();
+
+        var WhsId = $("#WhsId").val();
+        var itm_num = $("#Itmdtl").val();
+        var itm_color = $("#itm_color").val();
+        var itm_size = $("#itm_size").val();
+        var Itemcode = $("#itm_code").val();
+        var _imagesCount = 0;
+        for (var i = Minus; i < LINENUMBER; i++) {
+            var p_str_check_value = $('#one').val();
+
+            var MoveQty = $("#mvqty_" + i).val();
+            var MoveCtn = $("#mvctn_" + i).val();
+            var tot_ctns = $("#tot_ctns_" + i).val();
+            var l_str_ppk = $("#pkg_qty_" + i).val();
+            var tot_qty = $("#tot_qty_" + i).val();
+            var to_loc = $("#to_loc_" + i).val();
+            var po_num = $("#po_num_" + i).val();
+            var cont_id = $("#cont_id_" + i).val();
+            var ibdocId = $("#ib_doc_id_" + i).val();
+            var paletId = $("#palet_id_" + i).val();
+            var lot_id = $("#lot_id_" + i).val();
+            var frm_loc = $("#loc_id_" + i).val();
+            var rcvdate = $("#rcvd_dt_" + i).val();
+
+            var p_str_RowNo = $(this).attr('id1');
+            if (p_str_check_value == "true") {
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Content("~/StockChange/UpdItemTempDetails ")',
+                    data: {
+                        "cmpId": cmpId,
+                        "ibdocId": ibdocId,
+                        "rcvdate": rcvdate,
+                        "paletId": paletId,
+                        "lot_id": lot_id, "frm_loc": frm_loc, "WhsId": WhsId, "itm_num": itm_num, "itm_color": itm_color,
+                        "itm_size": itm_size, "MoveQty": MoveQty, "MoveCtn": MoveCtn, "Itemcode": Itemcode,
+                        "l_str_ppk": l_str_ppk, "tot_ctns": tot_ctns, "tot_qty": tot_qty, "to_loc": to_loc, "po_num": po_num,
+                        "cont_id": cont_id
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        debugger
+                        if (e == 1) {
+                            sweetAlert("", "New Loc Id Can Not Be Same as The Original Loc Id", "");
+                            return false;
+                        }
+                        else if (e == 2) {
+                            sweetAlert("", "Move Qty Greater than Tot Qty", "");
+                            return false;
+                        }
+                        else {
+                            $("#check_" + Minus).prop('checked', true);
+                            $("#GridID_" + Minus).css("background-color", "#5ae77e");
+                        }
+                    },
+
+                })
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Content("~/StockChange/UpdItemTempDetails")',
+                    data: {
+                        "cmpId": cmpId,
+                        "ibdocId": ibdocId,
+                        "rcvdate": rcvdate,
+                        "paletId": paletId,
+                        "lot_id": lot_id, "frm_loc": frm_loc, "WhsId": WhsId, "itm_num": itm_num, "itm_color": itm_color,
+                        "itm_size": itm_size, "MoveQty": MoveQty, "MoveCtn": MoveCtn, "Itemcode": Itemcode,
+                        "l_str_ppk": l_str_ppk, "tot_ctns": tot_ctns, "tot_qty": tot_qty, "to_loc": to_loc, "po_num": po_num,
+                        "cont_id": cont_id
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        debugger
+                        if (e == 1) {
+                            sweetAlert("", "New Loc Id Can Not Be Same as The Original Loc Id", "");
+                            return false;
+                        }
+                        else if (e == 2) {
+                            sweetAlert("", "Move Qty Greater than Tot Qty", "");
+                            return false;
+                        }
+                        else {
+                            $("#check_" + Minus).prop('checked', false);
+                            $("#GridID_" + Minus).css("background-color", "#5ae77e");
+                        }
+                        //$('#GridVasEntryDtls tr[id="GridID_"]' + Minus).css('background-color', 'white');
+                        //$('#qty_' + i).val(0);//CR-20180514-001 commented by nithya
+                        //$('#amt_' + i).val(0.00);
+                        //$('#Note_' + i).val('');
+                    },
+
+                })
+            }
+        }
+    });
+    $('#GridItemMove td[id="chkstk"]').click(function () {
+        debugger
+        var Checkvalue = ($('#getcheck').is(":checked"));
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_line_num = $(this).attr('id2');
+        var p_str_loc_id = $('#new_loc_id').val();
+        //alert(Checkvalue)
+        //if (Checkvalue == true)
+        var Rownumber = 0;
+        Rownumber = $("input[name='tblcheckbox5']:checked").length;
+        $('#row_ctn').val(Rownumber);
+        $('#move_ctns').val(Rownumber);
+        //{
+        if (p_str_loc_id == "") {
+            swal("", "Please Enter the LocId.", "");
+            $('#new_loc_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: "/StockChange/GetGridToLoc",
+                data: {
+                    "p_str_line_num": p_str_line_num, "p_str_loc_id": p_str_loc_id
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $('#hdrgridItemMove').hide();
+                    $('#hdrgridItemMoveshow').html("");
+                    $('#hdrgridItemMoveshow').html(e);
+                },
+            })
+        }
+    });
+
+
+    $("#TotalMove").click(function () {
+        debugger
+        var p_str_IBdoc_id = $('#IbdocId').val();
+        var p_str_line_num = $(this).attr('id2');
+        var p_str_loc_id = $('#new_loc_id').val();
+        var Rownumber = 0;
+        Rownumber = $("input[name='tblcheckbox5']:checked").length;
+        $('#row_ctn').val(Rownumber);
+        $('#move_ctns').val(Rownumber);
+        if (p_str_loc_id == "") {
+            swal("", "Please Enter the LocId.", "");
+            $('#new_loc_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: "/StockChange/DashboardTotalMoveGridToLoc",
+                data: {
+                    "p_str_IBdoc_id": p_str_IBdoc_id, "p_str_loc_id": p_str_loc_id
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $('#hdrgridItemMove').hide();
+                    $('#hdrgridItemMoveshow').html("");
+                    $('#hdrgridItemMoveshow').html(e);
+                },
+            })
+        }
+    })
+    $("#btnUncheck").click(function () {
+        var p_str_IBdoc_id = $('#IbdocId').val();
+        var p_str_line_num = $(this).attr('id2');
+        var p_str_loc_id = $('#new_loc_id').val();
+
+
+        $.ajax({
+            type: "GET",
+            url: "/StockChange/UncheckAll",
+            data: {
+                "p_str_IBdoc_id": p_str_IBdoc_id
+            },
+            dataType: 'html',
+            success: function (e) {
+                $('#hdrgridItemMove').hide();
+                $('#hdrgridItemMoveshow').html("");
+                $('#hdrgridItemMoveshow').html(e);
+            },
+        })
+
+    })
+    $("#btnItemSave").click(function () {
+        debugger
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_ibdocid = $('#IbdocId').val();
+        var p_str_ibdocdt = $('#date').val();
+        var p_str_lot_no = $('#lot_num').val();
+        var p_str_lot_id = $('#LotId').val();
+        var p_str_whs_id = $('#WhsId').val();
+        var p_str_frm_loc = $('#frm_loc').val();
+        var p_str_loc_id = $('#new_loc_id').val();
+        var p_str_tot_ctn = $('#tot_ctn').val();
+        var p_str_tot_qty = $('#tot_qty').val();
+        var p_str_row_ctn = $('#row_ctn').val();
+        var p_str_move_ctns = $('#move_ctns').val();
+        var p_str_move_qty = $('#move_qty').val();
+        var var_name = $('input[name=radio1]:checked').val();
+        var var_name1 = $('input[name=radio2]:checked').val();
+        var Itemcode = $("#itm_code").val();
+
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (p_str_lot_no == "") {
+            sweetAlert("", "Please Enter Pallet Id", "");
+            $('#IbdocId').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (p_str_loc_id == "") {
+            sweetAlert("", "Please Enter Loc Id", "");
+            $('#IbdocId').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        var Count = $("input[name='tblcheckbox5']:checked").length;
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/StockChange/SaveItemMove")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_ibdocid": p_str_ibdocid,
+                "p_str_ibdocdt": p_str_ibdocdt,
+                "p_str_lot_no": p_str_lot_no, "p_str_lot_id": p_str_lot_id, "p_str_whs_id": p_str_whs_id, "p_str_frm_loc": p_str_frm_loc,
+                "p_str_loc_id": p_str_loc_id, "p_str_tot_ctn": p_str_tot_ctn, "p_str_tot_qty": p_str_tot_qty, "p_str_row_ctn": p_str_row_ctn
+                , "p_str_move_ctns": p_str_move_ctns, "p_str_move_qty": p_str_move_qty, "var_name": var_name, "var_name1": var_name1
+            },
+            dataType: 'html',
+            success: function (e) {
+                $("#ajaxLoading").hide();
+                swal({
+                    title: "",
+                    text: "Item Move Saved Successfully",
+                    type: "",
+                    showCancelButton: false,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Ok",
+                    closeOnConfirm: true
+                },
+
+                function () {
+                    setTimeout(function () {
+                        $.ajax({
+                            type: "get",
+                            url: "/StockChange/DashboardStkChangeItemdtl",
+                            data: {
+                                "p_str_cmp_id": p_str_cmp_id,
+                                "Itemcode": Itemcode
+                            },
+                            datatype: 'html',
+                            success: function (e) {
+                                debugger
+                                $("#ajaxLoading").hide();
+                                $('#Itemgrid').html("");
+                                $('#Itemgrid').html(e);
+                            },
+                        })
+                    });
+                });
+            }
+        });
+    });
+
+</script>

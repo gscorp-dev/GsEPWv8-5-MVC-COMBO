@@ -1,0 +1,6 @@
+cmp_id,cntr_id,line_num,po_num,itm_num,itm_color,itm_size,itm_name,ordr_qty,ctn_qty,ordr_ctn,loc_id,st_rate_id,io_rate_id,ctn_len,ctn_width,ctn_hgt,ctn_cube,ctn_wgt,note
+CIG,TCNU-4554650             ,1,BI-17433            ,MCS-2001            ,-,-,-,1824,48,38,FLOOR,STRG-1,INOUT-1,11,9,25,1.43,22,-
+CIG,TCNU-4554650             ,2,BI-17433            ,MCS-4001            ,-,-,-,6000,48,125,FLOOR,STRG-1,INOUT-1,20,13,19,2.86,26,-
+CIG,TCNU-4554650             ,3,BI-17433            ,MCS-4002            ,-,-,-,6000,48,125,FLOOR,STRG-1,INOUT-1,20,13,19,2.86,26,-
+CIG,TCNU-4554650             ,4,BI-17433            ,MCS-8001            ,-,-,-,9600,48,200,FLOOR,STRG-1,INOUT-1,23,14,20,3.73,26,-
+CIG,TCNU-4554650             ,5,BI-17433            ,MCS-8002            ,-,-,-,9600,48,200,FLOOR,STRG-1,INOUT-1,23,14,20,3.73,26,-

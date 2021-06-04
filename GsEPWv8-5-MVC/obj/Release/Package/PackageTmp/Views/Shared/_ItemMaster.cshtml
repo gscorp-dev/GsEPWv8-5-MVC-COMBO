@@ -1,0 +1,392 @@
+﻿@model GsEPWv8_5_MVC.Model.ItemMasterModel
+@{
+    var Ordercount = Model.ListItemMaster.Count;
+}
+
+@Html.HiddenFor(model => model.itm_code)
+
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+
+            <td style="width:105px;"></td>
+            <td style="width:105px;"></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<div class="box-body">
+    <div class="row">
+        <div class="modal-body" style="background:Scroll; margin-top:-14px; margin-left:-10px;">
+
+            <table id="example1" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th style="display:none" class="grid_header_backcolor">Cust Id</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor" style="width: 300px;">Desc</th>
+                        <th class="grid_header_backcolor">Action</th>
+                        <th class="grid_header_backcolor">Sts</th>
+                        <th class="grid_header_backcolor">CTN DIMS</th>
+                        <th class="grid_header_backcolor">Wgt</th>
+                        <th class="grid_header_backcolor">CTN PPK</th>
+
+                        <th class="grid_header_backcolor">PIECE DIMS</th>
+                        <th class="grid_header_backcolor">Wgt</th>
+
+                        <th class="grid_header_backcolor">INNER DIMS</th>
+                        <th class="grid_header_backcolor">Wgt</th>
+                        <th class="grid_header_backcolor">Inner-PPK</th>
+                        <th class="grid_header_backcolor">BIN ID</th>
+                        <th class="grid_header_backcolor">BIN TYPE</th>
+                        <th class="grid_header_backcolor">BIN-DIMS</th>
+                        <th class="grid_header_backcolor">Wgt</th>
+                        <th class="grid_header_backcolor">BIN-PPK</th>
+
+                        @if (ViewBag.Status == "A")
+                        {
+                            <th><button class="btn btn-success" onclick="return Send();">Add</button></th>
+                        }
+                        @if (ViewBag.Status == "U")
+                        {
+                            <th><button class="btn btn-success" onclick="return Send();">Update</button></th>
+                        }
+                        @if (ViewBag.Status == "D")
+                        {
+                            <th><button class="btn btn-success" onclick="return Send();">Delete</button></th>
+                        }
+
+                    </tr>
+                </thead>
+                <tbody style="background-color:white">
+                    @for (int i = 0; i < Model.ListItemMaster.Count; i++)
+                    {
+
+                        <tr id="@Model.ListItemMaster[i].cmp_id">
+                            <td style="font-size:10px; color:black;display:none; font-weight:normal; ">@Model.ListItemMaster[i].cmp_id</td>
+                            <td style="font-size:10px; color:black; font-weight:normal;">@Model.ListItemMaster[i].itm_num</td>
+                            <td style="font-size:10px; color:black; font-weight:normal;">@Model.ListItemMaster[i].itm_color</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].itm_size</td>
+                            <td style="font-size:10px; color:black; font-weight:normal;">@Model.ListItemMaster[i].itm_name</td>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="RateViewDetail" data-id1="@Model.ListItemMaster[i].cmp_id"
+                                               data-id2="@Model.ListItemMaster[i].Status" data-id3="@Model.ListItemMaster[i].itm_code" data-id4="@Model.ListItemMaster[i].Length" data-id5="@Model.ListItemMaster[i].Width"
+                                               data-id6="@Model.ListItemMaster[i].wgt" data-bin-id="@Model.ListItemMaster[i].bin_id"  ><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="RateEditDetail" data-id1="@Model.ListItemMaster[i].cmp_id"
+                                               data-id2="@Model.ListItemMaster[i].Status" data-id3="@Model.ListItemMaster[i].itm_code" data-id4="@Model.ListItemMaster[i].Length" data-id5="@Model.ListItemMaster[i].Width"
+                                               data-weight="@Model.ListItemMaster[i].wgt" data-id7="@Model.ListItemMaster[i].itm_size" data-id8="@Model.ListItemMaster[i].itm_color" 
+                                               data-bin-id="@Model.ListItemMaster[i].bin_id"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="RateDeleteDetail" data-id1="@Model.ListItemMaster[i].cmp_id"
+                                               data-id2="@Model.ListItemMaster[i].Status" data-id3="@Model.ListItemMaster[i].itm_code" data-id4="@Model.ListItemMaster[i].Length" data-id5="@Model.ListItemMaster[i].Width"
+                                               data-id6="@Model.ListItemMaster[i].wgt" data-bin-id="@Model.ListItemMaster[i].bin_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="font-size:10px; color:black; font-weight:normal;">@Model.ListItemMaster[i].Status</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].Length | @Model.ListItemMaster[i].Width | @Model.ListItemMaster[i].Depth | @Model.ListItemMaster[i].Cube</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].wgt</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].ctn_qty</td>
+
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].pce_length | @Model.ListItemMaster[i].pce_width | @Model.ListItemMaster[i].pce_depth | @Model.ListItemMaster[i].pce_cube</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].pce_wgt</td>
+
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].inner_pack_length | @Model.ListItemMaster[i].inner_pack_width | @Model.ListItemMaster[i].inner_pack_depth | @Model.ListItemMaster[i].inner_pack_cube</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].inner_pack_wgt</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].inner_pack_ctn_qty</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].bin_id</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].bin_type</td>
+
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].bin_length | @Model.ListItemMaster[i].bin_width | @Model.ListItemMaster[i].bin_height | @Model.ListItemMaster[i].bin_cube</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].bin_wgt</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Model.ListItemMaster[i].bin_ppk</td>
+
+                         </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="footer" style="background-color:white;"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#example1').DataTable({
+            "pageLength": 50,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        });
+        $('#example1_paginate').hide();
+    })
+    $("#example1 tr").not(':first').hover(
+function () {
+    $(this).css("background", "#dcf4ff");
+},
+function () {
+    $(this).css("background", "white");
+}
+);
+    $("#example2 tr").not(':first').hover(
+function () {
+    $(this).css("background", "#dcf4ff");
+},
+function () {
+    $(this).css("background", "white");
+}
+);
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "Dashboard")';
+    })
+
+    @*$("#btnNewEntryAdd").click(function () {
+        var $buttonClicked = $(this);
+        var cmpid = $("#cmp_id").val();
+        var Itmnum = $buttonClicked.attr('data-id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoadingratemaster").show();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_itm_style = $('#p_str_itm_style').val();
+        var p_str_itm_Color = $('#p_str_itm_Color').val();
+        var p_str_itm_Size = $('#p_str_itm_Size').val();
+        var p_str_itm_Descr = $('#p_str_itm_Descr').val();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/ItemMaster/MASTER_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_itm_style": p_str_itm_style,
+                "p_str_itm_Color": p_str_itm_Color,
+                "p_str_itm_Size": p_str_itm_Size,
+                "p_str_itm_Descr": p_str_itm_Descr,
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "cmpid": cmpid, "Itmnum": Itmnum },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoadingratemaster").hide();
+                $('#myModalContentAdd').html(data);
+                $('#myModalAdd').modal(options);
+                $('#myModalAdd').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoadingratemaster").hide();
+            }
+        });
+    });*@
+    @*$("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Adminpage", "Home")';
+    })*@
+    var TeamDetailPostBackDeleteURL = '/ItemMaster/ItemDelete';
+    var TeamDetailPostBackViewURL = '/ItemMaster/ItemView';
+    var TeamDetailPostBackEditURL = '/ItemMaster/Edit';
+
+    $('#example1 tbody').on('click', '.RateEditDetail', function () {
+    //$(".RateEditDetail").click(function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var cmpid = $buttonClicked.attr('data-id1');
+        var staus = $buttonClicked.attr('data-id2');
+        var ItmCode = $buttonClicked.attr('data-id3');
+        var length = $buttonClicked.attr('data-id4');
+        var Width = $buttonClicked.attr('data-id5');
+        var Weight = $buttonClicked.attr('data-weight');
+        var Size = $buttonClicked.attr('data-id7');
+        var Colour = $buttonClicked.attr('data-id8');
+        var p_str_cmp_id = $('#cmpid').val();
+        var p_str_itm_style = $('#Style').val();
+        var p_str_itm_Color = $('#Color').val();
+        var p_str_itm_Size = $('#Size').val();
+        var p_str_itm_Descr = $('#ItmName').val();
+        var p_str_bin_id =$buttonClicked.attr('data-bin-id');
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/ItemMaster/MASTER_INQ_HDR_DATA")',//CR-180421-001 Added By Nithya
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_itm_style": p_str_itm_style,
+                "p_str_itm_Color": p_str_itm_Color,
+                "p_str_itm_Size": p_str_itm_Size,
+                "p_str_itm_Descr": p_str_itm_Descr
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackEditURL,
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "cmpid": cmpid, "staus": staus, "ItmCode": ItmCode, "length": length, "Width": Width, "Weight": Weight, "Size": Size, "Colour": Colour,"p_str_bin_id": p_str_bin_id
+            },
+            datatype: "json",
+            success: function (data) {//CR-180421-001 Added By Nithya
+                debugger;
+                $('#myModalContentEdit').html(data);
+                $('#myModalEdit').modal(options);
+                $('#myModalEdit').modal('show');
+            },
+            error: function () {
+                swal("", "Dynamic content load failed.", "");
+            }
+        });
+    });
+    //$(".RateViewDetail").click(function () {
+    $('#example1 tbody').on('click', '.RateViewDetail', function () {
+
+        debugger;
+        var $buttonClicked = $(this);
+        var cmpid = $buttonClicked.attr('data-id1');
+        var staus = $buttonClicked.attr('data-id2');
+        var ItmCode = $buttonClicked.attr('data-id3');
+        var length = $buttonClicked.attr('data-id4');
+        var Width = $buttonClicked.attr('data-id5');
+        var Weight = $buttonClicked.attr('data-id6');
+        var p_str_bin_id = $buttonClicked.attr('data-bin-id');
+        var p_str_cmp_id = $('#cmpid').val();
+        var p_str_itm_style = $('#Style').val();
+        var p_str_itm_Color = $('#Color').val();
+        var p_str_itm_Size = $('#Size').val();
+        var p_str_itm_Descr = $('#ItmName').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/ItemMaster/MASTER_INQ_HDR_DATA")',//CR-180421-001 Added By Nithya
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_itm_style": p_str_itm_style,
+                "p_str_itm_Color": p_str_itm_Color,
+                "p_str_itm_Size": p_str_itm_Size,
+                "p_str_itm_Descr": p_str_itm_Descr,
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackViewURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "cmpid": cmpid, "staus": staus, "ItmCode": ItmCode, "length": length, "Width": Width, "Weight": Weight, "p_str_bin_id": p_str_bin_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $('#myModalContentView').html(data);
+                $('#myModalView').modal(options);
+                $('#myModalView').modal('show');
+            },
+            error: function () {
+                swal("", "Dynamic content load failed.", "");
+            }
+        });
+    });
+    $('#example1 tbody').on('click', '.RateDeleteDetail', function () {
+
+    //$(".RateDeleteDetail").click(function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var cmpid = $buttonClicked.attr('data-id1');
+        var staus = $buttonClicked.attr('data-id2');
+        var ItmCode = $buttonClicked.attr('data-id3');
+        var length = $buttonClicked.attr('data-id4');
+        var Width = $buttonClicked.attr('data-id5');
+        var Weight = $buttonClicked.attr('data-id6');
+        var p_str_cmp_id = $('#cmpid').val();
+        var p_str_itm_style = $('#Style').val();
+        var p_str_itm_Color = $('#Color').val();
+        var p_str_itm_Size = $('#Size').val();
+        var p_str_itm_Descr = $('#ItmName').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/ItemMaster/MASTER_INQ_HDR_DATA")',//CR-180421-001 Added By Nithya
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_itm_style": p_str_itm_style,
+                "p_str_itm_Color": p_str_itm_Color,
+                "p_str_itm_Size": p_str_itm_Size,
+                "p_str_itm_Descr": p_str_itm_Descr,
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackDeleteURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "cmpid": cmpid, "staus": staus, "ItmCode": ItmCode, "length": length, "Width": Width, "Weight": Weight },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $('#myModalContentDelete').html(data);
+                $('#myModalDelete').modal(options);
+                $('#myModalDelete').modal('show');
+            },
+            error: function () {
+                swal("", "Dynamic content load failed.", "");
+            }
+        });
+    });
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+            $(this).val("");
+        });
+    });
+    $("#btnClose").click(function () {
+        $('#myModalAdd').modal('hide');
+
+    });
+</script>

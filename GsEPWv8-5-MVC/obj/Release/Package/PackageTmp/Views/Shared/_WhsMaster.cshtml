@@ -1,0 +1,180 @@
+﻿
+@model GsEPWv8_5_MVC.Model.WhsMasterModel
+@{
+    var Ordercount = Model.ListWhsMaster.Count;
+    var l_str_dflt_whs_id = "";
+}
+
+@Html.HiddenFor(model => model.whs_id)
+<div class="box-body">
+    <div class="row">
+        <div class="modal-body" style="background:Scroll; margin-top:-14px; margin-left:-10px;">
+            <div>
+                <table>
+                    <tr>
+                        <td style="width:83%;">
+                            <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;">
+                                Total Records:
+                            </span>
+                            <label class="totalCount" style="text-align:left">
+                                @Ordercount
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+
+                <table id="WhsGrid" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+                    <thead class="grid_backcolor">
+                        <tr>
+                            <th class="grid_header_backcolor" style="width:5%">Cmp ID</th>
+                            <th class="grid_header_backcolor" style="width:15%">Action</th>
+                            <th class="grid_header_backcolor" style="width:10%">Whs ID</th>
+                            <th class="grid_header_backcolor" style="width:20%">Description</th>
+                            <th class="grid_header_backcolor" style="width:10%">Status</th>
+                            <th class="grid_header_backcolor" style="width:20%">Attn</th>
+                            <th class="grid_header_backcolor" style="width:10%">Mail Name</th>
+                            <th class="grid_header_backcolor" style="width:10%">Dflt Whs</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:white">
+                        @for (int i = 0; i < Model.ListWhsMaster.Count; i++)
+                        {
+                            var l_str_whs_id = Model.ListWhsMaster[i].dft_whs.ToString();
+                            if(l_str_whs_id == "True")
+                            {
+                                l_str_dflt_whs_id = "Yes";
+                            }
+                            else
+                            {
+                                l_str_dflt_whs_id = "No";
+                            }
+
+                            <tr id="@Model.ListWhsMaster[i].cmp_id">
+                               
+                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListWhsMaster[i].cmp_id</td>
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="lnk_Whs_View" v_str_cmp_id="@Model.ListWhsMaster[i].cmp_id" v_str_whs_id="@Model.ListWhsMaster[i].whs_id" v_str_whs_name="@Model.ListWhsMaster[i].whs_name"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+                                    <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="lnk_Whs_Edit" E_str_cmp_id="@Model.ListWhsMaster[i].cmp_id" E_str_whs_id="@Model.ListWhsMaster[i].whs_id" E_str_whs_name="@Model.ListWhsMaster[i].whs_name"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="lnk_Whs_Delete" D_str_cmp_id="@Model.ListWhsMaster[i].cmp_id" D_str_whs_id="@Model.ListWhsMaster[i].whs_id" D_str_whs_name="@Model.ListWhsMaster[i].whs_name"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                </td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListWhsMaster[i].whs_id</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListWhsMaster[i].whs_name</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListWhsMaster[i].status</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListWhsMaster[i].attn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListWhsMaster[i].mail_name</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@l_str_dflt_whs_id</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="footer" style="background-color:white;"></div>
+        </div>
+    </div>
+</div>
+
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".lnk_Whs_Delete").click(function () {
+           var $DeletebuttonClicked = $(this);
+           var D_str_cmp_id = $DeletebuttonClicked.attr('D_str_cmp_id');
+           var D_str_whs_id = $DeletebuttonClicked.attr('D_str_whs_id');
+           var D_str_whs_name = $DeletebuttonClicked.attr('D_str_whs_name');
+           var options = { "backdrop": "static", keyboard: true };
+           $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '/WhsMaster/DeleteWhs',
+                contentType: "application/json; charset=utf-8",
+                data: { "D_str_cmp_id": D_str_cmp_id, "D_str_whs_id": D_str_whs_id, "D_str_whs_name": D_str_whs_name },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#WareHouseContentDelete').html(data);
+                    $('#WareHouseDelete').modal(options);
+                    $('#WareHouseDelete').modal('show');
+                    $(document).ready(function () {
+                        $("#whs_master_delete_hdr_sec :input").attr("disabled", true);
+                    });
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    $("#ajaxLoading").hide();
+                }
+            });
+        });
+        $(".lnk_Whs_View").click(function () {
+            var $ViewbuttonClicked = $(this);
+            var v_str_cmp_id = $ViewbuttonClicked.attr('v_str_cmp_id');
+            var v_str_whs_id = $ViewbuttonClicked.attr('v_str_whs_id');
+            var v_str_whs_name =$ViewbuttonClicked.attr('v_str_whs_name');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '/WhsMaster/ViewWhs',
+                contentType: "application/json; charset=utf-8",
+                data: { "v_str_cmp_id": v_str_cmp_id, "v_str_whs_id": v_str_whs_id, "v_str_whs_name": v_str_whs_name },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#WareHouseContentDelete').html(data);
+                    $('#WareHouseDelete').modal(options);
+                    $('#WareHouseDelete').modal('show');
+                    $(document).ready(function () {
+                        $("#companytabsdelete :input").attr("disabled", true);
+                    });
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    $("#ajaxLoading").hide();
+                }
+            });
+        });
+        $(".lnk_Whs_Edit").click(function () {
+            var $EditbuttonClicked = $(this);
+            var E_str_cmp_id = $EditbuttonClicked.attr('E_str_cmp_id');
+            var E_str_whs_id = $EditbuttonClicked.attr('E_str_whs_id');
+            var E_str_whs_name = $EditbuttonClicked.attr('E_str_whs_name');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '/WhsMaster/EditWhs',
+                contentType: "application/json; charset=utf-8",
+                data: { "E_str_cmp_id": E_str_cmp_id, "E_str_whs_id": E_str_whs_id, "E_str_whs_name": E_str_whs_name },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $("#ajaxLoading").hide();
+                    $('#WareHouseContentEdit').html(data);
+                    $('#WareHouseEdit').modal(options);
+                    $('#WareHouseEdit').modal('show');
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    $("#ajaxLoading").hide();
+                }
+            });
+        });
+    });
+</script>
+<script type="text/javascript">
+
+    $('#WhsGrid').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+    });
+</script>
+

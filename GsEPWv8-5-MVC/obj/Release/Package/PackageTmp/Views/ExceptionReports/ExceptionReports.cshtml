@@ -1,0 +1,1045 @@
+﻿@model  GsEPWv8_5_MVC.Model.ExceptionReportsModel
+
+@{
+    ViewBag.Title = "ExceptionReports";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var Ordercount = Model.LstExceptionRpt.Count;
+    var IBOrdercount = Model.LstIBExceptionRpt.Count;
+
+
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+        /*border-bottom: 1px solid #e5e5e5;*/
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .text-muted {
+        color: black;
+    }
+
+    .ui-widget-content {
+        border: 1px solid #5dbebe;
+        background: #e6e6e6;
+        color: #333333;
+    }
+</style>
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+
+@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+@Html.HiddenFor(model => model.ITM_CODE, new { })
+@using (Html.BeginForm("ExceptionReports", "ExceptionReports", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                @if (Model.screentitle == "ExceptionInquiry")
+                {
+                <td style="width: 60%" class="ScreenTitle">
+                    Exception Reports
+                    <input type="hidden" id="screenTitle" value="ExceptionInquiry" />
+                </td>
+                }
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <div id="ExceptionRptchildtabs">
+            <ul>
+                <li><a href="#childtabs-1" style="font-size:12px;">INBOUND Exception Report</a></li>
+                <li><a href="#childtabs-2" style="font-size:12px;">OUTBOUND Exception Report</a></li>
+                <li><a href="#childtabs-3" style="font-size:12px;">INVENTORY Exception Report</a></li>
+
+            </ul>
+            <div id="childtabs-1">
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-7 col-sm-7 col-xs-7">
+                                    <table style="width:100%;padding-top:5px;">
+                                        <tr>
+                                            <td style="text-align: right;width: 7.4%">
+                                                <label><b class="Lblmanual">Company</b></label>
+                                            </td>
+                                            <td style="width:30%; padding-left: 1%;">
+
+                                                @Html.DropDownListFor(model => model.ibcmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                            </td>
+                                            <td style="text-align:right;width:8%; ">
+                                                <label><b class="Lblmanual"> Revd Date From </b></label>
+                                            </td>
+                                            <td style="width:13%;padding-left: 1.6%;">
+                                                @Html.TextBoxFor(model => model.RcvdDtFm, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                                            </td>
+                                            <td style="text-align: right; width:2%;">
+                                                <label><b class="Lblmanual"> To </b></label>
+                                            </td>
+                                            <td style="width:13%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.RcvdDtTo, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:100%;padding-top:5px;border-collapse:separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="text-align:right;width:80%;">
+                                                <button type="button" id="IBbtnSearch" class="btn_search" style="margin-left: 1%;">Search </button>
+                                                <button type="button" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2"></div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <fieldset>
+                                        <legend>Report Selection</legend>
+                                        <table style="margin-top:0px;">
+                                            <tr>
+                                                <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="IBExceptionRpt" name="radio2" checked /><b> Inbound Exception Report</b></td>
+                                                <td style="padding-left:10px;font-size: 1.2em;"><b></b></td>
+                                            </tr>
+                                        </table>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                                </td>
+                                                <td>
+                                                    <select id="Ib_id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                        <option>PDF</option>
+                                                        <option>XLS</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                                </td>
+                                                <td>
+                                                    <select id="Ib_id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                        <option>VIEW</option>
+                                                        <option>EMAIL</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="button" id="IBbtnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="ibshowgrid" class="box-header" style="padding: 5px; ">
+                    <div class="gridSummary">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:20%;text-align:right">
+                                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                        Total Records:
+                                    </span>
+                                    <label class="totalCount" style="text-align:left">
+                                        @IBOrdercount
+                                    </label>
+                                </td>
+                                <td style="width:105px;"></td>
+                                <td style="width:105px;"></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <hr class="break" />
+                    <div class="box-body">
+                        <div>
+                            <table id="IBGrdExceptionRpt" class="table table-bordered table-striped">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">CMP_ID</th>
+                                        <th class="grid_header_backcolor">IB DOC#</th>
+                                        <th class="grid_header_backcolor">LOT STATUS</th>
+                                        <th class="grid_header_backcolor">LOT ID</th>
+                                        <th class="grid_header_backcolor">RCVD DT</th>
+                                        <th class="grid_header_backcolor">STYLE</th>
+                                        <th class="grid_header_backcolor">COLOR</th>
+                                        <th class="grid_header_backcolor">SIZE</th>
+                                        <th class="grid_header_backcolor">LOT QTY</th>
+                                        <th class="grid_header_backcolor">RCVD QTY</th>
+                                        <th class="grid_header_backcolor">IN QTY</th>
+                                        <th class="grid_header_backcolor">OUT QTY</th>
+                                        <th class="grid_header_backcolor">HST QTY</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="ibshowgridDetail" class="box-header" style="padding: 0px; ">
+                </div>
+            </div>
+            <div id="childtabs-2">
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-7 col-sm-7 col-xs-7">
+                                    <table style="width:100%;padding-top:5px;">
+                                        <tr>
+                                            <td style="text-align: right;width: 7.4%">
+                                                <label><b class="Lblmanual">Company</b></label>
+                                            </td>
+                                            <td style="width:30%; padding-left: 1%;">
+
+                                                @Html.DropDownListFor(model => model.obcmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                            </td>
+                                            <td style="text-align:right;width:8%; ">
+                                                <label><b class="Lblmanual"> SR Date From </b></label>
+                                            </td>
+                                            <td style="width:13%;padding-left: 1.6%;">
+                                                @Html.TextBoxFor(model => model.SRDtFm, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                                            </td>
+                                            <td style="text-align: right; width:2%;">
+                                                <label><b class="Lblmanual"> To </b></label>
+                                            </td>
+                                            <td style="width:13%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.SRDtTo, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:100%;padding-top:5px;border-collapse:separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="text-align:right;width:80%;">
+                                                <button type="button" id="btnSearch" class="btn_search" style="margin-left: 1%;">Search </button>
+                                                <button type="button" id="OBbtnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2"></div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <fieldset>
+                                        <legend>Report Selection</legend>
+                                        <table style="margin-top:0px;">
+                                            <tr>
+                                                <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="ExceptionRpt" name="radio1" checked /><b>Outbound Exception Report</b></td>
+                                                <td style="padding-left:10px;font-size: 1.2em;"><b></b></td>
+                                            </tr>
+                                        </table>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                                </td>
+                                                <td>
+                                                    <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                        <option>PDF</option>
+                                                        <option>XLS</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                                </td>
+                                                <td>
+                                                    <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                        <option>VIEW</option>
+                                                        <option>EMAIL</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="showgrid" class="box-header" style="padding: 5px; ">
+                    <div class="gridSummary">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:20%;text-align:right">
+                                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                        Total Records:
+                                    </span>
+                                    <label class="totalCount" style="text-align:left">
+                                        @Ordercount
+                                    </label>
+                                </td>
+                                <td style="width:105px;"></td>
+                                <td style="width:105px;"></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <hr class="break" />
+                    <div class="box-body">
+                        <div>
+                            <table id="GrdExceptionRpt" class="table table-bordered table-striped">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">CMP_ID</th>
+                                        <th class="grid_header_backcolor">SR#</th>
+                                        <th class="grid_header_backcolor">SR Date</th>
+                                        <th class="grid_header_backcolor">ALOC STATUS</th>
+                                        <th class="grid_header_backcolor">STYLE</th>
+                                        <th class="grid_header_backcolor">COLOR</th>
+                                        <th class="grid_header_backcolor">SIZE</th>
+                                        <th class="grid_header_backcolor">SR QTY</th>
+                                        <th class="grid_header_backcolor">ALOC DOC ID</th>
+                                        <th class="grid_header_backcolor">ALOC QTY</th>
+                                        <th class="grid_header_backcolor">SHIP DOC ID</th>
+                                        <th class="grid_header_backcolor">SHIP QTY</th>
+                                        <th class="grid_header_backcolor">IN QTY</th>
+                                        <th class="grid_header_backcolor">OUT QTY</th>
+                                        <th class="grid_header_backcolor">HST QTY</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="showgridDetail" class="box-header" style="padding: 0px; ">
+                </div>
+            </div>
+            <div id="childtabs-3">
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-7 col-sm-7 col-xs-7">
+                                    <table style="width:100%;padding-top:5px;">
+                                        <tr>
+                                            <td style="text-align: right;width: 1.4%">
+                                                <label><b class="Lblmanual">Company</b></label>
+                                            </td>
+                                            <td style="width:30%; padding-left: 1%;">
+
+                                                @Html.DropDownListFor(model => model.ivcmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl", @style = "width:35%;" })
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                    <table style="width:100%;padding-top:5px;">
+                                        <tr>
+                                            <td style="text-align: right;width: 5%;">
+                                                <label><b class="Lblmanual">Style</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Itmdtl, new {@class = "form-control txtlbl",  @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 3%;">
+                                                <label><b class="Lblmanual">Color</b></label>
+                                            </td>
+                                            <td style="width: 8%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.ITM_COLOR, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 2%;">
+                                                <label><b class="Lblmanual">Size</b></label>
+                                            </td>
+                                            <td style="width: 7%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.ITM_SIZE, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 1%;">
+                                                <label><b class="Lblmanual">Desc</b></label>
+                                            </td>
+                                            <td style="width: 21%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.ITM_NAME, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:100%;padding-top:5px;border-collapse:separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="text-align:right;width:80%;">
+                                                <button type="button" id="IVbtnSearch" class="btn_search" style="margin-left: 1%;">Search </button>
+                                                <button type="reset"  class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2"></div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <fieldset>
+                                        <legend>Report Selection</legend>
+                                        <table style="margin-top:0px;">
+                                            <tr>
+                                                <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="IVExceptionRpt" name="radio3" checked /><b>Inventory Exception Report</b></td>
+                                                <td style="padding-left:10px;font-size: 1.2em;"><b></b></td>
+                                            </tr>
+                                        </table>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                                </td>
+                                                <td>
+                                                    <select id="iv_id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                        <option>PDF</option>
+                                                        <option>XLS</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                                </td>
+                                                <td>
+                                                    <select id="iv_id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                        <option>VIEW</option>
+                                                        <option>EMAIL</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="button" id="IVbtnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="IVshowgrid" class="box-header" style="padding: 5px; ">
+                    <div class="gridSummary">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:20%;text-align:right">
+                                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                        Total Records:
+                                    </span>
+                                    <label class="totalCount" style="text-align:left">
+                                        @Ordercount
+                                    </label>
+                                </td>
+                                <td style="width:105px;"></td>
+                                <td style="width:105px;"></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <hr class="break" />
+                    <div class="box-body">
+                        <div>
+                            <table id="IVGrdExceptionRpt" class="table table-bordered table-striped">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">CMP ID</th>
+                                        <th class="grid_header_backcolor">ITM CODE</th>
+                                        <th class="grid_header_backcolor">RCVD QTY</th>
+                                        <th class="grid_header_backcolor">ALOC QTY</th>
+                                        <th class="grid_header_backcolor">AVAIL QTY IN</th>
+                                        <th class="grid_header_backcolor">ALOC QTY OUT</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="IVshowgridDtl" class="box-header" style="padding: 0px; ">
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalContent' style="width: 100%; height: 700px;"></div>
+        </div>
+    </div>
+</div>
+<div id='myModalEmail' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalEmailContent' style="width: 100%; height: 700px;"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    $(function () {
+        $("#Itmdtl").autocomplete({
+            source: function (request, response) {
+                $.getJSON("/ExceptionReports/ItemXGetitmDtl", {
+                    term: request.term,
+                    cmp_id: $('#ivcmp_id').val(),
+                },
+                          response);
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                $("#ITM_COLOR").val(ui.item.ITM_COLOR);
+                $("#ITM_SIZE").val(ui.item.ITM_SIZE);
+                $("#ITM_NAME").val(ui.item.ITM_NAME);
+                $("#ITM_CODE").val(ui.item.ITM_CODE);
+            }
+        });
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+    $(function () {
+        $("#ExceptionRptchildtabs").tabs();
+    });
+    $("#btnSearch").click(function () {
+        var cmp_id = $("#obcmp_id").val();
+        //if (cmp_id == "") {
+        //    sweetAlert("", "Please Select Cmp Id.", "");
+        //    $('#obcmp_id').focus();
+        //    $('body,html').animate({ scrollTop: 0 }, 0);
+        //    er = 1;
+        //    return false;
+        //}
+        //else {
+            debugger
+            var p_str_cmp_id = $('#obcmp_id').val();
+            var p_str_SR_dt_Fr = $('#SRDtFm').val();
+            var p_str_SR_dt_To = $('#SRDtTo').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: "/ExceptionReports/GetSearchExceptionReportInquiry",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_SR_dt_Fr": p_str_SR_dt_Fr, "p_str_SR_dt_To": p_str_SR_dt_To
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#showgrid').hide();
+                    $('#showgridDetail').html("");
+                    $('#showgridDetail').html(e);
+                },
+            })
+
+        //}
+    });
+
+    $("#IBbtnSearch").click(function () {
+        var cmp_id = $("#ibcmp_id").val();
+        //if (cmp_id == "") {
+        //    sweetAlert("", "Please Select Cmp Id.", "");
+        //    $('#ibcmp_id').focus();
+        //    $('body,html').animate({ scrollTop: 0 }, 0);
+        //    er = 1;
+        //    return false;
+        //}
+        //else {
+            debugger
+            var p_str_cmp_id = $('#ibcmp_id').val();
+            var p_str_Rcvd_dt_Fr = $('#RcvdDtFm').val();
+            var p_str_Rcvd_dt_To = $('#RcvdDtTo').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: "/ExceptionReports/GetSearchIBExceptionReportInquiry",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Rcvd_dt_Fr": p_str_Rcvd_dt_Fr, "p_str_Rcvd_dt_To": p_str_Rcvd_dt_To
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#ibshowgrid').hide();
+                    $('#ibshowgridDetail').html("");
+                    $('#ibshowgridDetail').html(e);
+                },
+            })
+
+        //}
+    });
+    $("#IVbtnSearch").click(function () {
+        var cmp_id = $("#ivcmp_id").val();
+        //if (cmp_id == "") {
+        //    sweetAlert("", "Please Select Cmp Id.", "");
+        //    $('#ivcmp_id').focus();
+        //    $('body,html').animate({ scrollTop: 0 }, 0);
+        //    er = 1;
+        //    return false;
+        //}
+        //else {
+            debugger
+            var p_str_cmp_id = $('#ivcmp_id').val();
+            var p_str_itm_code = $('#ITM_CODE').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: "/ExceptionReports/GetSearchIVExceptionReportInquiry",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_itm_code": p_str_itm_code
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#IVshowgrid').hide();
+                    $('#IVshowgridDtl').html("");
+                    $('#IVshowgridDtl').html(e);
+                },
+            })
+
+        //}
+    });
+
+    function change(el) {
+        if (el.value === "(Click to hide...)")
+            el.value = "(Click to show...)";
+        else
+            el.value = "(Click to hide...)";
+    }
+    $('#SRDtFm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#SRDtTo').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#RcvdDtFm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#RcvdDtTo').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    //$(function () {
+    //    $('#GrdExceptionRpt').DataTable({
+    //        "paging": true,
+    //        "lengthChange": true,
+    //        "searching": true,
+    //        "ordering": true,
+    //        "info": true,
+    //        "autoWidth": true,
+    //        "scrollCollapse": true,
+    //        "sScrollY": "460px",
+    //        "sScrollX": "100%",
+    //    })
+    //})
+    //$(function () {
+    //    $('#IBGrdExceptionRpt').DataTable({
+    //        "paging": true,
+    //        "lengthChange": true,
+    //        "searching": true,
+    //        "ordering": true,
+    //        "info": true,
+    //        "autoWidth": true,
+    //        "scrollCollapse": true,
+    //        "sScrollY": "460px",
+    //        "sScrollX": "100%",
+    //    })
+    //})
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+            $(this).val("");
+        });
+    });
+    $(document).ready(function () {
+        $("OBbtnClear").each(function () {
+            $(this).val("");
+        });
+    });
+    //$(document).ready(function () {
+    //    $("IVbtnClear").each(function () {
+    //        $(this).val("");
+    //    });
+    //});
+</script>
+<script type="text/javascript">
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#ibcmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $(function () {
+        $('#obcmp_id').change(function () {
+            debugger;
+            var l_str_comp = this.value;
+            debugger
+            $("#p_str_company").val(l_str_comp);
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "ExceptionReports")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+
+    });
+    $(function () {
+        $('#ivcmp_id').change(function () {
+            debugger;
+            var l_str_comp = this.value;
+            debugger
+            $("#p_str_company").val(l_str_comp);
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "ExceptionReports")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+    });
+    $(function () {
+        $('#ibcmp_id').change(function () {
+            debugger;
+            var l_str_comp = this.value;
+            debugger
+            $("#p_str_company").val(l_str_comp);
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "ExceptionReports")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+
+    });
+</script>
+<script>
+    $("#btnprocesss").click(function () {
+
+        debugger
+        var getli = $('#id_format').find(":selected").text();
+        var getli2 = $('#id_mode').find(":selected").text();
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+            var p_str_cmpid = $('#obcmp_id').val();
+            var p_str_SRDt_Fm = $('#SRDtFm').val();
+            var p_str_SRDt_To = $('#SRDtTo').val();
+            var Type = "PDF"
+            var p_str_report_selection_name = $("input[name='radio1']:checked").val();
+            if (p_str_report_selection_name == "ExceptionRpt") {
+                $("#ajaxLoading").show();
+                window.open('ShowSummaryReport?p_str_radio=' + p_str_report_selection_name + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_SR_dtFm=' + p_str_SRDt_Fm + '&p_str_SR_dtTo=' + p_str_SRDt_To + '&type=' + Type, 'ExceptionReports', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowSummaryReport')
+                $("#ajaxLoading").hide();
+            }
+        }
+        if (getli == 'XLS' && getli2 == 'VIEW') {
+            var p_str_cmpid = $('#obcmp_id').val();
+            var p_str_SRDt_Fm = $('#SRDtFm').val();
+            var p_str_SRDt_To = $('#SRDtTo').val();
+            var Type = "Excel"
+            var p_str_report_selection_name = $("input[name='radio1']:checked").val();
+            if (p_str_report_selection_name == "ExceptionRpt") {
+                $("#ajaxLoading").show();
+                window.location.replace('ShowSummaryReport?p_str_radio=' + p_str_report_selection_name + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_SR_dtFm=' + p_str_SRDt_Fm + '&p_str_SR_dtTo=' + p_str_SRDt_To + '&type=' + Type, 'ExceptionReports', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowSummaryReport')
+                $("#ajaxLoading").hide();
+            }
+        }
+        if (getli == 'PDF' && getli2 == 'EMAIL') {
+            var p_str_cmpid = $('#obcmp_id').val();
+            var p_str_SRDt_Fm = $('#SRDtFm').val();
+            var p_str_SRDt_To = $('#SRDtTo').val();
+            var Type = "PDF"
+            var p_str_report_selection_name = $("input[name='radio1']:checked").val();
+            if (p_str_report_selection_name == "ExceptionRpt") {
+                var options = { "backdrop": "static", keyboard: true };
+                var TeamDetailPostemailBackURL = '/ExceptionReports/EmailShowReport';
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_radio": p_str_report_selection_name, "p_str_cmp_id": p_str_cmpid, "p_str_SR_dtFm": p_str_SRDt_Fm,
+                        "p_str_SR_dtTo": p_str_SRDt_To, "type": Type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+            }
+        }
+
+    })
+    $("#IBbtnprocesss").click(function () {
+
+        debugger
+        var getli = $('#Ib_id_format').find(":selected").text();
+        var getli2 = $('#Ib_id_mode').find(":selected").text();
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+            var p_str_cmpid = $('#ibcmp_id').val();
+            var p_str_Rcvd_dt_Fr = $('#RcvdDtFm').val();
+            var p_str_Rcvd_dt_To = $('#RcvdDtTo').val();
+            var Type = "PDF"
+            var p_str_report_selection_name = $("input[name='radio2']:checked").val();
+            if (p_str_report_selection_name == "IBExceptionRpt") {
+                $("#ajaxLoading").show();
+                window.open('InboundSummaryReport?p_str_radio=' + p_str_report_selection_name + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_Rcvd_dt_Fr=' + p_str_Rcvd_dt_Fr + '&p_str_Rcvd_dt_To=' + p_str_Rcvd_dt_To + '&type=' + Type, 'ExceptionReports', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'InboundSummaryReport')
+                $("#ajaxLoading").hide();
+            }
+        }
+        if (getli == 'XLS' && getli2 == 'VIEW') {
+            var p_str_cmpid = $('#ibcmp_id').val();
+            var p_str_Rcvd_dt_Fr = $('#RcvdDtFm').val();
+            var p_str_Rcvd_dt_To = $('#RcvdDtTo').val();
+            var Type = "Excel"
+            var p_str_report_selection_name = $("input[name='radio2']:checked").val();
+            if (p_str_report_selection_name == "IBExceptionRpt") {
+                $("#ajaxLoading").show();
+                window.location.replace('InboundSummaryReport?p_str_radio=' + p_str_report_selection_name + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_Rcvd_dt_Fr=' + p_str_Rcvd_dt_Fr + '&p_str_Rcvd_dt_To=' + p_str_Rcvd_dt_To + '&type=' + Type, 'ExceptionReports', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'InboundSummaryReport')
+                $("#ajaxLoading").hide();
+            }
+        }
+        if (getli == 'PDF' && getli2 == 'EMAIL') {
+            var p_str_cmpid = $('#ibcmp_id').val();
+            var p_str_Rcvd_dt_Fr = $('#RcvdDtFm').val();
+            var p_str_Rcvd_dt_To = $('#RcvdDtTo').val();
+            var Type = "PDF"
+            var p_str_report_selection_name = $("input[name='radio2']:checked").val();
+            if (p_str_report_selection_name == "IBExceptionRpt") {
+                var options = { "backdrop": "static", keyboard: true };
+                var TeamDetailPostemailBackURL = '/ExceptionReports/IBEmailShowReport';
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_radio": p_str_report_selection_name, "p_str_cmp_id": p_str_cmpid, "p_str_Rcvd_dt_Fr": p_str_Rcvd_dt_Fr,
+                        "p_str_Rcvd_dt_To": p_str_Rcvd_dt_To, "type": Type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+            }
+        }
+
+    })
+    $("#IVbtnprocesss").click(function () {
+        debugger
+        var getli = $('#iv_id_format').find(":selected").text();
+        var getli2 = $('#iv_id_mode').find(":selected").text();
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+            var p_str_cmpid = $('#ivcmp_id').val();
+            var p_str_itm_code = $('#ITM_CODE').val();
+            var Type = "PDF"
+            var p_str_report_selection_name = $("input[name='radio3']:checked").val();
+            if (p_str_report_selection_name == "IVExceptionRpt") {
+                $("#ajaxLoading").show();
+                window.open('InventorySummaryReport?p_str_radio=' + p_str_report_selection_name + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_itm_code=' + p_str_itm_code + '&type=' + Type, 'ExceptionReports', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'InventorySummaryReport')
+                $("#ajaxLoading").hide();
+            }
+        }
+        if (getli == 'XLS' && getli2 == 'VIEW') {
+            var p_str_cmpid = $('#ivcmp_id').val();
+            var p_str_itm_code = $('#ITM_CODE').val();
+            var Type = "Excel"
+            var p_str_report_selection_name = $("input[name='radio3']:checked").val();
+            if (p_str_report_selection_name == "IVExceptionRpt") {
+                $("#ajaxLoading").show();
+                window.location.replace('InventorySummaryReport?p_str_radio=' + p_str_report_selection_name + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_itm_code=' + p_str_itm_code + '&type=' + Type, 'ExceptionReports', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'InventorySummaryReport')
+                $("#ajaxLoading").hide();
+            }
+        }
+        if (getli == 'PDF' && getli2 == 'EMAIL') {
+            var p_str_cmpid = $('#ivcmp_id').val();
+            var p_str_itm_code = $('#ITM_CODE').val();
+            var Type = "PDF"
+            var p_str_report_selection_name = $("input[name='radio3']:checked").val();
+            if (p_str_report_selection_name == "IVExceptionRpt") {
+                var options = { "backdrop": "static", keyboard: true };
+                var TeamDetailPostemailBackURL = '/ExceptionReports/IVEmailShowReport';
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_radio": p_str_report_selection_name, "p_str_cmp_id": p_str_cmpid, "p_str_itm_code": p_str_itm_code,
+                        "type": Type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+            }
+        }
+
+    })
+
+</script>
+

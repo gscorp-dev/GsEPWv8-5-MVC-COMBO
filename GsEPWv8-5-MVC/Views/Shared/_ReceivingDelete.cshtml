@@ -1,0 +1,362 @@
+﻿
+
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+@{
+    var Ordercount = Model.ListLoadReceivingDelDtl.Count;
+}
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: verdana;
+        font-size: 12px;
+    }
+     div#RecvdeleteajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+@Html.HiddenFor(model => model.itm_code)
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<center>
+    <div id="RecvdeleteajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        @if (Model.View_Flag == "A")
+            {
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inbound Receiving Entry - Add </h4>
+            <button type="button" id="btnClose" data-dismiss="modal" onclick="closeModal();" class="btn-Close" style="float:right;;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnRecvSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        }
+        @if (Model.View_Flag == "D")
+            {
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inbound Receiving Entry - Delete </h4>
+            <button type="button" id="btnClose" data-dismiss="modal" onclick="closeModal();" class="btn-Close" style="float:right;;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnReceivingqDeleteSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        }
+    </div>
+    <div >
+       
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Cmp Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @style = "width: 255px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">IB Doc Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.ib_doc_id, new { @id = "new_ib_doc_id", @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; width: 188px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Cont Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.cntr_id, new {  @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;background-color:lightyellow;" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                   
+                    <br />
+                 
+                 
+                   
+                </div>
+
+                <br />
+                <table>
+                    <tr>
+                        <td style="width: 8%;">
+                            <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                Total Records:
+                            </span>
+                        </td>
+                        <td style="width: 93%;">
+                            <label class="totalCount" style="text-align:left">
+                                @Ordercount
+                            </label>
+                        </td>
+
+                    </tr>
+                </table>
+                <br />
+                <div class="box">
+                    <div id="table-Details">
+                        <div style="overflow-y:auto; height:auto; width:auto;">
+                            <table id="GridDocDelEntry" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">WHhs</th>
+                                        <th class="grid_header_backcolor">Loc Id</th>
+                                        <th class="grid_header_backcolor">Lot Id</th>
+                                        <th class="grid_header_backcolor">Palet Id</th>
+                                        <th class="grid_header_backcolor">Rcvd Dt</th>
+                                        <th class="grid_header_backcolor">Style</th>
+                                        <th class="grid_header_backcolor">Color</th>
+                                        <th class="grid_header_backcolor">Size</th>
+                                        <th class="grid_header_backcolor">Desc</th>
+                                        <th class="grid_header_backcolor">Ctn(s)</th>
+                                        <th class="grid_header_backcolor">PPK</th>
+                                        <th class="grid_header_backcolor">Rcvd Qty</th>
+                                        <th class="grid_header_backcolor">PO#</th>
+                                        @*<th class="grid_header_backcolor">InOut</th>
+                                        <th class="grid_header_backcolor">Lot Id</th>*@
+                                      
+
+                                        @*<th></th>
+                                        <th></th>*@
+                                    </tr>
+                                </thead>
+                                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                                    @for (int i = 0; i < Model.ListLoadReceivingDelDtl.Count; i++)
+                                    {
+
+                                        int  l_int_tmp_tot_ctn = @Model.ListLoadReceivingDelDtl[i].tot_ctn;
+                                        int l_int_tmp_itm_qty = @Model.ListLoadReceivingDelDtl[i].itm_qty;
+                                        int l_int_tmp_qty = l_int_tmp_tot_ctn * l_int_tmp_itm_qty;
+                                        string l_int_rcvd_dt = Model.ListLoadReceivingDelDtl[i].palet_dt;
+                                        string l_int_tmp_rcvd_dt = Convert.ToDateTime(l_int_rcvd_dt).ToString("MM/dd/yyyy");
+                                        <tr id="@Model.ListLoadReceivingDelDtl[i].cmp_id ">
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListLoadReceivingDelDtl[i].whs_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListLoadReceivingDelDtl[i].loc_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadReceivingDelDtl[i].lot_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadReceivingDelDtl[i].palet_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@l_int_tmp_rcvd_dt</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadReceivingDelDtl[i].itm_num</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListLoadReceivingDelDtl[i].itm_color</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListLoadReceivingDelDtl[i].itm_size</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListLoadReceivingDelDtl[i].itm_name</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListLoadReceivingDelDtl[i].tot_ctn</td>
+
+                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListLoadReceivingDelDtl[i].itm_qty</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@l_int_tmp_qty</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListLoadReceivingDelDtl[i].po_num</td>
+                                            @*<td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListLoadReceivingDelDtl[i].itm_code</td>*@
+                                            @*<td style="font-size:12px; color:black; font-weight:bold; text-align :left"></td>*@
+
+
+                                          
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</center>
+@Html.HiddenFor(model => model.DocumentdateFrom)
+@Html.HiddenFor(model => model.DocumentdateTo)
+<script>
+    $('#ib_rcvd_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $("#Itmdtl").autocomplete({
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/InboundInquiry/ItemXGetitmDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+
+            $("#itm_color").val(ui.item.itm_color);
+            $("#itm_size").val(ui.item.itm_size);
+            $("#itm_name").val(ui.item.itm_name);
+            $("#itm_code").val(ui.item.itm_code);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+
+    $(function () {
+        $("#childtabsrcv").tabs();
+    });
+
+    $("#btnRecvSave").click(function () {
+        debugger
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_ib_doc_id = $('#ibdocid').val();
+        var p_str_rcvd_dt = $('#ib_rcvd_dt').val();
+        var p_str_rcvd_from = $('#rcvd_from').val();
+        var p_str_refno = $('#refno').val();
+        var p_str_vend_id = $('#vend_id').val();
+        var p_str_whs_id = $('#whs_id').val();
+        var p_str_cont_id = $('#cont_id').val();
+        var p_str_seal_num = $('#seal_num').val();
+        var p_str_palet_id = $('#palet_id').val();
+        var p_str_lot_id = $('#lot_id').val();
+        var p_str_ib_load_dt = $('#ib_load_dt').val();
+        $("#RecvdeleteajaxLoading").show();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/SaveRecvDocEntry")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_ib_doc_id": p_str_ib_doc_id,
+                    "p_str_rcvd_dt": p_str_rcvd_dt,
+                    "p_str_rcvd_from": p_str_rcvd_from, "p_str_refno": p_str_refno, "p_str_vend_id": p_str_vend_id, "p_str_whs_id": p_str_whs_id,
+                    "p_str_cont_id": p_str_cont_id, "p_str_seal_num": p_str_seal_num, "p_str_palet_id": p_str_palet_id, "p_str_ib_load_dt": p_str_ib_load_dt
+                    , "p_str_lot_id": p_str_lot_id
+                },
+                dataType: 'html',
+                success: function (e) {
+                    if (e != null) {
+                        debugger
+                        swal("", "Your record Added successfully.", "");
+
+                        var p_str_cmp_id = $('#new_cmp_id').val();
+                        var p_str_ib_doc_id = $('#ibdocid').val();
+                        var p_str_status = "1-RCVD";
+                        window.open('ShowdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_ib_doc_id=' + p_str_ib_doc_id, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+                        window.location.href = '@Url.Action("InboundInquiry", "InboundInquiry")';
+                        $("#RecvdeleteajaxLoading").hide();
+
+
+                    }
+                },
+
+            })
+        }
+    });
+    $("#btnReceivingqDeleteSave").click(function () {
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_ib_doc_id = $('#ib_doc_id').val();
+        $("#RecvdeleteajaxLoading").show(); 
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            sweetAlert({
+                title: "",
+                text: " Do You Want to Delete Receiving",
+                type: "",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "No",
+                cancelButtonText: "Yes",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+
+                }
+                else {
+
+                    debugger
+                    var p_str_cmp_id = $('#new_cmp_id').val();
+                    var p_str_ib_doc_id = $('#new_ib_doc_id').val();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/ReceivingDelete")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id
+
+                        },
+                        dataType: 'html',
+                        success: function (e) {
+                            debugger
+                            if (e > 0) {
+                               setTimeout(function () {
+                                    swal({
+                                        title: "",
+                                        text: "Your record Deleted successfully",
+                                        type: "",
+                                        showCancelButton: false,
+                                        confirmButtonClass: "btn-danger",
+                                        confirmButtonText: "Ok",
+                                        closeOnConfirm: true
+                                    },
+                                 function () {
+                               setTimeout(function () {
+                                       
+
+                                   $('#myModalEdit').modal('hide');
+                                   debugger
+                                        $.ajax({
+                                            type: "get",
+                                            url: "/inboundinquiry/inboundinquirydtl",
+                                            data: {
+                                                "p_str_cmp_id": p_str_cmp_id,
+                                                "p_str_ibdocid": p_str_ib_doc_id
+                                            },
+                                            datatype: 'html',
+                                            success: function (e) {
+                                                debugger                                               
+                                                $("#RecvdeleteajaxLoading").hide();
+                                                $('#showgrid').html("");
+                                                $('#showgrid').html(e);
+                                            },
+                                        })
+                                        });
+                                 });
+                                }, 2000);
+
+
+                            }
+                        },
+
+                    })
+                }
+            });
+
+
+        }
+    });
+    $(function () {
+        $('#GridDocDelEntry').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridDocDelEntry_paginate').hide();
+    })
+</script>

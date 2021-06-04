@@ -1,0 +1,628 @@
+﻿@model GsEPWv8_4_MVC.Model.StockChangeModel
+
+@{
+    ViewBag.Title = "DashboardItemMove";
+    Layout = "~/Views/Shared/_ItemMoveLayout.cshtml";
+    var Ordercount = Model.ListGetItemMoveDetails.Count;
+    var TotalNumberoflst = Model.ListGetItemMoveDetails.Count();
+}
+
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Content/ItemMoveCSS.css">
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .ItemSummary {
+        height: 49px;
+        background: #d2d6de;
+    }
+
+    fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .btn-danger {
+        background-color: red;
+        border-color: red;
+    }
+
+        .btn-danger:hover {
+            background-color: red;
+            border-color: red;
+        }
+
+    .sweet-alert {
+        background-color: #8cd6f7;
+        width: 478px;
+        padding: 17px;
+        border-radius: 5px;
+        text-align: center;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -256px;
+        margin-top: -200px;
+        overflow: hidden;
+        display: none;
+        z-index: 2000;
+    }
+
+    .btn-default {
+        background-color: #009685;
+        color: white;
+        border-color: #009685;
+    }
+
+
+        .btn-default:hover {
+            background-color: #009685;
+            color: white;
+            border-color: #009685;
+        }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        font-size: 16px;
+        font-family: Verdana;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .text-muted {
+        color: black;
+    }
+
+    .Dashboard {
+        font-size: 15px;
+        text-decoration: underline;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+
+<div class="img-responsive">
+    <div class="container-fluid">
+        <table class="table table-responsive" style="width:100%;">
+            <tr>
+                <td class="ScreenTitle" style="text-align:left;">
+                    <a href="#" id="btnDashboard" class="Dashboard">
+                        Dashboard
+                    </a>
+                    </>
+                <td class="ScreenTitle" style="text-align:center">
+                        INVENTORY ITEM MOVE
+                </td>
+                <td class="ScreenTitle" style="text-align:right;">
+                    <button type="button" id="btnClose" class="btn-Close">Close</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+    <div class="box" style="box-shadow: 0 1px 1px white; width:100%">
+        <div class="box box-default box-header">
+            <div class="container">
+                <br />
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <table style="width:100%;" class="BottomMargin">
+                                    <tr>
+                                        <td class="LblForTextbox">
+                                            Cmp Id &nbsp;
+                                        </td>
+                                        <td align="center">
+                                            <b>
+                                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control TableTextBox" })
+                                            </b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-sm-6">
+                                <table style="width:100%" class="BottomMargin">
+                                    <tr>
+                                        <td class="LblForTextbox">
+                                            Style &nbsp;
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control TableTextBox", @maxlength = "50" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <table style="width:100%;" class="BottomMargin">
+                                    <tr>
+                                        <td class="LblForTextbox">
+                                            Color &nbsp;
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control TableTextBox", @maxlength = "50" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-sm-6">
+                                <table style="width:100%;" class="BottomMargin">
+                                    <tr>
+                                        <td class="LblForTextbox">
+                                            Size &nbsp;
+                                        </td>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control TableTextBox", @maxlength = "50" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-sm-2">
+                            <div class="ButtonBlock">
+                                <button type="button" id="btnSearch" class="btn_search"
+                                        data-id1="@Model.cmp_id"
+                                        data-id2="@Model.itm_code"
+                                        data-id3="@Model.palet_id"
+                                        data-id4="@Model.po_num"
+                                        data-id5="@Model.loc_id"
+                                        data-id6="@Model.itm_num"
+                                        data-id7="@Model.itm_color"
+                                        data-id8="@Model.itm_size">
+                                    Search
+                                </button>
+                                <button type="button" id="btnClear" class="btn-Clear">Clear </button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+        </div>
+
+        <div style="display:none">
+            <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;    ">
+                <tr>
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">IB Doc Id</b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-2 col-sm-2 col-xs-2">
+                        @Html.TextBoxFor(model => model.ib_doc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </td>
+
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Whs Id</b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-1 col-sm-1 col-xs-1">
+                        @Html.TextBoxFor(model => model.whs_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </td>
+
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Cont Id</b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-1 col-sm-1 col-xs-1">
+                        @Html.TextBoxFor(model => model.cont_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </td>
+
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Desc</b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-1 col-sm-1 col-xs-1">
+                        @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                    </td>
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        @Html.DropDownListFor(model => model.search_text, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @class = "form-control txtlbl" })
+                    </td>
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Itm Code</b></label>
+                    </td>
+
+                    <td style="padding-left: 1%;" class="col-md-1 col-sm-1 col-xs-1">
+                        @Html.TextBoxFor(model => model.itm_code, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;", @id = "itm_code" })
+                    </td>
+                </tr>
+            </table>
+
+            <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;    ">
+
+                <tr>
+                    <td text-align right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Lot ID</b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-1 col-sm-1 col-xs-1">
+                        @Html.TextBoxFor(model => model.lot_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </td>
+
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Loc ID</b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-1 col-sm-1 col-xs-1">
+                        @Html.TextBoxFor(model => model.loc_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                    </td>
+
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Po Num</b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-1 col-sm-1 col-xs-1">
+                        @Html.TextBoxFor(model => model.po_num, new { @class = "form-control txtlbl", @maxlength = "50" })
+                    </td>
+
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Date Fm </b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-2 col-sm-2 col-xs-2">
+                        @Html.TextBoxFor(model => model.rcvd_dt_fm, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                    </td>
+
+                    <td style="text-align: right" class="col-md-1 col-sm-1 col-xs-1">
+                        <label><b class="Lblmanual">Date To</b></label>
+                    </td>
+                    <td style="padding-left: 1%;" class="col-md-2 col-sm-2 col-xs-2">
+                        @Html.TextBoxFor(model => model.rcvd_dt_to, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                    </td>
+                </tr>
+            </table>
+            <div class="col-xs-12 row">
+                <fieldset>
+                    <legend style="text-align: left;">Total Pallet Move</legend>
+                    <div class="col-xs-2">
+                        <input type="radio" id="TotalMove" value="TotalMove" name="radio1" /><b> Total Move</b></td>
+                    </div>
+                    <div class="col-xs-2">
+                        <label class="Lblmanual">Tot Of Ctns</label>
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.TextBoxFor(model => model.tot_ctn, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                    </div>
+                    <div class="col-xs-2">
+                        <label class="Lblmanual">Tot Of Qty</label>
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.TextBoxFor(model => model.tot_qty, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div id="Itemgrid" class="box-header">
+            <div class="container-fluid" style="background-color:lightgrey; padding:0.5%">
+                <table style="width:100%;">
+                    <tr>
+                        <td class="TotalRecords">
+                            Total Records:
+                        </td>
+                        <td class="totalCount">
+                            <b>
+                                @Ordercount
+                            </b>
+                        </td>
+                        <td style="text-align:left">
+                            <button type="button" id="btnItemSave" class="btn-Close ItemMoveSave">Save</button>
+                        </td>
+                    <tr>
+                </table>
+            </div>
+            <br />
+            <div id="hdrgridItemMove" class="container-fluid">
+                <br />
+                <div class="col-sm-12">
+                    <table id="GridItemMove" class="table table-bordered table-striped table-hover table-responsive GridItemMoveTable">
+                        <thead class="grid_backcolor">
+                            <tr>
+                                <th class="grid_header_backcolor" style="width:4%">Sel</th>
+                                <th class="grid_header_backcolor" style="width:12%">IBDocId</th>
+                                <th class="grid_header_backcolor" style="width:12%">FmLoc</th>
+                                <th class="grid_header_backcolor" style="width:12%">Totctns</th>
+                                <th class="grid_header_backcolor" style="width:12%">Ppk</th>
+                                <th class="grid_header_backcolor" style="width:12%">TotQty</th>
+                                <th class="grid_header_backcolor" style="width:12%">ToLoc</th>
+                                <th class="grid_header_backcolor" style="width:12%">Move Ctn(s)</th>
+                                <th class="grid_header_backcolor" style="width:12%">Move Qty</th>
+
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                                <th style="display:none;"></th>
+                            </tr>
+                        </thead>
+                        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                            @for (int i = 0; i < Model.ListGetItemMoveDetails.Count; i++)
+                            {
+                                int line = i + 1;
+                                int ppk = (Model.ListGetItemMoveDetails[i].pkg_qty);
+                                <tr id="GridID_@i" style="background-color:white;">
+                                    <td id="chkboxclick" id1="@line" id2="@ppk" style="text-align:center; width:4%">
+                                        <input id="check_@i" name="attribute" class="attribute" type="checkbox" />
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                        @Model.ListGetItemMoveDetails[i].ib_doc_id
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                        @Model.ListGetItemMoveDetails[i].loc_id
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                        @Model.ListGetItemMoveDetails[i].tot_ctns
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                        @Model.ListGetItemMoveDetails[i].pkg_qty
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                        @Model.ListGetItemMoveDetails[i].tot_qty
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left; width:12%">
+                                        @Html.TextBoxFor(model => model.ListGetItemMoveDetails[i].to_loc, new { @class = "to_loc TableTextBox", @id = "to_loc_" + i, @data = @line })
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align :left; width:12%">@Html.TextBoxFor(model => model.ListGetItemMoveDetails[i].move_ctns, new { @class = "mvctn TableTextBox numericOnly", @id = "mvctn_" + i, @data = @line })</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align :left; width:12%">
+                                        @Html.TextBoxFor(model => Model.ListGetItemMoveDetails[i].move_qty, new { @class = "mvqty TableTextBox", @id = "mvqty_" + i, @disabled = "true" })
+                                    </td>
+
+                                    <!--Display None - Region-->
+                                    <td style="font-size:12px; color:black; font-weight:bold;display:none;">
+                                        @Model.ListGetItemMoveDetails[i].rcvd_dt
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;display:none;">
+                                        @Model.ListGetItemMoveDetails[i].cont_id
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;display:none;">
+                                        @Model.ListGetItemMoveDetails[i].lot_id
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left;display:none;">
+                                        @Model.ListGetItemMoveDetails[i].palet_id
+                                    </td>
+                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left;display:none;">
+                                        @Model.ListGetItemMoveDetails[i].po_num
+                                    </td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].tot_ctns, new { @class = "tot_ctns", @id = "tot_ctns_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].tot_ctns</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].pkg_qty, new { @class = "pkg_qty", @id = "pkg_qty_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].pkg_qty</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].tot_qty, new { @class = "tot_qty", @id = "tot_qty_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].tot_qty</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].po_num, new { @class = "po_num", @id = "po_num_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].po_num</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].cont_id, new { @class = "cont_id", @id = "cont_id_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].cont_id</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].ib_doc_id, new { @class = "ib_doc_id", @id = "ib_doc_id_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].ib_doc_id</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].lot_id, new { @class = "lot_id", @id = "lot_id_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].lot_id</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].palet_id, new { @class = "palet_id", @id = "palet_id_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].palet_id</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].loc_id, new { @class = "loc_id", @id = "loc_id_" + i, @style = "text-align:right;" })@Model.ListGetItemMoveDetails[i].loc_id</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;display:none;">@Html.HiddenFor(model => model.ListGetItemMoveDetails[i].rcvd_dt, new { @class = "rcvd_dt", @id = "rcvd_dt_" + i, @style = "text-align:left;" })@Model.ListGetItemMoveDetails[i].rcvd_dt</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+    $("#btnClose").click(function () {
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $('#rcvd_dt_fm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#rcvd_dt_to').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#GridItemMove').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "pageLength": 50,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+    $("#btnSearch").click(function () {
+        debugger
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please select the Company Id", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+
+        else {
+            debugger;
+            var $buttonClicked = $(this);
+            var p_str_cmpid = $buttonClicked.attr('data-id1');
+            var p_str_itm_code = $buttonClicked.attr('data-id2');
+            var p_str_paletid = $buttonClicked.attr('data-id3');
+            var p_str_ponum = $buttonClicked.attr('data-id4');
+            var p_str_LocId = $buttonClicked.attr('data-id5');
+            var p_str_style = $buttonClicked.attr('data-id6');
+            var p_str_Color = $buttonClicked.attr('data-id7');
+            var p_str_Size = $buttonClicked.attr('data-id8');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ib_doc_id = $('#ib_doc_id').val();
+            var p_str_itm_num = $('#Itmdtl').val();
+            var p_str_itm_color = $('#itm_color').val();
+            var p_str_itm_size = $('#itm_size').val();
+            var p_str_itm_name = $('#itm_name').val();
+            var p_str_search_text = $('#search_text').val();
+            var p_str_cont_id = $('#cont_id').val();
+            var p_str_lot_id = $('#lot_id').val();
+            var p_str_loc_id = $('#loc_id').val();
+            var p_str_whs_id = $('#whs_id').val();
+            var p_str_Date_fm = $('#rcvd_dt_fm').val();
+            var p_str_Date_To = $('#rcvd_dt_to').val();
+            var p_str_po_num = $('#po_num').val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/StockChange/STK_CHG_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                    "p_str_itm_name": p_str_itm_name,
+                    "p_str_search_text": p_str_search_text,
+                    "p_str_cont_id": p_str_cont_id,
+                    "p_str_lot_id": p_str_lot_id,
+                    "p_str_loc_id": p_str_loc_id, "p_str_whs_id": p_str_whs_id,
+                    "p_str_Date_fm": p_str_Date_fm,
+                    "p_str_Date_To": p_str_Date_To, "p_str_po_num": p_str_po_num
+                },
+                dataType: "json",
+                success: function (e) {
+                },
+
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "/StockChange/DashboardItemMoveGrid",
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmpid": p_str_cmpid, "p_str_itm_code": p_str_itm_code, "p_str_paletid": p_str_paletid, "p_str_ponum": p_str_ponum, "p_str_LocId": p_str_LocId,
+                    "p_str_style": p_str_itm_num, "p_str_Color": p_str_itm_color, "p_str_Size": p_str_itm_size
+                },
+
+                dataType: 'html',
+                success: function (e) {
+                    debugger
+                    $("#ajaxLoading").hide();
+                    $('#Itemgrid').html("");
+                    $('#Itemgrid').html(e);
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();
+                    swal("Dynamic content load failed.");
+                }
+            });
+        }
+    });
+    function change(el) {
+        if (el.value === "(Click to hide...)")
+            el.value = "(Click to show...)";
+        else
+            el.value = "(Click to hide...)";
+    }
+    $("#Itmdtl").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/OutboundInq/ItemXGetitmDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#itm_color").val(ui.item.itm_color);
+            $("#itm_size").val(ui.item.itm_size);
+            $("#itm_name").val(ui.item.itm_name);
+            $("#itm_code").val(ui.item.itm_code);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+
+    $("#btnClear").click(function () {
+        $("#ib_doc_id").val("");
+        $("#whs_id").val("");
+        $("#cont_id").val("");
+        $("#Itmdtl").val("");
+        $("#itm_color").val("");
+        $("#itm_size").val("");
+        $("#itm_name").val("");
+        $("#lot_id").val("");
+        $("#loc_id").val("");
+        $("#po_num").val("");
+        $("#rcvd_dt_fm").val("");
+        $("#rcvd_dt_to").val("");
+    });
+</script>
+<script type="text/javascript">
+    $("#loc_id").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/StockChange/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#loc_id").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+
+</script>

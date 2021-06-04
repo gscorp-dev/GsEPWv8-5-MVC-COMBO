@@ -1,0 +1,71 @@
+﻿@model GsEPWv8_5_MVC.Model.OutboundInqModel
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<style type="text/css">
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 20px;
+    }
+</style>
+
+
+<table id="grdTrackingList" class="table table-bordered table-striped" style="border:1px solid #121213;">
+    <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+        <tr>
+            <th class="grid_header_backcolor" style="width:10%;">SO Number</th>
+            <th class="grid_header_backcolor" style="width:10%;">Master Tracking#</th>
+            <th class="grid_header_backcolor" style="width:10%;">Tracking#</th>
+            <th class="grid_header_backcolor" style="width:10%;">Status</th>
+            <th class="grid_header_backcolor" style="width:10%;"> Date</th>
+            <th class="grid_header_backcolor" style="width:10%;"> Delete</th>
+        </tr>
+    </thead>
+    <tbody style="background-color:rgba(0, 0, 0, 0.12); display:table; width:100%; max-height:600px; overflow-y:scroll;">
+        @for (int i = 0; i < Model.ListSOTracking.Count; i++)
+        {
+            <tr>
+                <td style="width:10%; color:black; font-weight:bold;text-align:left;">@Model.ListSOTracking[i].so_num</td>
+                <td style="width:10%; color:black; font-weight:bold;text-align:left;">@Model.ListSOTracking[i].track_num_type</td>
+                <td style="width:10%; color:black; font-weight:bold;text-align:left;">@Model.ListSOTracking[i].track_num</td>
+                <td style="width:10%; color:black; font-weight:bold;text-align:left;">@Model.ListSOTracking[i].track_status</td>
+                <td style="width:10%; color:black; font-weight:bold;text-align:left;">@Model.ListSOTracking[i].track_date</td>
+                <td style="width:10%; color:black; font-weight:bold;text-align:left;"><a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="SRTrackDeleteDetail" data-id="@Model.ListSOTracking[i].track_num" data-id1="@Model.ListSOTracking[i].cmp_id" data-id2="@Model.ListSOTracking[i].so_num"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a></td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+<script>
+    $('#grdTrackingList tbody').on('click', '.SRTrackDeleteDetail', function () {
+        debugger
+        var $buttonClicked = $(this);
+        var pstrCmpId = $buttonClicked.attr('data-id1');
+        var pstrTrackNum = $buttonClicked.attr('data-id');
+        var pstrSoNum = $buttonClicked.attr('data-id2');
+
+        $(this).closest('tr').remove()
+
+        $.ajax({
+            type: "GET",
+           url: '@Url.Content("~/OutboundInq/SaveSoTracking")',
+            data: {
+                "pstrCmpId": pstrCmpId, "pstrSoNum": pstrSoNum, "pstrTrackNum": pstrTrackNum, "pstrTrackNumType": '', "pstrMode": "D", "pstrTrackStatus": "OPEN"
+            },
+
+            datatype: "html",
+            success: function (e) {
+            $("#ajaxLoading").hide();
+            $('#showTrackingEntryGrid').html("");
+            $('#showTrackingEntryGrid').html(e);
+
+            sweetAlert("", "Tracking Record Deleted Successfully", "");
+            },
+            error: function () {
+            sweetAlert("", "Dynamic content load failed.", "");
+            }
+            });
+    });
+    </script>

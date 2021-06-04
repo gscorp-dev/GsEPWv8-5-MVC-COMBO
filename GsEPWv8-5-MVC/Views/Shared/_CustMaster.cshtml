@@ -1,0 +1,303 @@
+﻿@model GsEPWv8_5_MVC.Model.CustMasterModel
+@{
+    var Ordercount = Model.ListCustDetails.Count;
+}
+
+<style>
+    .ItemGridSummary {
+        height: 49px;
+        background: #d2d6de;
+        padding-top: 10px;
+    }
+</style>
+<div class="box-body">
+    <div class="row">
+        <div class="ItemGridSummary">
+            <table>
+                <tr>
+                    <td style="width: 5%;"></td>
+                    <td style="width:22%;">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            Total Records:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @Ordercount
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br />
+    <table id="GridCustInq" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="width:10%">CmpId</th>
+                <th class="grid_header_backcolor" style="width:10%">CustId</th>
+                <th class="grid_header_backcolor" style="width:10%">Action</th>
+                <th class="grid_header_backcolor" style="width:20%">Customer Name</th>
+                <th class="grid_header_backcolor" style="width:5%">Status</th>
+                <th class="grid_header_backcolor" style="width:5%">Whs ID</th>
+                <th class="grid_header_backcolor" style="width:10%">Contact</th>
+                <th class="grid_header_backcolor" style="width:15%">Email ID</th>
+                <th class="grid_header_backcolor" style="width:15%">Phone No</th>
+            </tr>
+        </thead>
+        <tbody style="background-color:white">
+            @for (int i = 0; i < Model.ListCustDetails.Count; i++)
+            {
+                <tr id="@Model.ListCustDetails[i].cust_of_cmp_id ">
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListCustDetails[i].cust_of_cmp_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListCustDetails[i].cmp_id</td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline;color: #59822c;" class="CustView" v_str_cmp_id="@Model.ListCustDetails[i].cust_of_cmp_id" v_str_cust_id="@Model.ListCustDetails[i].cmp_id"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="CustEdit" v_str_cmp_id="@Model.ListCustDetails[i].cust_of_cmp_id" v_str_cust_id="@Model.ListCustDetails[i].cmp_id"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="CustDelete" v_str_cmp_id="@Model.ListCustDetails[i].cust_of_cmp_id" v_str_cust_id="@Model.ListCustDetails[i].cmp_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListCustDetails[i].cmp_name</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListCustDetails[i].status</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListCustDetails[i].whs_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListCustDetails[i].contact</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListCustDetails[i].email</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListCustDetails[i].Tel</td>
+
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        $('#GridCustInq').DataTable({
+                "pageLength": 20,
+                'paging': true,
+                'lengthChange': false,
+                'searching': false,
+                'ordering': false,
+                'info': false,
+                'autoWidth': false,
+
+        });
+        $('#GridCustInq_paginate').hide();
+    })
+    var cmp_id = $("#cust_of_cmp_id").val();
+    var TeamDetailPostBackViewURL = '/CustMaster/CustomerViews';
+    $('#GridCustInq tbody').on('click', '.CustView', function () {
+    //$(".CustView").click(function () {
+        var $buttonClicked = $(this);
+        var cust_of_cmp_id = $buttonClicked.attr('v_str_cmp_id');
+        var cmp_id = $buttonClicked.attr('v_str_cust_id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#v_custofcmp_id').val();
+        var p_str_cust_id = $('#v_cmp_id').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/CustMaster/SaveInqSecInSession")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_cust_id": p_str_cust_id
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackViewURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "cust_of_cmp_id": cust_of_cmp_id, "cmp_id": cmp_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#CustomerContentView').html(data);
+                $('#CustomerView').modal(options);
+                $('#CustomerView').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+
+        //$("#closbtn").click(function () {
+        //    $('#myModal').modal('hide');
+        //});
+    });
+    var cmp_id = $("#cust_of_cmp_id").val();
+    var TeamDetailPostBackEditURL = '/CustMaster/CustomerEdit';
+    // $(".CustEdit").click(function () {
+    $('#GridCustInq tbody').on('click', '.CustEdit', function () {
+
+        var $buttonClicked = $(this);
+        var cust_of_cmp_id = $buttonClicked.attr('v_str_cmp_id');
+        var cmp_id = $buttonClicked.attr('v_str_cust_id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#v_custofcmp_id').val();
+        var p_str_cust_id = $('#v_cmp_id').val();
+
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/CustMaster/SaveInqSecInSession")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_cust_id": p_str_cust_id
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackEditURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "cust_of_cmp_id": cust_of_cmp_id, "cmp_id": cmp_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#CustomerContentEdit').html(data);
+                $('#CustomerEdit').modal(options);
+                $('#CustomerEdit').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+
+        //$("#closbtn").click(function () {
+        //    $('#myModal').modal('hide');
+        //});
+    });
+    var cmp_id = $("#cust_of_cmp_id").val();
+    var TeamDetailPostBackDelURL = '/CustMaster/Delete';
+    $('#GridCustInq tbody').on('click', '.CustDelete', function () {
+        // $(".CustDelete").click(function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var cust_of_cmp_id = $buttonClicked.attr('v_str_cmp_id');
+        var cmp_id = $buttonClicked.attr('v_str_cust_id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#v_custofcmp_id').val();
+        var p_str_cust_id = $('#v_cmp_id').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/CustMaster/SaveInqSecInSession")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_cust_id": p_str_cust_id
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackDelURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "cust_of_cmp_id": cust_of_cmp_id, "cmp_id": cmp_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#CustomerContentDel').html(data);
+                $('#CustomerDel').modal(options);
+                $('#CustomerDel').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+
+        //$("#closbtn").click(function () {
+        //    $('#myModal').modal('hide');
+        //});
+    });
+
+
+    //function Import() {
+    //    debugger
+    //    var l_str_new_cmp_id = $('#upd_cmp_id').val();
+    //    var l_str_file_name = $('#file_name').val();
+    //    if (l_str_new_cmp_id == "") {
+    //        swal("", "please select the company.", "");
+    //        $('#cmp_id').focus();
+    //        $('body,html').animate({ scrolltop: 0 }, 0);
+    //        er = 1;
+    //        return false;
+    //    }
+    //    if (l_str_file_name == "") {
+    //        swal("", "please select the File.", "");
+    //        $('#file_name').focus();
+    //        $('body,html').animate({ scrolltop: 0 }, 0);
+    //        er = 1;
+    //        return false;
+    //    }
+    //    debugger
+    //    // Checking whether FormData is available in browser
+    //    if (window.FormData !== undefined) {
+
+    //        var fileUpload = $("#img1").get(0);
+    //        var files = fileUpload.files;
+    //        // Create FormData object
+    //        var fileData = new FormData();
+    //        // Looping over all files and add it to FormData object
+    //        for (var i = 0; i < files.length; i++) {
+    //            fileData.append(files[i].name, files[i]);
+    //        }
+
+    //        // Adding one more key to FormData object
+    //        fileData.append('username', 'Manas');
+    //        if (file_name != "") {
+    //            $.ajax({
+    //                url: '/CustMaster/UploadFiles?l_str_cmp_id=' + l_str_new_cmp_id,
+    //                type: "POST",
+    //                contentType: false, // Not to set any content header
+    //                processData: false, // Not to process data
+    //                data: fileData,
+    //                success: function (result) {
+    //                    debugger
+
+    //                },
+    //                error: function (err) {
+    //                    alert(err.statusText);
+    //                }
+    //        });
+    //    }
+
+    //}
+    //else {
+    //        alert("FormData is not supported.");
+    //}
+    //}
+</script>

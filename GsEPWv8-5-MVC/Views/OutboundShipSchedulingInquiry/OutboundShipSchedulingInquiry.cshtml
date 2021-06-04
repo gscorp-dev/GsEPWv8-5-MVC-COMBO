@@ -1,0 +1,771 @@
+﻿
+@model  GsEPWv8_5_MVC.Model.OutboundShipSchedulingInquiryModel
+
+@{
+    ViewBag.Title = "OutboundShipSchedulingInquiry";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var Ordercount = Model.LstOutboundShipScheduleInqdetail.Count;
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+</style>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+
+@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+@Html.HiddenFor(model => model.screentitle)  
+
+
+
+@using (Html.BeginForm("OutboundShipInq", "OutboundShipInq", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <a href="/DashBoardB2B/DashBoardB2B" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    Shipping Schedule Inquiry & Analysis
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-8 col-sm-8 col-xs-8">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-3 Lblmanual" for="first-name" style="left:106px;padding-top:6px">
+                                   Comp ID
+                                </label>
+                                <div class="col-md-4 col-sm-4 col-xs-4">
+                                    @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                    {
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                    }
+                                </div>
+                                <label class="control-label col-md-1 col-sm-1 col-xs-1 Lblmanual" for="first-name" style="padding-top:5px">
+                                    Aloc#
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-48px">
+                                    @Html.TextBoxFor(model => model.aloc_doc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                               
+
+                            </div>
+                            <div class="form-group" style="padding-top:26px">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="left:86px;padding-top:6px">
+                                    Ship  Fm Dt
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                    @Html.TextBoxFor(model => model.Ship_dt_Fm, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                </div>
+                                <label class="control-label col-md-1 col-sm-1 col-xs-1 Lblmanual" for="first-name" style="padding-top:6px">
+                                    To
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-61px">
+                                    @Html.TextBoxFor(model => model.Ship_dt_To, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-70px;">
+                                    <button type="button" id="btnSearch" class="btn_search">Search </button>
+                                    <button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear</button>
+                                </div>
+                                </div>
+                         
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3" style="left:175px">
+                            <fieldset>
+                                <legend>Report Selection</legend>
+
+                                <table style="margin-top:0px;">
+                                    <tr>
+
+                                        <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Outboundpackslip" name="radio1" checked /><b> Packing Slip</b></td>
+                                       
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                            <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                <option>PDF</option>
+                                                <option>XLS</option>
+                                              
+                                            </select>
+
+                                        </td>
+                                        <td>
+                                            <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                            <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                <option>VIEW</option>
+                                                <option>EMAIL</option>
+
+                                            </select>
+
+
+                                        </td>
+                                        <td>
+
+                                            <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="showgrid" class="box-header" style="padding: 5px; ">
+        <div class="gridSummary">
+            <table style="width:100%">
+                <tr>
+                    <td style="width:20%;text-align:right">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            Total Records:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @Ordercount
+                        </label>
+                    </td>
+                    <td style=" width:105px;"></td>
+                    <td style=" width:105px;"></td>
+                    <td>
+                        @*<button type="button" id="btnClose" class="btn-Close">Close</button>*@
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr class="break" />
+        <div class="box-body">
+
+            <table id="GridShipSchedule" class="table table-bordered table-striped">
+
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%">Select</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%">SR.No</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%">Status</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%">Alloc.No</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%">Alloc.Date</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%">WhsID</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%">CustID</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:15%">ShipVia</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:15%">ShipTo</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%">ShipSchdlID</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%">ShipSchdlDate</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%">CarrierID</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (int i = 0; i < Model.LstOutboundShipScheduleInqdetail.Count; i++)
+                    {
+                        var l_str_ship_schdl_date = @Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date;
+                        <tr class="row-select">
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.LstOutboundShipScheduleInqdetail[i].ship_doc_id" /></td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].so_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].status</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].aloc_dt</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].whs_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].cust_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].ship_via_name</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].ship_to</td>
+                            <td>
+                                <table>
+                                    <tr>
+                                        @if (l_str_ship_schdl_date == "" || l_str_ship_schdl_date == null)
+                                        {
+                                            <td>
+                                                <a href="javascript:void(0);" class="btn btn-primary small ShipScheduleAddDetail" style="color: white;margin-left:115px;height: 17px;width: 44px;border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;margin-top:8%;" data-id="@Model.LstOutboundShipScheduleInqdetail[i].cmp_id" data-id1="@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundShipScheduleInqdetail[i].status">ADD</a>
+                                            </td>
+
+                                        }
+
+                                        else
+                                        {
+                                            <td>
+                                                <table>
+                                                    <tr>
+
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">
+                                                            <a href="javascript:void(0);" class="ShipScheduleDetail" style="text-decoration:underline; color:#034af3;padding:0px 11px" data-id="@Model.LstOutboundShipScheduleInqdetail[i].cmp_id" data-id1="@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundShipScheduleInqdetail[i].status"
+                                                               data-id3="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_doc_id" data-id4="@Model.LstOutboundShipScheduleInqdetail[i].ship_car_name"
+                                                               data-id5="@Model.LstOutboundShipScheduleInqdetail[i].truck_id" data-id6="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date"
+                                                               data-id7="@Model.LstOutboundShipScheduleInqdetail[i].notes">@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_doc_id</a>
+                                                        </td>
+                                                        <td> </td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline;color: blue;padding:0px 11px" class="ShipScheduleEditDetail" data-id="@Model.LstOutboundShipScheduleInqdetail[i].cmp_id" data-id1="@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundShipScheduleInqdetail[i].status" data-id3="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_doc_id" data-id4="@Model.LstOutboundShipScheduleInqdetail[i].ship_car_name" data-id5="@Model.LstOutboundShipScheduleInqdetail[i].truck_id" data-id6="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date" data-id7="@Model.LstOutboundShipScheduleInqdetail[i].notes"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>E</b></a>
+                                                        </td>
+                                                        <td> </td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline; color: red;padding:0px 11px" class="ShipScheduleDelDetail" data-id="@Model.LstOutboundShipScheduleInqdetail[i].cmp_id" data-id1="@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundShipScheduleInqdetail[i].status" data-id3="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_doc_id" data-id4="@Model.LstOutboundShipScheduleInqdetail[i].ship_car_name" data-id5="@Model.LstOutboundShipScheduleInqdetail[i].truck_id" data-id6="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date" data-id7="@Model.LstOutboundShipScheduleInqdetail[i].notes"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>D</b></a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        }
+
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].truck_id</td>
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="width: 1000px; height: 650px;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" style="margin-top: -38px;" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id="load" class="modal-body">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+}
+
+<div id='myModalEdit' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%;left:-281px;">
+            <div id='myModalContentEdit' style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalDel' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:150%;left:-281px;">
+            <div id='myModalContentDel' style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalAdd' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%; left:-365px;">
+            <div id='myModalContentAdd' style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalView' class='modal'>
+<div class="modal-dialog">
+    <div class="modal-content" style="width: 150%; left:-365px;">
+        <div id='myModalContentView' style="width: 100%; height:400px;"></div>
+    </div>
+</div>
+
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+
+    function change(el) {
+        if (el.value === "(Click to hide...)")
+            el.value = "(Click to show...)";
+        else
+            el.value = "(Click to hide...)";
+    }
+    $('#Ship_dt_Fm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#Ship_dt_To').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $("#btnSearch").click(function () {
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ship_dt_frm = $('#Ship_dt_Fm').val();
+            var p_str_ship_dt_to = $('#Ship_dt_To').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundShipSchedulingInquiry/GetOutboundShipSchedulingInqDetail")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ship_dt_frm": p_str_ship_dt_frm, "p_str_ship_dt_to": p_str_ship_dt_to,"p_str_AlocId": p_str_AlocId        
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#showgrid').html("");
+                    $('#showgrid').html(e);
+                },
+
+            })
+        }
+    });
+</script>
+
+<script>
+
+    $("#btnprocesss").click(function () {
+        debugger
+        var getFormat = $('#id_format').find(":selected").text();
+        var getMode = $('#id_mode').find(":selected").text();
+
+        if (getFormat == 'XLS' && getMode == 'VIEW') {
+            var type = "Excel";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio1']:checked").val();
+            if (var_name == "GridSummary") {
+                var p_str_radio = var_name;
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_ship_docId_Fm = $('#ship_doc_id_Fm').val();
+                var p_str_ship_docId_To = $('#ship_doc_id_To').val();
+                var p_str_ship_dt_frm = $('#Ship_dt_Fm').val();
+                var p_str_ship_dt_to = $('#Ship_dt_To').val();
+                var p_str_CustId = $('#cust_id').val();
+                var p_str_AlocId = $('#aloc_doc_id').val();
+                var p_str_Shipto = $('#ship_to').val();
+                var p_str_ship_via_name = $('#ship_via_name').val();
+                var p_str_status = $('#status').val();
+                var p_str_Whsid = $('#whs_id').val();
+                window.location.replace("/OutboundShipInq/ShowReport? &SelectedID=" + SelectdID + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_radio=' + p_str_radio
++ '&p_str_ship_docId_Fm=' + p_str_ship_docId_Fm + '&p_str_ship_docId_To=' + p_str_ship_docId_To + '&p_str_ship_dt_frm=' + p_str_ship_dt_frm + '&p_str_ship_dt_to=' + p_str_ship_dt_to
++ '&p_str_CustId=' + p_str_CustId + '&p_str_AlocId=' + p_str_AlocId + '& p_str_Shipto=' + p_str_Shipto + '&p_str_ship_via_name = ' + p_str_ship_via_name + '& p_str_status=' + p_str_status + '& p_str_Whsid=' + p_str_Whsid + '&type=' + type)
+            }
+            else {
+                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                if (numberOfCheckboxes == 0) {
+
+                    // not2("Please select the Record to Print.");
+                    sweetAlert("", "Please select the Record to Print.", "");
+                }
+
+                else {
+                    $("input[name='tblcheckbox']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    var Count = $("input[name='tblcheckbox']:checked").length;
+                    if (Count > 0) {
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+
+                        });
+                        var var_name = $("input[name='radio1']:checked").val();
+                        var p_str_cmpid = $('#cmp_id').val();
+                        var p_str_radio = var_name;
+
+                        window.location.replace("/OutboundShipInq/ShowReport? &SelectedID=" + SelectdID + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_radio=' + p_str_radio
++ '&p_str_ship_docId_Fm=' + p_str_ship_docId_Fm + '&p_str_ship_docId_To=' + p_str_ship_docId_To + '&p_str_ship_dt_frm=' + p_str_ship_dt_frm + '&p_str_ship_dt_to=' + p_str_ship_dt_to
++ '&p_str_CustId=' + p_str_CustId + '&p_str_AlocId=' + p_str_AlocId + '& p_str_Shipto=' + p_str_Shipto + '&p_str_ship_via_name = ' + p_str_ship_via_name + '& p_str_status=' + p_str_status + '& p_str_Whsid=' + p_str_Whsid + '&type=' + type)
+
+                    }
+                    else {
+
+                        $("input:checkbox").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                this.checked = !this.checked;
+                            }
+                        });
+
+                    }
+
+                }
+            }
+
+        }
+
+        if (getFormat == 'PDF' && getMode == 'VIEW') {
+            var type = "PDF";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio1']:checked").val();
+            if (var_name == "GridSummary") {
+                var p_str_radio = var_name;
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_ship_docId_Fm = $('#ship_doc_id_Fm').val();
+                var p_str_ship_docId_To = $('#ship_doc_id_To').val();
+                var p_str_ship_dt_frm = $('#Ship_dt_Fm').val();
+                var p_str_ship_dt_to = $('#Ship_dt_To').val();
+                var p_str_CustId = $('#cust_id').val();
+                var p_str_AlocId = $('#aloc_doc_id').val();
+                var p_str_Shipto = $('#ship_to').val();
+                var p_str_ship_via_name = $('#ship_via_name').val();
+                var p_str_status = $('#status').val();
+                var p_str_Whsid = $('#whs_id').val();
+                window.open('ShowReport?SelectedID=' + SelectdID + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_radio=' + p_str_radio
++ '&p_str_ship_docId_Fm=' + p_str_ship_docId_Fm + '&p_str_ship_docId_To=' + p_str_ship_docId_To + '&p_str_ship_dt_frm=' + p_str_ship_dt_frm + '&p_str_ship_dt_to=' + p_str_ship_dt_to
++ '&p_str_CustId=' + p_str_CustId + '&p_str_AlocId=' + p_str_AlocId + '& p_str_Shipto=' + p_str_Shipto + '&p_str_ship_via_name = ' + p_str_ship_via_name + '& p_str_status=' + p_str_status + '& p_str_Whsid=' + p_str_Whsid + '&type=' + type, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+
+            }
+            else {
+                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                if (numberOfCheckboxes == 0) {
+                    sweetAlert("", "Please select the Record to Print.", "");
+                }
+
+                else {
+                    $("input[name='tblcheckbox']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    var Count = $("input[name='tblcheckbox']:checked").length;
+                    if (Count > 0) {
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+
+                        });
+                        var var_name = $("input[name='radio1']:checked").val();
+                        var p_str_cmpid = $('#cmp_id').val();
+                        var p_str_radio = var_name;
+
+                        window.open('ShowReport?SelectedID=' + SelectdID + '&p_str_cmp_id=' + p_str_cmpid + '&p_str_radio=' + p_str_radio + '&type=' + type, 'OutboundShipSchedulingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID)
+                    }
+                    else {
+
+                        $("input:checkbox").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                this.checked = !this.checked;
+                            }
+                        });
+
+                    }
+
+                }
+            }
+
+        }
+        if (getFormat == 'PDF' && getMode == 'EMAIL') {
+            var options = { "backdrop": "static", keyboard: true };
+
+            var TeamDetailPostemailBackURL = '/OutboundShipInq/EmailShowReport';
+            var type = "PDF";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio1']:checked").val();
+            if (var_name == "GridSummary") {
+                var p_str_radio = var_name;
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_ship_docId_Fm = $('#ship_doc_id_Fm').val();
+                var p_str_ship_docId_To = $('#ship_doc_id_To').val();
+                var p_str_ship_dt_frm = $('#Ship_dt_Fm').val();
+                var p_str_ship_dt_to = $('#Ship_dt_To').val();
+                var p_str_CustId = $('#cust_id').val();
+                var p_str_AlocId = $('#aloc_doc_id').val();
+                var p_str_Shipto = $('#ship_to').val();
+                var p_str_ship_via_name = $('#ship_via_name').val();
+                var p_str_status = $('#status').val();
+                var p_str_Whsid = $('#whs_id').val();
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "SelectedID": SelectdID, "p_str_cmp_id": p_str_cmp_id, "p_str_radio": p_str_radio, "p_str_ship_docId_Fm": p_str_ship_docId_Fm,
+                        "p_str_ship_docId_To": p_str_ship_docId_To, "p_str_ship_dt_frm": p_str_ship_dt_frm, "p_str_ship_dt_to": p_str_ship_dt_to, "p_str_CustId": p_str_CustId,
+                        "p_str_AlocId": p_str_AlocId, "p_str_Shipto": p_str_Shipto, "p_str_ship_via_name": p_str_ship_via_name, "p_str_status": p_str_status, "p_str_Whsid": p_str_Whsid, "type": type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+            }
+            else {
+                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                if (numberOfCheckboxes == 0) {
+
+                    // not2("Please select the Record to Print.");
+                    sweetAlert("", "Please select the Record to Print.", "");
+                    $("#ajaxLoading").hide();
+                }
+
+                else {
+                    $("input[name='tblcheckbox']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    var Count = $("input[name='tblcheckbox']:checked").length;
+                    if (Count > 0) {
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+
+                        });
+                        var var_name = $("input[name='radio1']:checked").val();
+                        var p_str_cmpid = $('#cmp_id').val();
+                        var p_str_radio = var_name;
+
+
+                        $.ajax({
+                            type: "GET",
+                            url: TeamDetailPostemailBackURL,
+                            contentType: "application/json; charset=utf-8",
+                            data: {
+                                "SelectedID": SelectdID, "p_str_cmp_id": p_str_cmpid, "p_str_radio": p_str_radio, "p_str_ship_docId_Fm": p_str_ship_docId_Fm,
+                                "p_str_ship_docId_To": p_str_ship_docId_To, "p_str_ship_dt_frm": p_str_ship_dt_frm, "p_str_ship_dt_to": p_str_ship_dt_to, "p_str_CustId": p_str_CustId,
+                                "p_str_AlocId": p_str_AlocId, "p_str_Shipto": p_str_Shipto, "p_str_ship_via_name": p_str_ship_via_name, "p_str_status": p_str_status, "p_str_Whsid": p_str_Whsid, "type": type
+                            },
+                            datatype: "json",
+                            success: function (data) {
+                                $("#ajaxLoading").hide();
+                                $('#myModalEmailContent').html(data);
+                                $('#myModalEmail').modal(options);
+                                $('#myModalEmail').modal('show');
+
+                            },
+                            error: function () {
+                                alert("Dynamic content load failed.");
+                                $("#ajaxLoading").hide();
+                            }
+                        });
+                    }
+                    else {
+
+                        $("input:checkbox").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                this.checked = !this.checked;
+                            }
+                        });
+
+                    }
+
+                }
+            }
+
+        }
+    })
+    $('#GridShipSchedule').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        // "scrollY": "280px",
+        "scrollCollapse": true,
+        //true
+        //"sDom": 't',
+        "sScrollY": "460px",
+        "sScrollX": "100%"
+    })
+</script>
+<script type="text/javascript">
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseB2B").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("DashboardB2B", "DashboardB2B")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+
+

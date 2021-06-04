@@ -1,0 +1,820 @@
+﻿@model  GsEPWv8_5_MVC.Model.InboundReportModel
+
+@{
+    ViewBag.Title = "InboundReport";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var Ordercount = Model.LstinboundRpt.Count;
+
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 11px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+</style>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+@using (Html.BeginForm("InboundReport", "InboundReport", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <a href="/DashBoardB2B/DashBoardB2B" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    Receiving Reports
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-8 col-sm-8 col-xs-8">
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;">
+                                <tr>
+                                    <td style="width: 9%;text-align: right;">
+                                        <label><b class="Lblmanual">Company Id</b></label>
+                                    </td>
+                                    <td style="width: 38%; padding-left: 1%;">
+                                        @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                        {
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                        }
+                                    </td>
+                                  
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div  id="idShowWhs" class="col-md-8 col-sm-8 col-xs-8">
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;">
+
+                                <tr>
+                                    <td style="width: 9%;text-align: right;">
+                                        <label><b class="Lblmanual">Whs Id</b></label>
+                                    </td>
+                                    <td style="width: 25%; padding-left: 1%;">
+                                        @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListwhsPickDtl, "whs_id", "whs_name"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;background-color:lightyellow;" })
+                                                       </td>
+
+                                </tr>
+                     
+                            </table>
+                            </div>
+                      
+                        <div class="col-md-8 col-sm-8 col-xs-8">
+                            <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                <tr>
+                                    <td style="width: 8%;text-align: right;">
+                                        <label><b class="Lblmanual">Date Fm </b></label>
+                                    </td>
+                                    <td style="width: 10%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.RcvdDtFm, new { @class = "form-control txtlbl", @maxlength = "200", @placeholder = "MM/DD/YYYY", @autocomplete = "off" })
+                                    </td>
+                                    <td style="text-align: right; width:1%;">
+                                        <label><b class="Lblmanual">To </b></label>
+                                    </td>
+                                    <td style="width: 10%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.RcvdDtTo, new { @class = "form-control txtlbl", @maxlength = "200", @placeholder = "MM/DD/YYYY", @autocomplete = "off" })
+                                    </td>
+                                    <td style="text-align: right;width: 6%">
+                                        <label><b class="Lblmanual">IbDocId Fm </b></label>
+                                    </td>
+                                    <td style="width: 10%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.ib_doc_idFm, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </td>
+                                    <td style="text-align: right; width:1%;">
+                                        <label><b class="Lblmanual">To </b></label>
+                                    </td>
+                                    <td style="width: 10%;  padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.ib_doc_idTo, new { @class = "form-control txtlbl", @maxlength = "50", })
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;text-align:right">
+
+                                <tr>
+                                    <td style="width: 5%;text-align: center;">
+                                        <label><b class="Lblmanual">Style</b></label>
+                                    </td>
+                                    <td style="width: 10%;text-align: left;">
+                                        @Html.TextBoxFor(model => model.itm_num, new { @id = "ir_itm_num", @class = "form-control txtlbl", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td style="width: 5%;text-align: center;">
+                                        <label><b class="Lblmanual">Color</b></label>
+                                    </td>
+                                    <td style="width: 10%;text-align: right;">
+                                        @Html.TextBoxFor(model => model.itm_color, new { @id = "ir_itm_color", @class = "form-control txtlbl", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td style="width: 5%;text-align: center;">
+                                        <label><b class="Lblmanual">Size</b></label>
+                                    </td>
+                                    <td style="width: 10%;text-align: right;">
+                                        @Html.TextBoxFor(model => model.itm_size, new { @id = "ir_itm_size", @class = "form-control txtlbl", @maxlength = "20", @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td style="text-align: center; width: 5%;">
+                                        <label><b class="Lblmanual">Desc</b></label>
+                                    </td>
+                                    <td style="width: 40%;text-align: right;">
+                                        @Html.TextBoxFor(model => model.itm_name, new { @id = "ir_itm_name", @class = "form-control txtlbl", @maxlength = "75", @style = "background-color:lightyellow;" })
+                                    </td>
+
+                                    <td style="width: 15%;text-align: right;">
+                                        @Html.DropDownListFor(model => model.status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @id = "ir_status", @class = "form-control txtlbl" })
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                            <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;text-align:right">
+                                <tr>
+                                    <td style="width: 11%;text-align: right;">
+                                        <label><b class="Lblmanual">Container Id </b></label>
+                                    </td>
+                                    <td style="width: 25%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.cntr_id, new { @class = "form-control txtlbl", @maxlength = "30" })
+                                    </td>
+
+                                    <td style="text-align: right; width: 4%;">
+                                        <label><b class="Lblmanual">Status </b></label>
+                                    </td>
+                                    <td style="width: 6%; padding-left: 1%;">
+                                        <select id="id_rcvd_status" class="btn-Format" type="button" style="font-size: 12px; text-align:left; font-family: verdana;background-color:lightyellow " data-toggle="dropdown">
+                                            <option>ALL</option>
+                                            <option>OPEN</option>
+                                            <option>POST</option>
+
+                                        </select>
+                                    </td>
+                                    <td style="text-align: right; width: 6%;">
+                                        <label><b class="Lblmanual">Bill Status </b></label>
+                                    </td>
+
+                                    <td style="width: 6%; padding-left: 1%;">
+                                        <select id="id_bill_status" class="btn-Format" type="button" style="margin-left:6px;font-size: 12px; font-family: verdana;background-color:lightyellow; text-align:left " data-toggle="dropdown">
+                                            <option>ALL</option>
+                                            <option>BILLED</option>
+                                            <option>UN-BILLED</option>
+
+                                        </select>
+                                    </td>
+
+                                    <td></td>
+                                    <td>
+                                        <button type="button" id="btnSearch" class="btn_search" style="margin-left: 21px;">Search </button>
+                                        <button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                    </td>
+
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-xs-1">
+
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                            <fieldset>
+                                <legend>Report Selection</legend>
+
+
+                                <table style="margin-top:-16px;">
+                                    <tr>
+                                        <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="InbndDate" name="radio1" checked /><b>Receiving Rpt By Received Date</b></td>
+                                        <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="InbndStyle" name="radio1" /><b>Receiving Rpt By Style</b></td>
+                                    </tr>
+
+                                    <tr>
+
+                                        <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="IBRcvdByCntr" name="radio1" checked /><b>Receiving Rpt By Container</b></td>
+                                        <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="IBRcvdSummary" name="radio1" checked /><b>Receiving Summary Rpt</b></td>
+                                    </tr>
+
+
+
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                        </td>
+                                        <td>
+
+                                            <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                <option>XLS</option>
+                                                <option>PDF</option>
+                                            </select>
+
+                                        </td>
+                                        <td>
+                                            <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                        </td>
+                                        <td>
+
+                                            <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                <option>VIEW</option>
+                                                @*<option>EXPORT</option>*@
+                                                <option>EMAIL</option>
+
+                                            </select>
+
+
+                                        </td>
+                                        <td>
+
+                                            <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="showgrid" class="box-header" style="padding: 5px; ">
+
+        <div class="box-body">
+            <div class="gridSummary">
+                <table style="width:100%">
+                    <tr>
+                        <td style="width: 20%;text-align:right">
+                            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                Total Records:
+                            </span>
+                            <label class="totalCount" style="text-align:left">
+                                @Ordercount
+                            </label>
+                        </td>
+                        <td style=" width:105px;"></td>
+                        <td style=" width:105px;"></td>
+                        <td>
+                            @*<button type="button" id="btnClose" class="btn-Close">Close</button>*@
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <hr class="break" />
+            <table id="InqRpt" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        @*<th class="grid_header_backcolor">WHS</th>*@
+                        <th class="grid_header_backcolor">CntrId</th>
+                        <th class="grid_header_backcolor">IBdocId</th>
+                        <th class="grid_header_backcolor">RcvdDt</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">ItemName</th>
+                        <th class="grid_header_backcolor">PoNum</th>
+                        <th class="grid_header_backcolor">LocId</th>
+                        <th class="grid_header_backcolor">LotId</th>
+                        <th class="grid_header_backcolor">Ctns</th>
+                        <th class="grid_header_backcolor">PPK</th>
+                        <th class="grid_header_backcolor">TotQty</th>
+                        <th class="grid_header_backcolor">L/W/H</th>
+                        <th class="grid_header_backcolor">Wgt</th>
+                        <th class="grid_header_backcolor">Cube</th>
+                        <th class="grid_header_backcolor">PaletId</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (int i = 0; i < Model.LstinboundRpt.Count; i++)
+                    {
+                        var Length = (Model.LstinboundRpt[i].length);
+                        var Width = (Model.LstinboundRpt[i].Width);
+                        var Height = (Model.LstinboundRpt[i].height);
+                        var Cube = (Model.LstinboundRpt[i].cube);
+                        var weight = (Model.LstinboundRpt[i].Wgt);
+                        var l_dec_Length = Length.ToString("F2");
+                        var l_dec_Width = Width.ToString("F2");
+                        var l_dec_Height = Height.ToString("F2");
+                        var l_dec_Cube = Cube.ToString("F3");
+                        var l_dec_weight = weight.ToString("F2");
+                        var l_str_LWH = l_dec_Length + "/" + l_dec_Width + "/" + l_dec_Height;
+                        <tr class="row-select">
+                            @*<td style="font-size:10px; color:black; font-weight:bold; font-family:Verdana;">@Model.LstinboundRpt[i].whs_id</td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].cntr_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].ib_doc_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].RcvdDt</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana; ">@Model.LstinboundRpt[i].Style</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].Color</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].Size</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].ItmName</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].PoNum</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].LocId</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].LotId</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;text-align:right;">@Model.LstinboundRpt[i].Ctns</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;text-align:right;">@Model.LstinboundRpt[i].ppk</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;text-align:right;">@Model.LstinboundRpt[i].TotalQty</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@l_str_LWH</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;text-align:right;">@l_dec_weight</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana; text-align:right;">@l_dec_Cube</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].PaletId</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="width: 1000px; height: 650px;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" style="margin-top: -38px;" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id="load" class="modal-body">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='myModalEmail' class='modal'>
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="width: 198%; left:-160px;">
+                            <div id='myModalEmailContent' style="width: 100%; height: 700px;"></div>
+                        </div>
+                    </div>
+
+                </div>
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript">
+                    $("#btnDashboard").click(function () {
+                        var p_str_cmpid = $('#cmp_id').val();
+                        var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+                        url += '?id=' + p_str_cmpid;
+                        window.location.href = url;
+                    })
+                    @*$("#btnDashboard").click(function () {
+                        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+                    })*@
+                    function change(el) {
+                        if (el.value === "(Click to hide...)")
+                            el.value = "(Click to show...)";
+                        else
+                            el.value = "(Click to hide...)";
+                    }
+
+                    $('#RcvdDtFm').datetimepicker({
+                        timepicker: false,
+                        step: 15, format: 'm-d-Y'
+                    });
+                    $('#RcvdDtTo').datetimepicker({
+                        timepicker: false,
+                        step: 15, format: 'm-d-Y'
+                    });
+                    $('#example1').DataTable({
+                        //"paging": true,
+                        "lengthChange": false,
+                        "searching": false,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": false
+                    });
+                    $('#example4').DataTable({
+                        //"paging": true,
+                        "lengthChange": false,
+                        "searching": false,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": false
+                    });
+                    $("#btnClose").click(function () {
+
+                        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+                    })
+    
+                    $("#btnCloseB2B").click(function () {
+
+                        window.location.href = '@Url.Action("DashboardB2B", "DashBoardB2B")';
+                    })
+
+                    $("#btnCloseecom").click(function () {
+
+                        window.location.href = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+                        
+                    })
+    
+                    $("#btnSearch").click(function () {
+                        var cmp_id = $("#cmp_id").val();
+                        if (cmp_id == "") {
+                            not2("Please Select The Company.")
+                            $('#cmp_id').focus();
+                            $('body,html').animate({ scrollTop: 0 }, 0);
+                            er = 1;
+                            return false;
+                        }
+
+                        else {
+                            var p_str_cmp_id = $('#cmp_id').val();
+                            var p_str_whs_id = $('#whs_id').val();
+                            var p_str_RcvdDtFm = $('#RcvdDtFm').val();
+                            var p_str_RcvdDtTo = $('#RcvdDtTo').val();
+                            var p_str_ib_doc_idFm = $('#ib_doc_idFm').val();
+                            var p_str_ib_doc_idTo = $('#ib_doc_idTo').val();
+                            var p_str_cntr_id = $('#cntr_id').val();
+                            var p_str_rcvd_status = $('#id_rcvd_status').find(":selected").text();
+                            var p_str_bill_status = $('#id_bill_status').find(":selected").text();
+                            var p_str_itm_num = $('#ir_itm_num').val();
+                            var p_str_itm_color = $('#ir_itm_color').val();
+                            var p_str_itm_size = $('#ir_itm_size').val();
+                            var p_str_itm_name = $('#ir_itm_name').val();
+                            var p_str_status = $('#ir_status').find(":selected").text();
+
+                            $("#ajaxLoading").show();
+                            $.ajax({
+                                type: "GET",
+                                url: '@Url.Content("~/InboundReport/GetInboundReport")',
+                                data: {
+                                    "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id, "p_str_ib_doc_idFm": p_str_ib_doc_idFm, "p_str_ib_doc_idTo": p_str_ib_doc_idTo,
+                                    "p_str_RcvdDtFm": p_str_RcvdDtFm, "p_str_RcvdDtTo": p_str_RcvdDtTo, "p_str_cntr_id": p_str_cntr_id,
+                                    "p_str_rcvd_status": p_str_rcvd_status, "p_str_bill_status": p_str_bill_status, "p_str_itm_num": p_str_itm_num,
+                                    "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name, "p_str_status": p_str_status
+
+
+                                },
+                                dataType: 'html',
+                                success: function (e) {
+                                    $("#ajaxLoading").hide();
+                                    $('#showgrid').html("");
+                                    $('#showgrid').html(e);
+                                },
+
+                            })
+                        }
+                    });
+                    $("#whsdtl").autocomplete({
+
+                        matchContains: true,
+                        minChars: 1,
+                        mustMatch: true,
+                        source: '/InboundReport/GetWhsDetailss?cmpid=' + $('#cmp_id').val() + "&", //'@Url.Action("SearchActivity")'
+                        select: function (event, ui) {
+                            var UID = $("#whs_id").val(ui.item.whs_id);
+                        }
+                    });
+
+
+</script>
+<script>
+
+                    $("#btnprocesss").click(function () {
+                        debugger
+                        var getFormat = $('#id_format').find(":selected").text();
+                        var getMode = $('#id_mode').find(":selected").text();
+
+                        if (getFormat == 'XLS' && getMode == 'VIEW') {
+
+                            var type = "Excel";
+                            var SelectedRow = [];
+                            var checkboxIDArray = [];
+                            var chkbtn = $(this).html();
+                            var var_name = $("input[name='radio1']:checked").val();
+                            var p_str_cmp_id = $('#cmp_id').val();
+                            var p_str_whs_id = $('#whs_id').val();
+                            var p_str_RcvdDtFm = $('#RcvdDtFm').val();
+                            var p_str_RcvdDtTo = $('#RcvdDtTo').val();
+                            var p_str_ib_doc_idFm = $('#ib_doc_idFm').val();
+                            var p_str_ib_doc_idTo = $('#ib_doc_idTo').val();
+                            var p_str_cntr_id = $('#cntr_id').val();
+                            var p_str_rcvd_status = $('#id_rcvd_status').find(":selected").text();
+                            var p_str_bill_status = $('#id_bill_status').find(":selected").text();
+
+                            var p_str_itm_num = $('#ir_itm_num').val();
+                            var p_str_itm_color = $('#ir_itm_color').val();
+                            var p_str_itm_size = $('#ir_itm_size').val();
+                            var p_str_itm_name = $('#ir_itm_name').val();
+                            var p_str_status = $('#ir_status').find(":selected").text();
+
+                            if (var_name == "InbndStyle" || var_name == "IBRcvdSummary" || var_name == "InbndDate") {
+                                window.location.replace("/InboundReport/ShowReport?var_name=" + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id
+                                          + '&p_str_RcvdDtFm=' + p_str_RcvdDtFm + '&p_str_RcvdDtTo=' + p_str_RcvdDtTo + '&p_str_ib_doc_idFm='
+                                          + p_str_ib_doc_idFm + '&p_str_ib_doc_idTo=' + p_str_ib_doc_idTo + '&type=' + type
+                                          + '&p_str_cntr_id=' + p_str_cntr_id + '&p_str_rcvd_status=' + p_str_rcvd_status + '&p_str_bill_status=' + p_str_bill_status
+                                          + '&p_str_itm_num=' + p_str_itm_num + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size
+                                          + '&p_str_itm_name=' + p_str_itm_name + '&p_str_status=' + p_str_status)
+                            }
+                            //else if (var_name == "InbndDate") {
+                            //    window.location.replace("/InboundReport/ShowReport?var_name=" + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id
+                            //              + '&p_str_RcvdDtFm=' + p_str_RcvdDtFm + '&p_str_RcvdDtTo=' + p_str_RcvdDtTo + '&p_str_ib_doc_idFm=' + p_str_ib_doc_idFm + '&p_str_ib_doc_idTo=' + p_str_ib_doc_idTo + '&type=' + type)
+                            //}
+                            else if (var_name == "IBRcvdByCntr") {
+                                window.location.replace("/InboundReport/ShowReportByCntr?p_str_rpt_type=" + type + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id
+                                    + '&p_str_cntr_id=' + p_str_cntr_id + '&p_str_rcvd_dt_from=' + p_str_RcvdDtFm + '&p_str_rcvd_dt_to=' + p_str_RcvdDtTo + '&p_str_RcvdDtFm=' + p_str_RcvdDtFm + '&p_str_RcvdDtTo=' + p_str_RcvdDtTo)
+                            }
+
+
+                        }
+                        if (getFormat == 'PDF' && getMode == 'VIEW') {
+                            var type = "PDF";
+                            var SelectedRow = [];
+                            var checkboxIDArray = [];
+                            var chkbtn = $(this).html();
+                            var var_name = $("input[name='radio1']:checked").val();
+                            var p_str_cmp_id = $('#cmp_id').val();
+                            var p_str_whs_id = $('#whs_id').val();
+                            var p_str_RcvdDtFm = $('#RcvdDtFm').val();
+                            var p_str_RcvdDtTo = $('#RcvdDtTo').val();
+                            var p_str_ib_doc_idFm = $('#ib_doc_idFm').val();
+                            var p_str_ib_doc_idTo = $('#ib_doc_idTo').val();
+                            var p_str_cntr_id = $('#cntr_id').val();
+                            if (var_name == "InbndStyle") {
+                                //window.location.replace("/InboundReport/ShowReport?var_name=" + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id
+                                //          + '&p_str_RcvdDtFm=' + p_str_RcvdDtFm + '&p_str_RcvdDtTo=' + p_str_RcvdDtTo + '&p_str_ib_doc_idFm=' + p_str_ib_doc_idFm + '&p_str_ib_doc_idTo=' + p_str_ib_doc_idTo + '&type=' + type)
+                                window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_RcvdDtFm=' + p_str_RcvdDtFm + '&p_str_RcvdDtTo=' + p_str_RcvdDtTo + '&p_str_ib_doc_idFm=' + p_str_ib_doc_idFm + '&p_str_ib_doc_idTo=' + p_str_ib_doc_idTo + '&type=' + type + '&p_str_cntr_id=' + p_str_cntr_id, 'InboundReport', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+                            }
+                            else if (var_name == "InbndDate") {
+                                window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_RcvdDtFm=' + p_str_RcvdDtFm + '&p_str_RcvdDtTo=' + p_str_RcvdDtTo + '&p_str_ib_doc_idFm=' + p_str_ib_doc_idFm + '&p_str_ib_doc_idTo=' + p_str_ib_doc_idTo + '&type=' + type + '&p_str_cntr_id=' + p_str_cntr_id, 'InboundReport', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+                                //window.location.replace("/InboundReport/ShowReport?var_name=" + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id
+                                //          + '&p_str_RcvdDtFm=' + p_str_RcvdDtFm + '&p_str_RcvdDtTo=' + p_str_RcvdDtTo + '&p_str_ib_doc_idFm=' + p_str_ib_doc_idFm + '&p_str_ib_doc_idTo=' + p_str_ib_doc_idTo + '&type=' + type)
+
+                            }
+
+                            else if (var_name == "IBRcvdByCntr") {
+                                window.open('ShowReportByCntr?p_str_rpt_type=' + type + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cntr_id=' + p_str_cntr_id + '&p_str_rcvd_dt_from=' + p_str_RcvdDtFm + '&p_str_rcvd_dt_to=' + p_str_RcvdDtTo, 'InboundReport', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+
+                            }
+
+                        }
+
+                        if (getFormat == 'PDF' && getMode == 'EMAIL') {
+                            var options = { "backdrop": "static", keyboard: true };
+
+                            var TeamDetailPostemailBackURL = '/InboundReport/ShowEmailReport';
+                            var type = getFormat;
+                            var SelectedRow = [];
+                            var checkboxIDArray = [];
+                            var chkbtn = $(this).html();
+                            var var_name = $("input[name='radio1']:checked").val();
+                            var p_str_cmp_id = $('#cmp_id').val();
+                            var p_str_whs_id = $('#whs_id').val();
+                            var p_str_RcvdDtFm = $('#RcvdDtFm').val();
+                            var p_str_RcvdDtTo = $('#RcvdDtTo').val();
+                            var p_str_ib_doc_idFm = $('#ib_doc_idFm').val();
+                            var p_str_ib_doc_idTo = $('#ib_doc_idTo').val();
+                            var p_str_cntr_id = $('#cntr_id').val();
+                            if (var_name == "InbndStyle") {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id,
+                                        "p_str_RcvdDtFm": p_str_RcvdDtFm, "p_str_RcvdDtTo": p_str_RcvdDtTo, "p_str_ib_doc_idFm": p_str_ib_doc_idFm, "p_str_ib_doc_idTo": p_str_ib_doc_idTo, "type": type , "p_str_cntr_id": p_str_cntr_id
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        //alert("hjk")
+                                        debugger;
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                            else if (var_name == "InbndDate") {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id,
+                                        "p_str_RcvdDtFm": p_str_RcvdDtFm, "p_str_RcvdDtTo": p_str_RcvdDtTo, "p_str_ib_doc_idFm": p_str_ib_doc_idFm, "p_str_ib_doc_idTo": p_str_ib_doc_idTo, "type": type, "p_str_cntr_id": p_str_cntr_id
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        //alert("hjk")
+                                        debugger;
+
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+
+                            else if (var_name == "IBRcvdByCntr") {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id,
+                                        "p_str_RcvdDtFm": p_str_RcvdDtFm, "p_str_RcvdDtTo": p_str_RcvdDtTo, "p_str_ib_doc_idFm": p_str_ib_doc_idFm, "p_str_ib_doc_idTo": p_str_ib_doc_idTo, "type": type, "p_str_cntr_id": p_str_cntr_id
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        //alert("hjk")
+                                        debugger;
+
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+
+                        }
+
+
+
+                    })
+                    $('#InqRpt').DataTable({
+                        "paging": true,
+                        "lengthChange": true,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": true,
+                        // "scrollY": "280px",
+                        "scrollCollapse": true,
+                        //true
+                        //"sDom": 't',
+                        "sScrollY": "460px",
+                        "sScrollX": "100%",
+
+                    });
+
+                    $(function () {
+                        $("#ir_itm_num").autocomplete({
+                            source: function (request, response) {
+                                $.getJSON("/InvStkAdj/ItemXGetitmDtl", {
+                                    term: request.term,
+                                    cmp_id: $('#cmp_id').val(),
+                                },
+                                          response);
+                            },
+                            minLength: 1,
+                            select: function (event, ui) {
+                                $("#ir_itm_num").val(ui.item.itm_num);
+                                $("#ir_itm_color").val(ui.item.itm_color);    //action
+                                $("#ir_itm_size").val(ui.item.itm_size);
+                                $("#ir_itm_name").val(ui.item.itm_name);
+                            }
+                        });
+
+                    });
+</script>
+<script>
+    $(function () {
+        $('#cmp_id').change(function () {
+            debugger;
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "InboundReport")',
+                type: 'GET',
+                cache: false,
+                data: { "p_str_cmp_id": p_str_cmp_id },
+
+
+                dataType: "html",
+                success: function (e) {
+                    $('#idShowWhs').html("");
+                    $('#idShowWhs').html(e);
+                },
+            });
+
+              $("#ajaxLoading").hide();
+        });
+
+    });
+</script>
+
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+
+
+
+

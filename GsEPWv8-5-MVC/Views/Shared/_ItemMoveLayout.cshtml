@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/ico" href="~/Images/Gs3PL.ico" width="10" height="10" />
+    <title>GsEPWv8-4-MVC| Inventory Item Move</title>
+    <!-- First include jquery js -->
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+    <!-- Item Move Layout CSS -->
+    <link rel="stylesheet" href="~/Content/ItemMoveCSS.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body class="container-fluid">
+    <br />
+    <div class="row">
+        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+            <div style="margin-left:45%; margin-right:45%;">
+                <a href=@System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() target="_blank">
+                    <img class="CompanyLogo img-esponsive" src=@System.Configuration.ConfigurationManager.AppSettings["CompanyLogo"].ToString()>
+                </a>
+            </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+            <table style="width:100%">
+                <tr>
+                    <td>
+                        <label class="WelcomeText">
+                            @System.Configuration.ConfigurationManager.AppSettings["AppWelcome"].ToString() Portal
+                        </label>
+                    </td>
+                    <td align="right">
+                        <a href="@Url.Action("Logout", "Login")">
+                            <label class="LogoutText">Logout</label>
+                        </a>
+                    </td>                   
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="border-bottom: 8px solid #0094ff;">
+    </div>
+    <div style="border-bottom:2px solid #ff3700;">
+    </div>
+    @RenderBody()
+    <hr>
+    <footer class="ItemMoveFooter">
+        <div>
+            <b>Version</b> 8.0.0
+            <strong>
+                Copyright &copy; 2017-2019
+                <a href="http://www.gensoftcorp.com/Home.aspx?Type=Home">GensoftCorp</a>.
+            </strong> All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>

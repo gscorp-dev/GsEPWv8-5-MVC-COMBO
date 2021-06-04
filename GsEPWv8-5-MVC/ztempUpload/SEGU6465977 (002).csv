@@ -1,0 +1,9 @@
+SLF943,CompID,cntr_id,line_num,po_num / Ref#,itm_Num,itm_color,itm_size,itm_name,itm_qty,ctn_qty,ctns,Ctn-Len,Ctn-Wid,Ctn-Hgt,ctn_cube,ctn_wgt,ENTRY-DT,ETA-DT,SUPPLIER,Hdr-Note,Dtl-Note
+SLF943,MNS,SEGU6465977 ,1,74369,GG-MMBT-BLK,Black,,Metallix Magnet Tunes Bluetooth Earbuds,3000,50,60,63,18.5,40.5,2.83,7.9,10/5/2020,10/27/2020,Shenglai,,
+SLF943,MNS,SEGU6465977 ,2,74369,GG-MMBT-RGL,Rose Gold,,Metallix Magnet Tunes Bluetooth Earbuds,3000,50,60,63,18.5,40.5,2.83,7.9,10/5/2020,10/27/2020,Shenglai,,
+SLF943,MNS,SEGU6465977 ,3,74369,GG-SSWH-RGL,Rose Gold,,SleekSounds Wired Headphones,2820,20,141,44.5,38.5,47.5,12.21,6.48,10/5/2020,10/27/2020,Shenglai,,
+SLF943,MNS,SEGU6465978 ,4,74369,GG-SSWH-SLV,Silver,,SleekSounds Wired Headphones,3000,20,150,44.5,38.5,47.5,12.21,6.48,10/5/2020,10/27/2020,Shenglai,,
+SLF943,MNS,SEGU6465977 ,5,74369,GG-CESS-RBW,Rainbow,,SafeSounds Cat LED Wired Headphones,3000,20,150,49.2,34.8,35.2,9.04,4.94,10/5/2020,10/27/2020,Shenglai,,
+SLF943,MNS,SEGU6465977 ,6,74369,GG-CESS-PNK,Pink,,SafeSounds Cat LED Wired Headphones,2300,20,115,49.2,34.8,35.2,7.53,4.94,10/5/2020,10/27/2020,Shenglai,,
+SLF943,MNS,SEGU6465977 ,7,74369,GG-CESS-GRN,Green,,SafeSounds Cat LED Wired Headphones,2380,20,119,49.2,34.8,35.2,7.53,4.94,10/5/2020,10/27/2020,Shenglai,,
+SLF943,MNS,SEGU6465977 ,8,74369,GG-UKESS-RBW,Rainbow,,Safe Sounds LED Unicron Headphones,3500,20,175,56,34.8,35.2,12.35,5.41,10/5/2020,10/27/2020,Shenglai,,

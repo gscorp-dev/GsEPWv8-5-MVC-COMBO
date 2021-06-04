@@ -1,0 +1,447 @@
+﻿@model GsEPWv8_5_MVC.Model.BinMasterModel
+@{
+    ViewBag.Title = "BinMasterInquiry";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var lintBincount = Model.ListBinMasterinqury.Count;
+}
+
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .ui-autocomplete li {
+        font-size: 12px;
+        line-height: 30px;
+        color: darkblue;
+        font-family: Verdana;
+        font-weight: bold;
+        background-color: lightcyan;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+<style>
+    fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+</style>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+@Html.HiddenFor(model => model.cmp_id, new { @id = "g_str_tmp_cmp_id" })
+
+
+@using (Html.BeginForm("BinMasterInquiry", "BinMaster", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <a href="/DashBoardB2B/DashBoardB2B" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    Bin Master
+                </td>
+
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                    }
+                </td>
+
+                @*<td style="padding-top: 11px;width:30%;text-align:right">
+                    <button type="button" id="btnClose" class="btn-Close">Close</button>
+                </td>*@
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoadingratemaster" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <h3>Bin Master Inquiry</h3>
+    <div class="box box-default">
+
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <br />
+
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr>
+                                <td style="width: 8%;text-align: right;">
+                                    <label><b class="Lblmanual">Cmp Id </b></label>
+                                </td>
+                                <td style="width: 17%; padding-left: 1%;">
+                                    @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                    {
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                    }
+                                </td>
+                                <td style="text-align: right; width: 10%;">
+                                    <label><b class="Lblmanual">Bin# </b></label>
+                                </td>
+                                <td style="width: 15%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.bin_id, new { @class = "form-control txtlbl", @maxlength = "10" })
+                                </td>
+                                <td style="width:10%;text-align: right;">
+                                    <label><b class="Lblmanual">Description</b></label>
+                                </td>
+                                <td style="width: 15%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.bin_desc, new { @class = "form-control txtlbl", @maxlength = "100" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 8%;text-align: right;">
+                                    <label><b class="Lblmanual">Style </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.itm_num, new { @class = "form-control txtlbl NotaloowedSplchar VLDTITMFILD", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana;background-color:lightyellow;", @id = "v_itm_num" })
+                                   </td>
+                                <td style="text-align: right; width: 8%;">
+                                    <label><b class="Lblmanual">Color </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl NotaloowedSplchar VLDTITMFILD", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana;background-color:lightyellow;",  @id = "v_itm_color" })
+                                </td>
+                                <td style="text-align: right; width: 8%;">
+                                    <label><b class="Lblmanual">Size </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl NotaloowedSplchar VLDTITMFILD", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana;background-color:lightyellow;",  @id = "v_itm_size" })
+                                </td>
+                                <td style="width: 8%;text-align: right;">
+                                    <label><b class="Lblmanual">Desc </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", @maxlength = "100", @style = "font-size: 12px;font-weight: bold; font-family: verdana;background-color:lightyellow;", @id = "v_itm_name" })
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td style="padding-left: 30px;text-align:right;padding-top:10px; margin-left:0px" colspan="6">
+                                    <button type="button" id="btninquiry" class="btn_search" style="font-size:16px;">Search</button>
+                                    <button type="reset" id="btnClear" class="btn-Clear" style="font-size:16px;">Clear</button>
+                                    @if (Session["IsCompanyUser"].ToString().Trim() == "Y")
+                                    {<button type="button" id="btnAddBinEntry" class="btn_NewEntry" onclick="">New Bin Entry</button>}
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                        <div class="container" style="margin-left:0px; width:100%;">
+                            <fieldset>
+                                <legend>Report Selection</legend>
+                                <table style="margin-top:-30px;">
+                                    <tr>
+                                        <td style="padding-left: 20px;padding-bottom: 10px;font-size: 1.2em;">
+                                            <input type="radio" value="ItemDetails" name="optRptSelection" /><b style="margin-top:-50px;padding-left: 10px;">Bin Details</b>
+                                        </td>
+                                    
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <b style="color:blue;font-size: 12px;">Format</b>
+                                            <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right " data-toggle="dropdown">
+
+                                                <option>XLS</option>
+                                                <option>PDF</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                                            <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right " data-toggle="dropdown">
+                                                <option>VIEW</option>
+
+                                                <option>EMAIL</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div id='modalBinMaster' class='modal' style="padding-top:73px">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:250%; left:-400px;">
+                <div id='modalContextBinMaster' style="width: 100%; height:650px;"></div>
+            </div>
+        </div>
+    </div>
+    <div id="grdBinMaster" class="box-header" style="padding: 5px; ">
+        <div class="box-body">
+            <table id="grdBinBaterEmpty" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="display:none;">Whs Id</th>
+                        <th class="grid_header_backcolor">Bin Id</th>
+                        <th class="grid_header_backcolor">Description</th>
+                        <th class="grid_header_backcolor">Bin Type</th>
+                        <th class="grid_header_backcolor">Status</th>
+                        <th class="grid_header_backcolor">Bin Location</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">Item Name</th>
+                        <th class="grid_header_backcolor">Itm Dim</th>
+                        <th class="grid_header_backcolor">Itm.Cube</th>
+                        <th class="grid_header_backcolor">Itm.Wgt</th>
+                        <th class="grid_header_backcolor">B.Dim</th>
+                        <th class="grid_header_backcolor">B.Cube</th>
+                        <th class="grid_header_backcolor">B.Wgt</th>
+                        <th class="grid_header_backcolor">Pkg Qty</th>
+                        <th class="grid_header_backcolor">Min/Max Qty</th>
+                     
+                        <th class="grid_header_backcolor">Price</th>
+                        <th class="grid_header_backcolor">Stock Qty</th>
+                        <th class="grid_header_backcolor">Lead Time </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+}
+
+<!-- /.box-body -->
+
+<script type="text/javascript">
+    $("#btnAddBinEntry").click(function () {
+        debugger;
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            not2("Please select the company.")
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                url: '@Url.Action("BinMasterEntry", "BinMaster")',
+                data: { "p_str_cmp_id": p_str_cmp_id },
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $('#modalContextBinMaster').html(data);
+                    $('#modalBinMaster').modal(options);
+                    $('#modalBinMaster').modal('show');
+
+                }
+            });
+
+        }
+
+    })
+    $("#btninquiry").click(function () {
+        debugger;
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            not2("Please Select the company")
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_bin_id = $('#bin_id').val();
+            var p_str_bin_desc = $('#bin_desc').val();
+            var p_str_whs_id = '';
+            var p_str_itm_num = $('#v_itm_num').val();
+            var p_str_itm_color = $('#v_itm_color').val();
+            var p_str_itm_size = $('#v_itm_size').val();
+
+
+            debugger
+            $.ajax({
+                type: "GET",
+                url: "/BinMaster/BinMasterInquiryGridDtl",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_bin_id": p_str_bin_id, "p_str_bin_desc": p_str_bin_desc, "p_str_whs_id": p_str_whs_id, "p_str_itm_num": p_str_itm_num,
+                    "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size
+
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $('#grdBinMaster').html("");
+                    $('#grdBinMaster').html(e);
+                },
+            })
+
+        }
+    });
+
+    function change(el) {
+        if (el.value === "(Click to hide...)")
+            el.value = "(Click to show...)";
+        else
+            el.value = "(Click to hide...)";
+    }
+    //})
+
+    @*$("#btnClose").click(function () {
+        var p_str_cmp_id = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+    })
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmp_id = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+        window.location.href = url;
+
+    })*@
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';      
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseB2B").click(function () {
+        debugger
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("DashboardB2B", "DashboardB2B")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+
+</script>
+<script type="text/javascript">
+
+    $("#v_itm_num").autocomplete({
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/InboundInquiry/ItemXGetitmDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+
+            $("#v_itm_color").val(ui.item.itm_color);
+            $("#v_itm_size").val(ui.item.itm_size);
+            $("#v_itm_name").val(ui.item.itm_name);
+            $("#v_itm_code").val(ui.item.itm_code);
+
+            closeOnSelect: false
+        }
+
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+
+
+
+
+

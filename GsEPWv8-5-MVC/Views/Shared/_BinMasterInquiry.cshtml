@@ -1,0 +1,151 @@
+﻿@model GsEPWv8_5_MVC.Model.BinMasterModel
+
+@{
+    var Recordcount = Model.ListBinMasterinqury.Count;
+}
+<!-- /.box-header -->
+<div class="box-body">
+    <div class="gridSummary">
+        <table style="width:100%">
+            <tr>
+                <td style="width:20%;text-align:right">
+
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                        Total Records:
+                    </span>
+                    <label class="totalCount" style="text-align:left">
+                        @Recordcount
+                    </label>
+                </td>
+
+                <td style="width:105px;"></td>
+                <td style="width:105px;"></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="modal-body" style="background:Scroll; margin-top:-14px; margin-left:-10px;">
+
+            <table id="grdBinInquiry" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="display:none;">Whs Id</th>
+                        <th class="grid_header_backcolor">Bin Id</th>
+                        <th class="grid_header_backcolor">Action</th>
+                        <th class="grid_header_backcolor">Description</th>
+                        <th class="grid_header_backcolor">Bin Type</th>
+                        <th class="grid_header_backcolor">Status</th>
+                        <th class="grid_header_backcolor">Location</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">Item Name</th>
+                        <th class="grid_header_backcolor">Itm Dim</th>
+                        <th class="grid_header_backcolor">Itm.Cube</th>
+                        <th class="grid_header_backcolor">Itm.Wgt</th>
+                        <th class="grid_header_backcolor">B.Dim</th>
+                        <th class="grid_header_backcolor">B.Cube</th>
+                        <th class="grid_header_backcolor">B.Wgt</th>
+                        <th class="grid_header_backcolor">Min/Max Qty</th>
+                        @*<th class="grid_header_backcolor">MaxQty</th>*@
+                        <th class="grid_header_backcolor">Price</th>
+                        <th class="grid_header_backcolor">StockQty</th>
+                        <th class="grid_header_backcolor">LeadTime </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (int i = 0; i < Model.ListBinMasterinqury.Count; i++)
+            {
+                var TotalPrice = decimal.Parse(Model.ListBinMasterinqury[i].price);
+                var l_dec_TotalPrice = TotalPrice.ToString("F2");
+
+                        <tr class="row-select">
+
+                            <td style="color:black; font-weight:bold;display:none;">@Model.ListBinMasterinqury[i].whs_id</td>
+                            <td style="color:black; font-weight:bold;">@Model.ListBinMasterinqury[i].bin_id</td>
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="lnk_bin_view" p_str_cmp_id="@Model.ListBinMasterinqury[i].cmp_id" p_str_bin_id="@Model.ListBinMasterinqury[i].bin_id" p_str_mode ="V" ><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>V</b></a>
+                                <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="lnk_bin_edit" p_str_cmp_id="@Model.ListBinMasterinqury[i].cmp_id" p_str_bin_id="@Model.ListBinMasterinqury[i].bin_id" p_str_mode ="M"  ><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>E</b></a>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="lnk_bin_del" p_str_cmp_id="@Model.ListBinMasterinqury[i].cmp_id" p_str_bin_id="@Model.ListBinMasterinqury[i].bin_id" p_str_mode ="D"  ><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>D</b></a>
+                            </td>
+                            <td style="color:black; font-weight:bold;">@Model.ListBinMasterinqury[i].bin_desc</td>
+                            <td style="color:black; font-weight:bold;">@Model.ListBinMasterinqury[i].bin_type</td>
+                            <td style="color:black; font-weight:bold; ">@Model.ListBinMasterinqury[i].status</td>
+                            <td style="color:black; font-weight:bold; ">@Model.ListBinMasterinqury[i].bin_loc</td>
+                            <td style="color:black; font-weight:bold;">@Model.ListBinMasterinqury[i].itm_num</td>
+                            <td style="color:black; font-weight:bold;">@Model.ListBinMasterinqury[i].itm_color</td>
+                            <td style="color:black; font-weight:bold;">@Model.ListBinMasterinqury[i].itm_size</td>
+                            <td style="color:black; font-weight:bold;">@Model.ListBinMasterinqury[i].itm_name</td>
+                            <td style="color:black; font-weight:bold;text-align:right ">@Model.ListBinMasterinqury[i].pce_length / @Model.ListBinMasterinqury[i].pce_width / @Model.ListBinMasterinqury[i].pce_depth </td>
+                            <td style="color:black; font-weight:bold;text-align:right ">@Model.ListBinMasterinqury[i].pce_cube</td>
+                            <td style="color:black; font-weight:bold;text-align:right ">@Model.ListBinMasterinqury[i].pce_wgt</td>
+                            <td style="color:black; font-weight:bold;text-align:right ">@Model.ListBinMasterinqury[i].bin_length / @Model.ListBinMasterinqury[i].bin_width / @Model.ListBinMasterinqury[i].bin_height </td>
+                            <td style="color:black; font-weight:bold;text-align:right ">@Model.ListBinMasterinqury[i].bin_cube</td>
+                            <td style="color:black; font-weight:bold;text-align:right ">@Model.ListBinMasterinqury[i].bin_wgt</td>
+
+                            <td style="color:black; font-weight:bold; text-align:right">@Model.ListBinMasterinqury[i].min_qty / @Model.ListBinMasterinqury[i].max_qty </td>
+                            @*<td style="color:black; font-weight:bold; text-align:right">@Model.ListBinMasterinqury[i].max_qty</td>*@
+                            <td style="color:black; font-weight:bold; text-align:right">@l_dec_TotalPrice</td>
+                            <td style="color:black; font-weight:bold; text-align:right">@Model.ListBinMasterinqury[i].ordr_qty</td>
+                            <td style="color:black; font-weight:bold; text-align:left">@Model.ListBinMasterinqury[i].lead_time</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(".lnk_bin_view ,.lnk_bin_edit, .lnk_bin_del ").click(function () {
+        var $ViewbuttonClicked = $(this);
+        var p_str_cmp_id = $ViewbuttonClicked.attr('p_str_cmp_id');
+        var p_str_bin_id = $ViewbuttonClicked.attr('p_str_bin_id');
+        var p_str_mode = $ViewbuttonClicked.attr('p_str_mode');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '/BinMaster/ViewBinMaster',
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmp_id": p_str_cmp_id, "p_str_bin_id": p_str_bin_id, "p_str_mode":p_str_mode},
+            datatype: "json",
+            success: function (data) {
+                $('#modalContextBinMaster').html(data);
+                $('#modalBinMaster').modal(options);
+                $('#modalBinMaster').modal('show');
+                
+            },
+            error: function () {
+                swal("", "Dynamic content load failed.", "");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+
+    $('#grdBinInquiry').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+    });
+</script>
+
+
+
+

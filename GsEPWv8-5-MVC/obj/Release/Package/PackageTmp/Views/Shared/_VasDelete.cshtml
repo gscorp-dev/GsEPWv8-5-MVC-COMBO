@@ -1,0 +1,513 @@
+﻿@model GsEPWv8_5_MVC.Model.VasInquiryModel
+@{
+    var TotalNumberoflst = Model.ListVasEntryDtl.Count();
+    var Ordercount = Model.ListVasEntryDtl.Count;
+    decimal l_dec_tot_bill_amnt = 0;
+    var tot_amnt = "";
+}
+
+@for (int j = 0; j < Model.ListVasEntryDtl.Count(); j++)
+{
+    var bill_amt = (Model.ListVasEntryDtl[j].Amt);
+    decimal l_dec_bill_amnt = bill_amt;
+    if (l_dec_bill_amnt > 0)
+    {
+        l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+    }
+    tot_amnt = (l_dec_tot_bill_amnt.ToString("F2"));
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+</style>
+@Html.HiddenFor(model => model.whs_id)
+@Html.HiddenFor(model => model.bill_doc_id)
+@Html.HiddenFor(model => model.screentitle)
+<div class="modal-header">
+    @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>*@
+
+    @if (Model.View_Flag == "D")
+    {
+
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <center><h3 class="modal-title" id="myModalLabel" style="color: white;">Vas Delete</h3></center>
+            <button type="button" id="btnCancel" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 40px;background-color: #ef8f00">Cancel</button>
+            <button type="button" id="btnDelVas" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 4px;background-color: #00c0ef;">Save</button>
+
+    }
+    @if (Model.View_Flag == "P")
+            {
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">Vas Post</h3></center>
+        <button type="button" id="btnCancel" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 40px;background-color: #ef8f00">Cancel</button>
+            <button type="button" id="btnPostVas" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 4px;background-color: #00c0ef;">Post</button>
+
+    }
+    @if (Model.View_Flag == "UP")
+            {
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">Vas UnPost</h3></center>
+        <button type="button" id="btnCancel" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 40px;background-color: #ef8f00">Cancel</button>
+        <button type="button" id="btnUnPostVas" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 4px;background-color: #00c0ef;">UnPost</button>
+
+    }
+
+</div>
+
+<center>
+
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">Cmp Id:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">Vas Id:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.vas_id, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+                    </div>
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">Vas Date:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.ship_dt, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">Status:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.Status, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+
+                    </div>
+                    <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">SR#:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.so_num, new { @id = "Vassonum", @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+                    </div>
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">FOB:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.whs_id, new { @id = "ps_itm_name", @class = "form-control txtlbl", @maxlength = "80", @disabled = "true" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">Ship To Id:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.ship_to_id, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+
+                    </div>
+                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">Cust Po#:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.cust_po_num, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true" })
+
+                    </div>
+                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">Cust PO Dt:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.cust_po_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", @disabled = "true" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width: 120px;">
+                        <label><b class="Lblmanual">Header Note:</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.notes, new { @class = "form-control txtlbl", @maxlength = "200", @style = "width:493%;", @disabled = "true" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-4" style="left:-159px">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                    Total Records:
+                </span>
+            </div>
+            <div class="col-xs-2" style="left:-345px">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </div>
+            <div class="col-xs-4" style="left:-334px">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                    Total Amount:
+                </span>
+            </div>
+            <div class="col-xs-2" style="left:-452px">
+                <label class="totalCount" style="text-align:right">
+                    @tot_amnt
+                </label>
+            </div>
+        </div>
+    </div>
+    <br />
+</center>
+<div class="box" style="padding: 2px;">
+    <div id="table-Details">
+        @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+        <table id="GridVasDelDtl" class="table table-bordered table-striped" style="border:1px solid #121213;">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Ln#</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:8%;">ServiceId</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:20%;">Description</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Qty</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Rate</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Amount</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Status</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:8%;">UoM</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:33%;">Note</th>
+                </tr>
+            </thead>
+            <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                @for (int i = 0; i < Model.ListVasEntryDtl.Count; i++)
+                {
+                    var l_DEC_TMP_PRICE = (Model.ListVasEntryDtl[i].ship_itm_price);
+                    var l_DEC_PRICE = l_DEC_TMP_PRICE.ToString("F2");
+                    var Amt = (Model.ListVasEntryDtl[i].Amt);
+                    var l_dec_Amt = Amt.ToString("F2");
+                    <tr id="@Model.ListVasEntryDtl[i].VasID" style="background-color:white;">
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListVasEntryDtl[i].dtl_line</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryDtl[i].cust_itm</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryDtl[i].cust_itm_name</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListVasEntryDtl[i].ship_qty</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@l_DEC_PRICE</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@l_dec_Amt</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.ListVasEntryDtl[i].status</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryDtl[i].ship_price_uom</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryDtl[i].notes</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Hidden("Count_Values", TotalNumberoflst)
+        @*</div>*@
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#GridVasDelDtl').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridVasDelDtl_paginate').hide();
+    })
+
+    $('#last_so_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'Y-m-d'
+    });
+    $("#btnDelVas").click(function () {
+        debugger
+        var p_str_cmp_id = $("#cmp_id").val();
+        var p_str_vasid = $("#vas_id").val();
+        var so_num = $("#so_num").val();
+        var p_str_screen_title = $("#screentitle").val();
+        sweetAlert({
+            title: "",
+            text: "Do you want to delete?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+
+                       $.ajax({
+                           type: "GET",
+                           url: '@Url.Content("~/VasInquiry/VasDelete")',
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_vasid": p_str_vasid,
+                           },
+                           dataType: 'html',
+                           success: function (e) {
+                               swal.close();
+                               if (e != null) {
+                                   debugger
+
+                                   setTimeout(function () {
+                                       swal({
+                                           title: "",
+                                           text: "VASId " + p_str_vasid + " Deleted successfully.",
+                                           type: "",
+                                           showCancelButton: false,
+                                           confirmButtonClass: "btn-danger",
+                                           confirmButtonText: "Ok",
+                                           closeOnConfirm: true
+                                       },
+                                         function () {
+                                             debugger
+                                             setTimeout(function () {
+
+                                                 $('#myModalDel').modal('hide');
+                                                 if (p_str_screen_title == "OBInquiry" || p_str_screen_title == "OBVisibility") {
+                                                     $.ajax({
+                                                         type: "get",
+                                                         url: "/OutboundInq/GetOutboundInqDtl",
+                                                         data: {
+                                                             "p_str_cmp_id": p_str_cmp_id,
+                                                             "p_str_so_num": so_num
+                                                         },
+                                                         datatype: 'html',
+                                                         success: function (e) {
+                                                             debugger
+                                                             $("#ajaxloading").hide();
+                                                             $('#showgrid').html("");
+                                                             $('#showgrid').html(e);
+                                                         },
+                                                     })
+                                                 }
+                                                 else {
+                                                     $.ajax({
+                                                         type: "get",
+                                                         url: "/VasInquiry/VasInquiryDtl",    //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                                                         data: {
+                                                             "p_str_cmp_id": p_str_cmp_id,
+                                                             "p_str_vas_id": p_str_vasid,
+                                                         },
+                                                         datatype: 'html',
+                                                         success: function (e) {
+                                                             debugger
+                                                             $("#ajaxloading").hide();
+                                                             $('#showgrid').html("");
+                                                             $('#showgrid').html(e);
+                                                         },
+                                                     })
+                                                 }
+
+                                             });
+                                         });
+
+                                   }, 1000);
+
+
+
+                               }
+
+                           },
+
+                       })
+                   }
+               });
+    });
+
+    $("#btnPostVas").click(function () {
+        debugger
+        var p_str_cmp_id = $("#cmp_id").val();
+        var p_str_vasid = $("#vas_id").val();
+        var so_num = $("#so_num").val();
+        var p_str_screen_title = $("#screentitle").val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/VasInquiry/VasPost")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_vasid": p_str_vasid,
+            },
+            dataType: 'html',
+            success: function (e) {
+                if (e != null) {
+                    swal({
+                        title: "",
+                        text: "VASId " + p_str_vasid + " Posted successfully.",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                    //swal("", "VAS record Posted successfully.", "");
+                    //CR-3PL_MVC_VAS_2018_0219_016 Added by Soniya for Print Report
+                     function () {
+                         setTimeout(function () {
+                             debugger
+                             var p_str_cmpid = $('#cmp_id').val();
+                             var p_str_vasid = $('#vas_id').val();
+                             var SelectedID = p_str_vasid;
+                             var type = "PDF";
+                             var var_name = "Vas Post Report";
+                             var p_str_radio = var_name;
+                             if (p_str_screen_title == "OBInquiry" || p_str_screen_title == "OBVisibility") {
+                                 window.open('VAsShowReport?SelectedID=' + p_str_vasid + '&p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmpid + '&type=' + type, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'VAsShowReport' + SelectedID)
+                             }
+                             else
+                             {
+                                 window.open('ShowReport?SelectedID=' + p_str_vasid + '&p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmpid + '&type=' + type, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectedID)
+
+                             }
+                             $('#myModalDel').modal('hide');
+                             debugger
+                             if (p_str_screen_title == "OBInquiry" || p_str_screen_title == "OBVisibility") {
+                                 $.ajax({
+                                     type: "get",
+                                     url: "/OutboundInq/GetOutboundInqDtl",
+                                     data: {
+                                         "p_str_cmp_id": p_str_cmp_id,
+                                         "p_str_so_num": so_num
+                                     },
+                                     datatype: 'html',
+                                     success: function (e) {
+                                         debugger
+                                         $("#ajaxloading").hide();
+                                         $('#showgrid').html("");
+                                         $('#showgrid').html(e);
+                                     },
+                                 })
+                             }
+                             else {
+                                 $.ajax({
+
+                                     type: "get",
+                                     url: "/VasInquiry/GetVasGridINQ",         //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                                     data: {
+                                         "p_str_cmp_id": p_str_cmp_id,
+                                         "p_str_vas_id": p_str_vasid,
+                                     },
+                                     datatype: 'html',
+                                     success: function (e) {
+                                         debugger
+                                         $("#ajaxloading").hide();
+                                         $('#showgrid').html("");
+                                         $('#showgrid').html(e);
+                                     },
+                                 })
+                             }
+
+                         });
+                     });
+                }
+
+            },
+
+        })
+    });
+
+    $("#btnUnPostVas").click(function () {
+        debugger
+        var p_str_cmp_id = $("#cmp_id").val();
+        var p_str_vasid = $("#vas_id").val();
+        var p_str_bill_doc_id = $("#bill_doc_id").val();
+        var so_num = $("#so_num").val();
+        var p_str_screen_title = $("#screentitle").val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/VasInquiry/VasUnPost")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_vasid": p_str_vasid,
+                "p_str_bill_doc_id": p_str_bill_doc_id,
+            },
+            dataType: 'html',
+            success: function (e) {
+                if (e != null) {
+                    swal({
+                        title: "",
+                        text: "VAS " + p_str_vasid + " UnPosted successfully.",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                    //swal("", "VAS record UnPosted successfully.", "");
+                   function () {
+                       setTimeout(function () {
+                           var p_str_screentitle = $('#screentitle').val();
+                           var p_str_cmp_id = $('#cmp_id').val();
+                           var p_str_vasid = $('#vas_id').val();
+                           $('#myModalDel').modal('hide');
+                           if (p_str_screen_title == "OBInquiry" || p_str_screen_title == "OBVisibility") {
+                               $.ajax({
+                                   type: "get",
+                                   url: "/OutboundInq/GetOutboundInqDtl",
+                                   data: {
+                                       "p_str_cmp_id": p_str_cmp_id,
+                                       "p_str_so_num": so_num
+                                   },
+                                   datatype: 'html',
+                                   success: function (e) {
+                                       debugger
+                                       $("#ajaxloading").hide();
+                                       $('#showgrid').html("");
+                                       $('#showgrid').html(e);
+                                   },
+                               })
+                           }
+                           else {
+                               $.ajax({
+                                   type: "get",
+                                   url: "/VasInquiry/VasInquiryDtl",     //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                                   data: {
+                                       "p_str_cmp_id": p_str_cmp_id,
+                                       "p_str_vas_id": p_str_vasid,
+                                   },
+                                   datatype: 'html',
+                                   success: function (e) {
+                                       debugger
+                                       $("#ajaxloading").hide();
+                                       $('#showgrid').html("");
+                                       $('#showgrid').html(e);
+                                   },
+                               })
+                           }
+                       });
+                   });
+                }
+
+            },
+
+        })
+    });
+</script>
+
+

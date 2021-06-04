@@ -1,0 +1,455 @@
+﻿@model GsEPWv8_5_MVC.Model.OutboundInqModel
+
+@{
+    var Ordercount = Model.LstItmxCustdtl.Count;
+}
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<style type="text/css">
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 20px;
+    }
+</style>
+@Html.HiddenFor(model => model.aloc_by, new { @id = "aloc_by" })
+
+<!-- /.box-header -->@*<div class="box box-primary">*@
+<div>
+    <table style="width:100%">
+        <tr>
+            <td style="width:10%">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+            </td>
+            <td style="width: 60%;">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="box-body">
+    <div class="box">
+        <div id="table-Details">
+            @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+                <table id="GridSREntryPartial" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                    <thead class="grid_backcolor">
+                        <tr>
+                            <th class="grid_header_backcolor">Sts</th>
+                            <th class="grid_header_backcolor">Ln#</th>
+                            <th class="grid_header_backcolor">Style</th>
+                            @if (Model.View_Flag == "V" || Model.View_Flag == "D")
+                            {
+
+                            }
+                            else
+                            {
+                              <th id="hideth" class="grid_header_backcolor">Edit</th>
+                              <th class="grid_header_backcolor">Delete</th>
+                            }
+                            <th class="grid_header_backcolor">Color</th>
+                            <th class="grid_header_backcolor">Size</th>
+                            <th class="grid_header_backcolor">Desc</th>
+                            <th class="grid_header_backcolor">PONum</th>
+                            <th class="grid_header_backcolor">SR qty</th>
+                            <th class="grid_header_backcolor">Ctn Qty</th>
+                            <th class="grid_header_backcolor">Ctn(s)</th>
+                            <th class="grid_header_backcolor">Cube</th>
+                            <th class="grid_header_backcolor">Weight</th>
+                            <th class="grid_header_backcolor" style="display:none">LotId</th>
+                            <th class="grid_header_backcolor">L/W/H</th>
+                            <th class="grid_header_backcolor">Note</th>
+                            <th class="grid_header_backcolor" style="width:10%">Error Desc</th>
+
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                        @for (int i = 0; i < Model.LstItmxCustdtl.Count; i++)
+                        {
+                            var l_dec_cube = (Model.LstItmxCustdtl[i].cube);
+                            var l_dec_cube_val = l_dec_cube.ToString("F3");
+                            var l_dec_len = (Model.LstItmxCustdtl[i].length);
+                            var l_dec_len_val = l_dec_len.ToString("F2");
+
+                            var l_dec_width = (Model.LstItmxCustdtl[i].width);
+                            var l_dec_width_val = l_dec_width.ToString("F2");
+
+                            var l_dec_height = (Model.LstItmxCustdtl[i].depth);
+                            var l_dec_height_val = l_dec_height.ToString("F2");
+                            var l_dec_wgt = (Model.LstItmxCustdtl[i].wgt);
+                            var l_dec_wgt_val = l_dec_wgt.ToString("F2");
+                            var l_dec_LWH = l_dec_len_val + "/" + l_dec_width_val + "/" + l_dec_height_val;
+                            int lint_back_ordr_qty = Model.LstItmxCustdtl[i].back_ordr_qty;
+                            if ( lint_back_ordr_qty > 0)
+                            {
+                            <tr style="background-color:yellow;">
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].status</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].line_num</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].itm_num</td>
+                               
+                                 @if (Model.View_Flag == "V" || Model.View_Flag == "D")
+                                 {
+
+                                 }
+                                 else
+                                 {
+                                    <td>
+                                        <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="SREditDetail" data-id="@Model.LstItmxCustdtl[i].so_num" data-id1="@Model.LstItmxCustdtl[i].cmp_id" data-id2="@Model.LstItmxCustdtl[i].itm_code" data-id3="@Model.LstItmxCustdtl[i].line_num" data-id4="@Model.LstItmxCustdtl[i].ShipEntry" data-po-num="@Model.LstItmxCustdtl[i].po_num"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="SRDeleteDetail" data-id="@Model.LstItmxCustdtl[i].so_num" data-id1="@Model.LstItmxCustdtl[i].cmp_id" data-id2="@Model.LstItmxCustdtl[i].itm_code" data-id3="@Model.LstItmxCustdtl[i].line_num" data-id4="@Model.LstItmxCustdtl[i].ShipEntry" data-po-num="@Model.LstItmxCustdtl[i].po_num"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                    </td>
+                                 }
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].itm_color</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].itm_size</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].itm_name</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].po_num</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstItmxCustdtl[i].ordr_qty</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstItmxCustdtl[i].ctn_qty</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstItmxCustdtl[i].ordr_ctns</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@l_dec_cube_val</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstItmxCustdtl[i].wgt</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none;">@Model.LstItmxCustdtl[i].lot_id</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@l_dec_LWH</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].note</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].Errdesc</td>
+
+                            </tr>
+                            }
+                            else
+                            {
+                                <tr style="background-color:white;">
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].status</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].line_num</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].itm_num</td>
+                                    @if (Model.View_Flag == "V" || Model.View_Flag == "D")
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="SREditDetail" data-id="@Model.LstItmxCustdtl[i].so_num" data-id1="@Model.LstItmxCustdtl[i].cmp_id" data-id2="@Model.LstItmxCustdtl[i].itm_code" data-id3="@Model.LstItmxCustdtl[i].line_num" data-id4="@Model.LstItmxCustdtl[i].ShipEntry" data-po-num="@Model.LstItmxCustdtl[i].po_num"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="SRDeleteDetail" data-id="@Model.LstItmxCustdtl[i].so_num" data-id1="@Model.LstItmxCustdtl[i].cmp_id" data-id2="@Model.LstItmxCustdtl[i].itm_code" data-id3="@Model.LstItmxCustdtl[i].line_num" data-id4="@Model.LstItmxCustdtl[i].ShipEntry" data-po-num="@Model.LstItmxCustdtl[i].po_num"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                        </td>
+                                    }
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].itm_color</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].itm_size</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].itm_name</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].po_num</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstItmxCustdtl[i].ordr_qty</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstItmxCustdtl[i].ctn_qty</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstItmxCustdtl[i].ordr_ctns</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@l_dec_cube_val</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstItmxCustdtl[i].wgt</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none;">@Model.LstItmxCustdtl[i].lot_id</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@l_dec_LWH</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].note</td>
+                                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstItmxCustdtl[i].Errdesc</td>
+
+                                </tr>
+                            }
+
+                        }
+                    </tbody>
+
+                </table>
+            @*</div>*@
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    //$(function () {
+    //    $('#example1').DataTable({
+    //        'paging': true,
+    //        'lengthChange': true,
+    //        'searching': true,
+    //        'ordering': true,
+    //        'info': true,
+    //        'autoWidth': true
+    //    })
+    //})
+    //$(function () {
+    //    $('#GridSREntry').DataTable({
+    //        'paging': true,
+    //        'lengthChange': false,
+    //        'searching': false,
+    //        'ordering': true,
+    //        'info': true,
+    //        'autoWidth': false,
+    //        "scrollCollapse": true,
+    //        "sScrollY": "250px",
+    //        "sScrollX": "90%",
+    //    })
+    //})
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").click(function () {
+
+        if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+            $("#chkAll").prop("checked", true);
+        }
+        else {
+            $("#chkAll").prop("checked", false);
+        }
+
+    });
+    //var TeamDetailPostBackURL = '/OutboundInq/SR_Edit_Display_Grid_To_Textbox';
+
+    //$(".SREditDetail").click(function () {
+    $('#GridSREntryPartial tbody').on('click', '.SREditDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+        debugger
+        var $buttonClicked = $(this);
+        var l_str_so_num = $buttonClicked.attr('data-id');
+        var l_str_cmp_id = $buttonClicked.attr('data-id1');
+        var l_str_itm_code = $buttonClicked.attr('data-id2');
+        var l_str_LineNum = $buttonClicked.attr('data-id3');
+        var l_str_po_number = $buttonClicked.attr('data-po-num');
+        var p_str_aloc_by = $('#aloc_by').val();
+        //var l_str_shpiEntry = $buttonClicked.attr('data-id4');
+        var p_str_viewmode = "P";
+        var l_bool_is_in_edit = $('#l_bool_edit_flag').val();
+        if (l_bool_is_in_edit == "true") {
+            sweetAlert("", "Already an Line is Selected for Edit, Pls. Include Before Edit.", "");//CR_MVC_3PL_0320-001 Added By Nithya
+            return false;
+        }
+        var l_bool_is_in_edit = "true";
+        $(this).closest('tr').remove()
+        $("#ajaxLoading").show();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/SREditDisplayGridToTextbox")',
+            //TeamDetailPostBackURL,
+            //contentType: "application/json; charset=utf-8",
+            data: { "p_str_so_num": l_str_so_num, "p_str_cmp_id": l_str_cmp_id, "p_str_itm_code": l_str_itm_code, "p_str_LineNum": l_str_LineNum, "l_bool_is_in_edit": l_bool_is_in_edit, "l_str_po_number": l_str_po_number },
+
+            datatype: "json",
+            success: function (r) {
+                $.each(r.ListGridEditData, function () {
+                    //$('#showShipentrygrid td[id="hidetd"]').hide();
+                    //$('#showShipentrygrid th[id="hideth"]').hide();
+                    $("#ajaxLoading").hide();
+                    $("#LineNum").val(this.line_num);
+                    $("#STATUS").val(this.status);
+                    $("#avlqty").val(this.avail_qty);
+                    $("#Itmdtl").val(this.itm_num);
+                    $("#itm_color").val(this.itm_color)
+                    $("#itm_size").val(this.itm_size);
+                    $("#itm_name").val(this.itm_name);
+                    $("#ord_qty").val(this.ordr_qty);
+                    $("#shipppk").val(this.ctn_qty);
+                    $("#ctn").val(this.ordr_ctns);
+                    $("#qty_uom").val(this.qty_uom);
+                    $("#shiplength").val(this.length);
+                    $("#shipwidth").val(this.width);
+                    $("#shipheight").val(this.depth);
+                    $("#shipweight").val(this.wgt);
+                    $("#shipcube").val(this.cube);
+                    $("#vendpo").val(this.po_num);
+                    $("#note").val(this.note);
+                    $("#itm_code").val(this.itm_code);
+                    $("#p_str_Mode").val("M");
+                    $("#l_bool_edit_flag").val("true");//CR_MVC_3PL_0320-001 Added By Nithya
+                    $("#Itmdtl").attr('disabled', 'disabled');
+                    $("#itm_color").attr('disabled', 'disabled');// CR_3PL_MVC_OB_2018_0326_001 Added by Soniya
+                    $("#itm_size").attr('disabled', 'disabled');
+                    $("#itm_name").attr('disabled', 'disabled');
+                });
+                $.each(r.LstItmxCustdtl, function () {
+                    $("#avlqty").val(this.avail_qty);
+                });
+
+            },
+            error: function () {
+                //alert("Dynamic content load failed.");
+                sweetAlert("", "Dynamic content load failed.", "");
+            }
+        });
+    });
+
+
+</script>
+<script>
+
+
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").click(function () {
+
+        if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+            $("#chkAll").prop("checked", true);
+        }
+        else {
+            $("#chkAll").prop("checked", false);
+        }
+
+    });
+    @*var TeamDetailPostBackURL = '/OutboundInq/SR_Edit_Display_Grid_To_Textbox';
+
+    $(".SREditDetail").click(function () {
+        debugger
+        var $buttonClicked = $(this);
+        alert($buttonClicked)
+
+
+        var l_str_so_num = $buttonClicked.attr('data-id');
+        var l_str_cmp_id = $buttonClicked.attr('data-id1');
+        var l_str_itm_code = $buttonClicked.attr('data-id2');
+        var l_str_LineNum = $buttonClicked.attr('data-id3');
+
+        var l_str_shpiEntry = $buttonClicked.attr('data-id4');
+        var p_str_viewmode = "P";
+        $(this).closest('tr').remove()
+        $("#ajaxLoading").show();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/SREditDisplayGridToTextbox")',
+            //TeamDetailPostBackURL,
+            //contentType: "application/json; charset=utf-8",
+            data: { "p_str_so_num": l_str_so_num, "p_str_cmp_id": l_str_cmp_id, "p_str_itm_code": l_str_itm_code, "p_str_LineNum": l_str_LineNum, "p_str_shpiEntry": l_str_shpiEntry },
+
+            datatype: "json",
+            success: function (r) {
+                $.each(r.ListGridEditData, function () {
+                    $("#ajaxLoading").hide();
+                    $("#LineNum").val(this.line_num);
+                    $("#STATUS").val(this.status);
+                    $("#avlqty").val(this.avail_qty);
+                    $("#itm_num").val(this.itm_num);
+                    $("#itm_color").val(this.itm_color)
+                    $("#itm_size").val(this.itm_size);
+                    $("#itm_name").val(this.itm_name);
+                    $("#ord_qty").val(this.ordr_qty);
+                    $("#shipppk").val(this.ctn_qty);
+                    $("#ctn").val(this.ordr_ctns);
+                    $("#qty_uom").val(this.qty_uom);
+                    $("#shiplength").val(this.length);
+                    $("#shipwidth").val(this.width);
+                    $("#shipheight").val(this.depth);
+                    $("#shipweight").val(this.wgt);
+                    $("#shipcube").val(this.cube);
+                    $("#vendpo").val(this.po_num);
+                    $("#note").val(this.note);
+                    $("#itm_code").val(this.itm_code);
+                    $("#p_str_Mode").val("M");
+                });
+                $.each(r.LstItmxCustdtl, function () {
+                    $("#avlqty").val(this.avail_qty);
+                });
+
+            },
+            error: function () {
+                //alert("Dynamic content load failed.");
+                sweetAlert("", "Dynamic content load failed.", "");
+            }
+        });
+    });*@
+
+    //$(".SRDeleteDetail").click(function () {
+    $('#GridSREntryPartial tbody').on('click', '.SRDeleteDetail', function () { //CR2018-04-07-001 Added by Nithya
+        debugger
+        var $buttonClicked = $(this);
+        var l_str_so_num = $buttonClicked.attr('data-id');
+        var l_str_cmp_id = $buttonClicked.attr('data-id1');
+        var l_str_itm_code = $buttonClicked.attr('data-id2');
+        var l_str_LineNum = $buttonClicked.attr('data-id3');
+        var l_str_shpiEntry = $buttonClicked.attr('data-id4');
+        var l_bool_is_in_edit = $('#l_bool_edit_flag').val();
+        if (l_bool_is_in_edit == "true") {
+            sweetAlert("", "Already an Line is Selected for Edit, Pls. Include Before Delete.", "");//CR_MVC_3PL_0327-001 Added By Nithya
+            return false;
+        }
+        var p_str_viewmode = "P";
+        var l_str_temp_stk_ref_num = $('#temp_stk_ref_num').val();
+        $(this).closest('tr').remove()
+        $("#ajaxLoading").show();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/SRDeleteGridData")',
+            data: { "p_str_so_num": l_str_so_num, "p_str_cmp_id": l_str_cmp_id, "p_str_itm_code": l_str_itm_code, "p_str_LineNum": l_str_LineNum, "p_str_shpiEntry": l_str_shpiEntry, "l_str_temp_stk_ref_num": l_str_temp_stk_ref_num },
+
+            datatype: "html",
+            success: function (e) {
+                $("#ajaxLoading").hide();
+                $('#showShipentrygrid').html("");
+                $('#showShipentrygrid').html(e);
+
+                sweetAlert("", "Item Deleted Successfully", "");
+
+                //var rowCount = $("#GridSREntryPartial td").closest("tr").length;
+                //alert(rowCount)
+                //    $('#LineNum').val((rowCount * 1) + 1);
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/OutboundInq/GetSRGridRowCount")',
+                    data: { "p_str_cmp_id": l_str_cmp_id, "p_str_so_num": l_str_so_num },
+
+                    datatype: "html",
+                    success: function (e) {
+                        var rowCount = e;
+                        $('#LineNum').val((rowCount * 1) + 1);
+
+                    },
+                    error: function () {
+                        //alert("Dynamic content load failed.");
+                        sweetAlert("", "Dynamic content load failed.", "");
+                    }
+                });
+            },
+            error: function () {
+                //alert("Dynamic content load failed.");
+                sweetAlert("", "Dynamic content load failed.", "");
+            }
+        });
+    });
+    $('#GridSREntryPartial').DataTable({
+        "pageLength": 10,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        'autoWidth': false,
+    });
+    $('#GridSREntryPartial_paginate').hide();
+
+</script>
+
+
+
+
+
+
+

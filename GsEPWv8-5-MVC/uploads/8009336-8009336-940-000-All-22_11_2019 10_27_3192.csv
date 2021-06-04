@@ -1,0 +1,2 @@
+SLF940,CompID,REFNUM,BATCHID,CUSTID,CustPO,PickLine,ItemNum,Color,Size,Cust-SKU,ItmQty,Ctns,ctn_qty,ctn_cube,ctn_wgt,itm_name,DtlCount,PO-Num,Rel-ID,ReqDt,StartDt,CancelDt,Dept,STORE,ShipToName,ShipToAdd1,ShipToAdd2,City,State,ZipCode,Ship_to_Country,HdrNote,Ship-via
+SLF940,QUEST,8009336,11.22SCH,SCHEELS,9648306,1,IJOY-FS-DGRY-INV,-,-,,12,2,6,,,,1,,,11/22/2019,11/22/2019,11/29/2019,,SOUTHE,SOUTHERN HILL SCHEEL,4400 SERGEANT ROAD,SUITE 54,SIOUX CITY,IA,51106,USA,,UPSGR

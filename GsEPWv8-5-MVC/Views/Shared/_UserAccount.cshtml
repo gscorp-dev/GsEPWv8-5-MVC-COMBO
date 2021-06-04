@@ -1,0 +1,168 @@
+﻿
+@model GsEPWv8_5_MVC.Model.UserAccountModel
+@{
+    var l_str_users_count = Model.ListUserDetails.Count;
+}
+<div class="box-body">
+    <div class="row">
+        <div class="UserAccountPartialgridSummary">
+            <table>
+                <tr>
+                    <td style="width:22%;">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Records:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @l_str_users_count
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <table id="GridUserInqPartial" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">User ID</th>
+                <th class="grid_header_backcolor">Action</th>
+                <th class="grid_header_backcolor">First Name</th>
+                <th class="grid_header_backcolor">Last Name</th>
+                <th class="grid_header_backcolor">E-Mail Id</th>
+                <th class="grid_header_backcolor">Tel No.</th>
+            </tr>
+        </thead>
+        <tbody style="background-color:white">
+            @for (int i = 0; i < Model.ListUserDetails.Count; i++)
+            {
+                <tr id="@Model.ListUserDetails[i].user_id ">
+                    <td>
+                        <a href="javascript:void(0);" style="text-decoration:underline;color: blue;font-size:12px;font-weight:bold;" class="UserView" v_str_user_id="@Model.ListUserDetails[i].user_id" v_str_usr_type="@Model.ListUserDetails[i].user_type">@Model.ListUserDetails[i].user_id</a>
+                    </td>
+                 
+                    @if (Session["UserID"].ToString() == "pm")
+                {
+                    <td>
+                        <a href="javascript:void(0);" style="font-size:12px; text-decoration:underline;color: blue;" class="UserEdit" v_str_user_id="@Model.ListUserDetails[i].user_id" v_str_usr_type="@Model.ListUserDetails[i].user_type"><span class="glyphicon glyphicon-pencil" style="font-size: 12px;"></span><b>Edit</b></a>
+                        <a href="javascript:void(0);" style="font-size:12px; text-decoration:underline; color: red;" class="UserDel" v_str_user_id="@Model.ListUserDetails[i].user_id"><span class="glyphicon glyphicon-trash" style="font-size: 12px;"></span><b>Del</b></a>
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+
+                }
+
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListUserDetails[i].user_fst_name</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListUserDetails[i].user_lst_name</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListUserDetails[i].email</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListUserDetails[i].tel</td>    
+                                    
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+<script type="text/javascript">
+    $('#GridUserInqPartial').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "pageLength": 50,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+    });
+
+    $(".UserEdit").click(function () {
+        debugger;
+        var l_str_usr_acc_edit_url = '/UserAccount/EditUser';
+        var $EditbuttonClicked = $(this);
+        var l_str_user_id = $EditbuttonClicked.attr('v_str_user_id');
+        var l_str_user_type = $EditbuttonClicked.attr('v_str_usr_type');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: l_str_usr_acc_edit_url,
+            contentType: "application/json; charset=utf-8",
+            data: { "l_str_user_id": l_str_user_id, "l_str_user_type": l_str_user_type },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $('#UserContentEdit').html(data);
+                $('#UserEdit').modal(options);
+                $('#UserEdit').modal('show');
+                $("#ajaxLoading").hide();
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+
+    $(".UserView").click(function () {
+        debugger;
+        var l_str_usr_acc_edit_url = '/UserAccount/ViewUser';
+        var $EditbuttonClicked = $(this);
+        var l_str_user_id = $EditbuttonClicked.attr('v_str_user_id');
+        var l_str_user_type = $EditbuttonClicked.attr('v_str_usr_type');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: l_str_usr_acc_edit_url,
+            contentType: "application/json; charset=utf-8",
+            data: { "l_str_user_id": l_str_user_id, "l_str_user_type": l_str_user_type },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $('#UserContentEdit').html(data);
+                $('#UserEdit').modal(options);
+                $('#UserEdit').modal('show');
+                $("#ajaxLoading").hide();
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+
+    $(".UserDel").click(function () {
+        debugger;
+        var l_str_usr_acc_delete_url = '/UserAccount/DeleteUser';
+        var $DeletebuttonClicked = $(this);
+        var l_str_user_id = $DeletebuttonClicked.attr('v_str_user_id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: l_str_usr_acc_delete_url,
+            contentType: "application/json; charset=utf-8",
+            data: { "l_str_user_id": l_str_user_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $('#UserContentDelete').html(data);
+                $('#UserDelete').modal(options);
+                $('#UserDelete').modal('show');
+                $("#ajaxLoading").hide();
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+
+</script>

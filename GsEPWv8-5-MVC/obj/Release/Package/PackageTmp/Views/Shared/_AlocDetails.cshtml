@@ -1,0 +1,158 @@
+﻿@model GsEPWv8_5_MVC.Model.OutboundInqModel
+@{
+
+
+}
+<style type="text/css">
+    #GridOBShipReqAlocDTL tr td:nth-child(1) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(2) {
+        width: 6.7%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(3) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(4) {
+        width: 7.5%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(5) {
+        width: 6.2%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(6) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(7) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(8) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(9) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(10) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(11) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(12) {
+        width: 6.8%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(13) {
+        width: 6.7%;
+    }
+
+    #GridOBShipReqAlocDTL tr td:nth-child(14) {
+        width: 6.7%;
+    }
+</style>
+@Html.HiddenFor(model => model.cmp_id)
+@Html.HiddenFor(model => model.line_num)
+<input type="hidden" id="LineNums" value="@Session["lineNum"]" />
+<div>
+    <div class="row">
+        <div class="box box-primary">
+            <h6><b style="font-size: 14px;color: mediumvioletred;margin-left: -90%;">Allocation Details</b></h6>
+            <table id="GridOBShipReqAlocDTL" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+                    <tr>
+                        <th class="grid_header_backcolor">AlcLn</th>
+                        <th class="grid_header_backcolor">Ctnln</th>
+                        <th class="grid_header_backcolor">itmLn</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">Locid</th>
+                        <th class="grid_header_backcolor">RcvdDt</th>
+                        <th class="grid_header_backcolor">Due</th>
+                        <th class="grid_header_backcolor">Ppk</th>
+                        <th class="grid_header_backcolor">Avl</th>
+                        <th class="grid_header_backcolor">Aloc</th>
+                        <th class="grid_header_backcolor">LotId</th>
+                        <th class="grid_header_backcolor">Vendor PoNo</th>
+                        <th class="grid_header_backcolor">PaletId</th>
+                    </tr>
+                </thead>
+                <tbody style="display:block;  max-height:300px; overflow-y:scroll;">
+                    @for (int i = 0; i < Model.LstAlocDtl.Count; i++)
+                    {
+                        var linenumber = Session["lineNum"].ToString();
+
+                        if (Model.LstAlocDtl[i].AlcLn == Convert.ToInt32(linenumber))
+                        {
+                            <tr style="background-color:lightblue;display:table; width:100%; table-layout:fixed;" class="row-select">
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].AlcLn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"> @Model.LstAlocDtl[i].CtnLn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].ItmLn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].itm_num</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].itm_color</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].itm_size</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].loc_id</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstAlocDtl[i].rcvd_dt.ToString("MM/dd/yyyy")</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Model.LstAlocDtl[i].due_qty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.LstAlocDtl[i].pkg_qty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Model.LstAlocDtl[i].avail_qty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].Aloc</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].lot_id</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].po_num</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].Palet_id</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="row-select" style="background-color:lightblue; display:table; width:100%; table-layout:fixed;">
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].AlcLn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"> @Model.LstAlocDtl[i].CtnLn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].ItmLn</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].itm_num</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].itm_color</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].itm_size</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].loc_id</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstAlocDtl[i].rcvd_dt.ToString("MM/dd/yyyy")</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Model.LstAlocDtl[i].due_qty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.LstAlocDtl[i].pkg_qty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Model.LstAlocDtl[i].avail_qty</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].Aloc</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].lot_id</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].po_num</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstAlocDtl[i].Palet_id</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#GridOBShipReqAlocDTL').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridOBShipReqAlocDTL_paginate').hide();
+    })
+</script>
+

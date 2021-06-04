@@ -1,0 +1,178 @@
+﻿@model GsEPWv8_5_MVC.Model.StockInquiryDtlModel
+@{
+    var hdrcount = Model.ListStockInquiryGrid.Count;
+    var Dtlstockcount = Model.LstStockInquirystock.Count;
+    int AlocQty = 0;
+}
+@Html.HiddenFor(model => model.AlocQty)
+@for (int j = 0; j < Model.LstStockInquirystock.Count(); j++)
+{
+    AlocQty = AlocQty + Model.LstStockInquirystock[j].AlocQty;
+}
+@*<div class="box-body">*@
+<br />
+<div class="gridSummary">
+    <table>
+        <tr>
+            <td style="width:25%;text-align:center;">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label id="lblhdrcount" class="totalCount" style="text-align:left">
+                    @hdrcount
+                </label>
+            </td>
+            @*<td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                Avl Ctn:
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.AvlCtn, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+            </td>*@
+            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-left:30px;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                Avl Qty:
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.AvlQty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red;" })
+            </td>
+            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left; padding-left:36px; padding-right: 10px;font-family:Verdana;font-weight:200;">
+                Aloc Qty:
+            </td>
+            <td>
+                <input id="txtAlocQty" type="text" name="AlocQty" class="form-control" value="@AlocQty" style="font-size:16px;font-weight: 900;font-weight: 900;font-family: verdana;color: red;">
+            </td>
+        </tr>
+    </table>
+</div>
+<br />
+    <div class="box box-primary">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-10 col-sm-10 col-xs-10" style="bottom: -24px;">
+                    <div>
+                        <div id="Recorddisplay">
+                            @*<table>
+                                <tr>
+                                    <td style="width:22%;">
+                                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                            Total Records:
+                                        </span>
+                                        <label id="lblhdrcount" class="totalCount" style="text-align:left">
+                                            @hdrcount
+                                        </label>
+                                    </td>
+                                    <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-right: 10px; ">
+                                        Avl Ctn:
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.AvlCtn, new { @class = "form-control", @maxlength = "50" })
+                                    </td>
+                                    <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-left:30px;padding-right: 10px; ">
+                                        Avl Qty:
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.AvlQty, new { @class = "form-control", @maxlength = "50" })
+                                    </td>
+                                    <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left; padding-left:36px; padding-right: 10px;">
+                                        Aloc Qty:
+                                    </td>
+                                    <td>
+
+                                        <input id="txtAlocQty" type="text" name="AlocQty" class="form-control" value="@AlocQty">
+                                    </td>
+                                </tr>
+                            </table>*@
+
+                        </div>
+                    </div>
+                </div>    
+                <div class="col-md-2 col-sm-2 col-xs-2">
+                    <ul class="pagination" id="paging" style="margin-left:120px; margin:-45px; padding-left:150px;"></ul>
+                </div>
+            </div>
+        </div>
+       
+        <table id="StockInq" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor">Style</th>
+                    <th class="grid_header_backcolor">Color</th>
+                    <th class="grid_header_backcolor">Size</th>
+                    <th class="grid_header_backcolor">Desc</th>
+                    <th class="grid_header_backcolor">Rcvd Dt</th>
+                    <th class="grid_header_backcolor">IBDocID</th>
+                    <th class="grid_header_backcolor">ContID</th>
+                    <th class="grid_header_backcolor">LotID</th>
+                    <th class="grid_header_backcolor">PoNum</th>
+                    <th class="grid_header_backcolor">LocID</th>
+                    <th class="grid_header_backcolor">AvlCtn</th>
+                    <th class="grid_header_backcolor">PPK</th>
+                    <th class="grid_header_backcolor">AvlQty</th>
+                    <th class="grid_header_backcolor">PaletID</th>
+                    <th class="grid_header_backcolor">Whs</th>
+                </tr>
+            </thead>
+
+            <tbody style="background-color:white">
+                @for (int i = 0; i < Model.ListStockInquiryGrid.Count; i++)
+            {
+                    <tr>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].itm_num</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].itm_color</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].itm_size</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].itm_name</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].rcvd_dt</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].ib_doc_id</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].cont_id</td>
+                        <td style="font-size:12px;color:black; font-weight:bold; font-family: verdana;">@Model.ListStockInquiryGrid[i].lot_id</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].po_num</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].loc_id</td>
+                        @*<td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].palet_id</td>*@
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListStockInquiryGrid[i].TOT_CTN</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListStockInquiryGrid[i].pkg_qty</td>
+                        @*<td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; text-align:right">@Model.ListStockInquiryGrid[i].itm_qty</td>*@
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListStockInquiryGrid[i].tot_qty</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].palet_id</td>
+                        <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Model.ListStockInquiryGrid[i].whs_id</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+<script type="text/javascript">
+
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+    $("#example1").DataTable();
+    $(function () {
+        $('#StockInq').DataTable({
+            "pageLength": 50,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+     
+    })
+   
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    $("input[name=chkAll]").click(function () {
+        if ($(this).prop("checked") == true) {
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+
+</script>

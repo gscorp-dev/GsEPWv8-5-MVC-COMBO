@@ -1,0 +1,700 @@
+﻿
+@model GsEPWv8_5_MVC.Model.OBSRLoadInquiryModel
+@{
+    var SRCount = Model.ListOBGetSRSummary.Count;
+    var l_int_inv_amt = string.Empty;
+}
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+
+<center>
+
+    <div class="modal-header" style="width:100%;">
+        <div id="ajaxLoadingLoadEntry" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Load Entry - View</h4>
+        <button type="button" id="btnLoadEntryClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+    </div>
+    <div class="box-body">
+        <div class="box-header">
+            <fieldset>
+                <legend style="text-align:left;">Load Entry View</legend>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-2" style="text-align: right; margin-top: 6px; font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Company</b></label>
+                        </div>
+                        <div class="col-xs-7" style="padding-left: 0%;">
+                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "le_cmp_id", @style = "width:100%;", @class = "form-control txtlbl" })
+                        </div>
+                        <div class="col-xs-3" style="padding-left: 0%;">
+                        <fieldset>
+                            <legend style="text-align:center">Report Selection</legend>
+                            <table>
+                                <tr>
+                                  
+                                    <td>
+                                        <button type="button" id="btnSaveLoadEntry" class="btn_search" style="margin-left:10px; margin-bottom:3px; background-color:#5ae77e;">Save and Print</button>
+                                    </td>
+                                    <td>
+                                        <button type="button" id="btnLoadEntryRpt" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Print</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        </div>
+                      </div>
+                </div>
+                <br />
+            </fieldset>
+        
+        </div>
+    </div>
+
+</center>
+
+<div id="ShowLoadEntryDetail" class="box-header" style="padding: 5px; ">
+
+    <div class="box-body">
+        <div class="box-header">
+            <fieldset>
+                <legend style="text-align:left;">Load Entry</legend>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Load DocId</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].load_doc_id, new { @id = "le_load_doc_id",  @disabled = "true" ,@class = "form-control txtlbl", @maxlength = "10" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Load Number</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].load_number, new { @id = "le_load_number", @class = "form-control txtlbl", @maxlength = "30" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Approved Date</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].load_approve_dt, "{0:MM/dd/yyyy}", new { @id = "le_load_approve_dt", @class = "form-control txtlbl", @maxlength = "10" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Load Pick Date</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].load_pick_dt, "{0:MM/dd/yyyy}", new { @id = "le_load_pick_dt", @class = "form-control txtlbl", @maxlength = "10" })
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">BOL Number</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].bol_number, new { @id = "le_bol_number", @class = "form-control txtlbl", @maxlength = "30" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Carrier Name</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].carrier_name, new { @id = "le_carrier_name", @class = "form-control txtlbl", @maxlength = "50" })
+                        </div>
+
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Trailer Number</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].trailer_num, new { @id = "le_trailer_num", @class = "form-control txtlbl", @maxlength = "50" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Seal Number(s)</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].seal_num, new { @id = "le_seal_num", @class = "form-control txtlbl", @maxlength = "50" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Special Instructions</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 17.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].spcl_inst, new { @id = "le_spcl_inst", @class = "form-control txtlbl", @maxlength = "50" })
+                        </div>
+                        <div class="col-xs-1" style="width: 7.5%;text-align:right;">
+                            <label class="Lblmanual">Note:</label>
+                        </div>
+                        <div class="col-xs-7" style="width: 62.5%;padding-bottom: 1%;">
+
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].load_note, new { @id = "le_load_note", @class = "form-control txtlbl ", @maxlength = "1000" })
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+  
+    
+</div>
+    
+<div id="ShowLoadEntryGrid" class="box-header" style="padding: 5px; ">
+    <div class="box-body">
+        <div class="box-header">
+            <fieldset>
+                <legend style="text-align:left;">Ship To Address</legend>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Mail Name</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].st_mail_name, new { @id = "le_st_mail_name", @class = "form-control txtlbl", @maxlength = "50" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Addr1</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 25%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].st_addr_line1, new { @id = "le_st_addr_line1", @class = "form-control txtlbl", @maxlength = "50" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Addr2</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 25%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].st_addr_line2, new { @id = "le_st_addr_line2", @class = "form-control txtlbl", @maxlength = "50" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">City</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].st_city, new { @id = "le_st_city", @class = "form-control txtlbl", @maxlength = "30" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Country</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.DropDownListFor(model => model.st_cntry_id, new SelectList(Model.ListCntryPick, "Cntry_Id", "Countrydtl"), new { @id = "le_st_cntry_id", @class = "form-control txtlbl", @style = "font-weight: bold;font - size: 12px; font-family: verdana; width: 180px;background-color:lightyellow;" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Zipcode</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].st_post_code, new { @id = "le_st_post_code", @class = "form-control txtlbl numericOnly", @maxlength = "25", @onkeypress = "OnlyNumeric(this);" })
+                        </div>
+                        @*<div class="col-xs-1" style="width: 8%;text-align: right;">
+                            <label class="Lblmanual">State</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12%;padding-bottom: 1%;">
+                            @Html.DropDownListFor(model => model.ListOBSRLoadEntryHdr[0].st_state_id, new SelectList(Model.ListStatePick, "State_ID", "statedtl"), new { @id = "le_st_state_id", @class = "form-control txtlbl", @style = "font-weight: bold;font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                        </div>*@
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">State</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.DropDownListFor(model => model.st_state_id, new SelectList(Model.ListStatePick, "State_ID", "statedtl"), new { @id = "le_st_state_id", @class = "form-control txtlbl", @style = "font-weight: bold;font-size: 12px; font-family: verdana; background-color:lightyellow;" })
+                        </div>
+
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="box-header">
+            <fieldset>
+                <legend style="text-align:left;">Total Summary :</legend>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Total Ctns:</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].tot_ctns, new { @id = "le_tot_ctns", @disabled = "true", @class = "form-control txtlbl numericOnly", @maxlength = "10" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Total Cube </label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].tot_cube, new { @id = "le_tot_cube", @disabled = "true", @class = "form-control txtlbl numericOnly", @maxlength = "10", @onkeypress = "OnlyNumeric(this);" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Total Weight </label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].tot_weight, new { @id = "le_tot_weight", @disabled = "true", @class = "form-control txtlbl numericOnly", @maxlength = "10", @onkeypress = "OnlyNumeric(this);" })
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;text-align: right;">
+                            <label class="Lblmanual">Total Pallet :</label>
+                        </div>
+                        <div class="col-xs-1" style="width: 12.5%;padding-bottom: 1%;">
+                            @Html.TextBoxFor(model => model.ListOBSRLoadEntryHdr[0].tot_palet, new { @id = "le_tot_palet", @class = "form-control txtlbl numericOnly", @maxlength = "10", @onkeypress = "OnlyNumeric(this);" })
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="box-body">
+
+        <div>
+            <table id="GrdLoadEntryInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Select All <input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" /></th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Batch#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">SR#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">SR Date</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:15%;">Customer</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cust Order#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Order Number</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Ctns(s)</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Weight</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cube</th>
+
+                    </tr>
+                </thead>
+
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+                    @for (int i = 0; i < Model.ListOBGetSRSummary.Count; i++)
+                    {
+                        int line = i + 1;
+                        <tr style="background-color:white;">
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckboxLoadEntry" type="checkbox" value="@Model.ListOBGetSRSummary[i].so_num" checked="checked" /></td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].batch_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].so_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].so_dt</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].cust_name</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].cust_ordr_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].ordr_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;width:60px;">@Model.ListOBGetSRSummary[i].tot_ctns</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right">@Model.ListOBGetSRSummary[i].tot_weight</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right">@Model.ListOBGetSRSummary[i].tot_cube</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.Hidden("SRCount", SRCount)
+        </div>
+    </div>
+</div>
+<br />
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 1050px; height: 650px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" id="btnclose" style="margin-top: -38px;" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="load" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script>
+    debugger
+           $('#le_so_dt_from').datetimepicker({
+                        timepicker: false,
+                        step: 15, format: 'm/d/Y'
+                    });
+                    $('#le_so_dt_to').datetimepicker({
+                        timepicker: false,
+                        step: 15, format: 'm/d/Y'
+                    });
+
+                    $('#le_load_approve_dt').datetimepicker({
+                        timepicker: false,
+                        step: 15, format: 'm/d/Y'
+                    });
+
+                    $('#le_load_pick_dt').datetimepicker({
+                        timepicker: false,
+                        step: 15, format: 'm/d/Y'
+                    });
+    
+                    $("#btnSaveLoadEntry").click(function () {
+                        debugger;
+                        var p_str_cmp_id = $('#le_cmp_id').val();
+                        var p_str_load_number = $('#le_load_number').val();
+                        var p_str_load_approve_dt = $('#le_load_approve_dt').val();
+                        var checkboxIDArray = [];
+                        var SelectedRow = [];
+                        var numberOfCheckboxes = $("input[name='tblcheckboxLoadEntry']:checked").length;
+                        if (numberOfCheckboxes == 0) {
+
+                            sweetAlert("", "Please select the Record to Save Load Entry", "");
+                        }
+                        else {
+                            $("input[name='tblcheckboxLoadEntry']:checked").each(function () {
+                                var check = $(this);
+                                if (check.is(':checked')) {
+                                    checkboxIDArray.push(check.attr('id'));
+                                    SelectedRow.push(check.val());
+
+
+                                }
+                            });
+                            var Count = $("input[name='tblcheckboxLoadEntry']:checked").length;
+                            if (Count > 0) {
+                                debugger;
+                                var vOBSRLoadEntryHdr = {};
+                                vOBSRLoadEntryHdr.cmp_id = $('#le_cmp_id').val();
+                                vOBSRLoadEntryHdr.batch_num = $('#le_load_doc_id').val();
+                                vOBSRLoadEntryHdr.batch_num = $('#le_batch_num').val();
+                                vOBSRLoadEntryHdr.load_number = $('#le_load_number').val();
+                                vOBSRLoadEntryHdr.load_approve_dt = $('#le_load_approve_dt').val();
+                                vOBSRLoadEntryHdr.bol_number = $('#le_bol_number').val();
+                                vOBSRLoadEntryHdr.spcl_inst = $('#le_spcl_inst').val();
+
+                                vOBSRLoadEntryHdr.load_pick_dt = $('#le_load_pick_dt').val();
+                                vOBSRLoadEntryHdr.carrier_name = $('#le_carrier_name').val();
+                                vOBSRLoadEntryHdr.trailer_num = $('#le_trailer_num').val();
+                                vOBSRLoadEntryHdr.seal_num = $('#le_seal_num').val();
+                                vOBSRLoadEntryHdr.shipto_id = "-";
+                                vOBSRLoadEntryHdr.st_mail_name = $('#le_st_mail_name').val();
+                                vOBSRLoadEntryHdr.st_addr_line1 = $('#le_st_addr_line1').val();
+                                vOBSRLoadEntryHdr.st_addr_line2 = $('#le_st_addr_line2').val();
+                                vOBSRLoadEntryHdr.st_city = $('#le_st_city').val();
+                                vOBSRLoadEntryHdr.st_state_id = $('#le_st_state_id').val();
+                                vOBSRLoadEntryHdr.st_post_code = $('#le_st_post_code').val();
+                                vOBSRLoadEntryHdr.st_cntry_id = $('#le_st_cntry_id').val();
+
+                                vOBSRLoadEntryHdr.load_note = $('#le_load_note').val();
+                                vOBSRLoadEntryHdr.tot_ctns = $('#le_tot_ctns').val();
+                                vOBSRLoadEntryHdr.tot_cube = $('#le_tot_cube').val();
+                                vOBSRLoadEntryHdr.tot_weight = $('#le_tot_weight').val();
+                                vOBSRLoadEntryHdr.tot_palet = $('#le_tot_palet').val();
+                                vOBSRLoadEntryHdr.maker = '';
+                                vOBSRLoadEntryHdr.maker_dt = '';
+                                var objOBSRLoadEntryHdr = new Array();
+                                objOBSRLoadEntryHdr.push(vOBSRLoadEntryHdr);
+                                var SelectdSRNum = '';
+                                $.each(SelectedRow, function (i, v) {
+
+                                    if (SelectdSRNum == '')
+                                        SelectdSRNum = v;
+                                    else
+                                        SelectdSRNum = SelectdSRNum + ',' + v;
+                                }
+                                );
+                                var p_str_so_list = SelectdSRNum;
+                                $("#ajaxLoadingLoadEntry").show();
+                                $.ajax({
+                                    type: "POST",
+                                    url: '@Url.Content("~/OutboundInq/SaveLoadEntry")',
+                                    contentType: "application/json; charset=utf-8",
+                                    data: JSON.stringify({
+                                        "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_load_number": p_str_load_number,"p_str_load_approve_dt":p_str_load_approve_dt, "p_str_so_list": p_str_so_list,
+                                        objOBSRLoadEntryHdr: objOBSRLoadEntryHdr
+
+                                    }),
+
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    success: function (e) {
+                                        $("#ajaxLoadingLoadEntry").hide();
+
+                                        if (e > 0) {
+                                            swal({
+                                                title: "",
+                                                text: "No Records to Save",
+                                                type: "",
+                                                showCancelButton: false,
+                                                confirmButtonClass: "btn-danger",
+                                                confirmButtonText: "Ok",
+                                                closeOnConfirm: true
+                                            });
+                                        }
+
+                                        else {
+                                            debugger
+                                            swal({
+                                                title: "",
+                                                text: "Load Entry Saved successfully.",
+                                                type: "",
+                                                showCancelButton: false,
+                                                confirmButtonClass: "btn-danger",
+                                                confirmButtonText: "Ok",
+                                                closeOnConfirm: true
+                                            },
+
+                                            function () {
+                                                debugger
+                                                $("#ajaxLoadingLoadEntry").hide();
+                                                $('#ModalclsLoadEntry').modal('hide');
+                                                $('#ModalLoadEntry').modal('hide');
+
+                                            });
+
+                                        }
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                        $("#ajaxLoadingLoadEntry").hide();
+                                    }
+                                });
+
+                            }
+                        }
+
+                    });
+    $("#btnLoadEntryClose").click(function ()
+    {
+
+    debugger
+    sweetAlert(
+        {
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: true,
+            closeOnCancel: true
+            },
+    function (isConfirm)
+    {
+        if (isConfirm)
+        {
+                             
+            $("#ajaxLoadingLoadEntry").hide();
+            $('#ModalclsLoadEntry').modal('hide');
+            $('#ModalLoadEntry').modal('hide');
+         }
+    });
+   });
+
+
+
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckboxLoadEntry']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckboxLoadEntry']").prop("checked", false);
+        }
+
+    });
+                    $("input[name='tblcheckboxLoadEntry']").click(function () {
+
+                        if ($("input[name='tblcheckboxLoadEntry']").length == $("input[name='tblcheckboxLoadEntry']:checked").length) {
+                            $("#chkAll").prop("checked", true);
+                        }
+                        else {
+                            $("#chkAll").prop("checked", false);
+                        }
+
+                    });
+                    $("input[name='tblcheckbox']").on('change', function () {
+                        $("input[name='tblcheckboxLoadEntry']").not(this).prop('checked', false);
+                    });
+
+</script>
+
+<script>
+    $("#btnLoadEntryRpt").click(function () {
+           debugger
+
+               var p_str_cmp_id = $("#le_cmp_id").val();
+               var p_str_load_number = $('#le_load_number').val();
+               var p_str_load_doc_id = $('#le_load_doc_id').val();
+                $("#ajaxLoadingshipreq").show();
+                window.open('LoadEntryBOLRpt?p_str_cmp_id=' + p_str_cmp_id + '&p_str_load_doc_id=' + p_str_load_doc_id + '&p_str_load_number=' + p_str_load_number, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'LoadEntryBOLRpt')
+                
+
+                $("#ajaxLoadingLoadEntry").hide();
+               $('#ModalclsLoadEntry').modal('hide');
+               $('#ModalLoadEntry').modal('hide');
+
+
+
+    })
+
+</script>
+<script>
+    $("#btnSaveLoadEntry").click(function () {
+        debugger;
+        var p_str_cmp_id = $('#le_cmp_id').val();
+        var p_str_load_number = $('#le_load_number').val();
+        var p_str_load_doc_id = $('#le_load_doc_id').val();
+        var p_str_load_approve_dt = $('#le_load_approve_dt').val();
+        var checkboxIDArray = [];
+        var SelectedRow = [];
+        var numberOfCheckboxes = $("input[name='tblcheckboxLoadEntry']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            sweetAlert("", "Please select the Record to Save Load Entry", "");
+        }
+        else {
+            $("input[name='tblcheckboxLoadEntry']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    SelectedRow.push(check.val());
+
+
+                }
+            });
+            var Count = $("input[name='tblcheckboxLoadEntry']:checked").length;
+            if (Count > 0) {
+                debugger;
+                var vOBSRLoadEntryHdr = {};
+
+                vOBSRLoadEntryHdr.cmp_id = $('#le_cmp_id').val();
+                vOBSRLoadEntryHdr.load_doc_id = $('#le_load_doc_id').val();
+                vOBSRLoadEntryHdr.batch_num = $('#le_batch_num').val();
+                vOBSRLoadEntryHdr.load_number = $('#le_load_number').val();
+                vOBSRLoadEntryHdr.load_approve_dt = $('#le_load_approve_dt').val();
+                vOBSRLoadEntryHdr.bol_number = $('#le_bol_number').val();
+                vOBSRLoadEntryHdr.spcl_inst = $('#le_spcl_inst').val();
+
+                vOBSRLoadEntryHdr.load_pick_dt = $('#le_load_pick_dt').val();
+                vOBSRLoadEntryHdr.carrier_name = $('#le_carrier_name').val();
+                vOBSRLoadEntryHdr.trailer_num = $('#le_trailer_num').val();
+                vOBSRLoadEntryHdr.seal_num = $('#le_seal_num').val();
+                vOBSRLoadEntryHdr.shipto_id = "-";
+                vOBSRLoadEntryHdr.st_mail_name = $('#le_st_mail_name').val();
+                vOBSRLoadEntryHdr.st_addr_line1 = $('#le_st_addr_line1').val();
+                vOBSRLoadEntryHdr.st_addr_line2 = $('#le_st_addr_line2').val();
+                vOBSRLoadEntryHdr.st_city = $('#le_st_city').val();
+                vOBSRLoadEntryHdr.st_state_id = $('#le_st_state_id').val();
+                vOBSRLoadEntryHdr.st_post_code = $('#le_st_post_code').val();
+                vOBSRLoadEntryHdr.st_cntry_id = $('#le_st_cntry_id').val();
+
+                vOBSRLoadEntryHdr.load_note = $('#le_load_note').val();
+                vOBSRLoadEntryHdr.tot_ctns = $('#le_tot_ctns').val();
+                vOBSRLoadEntryHdr.tot_cube = $('#le_tot_cube').val();
+                vOBSRLoadEntryHdr.tot_weight = $('#le_tot_weight').val();
+                vOBSRLoadEntryHdr.tot_palet = $('#le_tot_palet').val();
+                vOBSRLoadEntryHdr.maker = '';
+                vOBSRLoadEntryHdr.maker_dt = '';
+                var objOBSRLoadEntryHdr = new Array();
+                objOBSRLoadEntryHdr.push(vOBSRLoadEntryHdr);
+
+
+                var SelectdSRNum = '';
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdSRNum == '')
+                        SelectdSRNum = v;
+                    else
+                        SelectdSRNum = SelectdSRNum + ',' + v;
+                }
+                );
+                var p_str_so_list = SelectdSRNum;
+                $("#ajaxLoadingLoadEntry").show();
+             
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Content("~/OutboundInq/SaveLoadEntry")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                        "p_str_cmp_id": p_str_cmp_id,
+                        "p_str_load_doc_id":p_str_load_doc_id,
+                        "p_str_load_number": p_str_load_number, "p_str_load_approve_dt": p_str_load_approve_dt, "p_str_so_list": p_str_so_list,
+                        objOBSRLoadEntryHdr: objOBSRLoadEntryHdr
+
+                    }),
+
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (e) {
+                        $("#ajaxLoadingLoadEntry").hide();
+
+                        if (e > 0) {
+                            swal({
+                                title: "",
+                                text: "No Records to Save",
+                                type: "",
+                                showCancelButton: false,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "Ok",
+                                closeOnConfirm: true
+                            });
+                        }
+
+                        else {
+                            debugger
+                            swal({
+                                title: "",
+                                text: "Load Entry Saved successfully.",
+                                type: "",
+                                showCancelButton: false,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "Ok",
+                                closeOnConfirm: true
+                            },
+
+                            function () {
+                                debugger
+                                var p_str_cmp_id = $("#le_cmp_id").val();
+                                var p_str_load_number = $('#le_load_number').val();
+                                var p_str_load_doc_id = $('#le_load_doc_id').val();
+                                $("#ajaxLoadingshipreq").show();
+                                window.open('LoadEntryBOLRpt?p_str_cmp_id=' + p_str_cmp_id + '&p_str_load_doc_id=' + p_str_load_doc_id + '&p_str_load_number=' + p_str_load_number, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'LoadEntryBOLRpt')
+                                $("#ajaxLoadingLoadEntry").hide();
+                                $('#ModalclsLoadEntry').modal('hide');
+                                $('#ModalLoadEntry').modal('hide');
+
+                            });
+
+                        }
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoadingLoadEntry").hide();
+                    }
+                });
+
+            }
+        }
+
+    });
+
+</script>
+
+<script>
+
+    $('#chkSelectAll').click(function (event) {
+        if ($(this).is(":checked")) {
+            $('.checkbox').each(function () {
+                $(this).prop("checked", true);
+            });
+        }
+        else {
+            $('.checkbox').each(function () {
+                $(this).prop("checked", false);
+            });
+        }
+    });
+</script>

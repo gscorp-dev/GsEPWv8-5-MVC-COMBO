@@ -1,0 +1,266 @@
+﻿
+@model  GsEPWv8_5_MVC.Model.OutboundShipSchedulingInquiryModel
+
+@{
+    ViewBag.Title = "OutboundShipSchedulingInquiry";
+
+
+}
+<style>
+    div#ajaxLoadingSaveMail {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">Ship Scheduling Delete Configuration</h4>
+    <button type="button" id="btnNewShipSchdldelClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+    <button type="button" id="btnNewShipSchdlDelete" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;margin-left:-28px;background-color: #00c0ef;">Save</button>
+
+</div>
+<div id="ajaxLoadingSaveMail" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+<fieldset style="margin-top:-1px;">
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Cmp Id:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -20px;width:38%;">
+                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @maxlength = "100", @style = "width:62%;background-color:lightyellow;" })
+                        </div>
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-9px;">
+                            <label><b class="Lblmanual">Schedule ID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -28px;">
+                            @Html.TextBoxFor(model => model.ship_schdl_doc_id, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:140px", @disabled = "true" })
+
+                        </div>
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-9px;">
+                            <label><b class="Lblmanual">Status:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -28px;">
+                            @Html.TextBoxFor(model => model.status, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:140px", @disabled = "true" })
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
+                    <div class="col-xs-12">
+
+                        <div class=" col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;margin-left: -126px;">
+                            <label><b class="Lblmanual">Schedl Dt:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -23px;">
+                            @Html.TextBoxFor(model => model.shipscheduleddate, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+
+                        </div>
+                        <div class=" col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;margin-left:4px;">
+                            <label><b class="Lblmanual">ShipCar Name:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -23px;">
+                            @Html.TextBoxFor(model => model.shipcarname, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:270px" })
+
+                        </div>
+                        <div class=" col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;margin-left: -29px;">
+                            <label><b class="Lblmanual">Allocation DocID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -23px;">
+                            @Html.TextBoxFor(model => model.aloc_doc_id, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:270px", @id = "new_aloc_id" })
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;">
+                            <label><b class="Lblmanual">Shipcar ID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -28px;">
+                            @Html.TextBoxFor(model => model.shipcarid, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:153px" })
+
+                        </div>
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-35px">
+                            <label><b class="Lblmanual">Comment:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -21px;">
+                            @Html.TextBoxFor(model => model.ship_note, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:370px" })
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</fieldset>
+<script>
+    $("#btnNewShipSchdldelClose").click(function (e) {
+        $('#myModalDel').modal('hide');
+        $("#ajaxLoadingLoadmail").hide();
+    })
+
+</script>
+<script>
+    $('#btnNewShipSchdlDelete').click(function () {
+            debugger
+            var cmp_id = $('#new_cmp_id').val();
+            var shipscheduledate = $('#shipscheduleddate').val();
+            var shipcarname = $('#shipcarname').val();
+            var alocid = $('#new_aloc_id').val();
+            var truckid = $('#shipcarid').val();
+            var note = $('#ship_note').val();
+            var status = $('#status').val();
+            if (cmp_id == "") {
+                sweetAlert("", "Company Name is Required.", "");
+                return false;
+            }
+            if (shipscheduledate == "") {
+                sweetAlert("", "Ship ScheduleDate is Required", "");
+                return false;
+            }
+            if (shipcarname == "")
+            {
+                sweetAlert("", "Vehicle Name is Required", "");
+                return false;
+            }
+            if (truckid == "") {
+                sweetAlert("", "Vehicle ID is Required", "");
+                return false;
+            }
+            $("#ajaxLoadingSaveMail").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/OutboundShipSchedulingInquiry/DeleteShipScheduleEntryDetails")',
+                data: '{cmp_id:"' + cmp_id + '",shipscheduledate:"' + shipscheduledate + '",shipcarname:"' + shipcarname + '",alocid: "' + alocid + '",truckid:"' + truckid + '",note: "' + note + '",status: "' + status + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (e) {
+                    if (e == true) {
+                        swal({
+                            title: "",
+                            text: " Details Saved successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+
+                         function () {
+                             setTimeout(function () {
+                                 $('#myModalNew').modal('hide');
+                                 var p_str_cmp_id = $('#new_cmp_id').val();
+                                 var p_str_ship_dt_frm = "";
+                                 var p_str_ship_dt_to = "";
+                                 var p_str_AlocId = "";
+                                 $.ajax({
+                                     type: "get",
+                                     url: "/OutboundShipSchedulingInquiry/GetOutboundShipSchedulingInqDetail",
+                                     data: {
+                                         "p_str_cmp_id": p_str_cmp_id, "p_str_ship_dt_frm": p_str_ship_dt_frm, "p_str_ship_dt_to": p_str_ship_dt_to, "p_str_AlocId": p_str_AlocId
+                                     },
+                                     datatype: 'html',
+                                     success: function (e) {
+                                         debugger
+                                         $("#ajaxLoadingSaveMail").hide();
+
+                                     },
+                                 })
+
+                             });
+                         });
+
+                    }
+                    else
+                    {
+                        sweetAlert("", "Details are already Exist Please Check it", "");
+
+                        $("#ajaxLoadingSaveMail").hide();
+                    }
+                },
+
+                failure: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveMail").hide();
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveMail").hide();
+                }
+            });
+
+
+
+        })
+
+</script>
+
+

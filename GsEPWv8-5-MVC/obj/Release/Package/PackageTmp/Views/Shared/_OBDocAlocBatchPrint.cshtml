@@ -1,0 +1,168 @@
+﻿@model GsEPWv8_5_MVC.Model.PickLabelModel
+
+@{
+
+    var Ordercount = Model.lstDocForPrint.Count;
+}
+<style type="text/css">
+    div#table-Details {
+        border: 1px solid #999;
+        box-shadow: 0px 0px 15px;
+    }
+
+    table.dataTable thead > tr > th {
+        padding-right: 0px;
+    }
+
+    .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #f5f5f5;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+<center>
+
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;">Outbound Batch Alocation Label/ Packing slip Print</h4>
+    </div>
+    <center>
+        <table style="width: 100%; margin-top:-11px;">
+            <tbody>
+
+                <tr>
+                    <td style="width: 60%;padding-left: 42%;font-size: 18px;font-family: Verdana;font-weight: bold;padding-top: 15px;">
+                        <label style="font-size:20px;"><b></b></label>
+                    </td>
+                    <td style="padding-top: 11px;width:30%;text-align:right">
+                        <button type="button" id="btnClosed" class="btn-Close">Close</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+
+    <hr />
+    </center>
+    <div>
+        <table>
+            <tr>
+                <td style="width: 10%;">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Records:
+                    </span>
+                </td>
+                <td style="width: 93%;">
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+    <br />
+@Html.HiddenFor(model => model.cmp_id, new { @id = "cmpid" })
+    <div class="box">
+        <div id="table-Details">
+
+            <table id="GridDocUpload" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:8%">File Type</th>
+                        <th class="grid_header_backcolor" style="width:19%">FileName</th>
+                        <th class="grid_header_backcolor" style="width:8%">Views</th>
+
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.lstDocForPrint.Count; i++)
+                    {
+                        var fileType = @Model.lstDocForPrint[i].file_type;
+                        var filePath = @Model.lstDocForPrint[i].file_path;
+                        var fileName = @Model.lstDocForPrint[i].upload_file_name;
+                        <tr style="background-color:white;">
+                            <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.lstDocForPrint[i].file_type</td>
+                            <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.lstDocForPrint[i].upload_file_name</td>
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="ViewDocumentFile" data-file-path="@Model.lstDocForPrint[i].file_path" data-file-name="@Model.lstDocForPrint[i].upload_file_name"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+
+
+            debugger
+            $('#GridDocUpload tbody').on('click', '.ViewDocumentFile', function () {
+                var $buttonClicked = $(this);
+                var path = $buttonClicked.attr('data-file-path');
+                var filename = $buttonClicked.attr('data-file-name');
+                var cmpid = $("#cmpid").val();
+                var options = { "backdrop": "static", keyboard: true };
+
+                $.ajax({
+                type: "GET",
+                url: '/DocumentUpload/GetDocumentFullFileName',
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "path": path },
+                datatype: "json",
+                success: function (path) {
+                    debugger
+                    var ext = path.split('.').pop();
+                    if (ext == "pdf" || ext == "PDF" || ext == "jpg" || ext == "JPG" | ext == "jpeg" || ext == "JPEG")
+                    {
+                        window.open('@Url.Action("ViewDocument")?path=' + path + '&ext=' + ext + '&filename=' + filename, "_blank", "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                    }
+                    else
+                    {
+                        window.location.replace('@Url.Action("ViewDocument")?path=' + path + '&ext=' + ext + '&filename=' + filename, "_blank", "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                     }
+                    $("#DocBtn").hide();
+                },
+
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+
+                });
+
+        $("#btnClosed").click(function () {
+
+            var cmpid = $("#cmpid").val();
+
+            $.ajax({
+                type: "get",
+                url: "/OutboundInq/GetOutboundInqDtl",
+                data: {
+                    "p_str_cmp_id": cmpid,
+                    "p_str_so_num": "",
+                    "p_str_AlocdocId": ""
+                },
+                datatype: 'html',
+                success: function (e) {
+                    debugger
+
+                },
+            })
+            $('#myModalBatchBinPrint').modal('hide');
+            });
+
+    </script>
+
+
+
+
+
+
+
+

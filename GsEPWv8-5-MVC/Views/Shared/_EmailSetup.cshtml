@@ -1,0 +1,459 @@
+﻿@model GsEPWv8_5_MVC.Model.EmailSetupModel
+
+@{
+    int gintRecCount = Model.lstRptEmailDtl.Count;
+    int intCurRow = 0;
+    var lstrRptFileFormat = "";
+}
+
+@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+@Html.HiddenFor(model => model.screentitle)
+    <div id="RptEmailChildTabs">
+        <ul>
+            <li><a href="#childtabs-0" style="font-size:12px;">General Email Setup</a></li>
+            <li><a href="#childtabs-1" style="font-size:12px;">INBOUND Report</a></li>
+            <li><a href="#childtabs-2" style="font-size:12px;">OUTBOUND and VAS Report</a></li>
+            <li><a href="#childtabs-3" style="font-size:12px;">INVENTORY and Billing Report</a></li>
+
+        </ul>
+        <div id="childtabs-0">
+            <div class="box-header">
+                <div class="box-body">
+                    <fieldset>
+                        <legend style="text-align:left;">General Report Email Setup </legend>
+                        <table>
+                            <tr>
+                                <td style="width:5%; text-align:right;">
+                                    <b style="font-size: 14px;">Email From</b>
+                                </td>
+                                <td style="width:13%;padding-bottom: 12px;padding-left: 10px;padding-top: 14px;">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBoxFor(model => model.objEmailCommon.emailFrom, new { @id = "emlemailFrom", @class = "form-control", @maxlength = "100", @style = "width:400px; height:32px; Font-weight:bold;" })
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:5%; text-align:right;">
+                                    <b style="font-size: 14px;">Company Email To:(, Seperated)</b>
+                                </td>
+                                <td style="width:13%;padding-bottom: 12px;padding-left: 10px;padding-top: 14px;">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBoxFor(model => model.objEmailCommon.cmpEmailTo, new { @type = "email", @id = "emlCmpEmailTo", @class = "form-control", placeholder = "Ex. abc@domain.com,abc@domain.com ", @maxlength = "500", @style = "width:952px; height:35px; Font-weight:bold;" })
+                                            </td>
+                                            <td>
+                                                <button type="button" id="btnCmpEmailTo" class="btn-Close" style="background-color: #ffac00;width:90px">Cmp Email</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td style="width:5%; text-align:right;">
+                                    <b style="font-size: 14px;">Customer Email To:(, Seperated)</b>
+                                </td>
+                                <td style="padding-bottom: 10px;padding-left: 10px;">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBoxFor(model => model.objEmailCommon.custEmailTo, new { @id = "emlCustEmailTo", @class = "form-control", placeholder = "Ex. abc@domain.com,abc@domain.com ", required = "required", @maxlength = "500", @style = "width: 956px; height:35px; Font-weight:bold;" })
+                                            </td>
+                                            <td>
+                                                <button type="button" id="btnCustEmailTo" class="btn-Close" style="background-color: #ffac00;width:90px">Cust Email</button>
+                                            </td>
+                                    </table>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:5%; text-align:right;">
+                                    <b style="font-size: 14px;">Email CC:(, Seperated)</b>
+                                </td>
+                                <td style="width:13%;padding-bottom: 12px;padding-left: 10px;padding-top: 14px;">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBoxFor(model => model.objEmailCommon.emailCC, new { @type = "email", @id = "emlEmailCC", @class = "form-control", placeholder = "Ex. abc@domain.com,abc@domain.com", @maxlength = "200", @style = "width:952px; height:32px; Font-weight:bold;" })
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:5%; text-align:right;">
+                                    <b style="font-size: 14px;"> Message:</b>
+                                </td>
+                                <td style="padding-bottom: 10px;padding-left: 10px;text-align:right">
+                                    @Html.TextAreaFor(model => model.objEmailCommon.emailMessage, new { @id = "emlEmailMessage", @class = "form-control", required = "required", @maxlength = "1000", @style = "height:150px; Font-weight:bold;" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:5%; text-align:right;">
+                                    <b style="font-size: 14px;"> Email Footer:</b>
+                                </td>
+                                <td style="padding-bottom: 10px;padding-left: 10px;text-align:right">
+                                    @Html.TextAreaFor(model => model.objEmailCommon.emailFooter, new { @id = "emlEmailFooter", @class = "form-control", required = "required", @maxlength = "1000", @style = "height:150px; Font-weight:bold;" })
+                                </td>
+                            </tr>
+
+                        </table>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <div id="childtabs-1">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                <table style="width:100%;padding-top:5px;border-collapse:separate;border-spacing: 0px 0.5em;"></table>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-2"></div>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="grdEmailSetup" class="box-header" style="padding: 5px; ">
+                    <hr class="break" />
+                    <div class="box-body">
+                        <div>
+                            <table id="tblEmailIB" class="table table-bordered table-striped">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                        <th class="grid_header_backcolor" style="display:none">Module</th>
+                                        <th class="grid_header_backcolor" style="display:none">Report Id</th>
+                                        <th class="grid_header_backcolor" style="width:15%;">Report Name</th>
+                                        <th class="grid_header_backcolor" style="width:6%;">Format</th>
+                                        <th class="grid_header_backcolor" style="width:17%;">Cmp. Email List</th>
+                                        <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                        <th class="grid_header_backcolor" style="width:20%;">Cust. Email List</th>
+                                        <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                        <th class="grid_header_backcolor" style="width:30%;">Email Body</th>
+                                        <th class="grid_header_backcolor" style="width:5%;">AutoEmail</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="width:100%;">
+
+                                    @for (int i = 0; i < Model.lstRptEmailDtl.Count; i++)
+                                    {
+                                        lstrRptFileFormat = Model.lstRptEmailDtl[i].rpt_file_format;
+                                        if ((@Model.lstRptEmailDtl[i].module_name == "INBOUND") || (@Model.lstRptEmailDtl[i].module_name == "MASTER"))
+                                        {
+                                            <tr id="grdRow_@intCurRow" class="row-select" style="width:100%;">
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkRec_@intCurRow" name="tblcheckboxRptId" type="checkbox" value="@Model.lstRptEmailDtl[i].rpt_id" />
+                                                </td>
+                                                <td style="color:black;display:none; font-size:12px">
+                                                    @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].module_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "eml_module_name_" + intCurRow, @style = "background-color:white;" })
+                                                </td>
+                                                <td style="color:black;display:none; font-size:12px">
+                                                    @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].rpt_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "eml_rpt_id_" + intCurRow, @style = "background-color:white;" })
+                                                </td>
+                                                <td style="color:black; font-size:12px">
+                                                    @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].rpt_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "100", @id = "eml_rpt_name_" + intCurRow, @style = "background-color:lightyellow;" })
+                                                </td>
+
+                                                <td style="color:black; font-size:12px">
+                                                    @Html.DropDownListFor(model => model.lstRptEmailDtl[i].rpt_file_format, new SelectList(Model.ListRptEmailFormat, "name", "description", lstrRptFileFormat), new { @id = "eml_rpt_file_format_" + intCurRow, @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana; width: 100px;background-color:lightyellow;" })
+                                                </td>
+                                                <td style="color:black; font-size:12px">
+                                                    @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].cmp_email_list, new { @class = "form-control txtlbl", @maxlength = "500", @id = "eml_cmp_email_list_" + intCurRow, @style = "background-color:lightyellow;" })
+                                                    @* <a href="javascript:void(0);" style="text-decoration:underline; color: #ffd400;" class="ib_doc_send" data-id="@Model.lstRptEmailDtl[i].rpt_id"> <span class="glyphicon glyphicon-envelope" style="font-size: 14px;"></span></a>*@
+
+                                                </td>
+                                                <td style="color:black; font-size:12px">
+                                                    <a href="javascript:void(0);" class="btn btn-primary small btncmpEmail" style="color: white;height: 25px;width: 20px; border-radius: 5px;font-size: 12px;font-family: bold;padding-top: 5px; background-color:#ff9966" dataCurRow="@intCurRow" dataCmpEmail="@Model.lstRptEmailDtl[i].rpt_id">E</a>
+                                                </td>
+
+                                                <td style="color:black; font-size:12px">
+                                                    @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].cust_email_list, new { @class = "form-control txtlbl", @maxlength = "500", @id = "eml_cust_email_list_" + intCurRow, @style = "background-color:lightyellow;" })
+                                                </td>
+                                                <td style="color:black; font-size:12px">
+                                                    <a href="javascript:void(0);" class="btn btn-primary small btnCustEmail" style="color: white;height: 25px;width: 20px; border-radius: 5px;font-size: 12px;font-family: bold;padding-top: 5px; background-color:#ff9966" dataCurRow="@intCurRow" dataCustEmail="@Model.lstRptEmailDtl[i].rpt_id">E</a>
+                                                </td>
+                                                <td style="color:black; font-size:12px">
+                                                    @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].email_body, new { @class = "form-control txtlbl", @maxlength = "1000", @id = "eml_email_body_" + intCurRow, @style = "background-color:lightyellow;" })
+                                                </td>
+                                                @if (@Model.lstRptEmailDtl[i].is_auto_email == "Y")
+                                                {
+                                                    <td style="text-align:center">
+                                                        <input class="checkbox" id="chkboxAutoEmail_@intCurRow" name="tblcheckboxAutoEmail" type="checkbox" checked />
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td style="text-align:center">
+                                                        <input class="checkbox" id="chkboxAutoEmail_@intCurRow" name="tblcheckboxAutoEmail" type="checkbox" />
+                                                    </td>
+                                                }
+
+                                            </tr>
+                                            intCurRow = intCurRow + 1;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="childtabs-2">
+            <div id="showgrid" class="box-header" style="padding: 5px; ">
+                <hr class="break" />
+                <div class="box-body">
+                    <div>
+                        <table id="tblEmailIB" class="table table-bordered table-striped">
+                            <thead class="grid_backcolor">
+                                <tr>
+                                    <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                    <th class="grid_header_backcolor" style="display:none">Module</th>
+                                    <th class="grid_header_backcolor" style="display:none">Report Id</th>
+                                    <th class="grid_header_backcolor" style="width:15%;">Report Name</th>
+                                    <th class="grid_header_backcolor" style="width:6%;">Format</th>
+                                    <th class="grid_header_backcolor" style="width:17%;">Cmp. Email List</th>
+                                    <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                    <th class="grid_header_backcolor" style="width:20%;">Cust. Email List</th>
+                                    <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                    <th class="grid_header_backcolor" style="width:30%;">Email Body</th>
+                                    <th class="grid_header_backcolor" style="width:5%;">AutoEmail</th>
+                                </tr>
+                            </thead>
+                            <tbody style="width:100%;">
+
+                                @for (int i = 0; i < Model.lstRptEmailDtl.Count; i++)
+                                {
+                                    lstrRptFileFormat = Model.lstRptEmailDtl[i].rpt_file_format;
+                                    if ((@Model.lstRptEmailDtl[i].module_name == "OUTBOUND") || (@Model.lstRptEmailDtl[i].module_name == "VAS"))
+                                    {
+                                        <tr id="grdRow_@intCurRow" class="row-select" style="width:100%;">
+                                            <td style="text-align:center">
+                                                <input class="checkbox" id="chkRec_@intCurRow" name="tblcheckboxRptId" type="checkbox" value="@Model.lstRptEmailDtl[i].rpt_id" />
+                                            </td>
+                                            <td style="color:black;display:none; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].module_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "eml_module_name_" + intCurRow, @style = "background-color:white;" })
+                                            </td>
+                                            <td style="color:black;display:none; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].rpt_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "eml_rpt_id_" + intCurRow, @style = "background-color:white;" })
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].rpt_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "100", @id = "eml_rpt_name_" + intCurRow, @style = "background-color:lightyellow;" })
+                                            </td>
+
+                                            <td style="color:black; font-size:12px">
+                                                @Html.DropDownListFor(model => model.lstRptEmailDtl[i].rpt_file_format, new SelectList(Model.ListRptEmailFormat, "name", "description", lstrRptFileFormat), new { @id = "eml_rpt_file_format_" + intCurRow, @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana; width: 100px;background-color:lightyellow;" })
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].cmp_email_list, new { @class = "form-control txtlbl", @maxlength = "500", @id = "eml_cmp_email_list_" + intCurRow, @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                <a href="javascript:void(0);" class="btn btn-primary small btncmpEmail" style="color: white;height: 25px;width: 20px; border-radius: 5px;font-size: 12px;font-family: bold;padding-top: 5px; background-color:#ff9966" dataCurRow="@intCurRow" dataCmpEmail="@Model.lstRptEmailDtl[i].rpt_id">E</a>
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].cust_email_list, new { @class = "form-control txtlbl", @maxlength = "500", @id = "eml_cust_email_list_" + intCurRow, @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                <a href="javascript:void(0);" class="btn btn-primary small btnCustEmail" style="color: white;height: 25px;width: 20px; border-radius: 5px;font-size: 12px;font-family: bold;padding-top: 5px; background-color:#ff9966" dataCurRow="@intCurRow" dataCustEmail="@Model.lstRptEmailDtl[i].rpt_id">E</a>
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].email_body, new { @class = "form-control txtlbl", @maxlength = "1000", @id = "eml_email_body_" + intCurRow, @style = "background-color:lightyellow;" })
+                                            </td>
+                                            @if (@Model.lstRptEmailDtl[i].is_auto_email == "Y")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkboxAutoEmail_@intCurRow" name="tblcheckboxAutoEmail" type="checkbox" checked />
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkboxAutoEmail_@intCurRow" name="tblcheckboxAutoEmail" type="checkbox" />
+                                                </td>
+                                            }
+
+
+                                        </tr>
+                                        intCurRow = intCurRow + 1;
+                                    }
+
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="childtabs-3">
+            <div id="IVshowgrid" class="box-header" style="padding: 5px; ">
+                <hr class="break" />
+                <div class="box-body">
+                    <div>
+                        <table id="tblEmailIB" class="table table-bordered table-striped">
+                            <thead class="grid_backcolor">
+                                <tr>
+                                    <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                    <th class="grid_header_backcolor" style="display:none">Module</th>
+                                    <th class="grid_header_backcolor" style="display:none">Report Id</th>
+                                    <th class="grid_header_backcolor" style="width:15%;">Report Name</th>
+                                    <th class="grid_header_backcolor" style="width:6%;">Format</th>
+                                    <th class="grid_header_backcolor" style="width:17%;">Cmp. Email List</th>
+                                    <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                    <th class="grid_header_backcolor" style="width:20%;">Cust. Email List</th>
+                                    <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                                    <th class="grid_header_backcolor" style="width:30%;">Email Body</th>
+                                    <th class="grid_header_backcolor" style="width:5%;">AutoEmail</th>
+                                </tr>
+                            </thead>
+                            <tbody style="width:100%;">
+                                @for (int i = 0; i < Model.lstRptEmailDtl.Count; i++)
+                                {
+                                    lstrRptFileFormat = Model.lstRptEmailDtl[i].rpt_file_format;
+                                    if ((@Model.lstRptEmailDtl[i].module_name == "BILL") || (@Model.lstRptEmailDtl[i].module_name == "INV"))
+                                    {
+                                        <tr id="grdRow_@intCurRow" class="row-select" style="width:100%;">
+                                            <td style="text-align:center">
+                                                <input class="checkbox" id="chkRec_@intCurRow" name="tblcheckboxRptId" type="checkbox" value="@Model.lstRptEmailDtl[i].rpt_id" />
+                                            </td>
+                                            <td style="color:black;display:none; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].module_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "eml_module_name_" + intCurRow, @style = "background-color:white;" })
+                                            </td>
+                                            <td style="color:black;display:none; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].rpt_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "20", @id = "eml_rpt_id_" + intCurRow, @style = "background-color:white;" })
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].rpt_name, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "100", @id = "eml_rpt_name_" + intCurRow, @style = "background-color:lightyellow;" })
+                                            </td>
+
+                                            <td style="color:black; font-size:12px">
+                                                @Html.DropDownListFor(model => model.lstRptEmailDtl[i].rpt_file_format, new SelectList(Model.ListRptEmailFormat, "name", "description", lstrRptFileFormat), new { @id = "eml_rpt_file_format_" + intCurRow, @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana; width: 100px;background-color:lightyellow;" })
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].cmp_email_list, new { @class = "form-control txtlbl", @maxlength = "500", @id = "eml_cmp_email_list_" + intCurRow, @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                <a href="javascript:void(0);" class="btn btn-primary small btncmpEmail" style="color: white;height: 25px;width: 20px; border-radius: 5px;font-size: 12px;font-family: bold;padding-top: 5px; background-color:#ff9966" dataCurRow="@intCurRow" dataCmpEmail="@Model.lstRptEmailDtl[i].rpt_id">E</a>
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].cust_email_list, new { @class = "form-control txtlbl", @maxlength = "500", @id = "eml_cust_email_list_" + intCurRow, @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                <a href="javascript:void(0);" class="btn btn-primary small btnCustEmail" style="color: white;height: 25px;width: 20px; border-radius: 5px;font-size: 12px;font-family: bold;padding-top: 5px; background-color:#ff9966" dataCurRow="@intCurRow" dataCustEmail="@Model.lstRptEmailDtl[i].rpt_id">E</a>
+                                            </td>
+                                            <td style="color:black; font-size:12px">
+                                                @Html.TextBoxFor(model => @Model.lstRptEmailDtl[i].email_body, new { @class = "form-control txtlbl", @maxlength = "1000", @id = "eml_email_body_" + intCurRow, @style = "background-color:lightyellow;" })
+                                            </td>
+                                            @if (@Model.lstRptEmailDtl[i].is_auto_email == "Y")
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkboxAutoEmail_@intCurRow" name="tblcheckboxAutoEmail" type="checkbox" checked />
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    <input class="checkbox" id="chkboxAutoEmail_@intCurRow" name="tblcheckboxAutoEmail" type="checkbox" />
+                                                </td>
+                                            }
+
+                                        </tr>
+                                        intCurRow = intCurRow + 1;
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.Hidden("hdnRecCount", gintRecCount)
+
+    </div>
+
+<script type="text/javascript">
+    $("#RptEmailChildTabs").tabs({ active: 0 })
+    $(function () {
+        $("#RptEmailChildTabs").tabs();
+    });
+</script>
+ 
+<script type="text/javascript">
+    $(function () {
+        $('#tblEmailIB tbody').on('click', '.btncmpEmail', function () {
+            debugger
+            var $buttonClicked = $(this);
+            var lintCurRow = $buttonClicked.attr('dataCurRow');
+            var lintCurLine = parseFloat(lintCurRow);
+            var lstrCmpEmailList = $("#eml_cmp_email_list_" + lintCurLine).val();
+            var p_str_form_control = "eml_cmp_email_list_" + lintCurLine;
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $("#cmp_id").val();
+            var p_str_cmp_email_to = lstrCmpEmailList;
+            var pstrEmailType = 'CMP';
+            $("#ajaxLoading").show();
+            $.ajax({
+                url: '@Url.Action("GetEmailList", "EmailSetup")',
+                contentType: "application/json; charset=utf-8",
+                type: 'GET',
+                data: { "pstrCmpId": p_str_cmp_id, "pstrEmail": p_str_cmp_email_to, "pstrFormControl": p_str_form_control, "pstrEmailType": pstrEmailType },
+                datatype: "json",
+                success: function (data) {
+                    $('#UsersEmailContent').html(data);
+                    $('#UsersEmail').modal(options);
+                    $('#UsersEmail').modal('show');
+                    $("#ajaxLoading").hide();
+                }
+            });
+
+        });
+    });
+
+    $(function () {
+        $('#tblEmailIB tbody').on('click', '.btnCustEmail', function () {
+            debugger
+            var $buttonClicked = $(this);
+            var lintCurRow = $buttonClicked.attr('dataCurRow');
+            var lintCurLine = parseFloat(lintCurRow);
+            var lstrCustEmailList = $("#eml_cust_email_list_" + lintCurLine).val();
+            var p_str_form_control = "eml_cust_email_list_" + lintCurLine;
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $("#cmp_id").val();
+            var p_str_cust_email_to = lstrCustEmailList;
+            var pstrEmailType = 'CUST';
+            $("#ajaxLoading").show();
+            $.ajax({
+                url: '@Url.Action("GetEmailList", "EmailSetup")',
+                contentType: "application/json; charset=utf-8",
+                type: 'GET',
+                data: { "pstrCmpId": p_str_cmp_id, "pstrEmail": p_str_cust_email_to, "pstrFormControl": p_str_form_control, "pstrEmailType": pstrEmailType },
+                datatype: "json",
+                success: function (data) {
+                    $('#UsersEmailContent').html(data);
+                    $('#UsersEmail').modal(options);
+                    $('#UsersEmail').modal('show');
+                    $("#ajaxLoading").hide();
+                }
+            });
+
+        });
+    });
+
+
+
+
+</script>

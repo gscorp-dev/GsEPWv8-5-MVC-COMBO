@@ -1,0 +1,2696 @@
+
+
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+@{
+    var Ordercount = Model.ListDocdtl.Count;
+}
+
+    <style type="text/css">
+        div#table-Details {
+            border: 10px solid white;
+            box-shadow: 0px 0px 15px;
+        }
+
+        .Lblmanual {
+            color: #0d8cb5;
+            font-family: verdana;
+            font-size: 12px;
+        }
+
+        legend {
+            display: block;
+            width: 100%;
+            padding: 0;
+            margin-bottom: 23px;
+            font-size: 14px;
+            line-height: inherit;
+            color: #e81994;
+            border: 0;
+            font-weight: bold;
+        }
+    </style>
+    <style>
+        div#ajaxLoading {
+            display: none;
+            width: 100px;
+            height: 100px;
+            position: fixed;
+            top: 40%;
+            left: 53%;
+            text-align: center;
+            margin-left: -50px;
+            margin-top: -100px;
+            z-index: 2;
+            overflow: auto;
+        }
+          .ui-autocomplete li {
+        font-size: 12px;
+        line-height: 30px;
+        color: darkblue;
+        font-family: Verdana;
+        font-weight: bold;
+        background-color: lightcyan;
+    }
+        .text-muted {
+        color:black;
+    }
+
+
+
+    </style>
+    @Html.HiddenFor(model => model.itm_code)
+    @Html.HiddenFor(model => model.ctn_line)
+    @Html.HiddenFor(model => model.View_Flag)
+    @Html.HiddenFor(model => model.screentitle)
+    @Html.HiddenFor(model => model.l_bool_edit_flag)
+    @Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+    @Html.HiddenFor(model=>model.Recv_Itm_Mode)
+    @Html.HiddenFor(model => model.aloc_by)
+    @Html.HiddenFor(model => model.ecom_recv_by_bin)
+    <center>
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Add New IB Doc Entry</h4>
+            <button type="button" id="docbtnClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnDocSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        </div>
+        <div id="docchildtabs">
+            <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+                <li><a href="#docchildtabs-1" id="btnid1" style="font-size:12px;">Header</a></li>
+                <li><a href="#docchildtabs-2" id="btnid2" style="font-size:12px;">Item Details</a></li>
+            </ul>
+            <div id="docchildtabs-1">
+                <div class="box-body">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-11 col-sm-11 col-xs-11">
+
+                                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="width: 6%;text-align: right;">
+                                                <label><b class="Lblmanual">Cmp Id </b></label>
+                                            </td>
+                                            <td style="width: 38%; padding-left: 1%;">
+                                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @style = "background-color:lightyellow;" })
+                                                @Html.HiddenFor(model => model.p_str_cmpid)
+                                            </td>
+
+                                            <td style="text-align: center; width: 9%;">
+                                                <label><b class="Lblmanual">IB Doc Id</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                <table>
+                                                    <tr>
+                                                        <td> @Html.TextBoxFor(model => model.ib_doc_id, new { @id = "new_ib_doc_id", @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; width: 110px;margin-left: -23px;background-color:lightyellow;" })</td>
+                                                        <td style="padding-left: 9px;">
+                                                            <label for="chkPassport" style="font-size:12px;">
+                                                                <input type="checkbox" id="chkPassport" onclick="Check()" />
+                                                                Is RMA
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">IB Doc Dt</b></label>
+                                            </td>
+                                            <td style="width: 9%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.ib_doc_dt, new { @id = "new_ib_doc_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;background-color:lightyellow;" })
+                                            </td>
+
+                                        </tr>
+
+                                    </table>
+                                    <br />
+                                    <table style="border-collapse: separate;border-spacing: 0px 0.5em;   width:100%" id="SRDetailSec">
+                                        <tr>
+                                            <td style="width:7.5%;text-align: right; ">
+                                                <label><b class="Lblmanual">Status</b></label>
+                                            </td>
+                                            <td style="width: 9%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.status, new { @id = "new_status", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana; background-color:lightyellow;" })
+                                            </td>
+                                            <td style="width: 4%;text-align: right;padding-left:1%; ">
+                                                <label><b class="Lblmanual">Container</b></label>
+                                            </td>
+
+                                            <td style="width: 25%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.cont_id, new { @id = "new_cont_id", @class = "form-control txtlbl", @maxlength = "25", @style = "font-size: 12px;font-family: verdana;" })
+
+                                            </td>
+                                            <td style="text-align: right;  width: 5%;">
+                                                <label><b class="Lblmanual"> ETA</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.eta_dt, new { @id = "new_eta_dt", @class = "form-control txtlbl", @maxlength = "50", placeholder = "MM/DD/YYYY", @style = "font-size: 12px;font-family: verdana;background-color:lightyellow;" })
+                                            </td>
+                                            <td style="width: 5%;text-align: right;">
+                                                <label><b class="Lblmanual">Ref Num</b></label>
+                                            </td>
+
+                                            <td style="width: 14%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.refno, new { @id = "new_refno", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                            </td>
+                                            <td style="width: 5%;text-align: right;">
+                                                <label><b class="Lblmanual">TRUCK</b></label>
+                                            </td>
+
+                                            <td style="width: 14%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.recvdvia, new { @id = "new_recvdvia", @class = "form-control txtlbl", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                    <br />
+                                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+
+                                            <td style="text-align: right; width: 7.3%;">
+                                                <label><b class="Lblmanual">Rcvd Fm</b></label>
+                                            </td>
+                                            <td style="width: 21%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.recvd_fm, new { @id = "new_recvd_fm", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                            </td>
+                                            <td style="text-align: right; width: 8%;">
+                                                <label><b class="Lblmanual">Master BOL</b></label>
+                                            </td>
+                                            <td style="width: 21%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.bol, new { @id = "new_bol", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                            </td>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">Vessel No</b></label>
+                                            </td>
+                                            <td style="width: 19%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.vessel_num, new { @id = "new_vessel_num", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                            </td>
+                                            <td></td>
+
+                                        </tr>
+
+
+                                    </table>
+                                    <br />
+                                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="text-align: right;  width: 7.3%;">
+                                                <label><b class="Lblmanual">Hdr Note</b></label>
+                                            </td>
+                                            <td style="width: 45%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Note, new { @id = "new_Note", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:100%;">
+                                        <tr>
+
+                                            @*<td colspan="4"></td>*@
+                                        <td style="padding-left: 30px;text-align:right;padding-top:10px" colspan="6">
+                                            <button type="button" id="btnNext" class="btn-Clear" style="font-size: 13px;">Next>> </button>
+                                            <button type="reset" id="btnHdrClr" class="btn_search" style="font-size: 13px;">Clear</button>
+
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                   
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="docchildtabs-2">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-9 col-sm-9 col-xs-9">
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% " id="SRDetailSec">
+                                <tr>
+                                    <td style="text-align: right;width:9%">
+                                        <label class="Lblmanual">Line#</label>
+                                    </td>
+                                    <td style="width:5%;padding-left: 5px;">
+                                        @Html.TextBoxFor(model => model.LineNum, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; background-color:lightyellow;" })
+                                    </td>
+                                    <td style="text-align: right;width:4%">
+                                        <label class="Lblmanual">Style</label>
+                                    </td>
+                                    <td style="width:18%;padding-left: 5px;">
+                                        @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control txtlbl NotaloowedSplchar VLDTITMFILD", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;background-color:lightyellow;" })
+                                    </td>
+                                    <td style="text-align: right;width:4%">
+                                        <label class="Lblmanual">Color</label>
+                                    </td>
+                                    <td style="width:8%;padding-left: 5px;">
+                                        @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl VLDTITMFILD NotaloowedSplchar", @maxlength = "20", @style = "font-size: 12px; font-family: verdana; background-color:lightyellow;" })
+                                    </td>
+                                    <td style="text-align: right;width:4%;">
+                                        <label class="Lblmanual">Size</label>
+                                    </td>
+                                    <td style="width:8%;padding-left: 5px;">
+                                        @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl VLDTITMFILD NotaloowedSplchar", @maxlength = "20", @style = "font-size: 12px; font-family: verdana; background-color:lightyellow;" })
+                                    </td>
+                                    <td style="text-align: right;width:4%;">
+                                        <label class="Lblmanual">Desc</label>
+                                    </td>
+                                    <td style="width:31%;padding-left: 5px;">
+                                        @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", @maxlength = "100", @style = "font-size: 11px; font-family: verdana;background-color:lightyellow;" })
+                                      
+                                     </td>
+                                    <td style="width: 10%;font-size: 12px;text-align: right;padding-right: 10px;">
+                                        <button type="button" id="btncopydims" class="btn_search" style="font-size: 13px;width: 95px;">Copy Dims</button>
+                                    </td>
+                                </tr>
+
+
+
+
+                            </table>
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100%">
+                                <tr>
+                                    <td style="text-align: right;width:9%">
+                                        <label class="Lblmanual"> Order Qty</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%;">
+                                        @Html.TextBoxFor(model => model.ord_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;" })
+                                    </td>
+
+                                    <td style="text-align: right;width:7%">
+                                        <label class="Lblmanual"> PPK</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%;">
+                                        @Html.TextBoxFor(model => model.docuppk, new { @class = "form-control txtlbl numericOnly", @maxlength = "6", @style = "font-size: 12px; font-family: verdana;    text-align: right;" })
+                                    </td>
+                                    <td style="text-align: right; width:7%;">
+                                        <label class="Lblmanual"> Ctns</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%;">
+                                        @Html.TextBoxFor(model => model.ctn_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;" })
+                                    </td>
+                                    <td style="text-align: right; width:5%;">
+                                        <label class="Lblmanual"> Factory </label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:20%;">
+                                        @Html.TextBoxFor(model => model.factory_id, new { @class = "form-control txtlbl", @id = "add_factory_id", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                    </td>
+                                    <td style="text-align: right; width:7%;">
+                                        <label class="Lblmanual"> Vendor Po#</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:15%;">
+                                        @Html.TextBoxFor(model => model.po_num, new { @class = "form-control txtlbl", @id = "add_po_num", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;" })
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                  
+                                </tr>
+
+                              
+
+                            </table>
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                <tr>
+                                    <td style="text-align: right;width:9%">
+                                        <label class="Lblmanual">Length(IN)</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.doclength, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; text-align: right;" })        @*//CR20180216-01  Modified By Soniya 16-02-2018*@
+                                    </td>
+                                    <td style="text-align: right;width:8%">
+                                        <label class="Lblmanual">Width(IN)</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.docwidth, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;  text-align: right;" })
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label class="Lblmanual"> Height(IN)</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.docheight, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;text-align: right;" })
+                                    </td>
+                                    <td style="text-align: center;width:8%">
+                                        <button type="button" id="btnCube" class="btn_search" style="font-size: 13px;">Cube</button>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label class="Lblmanual"> Cube(Ft)</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.doccube, new { @class = "form-control txtlbl three-decimals ", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; text-align: right; " })
+                                    </td>
+                                    
+                                    <td style="text-align: right;">
+                                        <label class="Lblmanual"> Weight(Lbs)</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:12%">
+                                        @Html.TextBoxFor(model => model.docweight, new { @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; text-align: right;" })
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100%">
+                                <tr>
+                                    <td style="text-align: right;width:9%">
+                                        <label class="Lblmanual">Loc Id</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:20%">
+                                        @*@Html.DropDownListFor(model => model.loc_id, new SelectList(Model.ListLocPickDtl, "loc_id", "loc_id"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; background-color:lightyellow;" })*@
+                                        @Html.TextBoxFor(model => model.loc_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                                    </td>
+                                    <td style="text-align: right;width:9%">
+                                        <label class="Lblmanual">Strg Rate</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width: 14%;">
+                                        @*@Html.TextBoxFor(model => model.strg_rate, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px; " })*@
+                                        @Html.DropDownListFor(model => model.strg_rate, new SelectList(Model.LstStrgIddtl, "strg_rate", "strg_rate"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; " })
+                                    </td>
+                                    <td style="text-align: right;width:9%;">
+                                        <label class="Lblmanual"> Inout Rate</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width: 14%;">
+                                        @*@Html.TextBoxFor(model => model.inout_rate, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px; " })*@
+                                        @Html.DropDownListFor(model => model.inout_rate, new SelectList(Model.LstInoutIddtl, "inout_rate", "inout_rate"), new { @class = "form-control txtlbl", })
+                                    </td>
+                                    @if (Model.Recv_Itm_Mode == "CUST LOT ID")
+                                    {
+                                        <td style="text-align: right;width:8%">
+                                            <label class="Lblmanual"> Lot Id</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:16%">
+                                            @Html.TextBoxFor(model => model.lot_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="text-align: right;width:8%"></td>
+                                        <td style="padding-left: 5px;width:16%"></td>
+                                    }
+                                </tr>
+
+                            </table>
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                <tr>
+                                    <td style="text-align: right;width:7%">
+                                        <label class="Lblmanual"> Customer </label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:25%;">
+                                        @Html.TextBoxFor(model => model.cust_name, new { @id = "add_cust_name", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                    </td>
+                                    <td style="text-align: right; width:8%;">
+                                        <label class="Lblmanual"> Cust Po#</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:15%;">
+                                        @Html.TextBoxFor(model => model.cust_po_num, new { @id = "add_cust_po_num", @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;" })
+                                    </td>
+                                    <td style="text-align: right; width:8%;">
+                                        <label class="Lblmanual"> Pick List</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:37%;">
+                                        @Html.TextBoxFor(model => model.pick_list, new { @id = "add_pick_list", @class = "form-control txtlbl", @maxlength = "100", @style = "font-size: 12px; font-family: verdana;" })
+                                    </td>
+
+                                </tr>
+                            </table>
+
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                <tr>
+                                    <td style="text-align: right;width:9%">
+                                        <label class="Lblmanual"> Note</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:70%;">
+                                        @Html.TextBoxFor(model => model.note, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; " })
+                                    </td>
+
+
+                                    <td style="text-align: right;padding-left: 50px">
+                                        <button type="button" id="btnInclude" class="btn_search" style="font-size: 13px;">Include</button>
+                                    </td>
+                                    <td style="padding-left: 5px">
+                                        <button type="button" id="btnDtlClr" class="btn-Clear" style="font-size: 13px;">Clear </button>  @*//CR20180216-01  Modified By Soniya 16-02-2018*@
+
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+
+                            <table style="width:100%">
+                                <tr>
+                                    <td><a id="upload" href="@Url.Action("SampleTemplatedownload", "InboundInquiry")" target="_blank" style="text-decoration:underline; color:#4c8cff;"><b style="font-size:13px;">IB UploadTemplate WithSample</b></a></td>
+                                </tr>
+                                <tr>
+
+                                    <td style="text-align: right;">
+                                        <fieldset style="padding:6px;">
+                                            <legend style="text-align:left;">Upload File</legend>
+                                            <table style="margin-top:-25px;width:100%">
+                                                <tr>
+                                                    <td colspan="2"><button type="button" id="btnBrowse" onclick="document.getElementById('img1').click();" class="btn_search" style="font-size: 13px;color:white;background-color:#0094ff;width: 100%;">Container Upload</button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 80%;padding-top:5px">
+                                                        <input type="file" name="FileUpload" id="img1" onchange="updateFileName()" style="display:none" title="" />
+                                                        @Html.TextBoxFor(x => x.file_name, new { @class = "form-control", @name = "file_name", @id = "file_name", @style = "width: 170px;" })
+                                                    </td>
+                                                    <td style="padding-left: 10px;padding-top:5px"><button type="button" id="btnImport" class="btn_search" style="font-size: 13px;color:white;background-color:blue;">Import</button></td>
+                                                </tr>
+
+
+                                                <tr></tr>
+                                            </table>
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <fieldset style="margin-top:-10px;">
+                        <legend style="text-align:left;">Style Dimensions</legend><hr />
+                        <div class="body" style="margin-top:-66px;">
+                            <table>
+                                <tr>
+                                    <td style="width: 57px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                        <label><b style="font-family:Verdana;color:#1d1e1e;">PPK</b></label>
+                                    </td>
+                                    <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                        @Html.TextBoxFor(model => model.ppk, new { @disabled = "true", @class = "form-control ", @maxlength = "50", @style = "text-align: right;" })
+                                    </td>
+                                    <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                        <label><b style="font-family:Verdana;color:#1d1e1e;">Length(IN)</b></label>
+                                    </td>
+                                    <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                        @Html.TextBoxFor(model => model.length, new { @disabled = "true", @class = "form-control two-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                    </td>
+                                    <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                        <label><b style="font-family:Verdana;color:#1d1e1e;">Width(IN)</b></label>
+                                    </td>
+                                    <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                        @Html.TextBoxFor(model => model.width, new { @disabled = "true", @class = "form-control two-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                    </td>
+
+                                    <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                        <label><b style="font-family:Verdana;color:#1d1e1e;">Height(IN)</b></label>
+                                    </td>
+                                    <td style="width: 133px;font-size: 12px;text-align:  right;padding-right: 10px;">
+                                        @Html.TextBoxFor(model => model.height, new { @disabled = "true", @class = "form-control two-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                    </td>
+                                    <td style="width: 103px;font-size: 12px;text-align: center;padding-right: 10px;">
+                                        <label><b style="font-family:Verdana;color:#1d1e1e;">Cube(Ft)</b></label>
+                                    </td>
+                                    <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                        @Html.TextBoxFor(model => model.cube, new { @disabled = "true", @class = "form-control three-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                    </td>
+                                    <td style="width: 103px;font-size: 12px;text-align: right;padding-right: 10px;">
+                                        <label><b style="font-family:Verdana;color:#1d1e1e;">Weight(Lbs)</b></label>
+                                    </td>
+                                    <td style="width: 133px;font-size: 12px;padding-right: 10px;">
+                                        @Html.TextBoxFor(model => model.weight, new { @disabled = "true", @class = "form-control two-decimals", @maxlength = "50", @style = "text-align: right;" })
+                                    </td>
+                                   
+                                
+                                   
+
+
+                                </tr>
+                            </table>
+                        </div>
+                    </fieldset>
+                    <br />
+                    <br />
+                    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+                    <div id="GridDocEntryhide">
+                        <div id="childtabsgrid">
+                            <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+                                <li><a href="#childtabsgrid-1" style="font-size:12px;">Item Details</a></li>
+                                <li><a href="#childtabsgrid-2" style="font-size:12px;">Item Details by Carton</a></li>
+                            </ul>
+                            <div id="childtabsgrid-1">
+                                <fieldset>
+                                    <legend style="color:cornflowerblue; font-size:1.1px;">Item details</legend>
+                                    <div class="box-header" style="margin-top:-27px;">
+                                        <table id="GridDocEntry" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                            <thead class="grid_backcolor">
+                                                <tr>
+                                                    <th class="grid_header_backcolor">Ln#</th>
+                                                    <th class="grid_header_backcolor">Ctn Ln#</th>
+                                                    <th class="grid_header_backcolor">Style</th>
+                                                    <th class="grid_header_backcolor">Color</th>
+                                                    <th class="grid_header_backcolor">Size</th>
+                                                    <th class="grid_header_backcolor">Name</th>
+                                                    <th class="grid_header_backcolor">Factory</th>
+                                                    <th class="grid_header_backcolor">Vend PO Num</th>
+                                                    <th class="grid_header_backcolor">OrderQty</th>
+                                                    <th class="grid_header_backcolor">PPK</th>
+                                                    <th class="grid_header_backcolor">Ctns</th>
+                                                    <th class="grid_header_backcolor">Customer</th>
+                                                    <th class="grid_header_backcolor">CustPO</th>
+                                                    <th class="grid_header_backcolor">Pick List</th>
+                                                    <th class="grid_header_backcolor">L/W/H</th>
+                                                    <th class="grid_header_backcolor">Cube</th>
+                                                    <th class="grid_header_backcolor">Weight</th>
+                                                    <th id="hideth" class="grid_header_backcolor">Note</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="background-color:rgba(0, 0, 0, 0.12);display:block; max-height:300px; width:101.5%; overflow-y:scroll;">
+
+
+                                                @for (int i = 0; i < Model.ListLoadDocEditDtl.Count; i++)
+                                                {
+                                                    int line = i + 1;
+                                                     <tr id="@Model.ListLoadDocEditDtl[i].cmp_id ">
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].line_num</td>
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].ctn_line</td>
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].itm_num</td>
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].itm_color</td>
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].itm_size</td>
+                                                         <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].factory_id</td>
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].po_num</td>
+                                                         <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].itm_name</td>
+                                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].ordr_qty</td>
+                                                         <td style="font-size:12px; color:black; font-weight:bold;text-align :right">@Model.ListLoadDocEditDtl[i].ppk</td>
+                                                        <td style="font-size:12px; color:black; font-weight:bold;text-align :right">@Model.ListLoadDocEditDtl[i].ctns</td>
+
+                                                         <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].cust_name</td>
+                                                         <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].cust_po_num</td>
+                                                         <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].pick_list</td>
+                                                         <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].length / @Model.ListLoadDocEditDtl[i].width / @Model.ListLoadDocEditDtl[i].height </td>
+                                                         <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].cube</td>
+                                                         <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLoadDocEditDtl[i].weight</td>
+
+                                                        <td style="font-size:12px; color:black; font-weight:bold;text-align :left">@Model.ListLoadDocEditDtl[i].note</td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="DocEntryEditDetail" data-id="@Model.ListLoadDocEditDtl[i].cmp_id" data-id1="@Model.ListLoadDocEditDtl[i].ib_doc_id" data-id2="@Model.ListLoadDocEditDtl[i].line_num" data-id3="@Model.ListLoadDocEditDtl[i].itm_code" data-id4="@Model.ListLoadDocEditDtl[i].DocEntry" data-id5="@Model.ListLoadDocEditDtl[i].itm_num" data-id6="@Model.ListLoadDocEditDtl[i].itm_color" data-id7="@Model.ListLoadDocEditDtl[i].itm_size"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="DocEntryDelDetail" data-id="@Model.ListLoadDocEditDtl[i].cmp_id" data-id1="@Model.ListLoadDocEditDtl[i].ib_doc_id" data-id2="@Model.ListLoadDocEditDtl[i].line_num" data-id3="@Model.ListLoadDocEditDtl[i].itm_code" data-id4="@Model.ListLoadDocEditDtl[i].DocEntry"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+                                            </tbody>
+                                        </table>
+                                        @*</div>*@
+
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="childtabsgrid-2" style="display:none">
+                                <fieldset>
+                                    <legend style="color:cornflowerblue; font-size:1.1px;">Item details by carton</legend>
+                                    <div class="box-header" style="margin-top:-27px;">
+                                        @*<div id="table-Details">*@
+                                        @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+                                        <table id="GridDocDetailsEntry" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                            <thead class="grid_backcolor">
+                                                <tr>
+                                                    <th class="grid_header_backcolor">Dtl Line</th>
+                                                    <th class="grid_header_backcolor">Line</th>
+                                                    <th class="grid_header_backcolor">PPK</th>
+                                                    <th class="grid_header_backcolor">TotalCtns</th>
+                                                    <th class="grid_header_backcolor">TotalQty</th>
+                                                    <th class="grid_header_backcolor">PO#</th>
+                                                    <th class="grid_header_backcolor">Location</th>
+                                                    <th class="grid_header_backcolor">IORate</th>
+                                                    <th class="grid_header_backcolor">Strg</th>
+                                                    <th class="grid_header_backcolor">Length</th>
+                                                    <th class="grid_header_backcolor">Width</th>
+                                                    <th class="grid_header_backcolor">Depth</th>
+                                                    <th class="grid_header_backcolor">Weight</th>
+                                                    <th class="grid_header_backcolor">Cube</th>
+                                                    <th class="grid_header_backcolor">LotId</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                                                @*@for (int i = 0; i < Model.ListDocdtl.Count; i++)
+                                                    {
+                                                        int line = i + 1;
+                                                        <tr id="@Model.ListDocdtl[i].cmp_id ">
+                                                            <td style="font-size:12px; color:black; font-weight:bold; ">@line</td>
+                                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListDocdtl[i].itm_num</td>
+                                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].itm_color</td>
+                                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].itm_size</td>
+                                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].itm_name</td>
+                                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocdtl[i].ordr_qty</td>
+                                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListDocdtl[i].ctns</td>
+                                                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListDocdtl[i].note</td>
+                                                            <td>
+                                                                <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="DocEntryEditDetail" data-id="@Model.ListDocDtl[i].cmp_id" data-id1="@Model.ListDocDtl[i].itm_num" data-id2="@Model.ListDocDtl[i].itm_color" data-id3="@Model.ListDocDtl[i].itm_size"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                                            </td>
+                                                            <td>
+                                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="DocEntryDelDetail" data-id="@Model.ListDocDtl[i].cmp_id" data-id1="@Model.ListDocDtl[i].itm_num" data-id2="@Model.ListDocDtl[i].itm_color" data-id3="@Model.ListDocDtl[i].itm_size"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                                            </td>
+                                                        </tr>
+
+                                                    }*@
+                                            </tbody>
+                                        </table>
+                                        @*</div>*@
+                                        @*</div>*@
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="GridDocEntrydisp"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</center>
+@Html.HiddenFor(model => model.DocumentdateFrom)
+@Html.HiddenFor(model => model.DocumentdateTo)
+
+<div id='myModalDetailsPopUp' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%;">
+            <div id='myModalDetailsPopUpDetails' style="width: 100%; height: 650px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    
+    $(function () {
+        $("#childtabsgrid").tabs();
+    });
+   
+    $(function () {
+        $("#docchildtabs").tabs();
+    });
+</script>
+<script type="text/javascript">
+    $("#new_cmp_id").change(function () {
+        var end = this.value;
+        // alert(end)
+        $('#p_str_cmpid').val(end);
+    });
+
+    $("#btnNext").click(function () {
+        debugger
+        //$('#ui-id-2').click();
+        $("#docchildtabs").tabs("option", "active", $("#docchildtabs").tabs('option', 'active') + 1);
+
+    });
+
+    $('#doclength,#docwidth,#docheight,#docweight, #doccube').keyup(function () {
+        var val = $(this).val();
+        if (isNaN(val)) {
+            val = val.replace(/[^0-9\.]/g, '');
+            if (val.split('.').length > 2)
+                val = val.replace(/\.+$/, "");
+        }
+        $(this).val(val);
+    });
+    $('#doclength').focusout(function () {
+        debugger
+        var a = $('#doclength').val();
+
+        if (a == 'NaN') {
+            $('#doclength').val(0);
+            return false;
+        }
+    });
+
+    $('#docwidth').focusout(function () {
+        debugger
+        var a = $('#docwidth').val();
+
+        if (a == 'NaN') {
+            $('#docwidth').val(0);
+            return false;
+        }
+    });
+    $('#docheight').focusout(function () {
+        debugger
+        var a = $('#docheight').val();
+
+        if (a == 'NaN') {
+            $('#docheight').val(0);
+            return false;
+        }
+    });
+    $('#docweight').focusout(function () {
+        debugger
+        var a = $('#docweight').val();
+
+        if (a == 'NaN') {
+            $('#docweight').val(0);
+            return false;
+        }
+    });
+    $(document).ready(function () {
+        $("btnClr").each(function () {
+            $(this).val("");
+        });
+    });
+    $('#new_ib_doc_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#new_eta_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#new_orderdt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+    $(function () {
+        $("#divReadOnlyFields :input").attr("disabled", true);
+    });
+
+    $('#docuppk').focusout(function () {
+
+        var a = $('#ord_qty').val();
+        var b = $('#docuppk').val();
+        debugger
+        if ($('#ord_qty').val() == 0 && $('#docuppk').val() == 0) {
+            $('#ctn_qty').val(0);
+        }
+        else {
+            $('#ctn_qty').val(Math.ceil(a / b));
+            if (a > 0 && b == 0) {
+                $('#ctn_qty').val(0);
+            }
+        }
+    });
+
+    $('#ctn_qty').focusout(function () {
+
+        var lintOrdrQty = $('#ord_qty').val();
+        var lintPPk = $('#docuppk').val();
+        var lintCtns = $('#ctn_qty').val();
+        debugger
+        if ($('#ord_qty').val() == 0 || ($('#ord_qty').val() == ''))
+        {
+            if (parseInt(lintPPk) > 0 && parseInt(lintCtns) > 0)
+            {
+                lintOrdrQty = parseInt(lintPPk) * parseInt(lintCtns);
+                $("#ord_qty").val(lintOrdrQty);
+            }
+        }
+     
+    });
+
+    
+
+
+    $("docuppk").keydown(function (e) {
+
+        var a = $('#ord_qty').val();
+        var b = $('#docuppk').val();
+        if (b == 0) {
+            $('#ctn_qty').val(0);
+
+        }
+        else {
+            $('#ctn_qty').val(Math.ceil(a / b));
+
+        }
+
+        //$('#ctn').val(a / b);
+    });
+    $('#docuppk').keyup(function () {
+        var a = $('#ord_qty').val();
+        var b = $('#docuppk').val();
+        if (b == 0) {
+            $('#ctn_qty').val(0);
+
+        }
+        else {
+            $('#ctn_qty').val(Math.ceil(a / b));
+
+        }
+    });
+    $('#ord_qty').keyup(function () {
+        var a = $('#ord_qty').val();
+        var b = $('#docuppk').val();
+        if (a == 0 && b == 0) {
+            $('#ctn_qty').val(0);
+        }
+        else if (a != 0 && b == 0) {
+            $('#ctn_qty').val(0);
+        }
+        else {
+            $('#ctn_qty').val(Math.ceil(a / b));
+        }
+    });
+    $(document).ready(function () {
+
+        $('#btnImport').click(function () {
+            debugger
+            var l_str_new_cmp_id = $('#new_cmp_id').val();
+            var l_str_new_cont_id = $('#new_cont_id').val();
+            var l_str_new_ib_doc_id = $('#new_ib_doc_id').val();
+            if (l_str_new_cmp_id == "") {
+                sweetalert("", "please select the company.", "");
+                $('#new_cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            if (l_str_new_cont_id == "") {
+                sweetAlert("", "please enter the container id.", "");
+                $('#new_cont_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#img1").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('username', 'Manas');
+
+                $.ajax({
+                    url: '/InboundInquiry/UploadFiles?l_str_new_cmp_id=' + l_str_new_cmp_id + '&l_str_new_cont_id=' + l_str_new_cont_id,
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    //dataType: 'json',
+                    //dataType: 'html',
+                    success: function (result) {
+
+                        debugger
+                        //CR-3PL_MVC_IB_2018-03-13-003
+                        if (result.data1 == "N") {
+                            //$("#LineNum").val(this.line_num);
+                            //var l_str_line_no =   $("#LineNum").val();
+                            sweetAlert("", "Container ID Mismatch with Header Container ID for Line:" + result.data2, "");
+
+                        }
+                            //CR-3PL_MVC_IB_2018-03-13-003
+                        else {
+                            $("#ajaxLoading").hide();
+                            $('#GridDocEntry').html("");
+                            $('#GridDocEntry').html(result);
+                            $('#file_name').val("");
+                            //$('#GridDocuEntry').html("");
+                            //$('#GridDocuEntry').html(result);
+                        }
+
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+            }
+        });
+    });
+
+
+    $("#btnInclude").click(function () {
+        debugger
+        // var cmp_id = $("#cmp_id").val();  //CR-20180410 -Added By Nithya for cmp_id Validation
+        var cmp_id = $("#new_cmp_id").val();
+        var p_str_recv_itm_mode = $("#aloc_by").val();
+        var p_str_ecom_recv_by_bin = $("#ecom_recv_by_bin").val();
+        var pstrBinLocId = $("#loc_id").val();
+        var po_num = $("#add_po_num").val();
+
+
+
+        if (p_str_recv_itm_mode == "PO")
+        {
+            if (po_num == "-" || po_num == "") {
+                swal("", "Please Enter po number (“Cust Configered For   Allocation By  PO ”)", "");
+                $("#add_po_num").focus();
+                return false;
+            }
+        }
+
+        //CR-20180206 -Added By Nithya for ordr_qty Validation
+        if ($('#Itmdtl').val() == '') {
+            $('#Itmdtl').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#Itmdtl').css('border-color', '');
+        }
+        if ($('#itm_color').val() == '') {
+            $('#itm_color').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#itm_color').css('border-color', '');
+
+        }
+        if ($('#itm_size').val() == '') {
+            $('#itm_size').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#itm_size').css('border-color', '');
+        }
+        if ($('#itm_name').val() == '') {
+            $('#itm_name').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#itm_name').css('border-color', '');
+        }
+
+
+        if ($('#loc_id').val() == "") {
+            sweetAlert("", "Please Select The Location.", "");
+            return false;
+
+        }
+
+        else {
+            $('#loc_id').css('border-color', '');
+        }
+
+
+        @*$.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/CheckBinRefered")',
+            contentType: "application/json; charset=utf-8",
+            data: { "pstrCmpId": cmp_id, "pstrBinLocId": pstrBinLocId, "pstrItmNum": $('#Itmdtl').val(), "pstrItmColor": $('#itm_color').val(), "pstrItmSize": $('#itm_size').val() },
+            datatype: "json",
+            success: function (BinLocRefered) {
+                debugger
+                alert(BinLocRefered);
+                if (BinLocRefered != "NO") {
+                    sweetAlert("", BinLocRefered, "");
+                    return false;
+                }
+
+            },
+        });*@
+
+        var ordr = $('#ord_qty').val();
+        var ppk = $('#docuppk').val();
+        if (parseInt(ordr) >= parseInt(ppk)) {
+            if (parseInt(ordr) >= 0 && parseInt(ppk) > 0) {
+                $('#ctn_qty').val(Math.ceil(ordr / ppk));
+            }
+        }
+        else {
+            swal("", "PPK Should Be Less Than Order Qty", "");
+            $('#docuppk').val(1);
+            $('#docuppk').focus();
+            return false;
+        }
+        $('#ctn_qty').val(Math.ceil(ordr / ppk));
+        if ($('#docuppk').val() == 0) {
+            $('#docuppk').css('border-color', 'red');
+            return false;
+        }
+
+        else {
+            $('#docuppk').css('border-color', '');
+
+        }
+        if ($('#docuppk').val() == '') {
+            $('#docuppk').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#docuppk').css('border-color', '');
+        }
+        if ($('#ord_qty').val() == 0) {
+            $('#ord_qty').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#ord_qty').css('border-color', '');
+        }
+        if ($('#ord_qty').val() == '') {
+            $('#ord_qty').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#ord_qty').css('border-color', '');
+        }
+        if ($('#ctn_qty').val() == 0) {
+            $('#ctn_qty').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#ctn_qty').css('border-color', '');
+        }
+        if ($('#ctn_qty').val() == '') {
+            $('#ctn_qty').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#ctn_qty').css('border-color', '');
+        }
+
+
+
+        if ( $('#doclength').val() == '' ) {
+            sweetAlert("", "Please Enter the Length between 2 to 100 ", "");
+            return false;
+
+        }
+
+        else {
+            $('#doclength').css('border-color', '');
+        }
+
+
+        if ($('#docwidth').val() == '' ) {
+            sweetAlert("", "Please Enter the Width between 2 to 100 ", "");
+            return false;
+
+        }
+
+        else {
+            $('#docwidth').css('border-color', '');
+        }
+
+        if ($('#docheight').val() == '' ) {
+            sweetAlert("", "Please Enter the Height between 2 to 100 ", "");
+            return false;
+
+        }
+
+        else {
+            $('#docheight').css('border-color', '');
+        }
+
+
+        if ($('#doccube').val() == 0 || $('#doccube').val() == '') {
+            $('#doccube').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#doccube').css('border-color', '');
+        }
+
+        if ($('#docweight').val() == '' ) {
+
+            $('#docweight').css({
+                "border-color": "#e81994",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
+            return false;
+        }
+
+        else {
+
+
+            $('#docweight').css('border-color', '');
+            $('#docweight').css('border-width', '1px');
+            $('#docweight').focus();
+        }
+
+
+
+
+       
+
+        if (cmp_id == "") {
+            sweetAlert("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (po_num == "") {
+            sweetAlert("", "Please Enter PO Number.", "");
+
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $('#add_po_num').css({
+                "border-color": "#e81994",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
+            $('#add_po_num').focus();
+            return false;
+        }
+        else
+        {
+            $('#add_po_num').css('border-color', '');
+            $('#add_po_num').css('border-width', '1px');
+            $('#add_po_num').focus();
+
+        }
+        //CR20180216-02  Added By Soniya 16-02-2018
+        if ($('#docuppk').val() <= 1) {
+            debugger
+            sweetAlert({
+                title: "",
+                text: "PPK is 1 Do you want to Allow(Yes/No)",
+                type: "",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "No",
+                cancelButtonText: "Yes",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+         function (isConfirm) {
+             if (isConfirm) {
+
+                 $('#docuppk').val('');
+                 $('#docuppk').focus();
+                 swal.close();
+
+             }
+
+             else {
+                 var p_str_cmp_id = $('#new_cmp_id').val();
+                 var p_str_ibdocid = $('#new_ib_doc_id').val();
+                 var p_str_line_num = $('#LineNum').val();
+                 var p_str_style = $('#Itmdtl').val();
+                 var p_str_color = $('#itm_color').val();
+                 var p_str_size = $('#itm_size').val();
+                 var p_str_desc = $('#itm_name').val();
+                 var p_str_Itmcode = $('#itm_code').val();
+                 var p_str_ord_qty = $('#ord_qty').val();
+                 var p_str_ppk = $('#docuppk').val();
+                 var p_str_ctns = $('#ctn_qty').val();
+              
+                 var p_str_length = $('#doclength').val();
+                 var p_str_width = $('#docwidth').val();
+                 var p_str_height = $('#docheight').val();
+                 var p_str_weight = $('#docweight').val();
+                 var p_str_cube = $('#doccube').val();
+                 var p_str_loc_id = $('#loc_id').val();
+                 var p_str_strg_rate = $('#strg_rate').val();
+                 var p_str_inout_rate = $('#inout_rate').val();
+                 var p_str_note = $('#note').val();
+                 var p_int_ctn_line = $('#ctn_line').val();
+                 var l_bool_is_in_edit = "false";
+
+                 var p_str_po_num = $('#add_po_num').val();
+                 var p_str_factory_id = $('#add_factory_id').val();
+                 var p_str_cust_name = $('#add_cust_name').val();
+                 var p_str_cust_po_num = $('#add_cust_po_num').val();
+                 var p_str_pick_list = $('#add_pick_list').val();
+
+                 debugger
+                 $("#ajaxLoading").show();
+                 $.ajax({
+                     type: "GET",
+                     url: '@Url.Content("~/InboundInquiry/IncludeDocDetails")',
+                     data: {
+                         "p_str_cmp_id": p_str_cmp_id, "p_str_ibdocid": p_str_ibdocid, "p_str_line_num": p_str_line_num, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size,
+                         "p_str_desc": p_str_desc, "p_str_Itmcode": p_str_Itmcode, "p_str_ord_qty": p_str_ord_qty, "p_str_ppk": p_str_ppk, "p_str_ctns": p_str_ctns, "p_str_po_num": p_str_po_num, "p_str_length": p_str_length,
+                         "p_str_width": p_str_width, "p_str_height": p_str_height, "p_str_weight": p_str_weight, "p_str_cube": p_str_cube,
+                         "p_str_loc_id": p_str_loc_id, "p_str_strg_rate": p_str_strg_rate, "p_str_inout_rate": p_str_inout_rate, "p_str_note": p_str_note, "p_int_ctn_line": p_int_ctn_line,
+                         "p_str_factory_id": p_str_factory_id, "p_str_cust_name": p_str_cust_name, "p_str_cust_po_num": p_str_cust_po_num, "p_str_pick_list": p_str_pick_list
+                     },
+
+                     dataType: 'html',
+                     success: function (e) {
+                         if (e == 0) {
+                             sweetAlert("", "Style Not Found.", "");
+                             $("#ajaxLoading").hide();
+                             return false;
+                         }
+
+                         if (e == 2) {
+                             sweetAlert("", "Bin Location already used by another Style", "");
+                             $("#ajaxLoading").hide();
+                             return false;
+                         }
+
+                         if (e > 2) {
+                             sweetAlert({
+                                 title: "",
+                                 text: "Style,PPK,PO Number Combination Alreadry Exists Do you want Receive?",
+                                 type: "",
+                                 showCancelButton: true,
+                                 confirmButtonClass: "btn-danger",
+                                 confirmButtonText: "No",
+                                 cancelButtonText: "Yes",
+                                 closeOnConfirm: false,
+                                 closeOnCancel: true
+                             },
+         function (isConfirm) {
+             if (isConfirm) {
+                 swal.close();
+             }
+
+             else {
+                 $.ajax({
+                     type: "GET",
+                     url: '@Url.Content("~/InboundInquiry/IncludeDocDetailEntry")',
+                     data: {
+                         "p_str_cmp_id": p_str_cmp_id, "p_str_ibdocid": p_str_ibdocid, "p_str_line_num": p_str_line_num, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size,
+                         "p_str_desc": p_str_desc, "p_str_Itmcode": p_str_Itmcode, "p_str_ord_qty": p_str_ord_qty, "p_str_ppk": p_str_ppk, "p_str_ctns": p_str_ctns, "p_str_po_num": p_str_po_num, "p_str_length": p_str_length,
+                         "p_str_width": p_str_width, "p_str_height": p_str_height, "p_str_weight": p_str_weight, "p_str_cube": p_str_cube,
+                         "p_str_loc_id": p_str_loc_id, "p_str_strg_rate": p_str_strg_rate, "p_str_inout_rate": p_str_inout_rate, "p_str_note": p_str_note, "p_int_ctn_line": p_int_ctn_line,
+                         "p_str_factory_id": p_str_factory_id, "p_str_cust_name": p_str_cust_name, "p_str_cust_po_num": p_str_cust_po_num, "p_str_pick_list": p_str_pick_list
+                     },
+                     dataType: 'html',
+                     success: function (e) {
+                         $("#ajaxLoading").hide();
+                         $('#GridDocEntry').html("");
+                         $('#GridDocEntry').html(e);
+                         $('#itm_name').val('');
+                         $('#ord_qty').val('');
+                         $('#ctn_qty').val('');
+                         $('#docuppk').val('');
+                         $('#doclength').val('');
+                         $('#docwidth').val('');
+                         $('#docheight').val('');
+                         $('#docweight').val('');
+                         $('#doccube').val('');
+                         $('#length').val('');
+                         $('#width').val('');
+                         $('#height').val('');
+                         $('#weight').val('');
+                         $('#cube').val('');
+                         $('#ppk').val('');
+                         $('#qty_uom').val('');
+                         $('#vendpo').val('');
+                         $('#note').val('');
+                         $('#cust_id').val('');
+                         $('#Itmdtl').val('');
+                         $('#itm_color').val('');
+                         $('#itm_size').val('');
+                         $('#itm_name').val('');
+                         $('#length').val('');
+                         $('#width').val('');
+                         $('#height').val('');
+                         $('#weight').val('');
+                         $('#ppk').val('');
+                         $('#itm_code').val('');
+                         $("#add_pick_list").val('');
+                         $('#l_bool_edit_flag').val('false');//CR_MVC_3PL_0317-001 Added By Nithya
+                         $.ajax({
+                             type: "GET",
+                             url: '@Url.Content("~/InboundInquiry/DocEntryCount")',
+                             contentType: "application/json; charset=utf-8",
+                             data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                             datatype: "json",
+                             success: function (e) {
+                                 debugger
+                                 var rowCount = e;
+                                 $('#LineNum').val((rowCount * 1) + 1);
+                             },
+                         });
+                         $('#Itmdtl').focus();
+                         //var val = $('#LineNum').val();
+                         //$('#LineNum').val((val * 1) + 1);
+
+                     },
+                 })
+             }
+         })
+                         }
+                         else {
+                             $("#ajaxLoading").hide();
+                             $('#GridDocEntry').html("");
+                             $('#GridDocEntry').html(e);
+                             $('#itm_name').val('');
+                             $('#ord_qty').val('');
+                             $('#ctn_qty').val('');
+                             $('#docuppk').val('');
+                             $('#doclength').val('');
+                             $('#docwidth').val('');
+                             $('#docheight').val('');
+                             $('#docweight').val('');
+                             $('#doccube').val('');
+                             $('#length').val('');
+                             $('#width').val('');
+                             $('#height').val('');
+                             $('#weight').val('');
+                             $('#cube').val('');
+                             $('#ppk').val('');
+                             $('#qty_uom').val('');
+                             $('#vendpo').val('');
+                             $('#note').val('');
+                             $('#cust_id').val('');
+                             $('#Itmdtl').val('');
+                             $('#itm_color').val('');
+                             $('#itm_size').val('');
+                             $('#itm_name').val('');
+                             $('#length').val('');
+                             $('#width').val('');
+                             $('#height').val('');
+                             $('#weight').val('');
+                             $('#ppk').val('');
+                             $('#itm_code').val('');
+                             $("#add_pick_list").val('');
+                             $('#l_bool_edit_flag').val('false');//CR_MVC_3PL_0317-001 Added By Nithya
+                             $.ajax({
+                                 type: "GET",
+                                 url: '@Url.Content("~/InboundInquiry/DocEntryCount")',
+                                 contentType: "application/json; charset=utf-8",
+                                 data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                                 datatype: "json",
+                                 success: function (e) {
+                                     debugger
+                                     var rowCount = e;
+                                     $('#LineNum').val((rowCount * 1) + 1);
+
+
+
+                                 },
+                             });
+                             //var val = $('#LineNum').val();
+                             //$('#LineNum').val((val * 1) + 1);
+                             $('#docuppk').focus();
+                         }
+                     },
+                 })
+             }
+         })
+        }
+
+        else {
+            var p_str_cmp_id = $('#new_cmp_id').val();
+            var p_str_ibdocid = $('#new_ib_doc_id').val();
+            var p_str_line_num = $('#LineNum').val();
+            var p_str_style = $('#Itmdtl').val();
+            var p_str_color = $('#itm_color').val();
+            var p_str_size = $('#itm_size').val();
+            var p_str_desc = $('#itm_name').val();
+            var p_str_Itmcode = $('#itm_code').val();
+            var p_str_ord_qty = $('#ord_qty').val();
+            var p_str_ppk = $('#docuppk').val();
+            var p_str_ctns = $('#ctn_qty').val();
+            var p_str_po_num = $('#add_po_num').val();
+     
+            var p_str_factory_id = $('#add_factory_id').val();
+            var p_str_cust_name = $('#add_cust_name').val();
+            var p_str_cust_po_num = $('#add_cust_po_num').val();
+            var p_str_pick_list = $('#add_pick_list').val();
+
+            var p_str_length = $('#doclength').val();
+            var p_str_width = $('#docwidth').val();
+            var p_str_height = $('#docheight').val();
+            var p_str_weight = $('#docweight').val();
+            var p_str_cube = $('#doccube').val();
+            var p_str_loc_id = $('#loc_id').val();
+            var p_str_strg_rate = $('#strg_rate').val();
+            var p_str_inout_rate = $('#inout_rate').val();
+            var p_str_note = $('#note').val();
+            var p_int_ctn_line = $('#ctn_line').val();
+            var l_bool_is_in_edit = "false";
+            debugger
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/IncludeDocDetails")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ibdocid": p_str_ibdocid, "p_str_line_num": p_str_line_num, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size,
+                    "p_str_desc": p_str_desc, "p_str_Itmcode": p_str_Itmcode, "p_str_ord_qty": p_str_ord_qty, "p_str_ppk": p_str_ppk, "p_str_ctns": p_str_ctns, "p_str_po_num": p_str_po_num, "p_str_length": p_str_length,
+                    "p_str_width": p_str_width, "p_str_height": p_str_height, "p_str_weight": p_str_weight, "p_str_cube": p_str_cube,
+                    "p_str_loc_id": p_str_loc_id, "p_str_strg_rate": p_str_strg_rate, "p_str_inout_rate": p_str_inout_rate, "p_str_note": p_str_note, "p_int_ctn_line": p_int_ctn_line,
+                    "p_str_factory_id": p_str_factory_id, "p_str_cust_name": p_str_cust_name, "p_str_cust_po_num": p_str_cust_po_num, "p_str_pick_list": p_str_pick_list
+                },
+
+                dataType: 'html',
+                success: function (e) {
+                    if (e == 0) {
+                        sweetAlert("", "Style Not Found.", "");
+                        $("#ajaxLoading").hide();
+                        return false;
+                    }
+                    if (e == 2) {
+                        sweetAlert("", "Bin Location already used by another Style", "");
+                        $("#ajaxLoading").hide();
+                        return false;
+                    }
+                    if (e > 2) {
+                        sweetAlert({
+                            title: "",
+                            text: "Style,PPK,PO Number Combination Alreadry Exists Do you want Receive?",
+                            type: "",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "No",
+                            cancelButtonText: "Yes",
+                            closeOnConfirm: false,
+                            closeOnCancel: true
+                        },
+    function (isConfirm) {
+        if (isConfirm) {
+            swal.close();
+
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/IncludeDocDetailEntry")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ibdocid": p_str_ibdocid, "p_str_line_num": p_str_line_num, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size,
+                    "p_str_desc": p_str_desc, "p_str_Itmcode": p_str_Itmcode, "p_str_ord_qty": p_str_ord_qty, "p_str_ppk": p_str_ppk, "p_str_ctns": p_str_ctns, "p_str_po_num": p_str_po_num, "p_str_length": p_str_length,
+                    "p_str_width": p_str_width, "p_str_height": p_str_height, "p_str_weight": p_str_weight, "p_str_cube": p_str_cube,
+                    "p_str_loc_id": p_str_loc_id, "p_str_strg_rate": p_str_strg_rate, "p_str_inout_rate": p_str_inout_rate, "p_str_note": p_str_note, "p_int_ctn_line": p_int_ctn_line,
+                    "p_str_factory_id": p_str_factory_id, "p_str_cust_name": p_str_cust_name, "p_str_cust_po_num": p_str_cust_po_num, "p_str_pick_list": p_str_pick_list
+                },
+
+                dataType: 'html',
+                success: function (e) {
+
+                    $("#ajaxLoading").hide();
+                    $('#GridDocEntry').html("");
+                    $('#GridDocEntry').html(e);
+                    $('#itm_name').val('');
+                    $('#ord_qty').val('');
+                    $('#ctn_qty').val('');
+                    $('#docuppk').val('');
+                    $('#doclength').val('');
+                    $('#docwidth').val('');
+                    $('#docheight').val('');
+                    $('#docweight').val('');
+                    $('#doccube').val('');
+                    $('#length').val('');
+                    $('#width').val('');
+                    $('#height').val('');
+                    $('#weight').val('');
+                    $('#cube').val('');
+                    $('#ppk').val('');
+                    $('#qty_uom').val('');
+                    $('#vendpo').val('');
+                    $('#note').val('');
+                    $('#cust_id').val('');
+                    $('#Itmdtl').val('');
+                    $('#itm_color').val('');
+                    $('#itm_size').val('');
+                    $('#itm_name').val('');
+                    $('#length').val('');
+                    $('#width').val('');
+                    $('#height').val('');
+                    $('#weight').val('');
+                    $('#ppk').val('');
+                    $('#itm_code').val('');
+                    $("#add_pick_list").val('');
+                    $('#l_bool_edit_flag').val('false');//CR_MVC_3PL_0317-001 Added By Nithya
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/DocEntryCount")',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                        datatype: "json",
+                        success: function (e) {
+                            debugger
+                            var rowCount = e;
+                            $('#LineNum').val((rowCount * 1) + 1);
+
+
+
+                        },
+                    });
+                    $('#Itmdtl').focus();
+                    //var val = $('#LineNum').val();
+                    //$('#LineNum').val((val * 1) + 1);
+
+                },
+            })
+        }
+    })
+                    }
+                    else {
+                        $("#ajaxLoading").hide();
+                        $('#GridDocEntry').html("");
+                        $('#GridDocEntry').html(e);
+                        $('#itm_name').val('');
+                        $('#ord_qty').val('');
+                        $('#ctn_qty').val('');
+                        $('#docuppk').val('');
+                        $('#doclength').val('');
+                        $('#docwidth').val('');
+                        $('#docheight').val('');
+                        $('#docweight').val('');
+                        $('#doccube').val('');
+                        $('#length').val('');
+                        $('#width').val('');
+                        $('#height').val('');
+                        $('#weight').val('');
+                        $('#cube').val('');
+                        $('#ppk').val('');
+                        $('#qty_uom').val('');
+                        $('#vendpo').val('');
+                        $('#note').val('');
+                        $('#cust_id').val('');
+                        $('#Itmdtl').val('');
+                        $('#itm_color').val('');
+                        $('#itm_size').val('');
+                        $('#itm_name').val('');
+                        $('#length').val('');
+                        $('#width').val('');
+                        $('#height').val('');
+                        $('#weight').val('');
+                        $('#ppk').val('');
+                        $('#itm_code').val('');
+                        $("#add_pick_list").val('');
+                        $('#l_bool_edit_flag').val('false');//CR_MVC_3PL_0317-001 Added By Nithya
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Content("~/InboundInquiry/DocEntryCount")',
+                            contentType: "application/json; charset=utf-8",
+                            data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                            datatype: "json",
+                            success: function (e) {
+                                debugger
+                                var rowCount = e;
+                                $('#LineNum').val((rowCount * 1) + 1);
+
+
+
+                            },
+                        });
+                        $('#Itmdtl').focus();
+                        //var val = $('#LineNum').val();
+                        //$('#LineNum').val((val * 1) + 1);
+                    }
+
+                },
+            })
+        }
+        //CR20180216-02 End
+    });
+
+    //CR-3PL_MVC_IB_2019-11-23-001 - Added By Naveen 
+    $("#btnCube").click(function () {
+        debugger
+        var l_dec_length = $("#doclength").val();
+        var l_dec_width = $("#docwidth").val();
+        var l_dec_height = $("#docheight").val();
+
+        if (l_dec_length == 0) {
+            sweetAlert("", "Please enter the Length", "");
+            return false;
+        }
+
+        if (l_dec_width == 0) {
+            sweetAlert("", "Please enter the Width", "");
+            return false;
+        }
+
+        if (l_dec_height == 0) {
+            sweetAlert("", "Please enter the Height", "");
+            return false;
+        }
+
+        if ((l_dec_length < 2) || (l_dec_width < 2) || (l_dec_height < 2)) {
+            sweetAlert("", "Dimension L/W/H should be greater than 2.0 ", "");
+            return false;
+        }
+
+        else {
+            if ($('#doclength').val() > 0 && $('#docwidth').val() > 0 && $('#docheight').val() > 0) {
+                $('#doccube').val(($('#doclength').val() * $('#docwidth').val() * $('#docheight').val()) / 1728);
+                $('#doccube').val(parseFloat($('#doccube').val()).toFixed(3));
+            }
+        }
+    });
+    //CR-3PL_MVC_IB_2019-11-23-001 - END 
+
+    $('#btnHdrClr').click(function () {
+        $('#cont_id').val('');
+        $('#eta_dt').val('');
+        $('#refno').val('');
+        $('#recvdvia').val('');
+        $('#recvd_fm').val('');
+        $('#bol').val('');
+        $('#vessel_num').val('');
+        $('#Note').val('');
+
+    });
+    $('#btnDtlClr').click(function () {
+        $('#itm_name').val('');
+        $('#ctn_qty').val('');
+        $('#docuppk').val('');
+        $('#doclength').val('');
+        $('#docwidth').val('');
+        $('#docheight').val('');
+        $('#docweight').val('');
+        $('#doccube').val('');
+        $('#qty_uom').val('');
+        $('#vendpo').val('');
+        $('#note').val('');
+        $('#cust_id').val('');
+        $('#itm_code').val('');
+        $('#add_factory_id').val('');
+        $('#add_po_num').val('');
+        $('#add_cust_name').val('');
+        $('#edit_cust_po_num').val('');
+        $('#edit_pick_list').val('');
+
+    });
+    $("#btnDocSave").click(function () {
+        debugger
+        var l_str_Edit_flag = $('#l_bool_edit_flag').val();
+        if (l_str_Edit_flag == "true") {
+            sweetAlert("", "Already an Line is Selected for Edit, Pls. Include Before Save.", "");//CR_MVC_3PL_0317-001 Added By Nithya
+            return false;
+        }
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_ibdocid = $('#new_ib_doc_id').val();
+        var p_str_ibdocdt = $('#new_ib_doc_dt').val();
+        var p_str_status = $('#new_status').val();
+        var p_str_cont_id = $('#new_cont_id').val();
+        var p_str_eta_dt = $('#new_eta_dt').val();
+        var p_str_refno = $('#new_refno').val();
+        var p_str_ordrdt = $('#new_orderdt').val();
+        var p_str_rcvdvia = $('#new_recvdvia').val();
+        var p_str_rcvdfm = $('#new_recvd_fm').val();
+        var p_str_bol = $('#new_bol').val();
+        var p_str_vessel_num = $('#new_vessel_num').val();
+        var p_str_note = $('#new_Note').val();
+        var p_str_screentitle = $('#screentitle').val();
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (p_str_ibdocid == "") {
+            sweetAlert("", "Please Enter Doc Id", "");
+            $('#new_ib_doc_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/CheckExistContainerIDS")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cont_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //if (e == "True") {
+                    //    sweetAlert("", "Container Id Already Exist", "");
+                    //    $('#new_cont_id').val('');
+                    //    $('#new_cont_id').focus();
+
+                    //    return false;
+                    //}
+                    debugger
+                    if (e == "True")
+                    {
+                        sweetAlert(
+                        {
+                            title: "",
+                            text: "Container Already Exist, Do you want to Continue?",
+                            type: "",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "No",
+                            cancelButtonText: "Yes",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                            function (isConfirm) 
+                            {
+                                if (isConfirm) 
+                                {
+                                    $('#new_cont_id').val('');
+                                    $('#new_cont_id').focus();
+                                    return false;
+                                }
+                                else
+                                {
+                                    $.ajax({
+                                        type: "GET",
+                                        url: '@Url.Content("~/InboundInquiry/SaveDocEntry")',
+                                        data: {
+                                            "p_str_cmp_id": p_str_cmp_id,
+                                            "p_str_ibdocid": p_str_ibdocid,
+                                            "p_str_ibdocdt": p_str_ibdocdt,
+                                            "p_str_status": p_str_status, "p_str_cont_id": p_str_cont_id, "p_str_eta_dt": p_str_eta_dt, "p_str_refno": p_str_refno,
+                                            "p_str_ordrdt": p_str_ordrdt, "p_str_rcvdvia": p_str_rcvdvia, "p_str_rcvdfm": p_str_rcvdfm, "p_str_bol": p_str_bol
+                                            , "p_str_vessel_num": p_str_vessel_num, "p_str_note": p_str_note
+                                        },
+                                        dataType: 'html',
+                                        success: function (e) {
+                                            $("#ajaxLoading").hide();
+                                            //if (e != null) {
+                                            if (e == "true") {
+
+                                                swal({
+                                                    title: "",
+                                                    text: "IB DocId #" + p_str_ibdocid + "  Added successfully",
+                                                    type: "",
+                                                    showCancelButton: false,
+                                                    confirmButtonClass: "btn-danger",
+                                                    confirmButtonText: "Ok",
+                                                    closeOnConfirm: true
+                                                },
+
+                                                 function () {
+                                                     setTimeout(function () {
+                                                         var p_str_ib_doc_id = $('#new_ib_doc_id').val();
+                                                         var p_str_cmpid = $('#new_cmp_id').val();
+                                                         var p_str_datefrom = $('#DocumentdateFrom').val();
+                                                         var p_str_dateto = $('#DocumentdateTo').val();
+                                                         var type = "PDF";
+                                                         var p_str_radio = "WorkSheet";
+                                                         var SelectdID = p_str_ib_doc_id;
+                                                         var p_str_doc_cmp_id = $('#cmp_id').val();
+                                                         var p_str_screentitle = $('#screentitle').val();
+
+                                                         window.open('ShowReport?SelectdID=' + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID);
+
+                                                         $('#myModalAdd').modal('hide');
+                                                         $.ajax({
+                                                             type: "get",
+                                                             url: "/inboundinquiry/inboundinquirydtl",
+                                                             data: {
+                                                                 "p_str_cmp_id": p_str_doc_cmp_id,
+                                                                 "p_str_ibdocid": SelectdID
+                                                             },
+                                                             datatype: 'html',
+                                                             success: function (e) {
+                                                                 debugger
+                                                                 $("#ajaxloading").hide();
+                                                                 $('#showgrid').html("");
+                                                                 $('#showgrid').html(e);
+                                                             },
+                                                         })
+
+                                                     });
+                                                 });
+                                            }
+                                            else if (e == "false") {
+                                                sweetAlert("", "No Document details Added.", "");
+                                                $('#itmdtl').focus();
+                                            }
+
+                                        },
+
+                                    })
+                                }
+                            }
+                        )
+                    }
+
+
+                    else {
+
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Content("~/InboundInquiry/SaveDocEntry")',
+                            data: {
+                                "p_str_cmp_id": p_str_cmp_id,
+                                "p_str_ibdocid": p_str_ibdocid,
+                                "p_str_ibdocdt": p_str_ibdocdt,
+                                "p_str_status": p_str_status, "p_str_cont_id": p_str_cont_id, "p_str_eta_dt": p_str_eta_dt, "p_str_refno": p_str_refno,
+                                "p_str_ordrdt": p_str_ordrdt, "p_str_rcvdvia": p_str_rcvdvia, "p_str_rcvdfm": p_str_rcvdfm, "p_str_bol": p_str_bol
+                                , "p_str_vessel_num": p_str_vessel_num, "p_str_note": p_str_note
+                            },
+                            dataType: 'html',
+                            success: function (e) {
+                                $("#ajaxLoading").hide();
+                                //if (e != null) {
+                                if (e == "true") {
+
+                                    swal({
+                                        title: "",
+                                        text: "IB DocId #" + p_str_ibdocid + "  Added successfully",
+                                        type: "",
+                                        showCancelButton: false,
+                                        confirmButtonClass: "btn-danger",
+                                        confirmButtonText: "Ok",
+                                        closeOnConfirm: true
+                                    },
+
+                                     function () {
+                                         setTimeout(function () {
+                                             var p_str_ib_doc_id = $('#new_ib_doc_id').val();
+                                             var p_str_cmpid = $('#new_cmp_id').val();
+                                             var p_str_datefrom = $('#DocumentdateFrom').val(); 
+                                             var p_str_dateto = $('#DocumentdateTo').val();     
+                                             var type = "PDF";
+                                             var p_str_radio = "WorkSheet";
+                                             var SelectdID = p_str_ib_doc_id;
+                                             var p_str_doc_cmp_id = $('#cmp_id').val();
+                                             var p_str_screentitle = $('#screentitle').val();
+
+                                               window.open('ShowReport?SelectdID=' + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID);
+
+                                            $('#myModalAdd').modal('hide');
+                                             $.ajax({
+                                                 type: "get",
+                                                 url: "/inboundinquiry/inboundinquirydtl",
+                                                 data: {
+                                                     "p_str_cmp_id": p_str_doc_cmp_id, 
+                                                     "p_str_ibdocid": SelectdID
+                                                 },
+                                                 datatype: 'html',
+                                                 success: function (e) {
+                                                     debugger
+                                                     $("#ajaxloading").hide();
+                                                     $('#showgrid').html("");
+                                                     $('#showgrid').html(e);
+                                                 },
+                                             })
+
+                                         });
+                                     });
+                                }
+                                else if (e == "false") {
+                                    sweetAlert("", "No Document details Added.", "");
+                                    $('#itmdtl').focus();
+                                }
+
+                            },
+
+                        })
+                    }
+                },
+
+            });
+
+
+
+
+
+
+
+    }
+    });
+   
+    $(".two-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(2);
+        if (this.value == 'NaN') {
+            $('#ctn_qty').val(0);
+        }
+    });
+    $(".three-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(3);
+        if (this.value == 'NaN') {
+
+            $("#doccube").val(0);
+            return false;
+        }
+    });
+   
+    //Allow users to enter numbers only
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+
+  
+    $(".StringOnly").bind('keypress', function (e) {
+        isIE = document.all ? 1 : 0
+        keyEntry = !isIE ? e.which : event.keyCode;
+        if (((keyEntry >= '65') && (keyEntry <= '90')) || ((keyEntry >= '97') && (keyEntry <= '122')) || (keyEntry == '46') || (keyEntry == '32') || keyEntry == '45')
+            return true;
+        else {
+            alert('Please Enter Only Character values.');
+            return false;
+        }
+    });
+
+    $(function () {
+        $('.select2').select2();
+    })
+    //$('#itm_size').focusout(function () {
+    $("#itm_size").blur(function () {
+        debugger
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_style = $('#Itmdtl').val();
+        var p_str_color = $('#itm_color').val();
+        var p_str_size = $('#itm_size').val();
+        var p_str_Itmcode = $('#itm_code').val();
+
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/LoadAvailQty")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size, "p_str_Itmcode": p_str_Itmcode
+            },
+
+            dataType: "json",
+            success: function (e) {
+                debugger
+                if (e == "Y") {
+                    debugger
+                    $("#length").val(0);
+                    $("#width").val(0);
+                    $("#height").val(0);
+                    $("#weight").val(0);
+                    $("#cube").val(0);
+                    $("#ppk").val(0);
+                    $('#itm_code').val("");
+                    //});
+                }
+                else {
+                    debugger
+                    $.each(e, function () {
+                        $("#length").val(this.length);
+                        $("#width").val(this.width);
+                        $("#height").val(this.depth);
+                        $("#weight").val(this.wgt);
+                        $("#cube").val(this.cube);
+                        $("#ppk").val(this.ctn_qty);
+                    });
+                }
+
+            },
+
+        });
+    });
+    $("#itm_color").blur(function () {
+        debugger
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_style = $('#Itmdtl').val();
+        var p_str_color = $('#itm_color').val();
+        var p_str_size = $('#itm_size').val();
+        var p_str_Itmcode = $('#itm_code').val();
+
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/LoadAvailQty")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size, "p_str_Itmcode": p_str_Itmcode
+            },
+
+            dataType: "json",
+            success: function (e) {
+                debugger
+                if (e == "Y") {
+                    debugger
+                    $("#length").val(0);
+                    $("#width").val(0);
+                    $("#height").val(0);
+                    $("#weight").val(0);
+                    $("#cube").val(0);
+                    $("#ppk").val(0);
+                    $('#itm_code').val("");
+                    //});
+                }
+                else {
+                    debugger
+                    $.each(e, function () {
+                        $("#length").val(this.length);
+                        $("#width").val(this.width);
+                        $("#height").val(this.depth);
+                        $("#weight").val(this.wgt);
+                        $("#cube").val(this.cube);
+                        $("#ppk").val(this.ctn_qty);
+                    });
+                }
+
+            },
+
+        });
+    });
+    $("#Itmdtl").blur(function () {
+        debugger
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_style = $('#Itmdtl').val();
+        var p_str_color = $('#itm_color').val();
+        var p_str_size = $('#itm_size').val();
+        var p_str_Itmcode = $('#itm_code').val();
+
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/LoadAvailQty")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size, "p_str_Itmcode": p_str_Itmcode
+            },
+
+            dataType: "json",
+            success: function (e) {
+                debugger
+                if (e == "Y") {
+
+
+                    debugger
+                    $("#length").val(0);
+                    $("#width").val(0);
+                    $("#height").val(0);
+                    $("#weight").val(0);
+                    $("#cube").val(0);
+                    $("#ppk").val(0);
+                    $('#itm_code').val("");
+                    //});
+                }
+                else {
+                    debugger
+                    $.each(e, function () {
+                        $("#length").val(this.length);
+                        $("#width").val(this.width);
+                        $("#height").val(this.depth);
+                        $("#weight").val(this.wgt);
+                        $("#cube").val(this.cube);
+                        $("#ppk").val(this.ctn_qty);
+                    });
+                }
+
+            },
+
+        });
+    });
+
+
+    $('#btncopydims').click(function () {
+        debugger
+        $('#doclength').val($('#length').val());
+        $("#docwidth").val($('#width').val());
+        $("#docheight").val($('#height').val());
+        $("#docweight").val($('#weight').val());
+        $("#doccube").val($('#cube').val());
+        $("#docuppk").val($('#ppk').val());
+        if (this.value == 'Infinity') {
+            $('#ctn_qty').val(0);
+        }
+        //document.querySelector("#docuppk").focus();
+        document.querySelector("#ord_qty").focus();
+    });
+    function updateFileName() {
+        $('#itm_name').val('');
+        $('#ord_qty').val('');
+        $('#ctn_qty').val('');
+        $('#docuppk').val('');
+        $('#doclength').val('');
+        $('#docwidth').val('');
+        $('#docheight').val('');
+        $('#docweight').val('');
+        $('#doccube').val('');
+        $('#length').val('');
+        $('#width').val('');
+        $('#height').val('');
+        $('#weight').val('');
+        $('#cube').val('');
+        $('#ppk').val('');
+        $('#qty_uom').val('');
+        $('#vendpo').val('');
+        $('#note').val('');
+        $('#cust_id').val('');
+        $('#Itmdtl').val('');
+        $('#itm_color').val('');
+        $('#itm_size').val('');
+        $('#itm_name').val('');
+        $('#length').val('');
+        $('#width').val('');
+        $('#height').val('');
+        $('#weight').val('');
+        $('#ppk').val('');
+        var img1 = document.getElementById('img1');
+        var file_name = document.getElementById('file_name');
+        var fileNameIndex = img1.value.lastIndexOf("\\");
+        file_name.value = img1.value.substring(fileNameIndex + 1);
+    }
+    $("#itmstyle").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "/InboundInquiry/ItemXGetitmDtl",
+                dataType: "json",
+                data: {
+                    term: request.term,
+                    cmp_id: $("#p_str_cmp_id").val()
+                    //,
+                    //Division: $("#Lstdivisiondetail").val(),
+                    //CUSTID: $("#Comment").val()
+                },
+                success: function (data) {
+
+                    response(data);
+                }
+            });
+        },
+        min_length: 1,
+        delay: 300
+    });
+
+</script>
+<script type="text/javascript">
+    var p_str_ib_doc_id = $('#new_ib_doc_id').val();
+    function Check() {
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var chkPassport = document.getElementById("chkPassport");
+        if (chkPassport.checked) {
+            //alert("CheckBox checked.");//Getcheckedvalue
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/Getcheckedvalue")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        //$("#avlqty").val(this.avail_qty);
+                        // alert(this.ct_value)
+                        $("#new_ib_doc_id").val(this.ct_value);
+                    });
+                },
+
+            });
+        } else {
+
+
+            swal({
+                title: "",
+                text: "Do you want to Cancel the RMA Id?",
+                type: "",
+                showCancelButton: true,
+                closeOnConfirm: true,
+            },
+            function () {
+                $('#new_ib_doc_id').val(p_str_ib_doc_id);
+                $("#chkPassport").attr("disabled", "disabled");
+            });
+
+
+
+        }
+    }
+
+    $(document).ready(function () {
+        $('.VLDTITMFILD').keyup(function () {
+            $(this).val($(this).val().toUpperCase());
+        });
+    });
+    $('.NotaloowedSplchar').on('keypress', function (event) {
+        var regex = new RegExp("^[ A-Za-z0-9_/&,-.]*$");
+        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+        if (!regex.test(key)) {
+            event.preventDefault();
+            return false;
+        }
+    });
+    //CR 03-29-2018-001 added by Nithya
+    $("#docbtnClose").click(function () {
+        var p_str_cmp_id = $("#g_str_tmp_cmp_id").val();
+        var p_str_doc_id = $("#new_ib_doc_id").val();
+        var p_str_screentitle = $('#screentitle').val();
+        debugger
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+                       debugger
+                       $('#myModalAdd').modal('hide');
+                       $.ajax({
+                           type: "get",
+                           url: "/inboundinquiry/inboundinquirydtl",
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_ibdocid": p_str_doc_id
+                           },
+                           datatype: 'html',
+                           success: function (e) {
+                               debugger
+                               $("#ajaxloading").hide();
+                               $('#showgrid').html("");
+                               $('#showgrid').html(e);
+                           },
+                       })
+
+                       @*var url = '@Url.Action("InboundInquiry", "InboundInquiryDtl")';
+                                 url += '?cmp=' + p_str_cmp_id;
+                                 url += '&screentitle' + p_str_screentitle;
+                                 window.location.href = url;*@
+                   }
+               });
+    });
+
+
+</script>
+@*<script type="text/javascript">
+    $(function () {
+        $('#new_cont_id').focusout(function () {
+            debugger
+            var p_str_cmp_id = $('#new_cmp_id').val();
+            var p_str_cntr_id = $('#new_cont_id').val();
+
+            if ((p_str_cntr_id != "") || (p_str_cntr_id != "-"))
+            {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InboundInquiry/CheckExistContainerIDS")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id
+                    },
+
+                    dataType: "json",
+                    success: function (e) {
+                        if (e == "True") {
+                            sweetAlert("", "Container Id Already Exist", "");
+                            $('#new_cont_id').val('');
+                            $('#new_cont_id').focus();
+                          
+                            return false;
+                        }
+                        else {
+
+                            $('#new_eta_dt').focus();
+                        }
+                    },
+
+                });
+
+            }
+            else {
+                return false;
+            }
+
+
+        });
+    });
+</script>*@
+<script type="text/javascript">
+
+    $("#Itmdtl").autocomplete({
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/InboundInquiry/ItemXGetitmDtl?cmp_id=" + $('#new_cmp_id').val() + "&",
+        select: function (event, ui) {
+
+            $("#itm_color").val(ui.item.itm_color);
+            $("#itm_size").val(ui.item.itm_size);
+            $("#itm_name").val(ui.item.itm_name);
+            $("#itm_code").val(ui.item.itm_code);
+
+            closeOnSelect: false
+        }
+
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+<script type="text/javascript">
+    $(".DocEntryDelDetail").click(function () {
+        debugger
+        var $buttonClicked = $(this);
+        var P_Str_CmpId = $buttonClicked.attr('data-id');
+        var P_Str_IbdocId = $buttonClicked.attr('data-id1');
+        var P_Str_LineNum = $buttonClicked.attr('data-id2');
+        var P_Str_ItmCode = $buttonClicked.attr('data-id3');
+        var P_str_DocEntry_Id = $buttonClicked.attr('data-id4');
+        $("#ajaxLoading").show();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/DocEntryDeleteGridData")',
+            data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId, "P_Str_LineNum": P_Str_LineNum, "P_Str_ItmCode": P_Str_ItmCode, "P_str_DocEntry_Id": P_str_DocEntry_Id },
+
+            datatype: "html",
+            success: function (e) {
+                $("#ajaxLoading").hide();
+                $('#GridDocEntry').html("");
+                $('#GridDocEntry').html(e);
+                debugger
+
+                sweetAlert("", "Item Deleted Successfully", "");
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InboundInquiry/DocEntryCount")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId },
+                    datatype: "json",
+                    success: function (e) {
+                        debugger
+                        var rowCount = e;
+                        $('#LineNum').val((rowCount * 1) + 1);
+                    },
+                });
+
+                //var rowCount = $("#    td").closest("tr").length;
+                //alert(rowCount)
+                //var val = $('#LineNum').val();
+
+
+
+            },
+            error: function () {
+                $("#ajaxLoading").hide();
+
+                //alert("Dynamic content load failed.");
+                sweetAlert("", "Dynamic content load failed.", "");
+            }
+        });
+    });
+    $(".DocEntryEditDetail").click(function () {
+        debugger
+        $("#ajaxLoading").show();
+
+        var $buttonClicked = $(this);
+        var P_Str_CmpId = $buttonClicked.attr('data-id');
+        var P_Str_IbdocId = $buttonClicked.attr('data-id1');
+        var P_Str_LineNum = $buttonClicked.attr('data-id2');
+        var P_Str_ItmCode = $buttonClicked.attr('data-id3');
+        var P_str_DocEntry_Id = $buttonClicked.attr('data-id4');
+        var P_Str_style = $buttonClicked.attr('data-id5');
+        var P_Str_Color = $buttonClicked.attr('data-id6');
+        var P_str_Size = $buttonClicked.attr('data-id7');
+        var l_bool_is_in_edit = $('#l_bool_edit_flag').val();
+        if (l_bool_is_in_edit == "true") {
+            sweetAlert("", "Already a Line is Selected for Mod, Pls. Include Before Edit.", "");//CR_MVC_3PL_0317-001 Added By Nithya
+            return false;
+        }
+        //$(this).closest('tr').remove();
+
+        $('#GridDocuEntry tr').each(function () {
+            var tdVal = $(this).find("td:first").text();
+            if (tdVal == P_Str_LineNum)
+                $(this).hide();
+        });
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/DocEntryEditDisplayGridToTextbox")',
+            contentType: "application/json; charset=utf-8",
+            data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId, "P_Str_LineNum": P_Str_LineNum, "P_Str_ItmCode": P_Str_ItmCode, "P_str_DocEntry_Id": P_str_DocEntry_Id },
+            datatype: "json",
+            success: function (e) {
+                $.each(e, function () {
+                    debugger
+                
+                    $("#Itmdtl").val(this.itm_num);
+                    $("#itm_color").val(this.itm_color);
+                    $("#itm_size").val(this.itm_size);
+                    $("#itm_name").val(this.itm_name);
+                    $("#ord_qty").val(this.ordr_qty);
+                    $("#ctn_qty").val(this.ctns);
+                    $("#LineNum").val(this.line_num);
+                    $("#note").val(this.note);
+                    $("#length").val(this.length);
+                    $("#width").val(this.width);
+                    $("#height").val(this.depth);
+                    $("#weight").val(this.wgt);
+                    $("#cube").val(this.cube);
+                    $("#docuppk").val(this.ppk);
+                    $("#ppk").val(this.ppk);
+                    $("#doclength").val(this.length);
+                    $("#docwidth").val(this.width);
+                    $("#docheight").val(this.height);
+                    $("#docweight").val(this.weight);
+                    $("#doccube").val(this.cube);
+                    $("#strg_rate").val(this.strg_rate);
+                    $("#inout_rate").val(this.inout_rate);
+                    $("#itm_code").val(this.itm_code);
+                    $("#loc_id").val(this.loc_id);
+                    $("#add_po_num").val(this.po_num);
+                    $("#add_factory_id").val(this.factory_id);
+                    $("#add_cust_name").val(this.cust_name);
+                    $("#add_cust_po_num").val(this.cust_po_num);
+                    $("#add_pick_list").val(this.pick_list);
+
+                    $("#ctn_line").val(this.ctn_line);
+
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_style = $('#Itmdtl').val();
+                    var p_str_color = $('#itm_color').val();
+                    var p_str_size = $('#itm_size').val();
+                    var p_str_Itmcode = $('#itm_code').val();
+
+                    $("#ajaxLoading").hide();
+
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/LoadAvailQty")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size, "p_str_Itmcode": p_str_Itmcode
+                        },
+
+                        dataType: "json",
+                        success: function (e) {
+                         
+
+                            $.each(e, function () {
+                                //$("#avlqty").val(this.avail_qty);
+                                $("#length").val(this.length);
+                                $("#width").val(this.width);
+                                $("#height").val(this.depth);
+                                $("#weight").val(this.wgt);
+                                $("#cube").val(this.cube);
+                                $("#ppk").val(this.ctn_qty);
+                                $("#l_bool_edit_flag").val('true');//CR_MVC_3PL_0317-001 Added By Nithya
+                            });
+                        },
+
+                    });
+                });
+            },
+        });
+    });
+    $("#btnDocEditSave").click(function () {
+        debugger
+        var l_str_Edit_flag = $('#l_bool_edit_flag').val();
+        if (l_str_Edit_flag == "true") {
+            sweetAlert("", "Already an Item is Selected for Edit, Pls. Include Before Save.", "");//CR_MVC_3PL_0317-001 Added By Nithya
+            return false;
+        }
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_ibdocid = $('#new_ib_doc_id').val();
+        var p_str_ibdocdt = $('#new_ib_doc_dt').val();
+        var p_str_status = $('#new_status').val();
+        var p_str_cont_id = $('#new_cont_id').val();
+        var p_str_eta_dt = $('#new_eta_dt').val();
+        var p_str_refno = $('#new_refno').val();
+        var p_str_ordrdt = $('#new_orderdt').val();
+        var p_str_rcvdvia = $('#new_recvdvia').val();
+        var p_str_rcvdfm = $('#new_recvd_fm').val();
+        var p_str_bol = $('#new_bol').val();
+        var p_str_vessel_num = $('#new_vessel_num').val();
+        var p_str_note = $('#hdr_note').val();
+
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (p_str_ibdocid == "") {
+            sweetAlert("", "Please Enter Doc Id", "");
+            $('#new_ib_doc_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $("#ajaxLoading").show();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/SaveDocEntryEdit")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_ibdocid": p_str_ibdocid,
+                    "p_str_ibdocdt": p_str_ibdocdt,
+                    "p_str_status": p_str_status, "p_str_cont_id": p_str_cont_id, "p_str_eta_dt": p_str_eta_dt, "p_str_refno": p_str_refno,
+                    "p_str_ordrdt": p_str_ordrdt, "p_str_rcvdvia": p_str_rcvdvia, "p_str_rcvdfm": p_str_rcvdfm, "p_str_bol": p_str_bol
+                    , "p_str_vessel_num": p_str_vessel_num, "p_str_note": p_str_note
+                },
+                dataType: 'html',
+
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+
+                    //if (e != null) {
+                    if (e == "true") {
+                        swal({
+                            title: "",
+                            text: "Your Record " + p_str_ibdocid + "Added successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                            function () {
+                                var p_str_ib_doc_id = $('#new_ib_doc_id').val();
+                                var p_str_cmpid = $('#new_cmp_id').val();
+                                var p_str_datefrom = $('#DocumentdateFrom').val(); //CR 2202018_01 Added by murugan
+                                var p_str_dateto = $('#DocumentdateTo').val();     //CR 2202018_01 Added by murugan
+                                var p_str_doc_cmp_id = $('#cmp_id').val(); //CR-3PL_MVC_IB_2018_0410_001 Added By Nithya
+                                var type = "PDF";
+                                var p_str_radio = "WorkSheet";
+                                var SelectdID = p_str_ib_doc_id;
+                                var p_str_screentitle = $('#screentitle').val();
+                                window.open('ShowReport?SelectdID=' + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID);
+
+                                $('#myModalEdit').modal('hide');
+                                $.ajax({
+                                    type: "get",
+                                    url: "/inboundinquiry/inboundinquirydtl",
+                                    data: {
+                                        "p_str_cmp_id": p_str_doc_cmp_id,
+                                        "p_str_ibdocid": SelectdID
+                                    },
+                                    datatype: 'html',
+                                    success: function (e) {
+                                        debugger
+                                        $("#ajaxloading").hide();
+                                        $('#showgrid').html("");
+                                        $('#showgrid').html(e);
+                                    },
+                                })
+
+                            });
+
+
+                    }
+                    else if (e == "false") {
+                        sweetAlert("", "No Document details Added.", "");
+                        $('#itmdtl').focus();
+                    }
+                },
+
+            })
+        }
+    });
+    $("#btnEditClose").click(function () {
+        var p_str_cmp_id = $("#g_str_tmp_cmp_id").val();
+        var p_str_doc_id = $("#new_ib_doc_id").val();
+        var p_str_screentitle = $('#screentitle').val();
+        debugger
+
+
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+
+               function (isConfirm) {
+                   debugger
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+                       debugger
+                       $('#myModalEdit').modal('hide');
+                       $.ajax({
+                           type: "get",
+                           url: "/inboundinquiry/inboundinquirydtl",
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_ibdocid": p_str_doc_id
+                           },
+                           datatype: 'html',
+                           success: function (e) {
+                               debugger
+                               $("#ajaxloading").hide();
+                               $('#showgrid').html("");
+                               $('#showgrid').html(e);
+                               $('#l_bool_edit_flag').val('false');
+                           },
+                       })
+                   }
+               });
+    });
+</script>
+<script type="text/javascript">
+    $("#loc_id").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/inboundinquiry/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#loc_id").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+<script>
+    $("#btnid1").click(function()
+    {
+        $('#new_cont_id').focus();
+
+    })
+    $("#btnid2").click(function()
+    {
+        $('#Itmdtl').focus();
+    })
+    $("#btnNext").click(function()
+    {
+        $('#Itmdtl').focus();
+
+    })
+</script>

@@ -1,0 +1,672 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InvStkAdjModel
+@{
+   
+    int lintSplitCount = 0;
+    int lintTotLines = Model.ListInvStkAdjDetail.Count;
+}
+
+<style type="text/css">
+    div#ajaxLoadingMerge {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+    </style>
+<br />
+<div class="gridMergeSummary">
+
+    <table>
+        <tr>
+            <td colspan="6"><br /></td>
+        </tr>
+        <tr>
+            <td style="width:10%;text-align:right;">
+                <label style="color:#116b42;font-weight: bold;font-size: 1.5em;">Selected Qty &nbsp; </label>
+                @*<span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                   Selected Qty
+                </span>*@
+            </td>
+            <td style="width:10%;text-align:left;">
+                @Html.TextBoxFor(model => model.objInvMergeLoad.sel_qty, new { @id = "ivm_sel_qty", @class = "numericOnly", @maxlength = "10", @disabled = "true", @style = "width:100px;font-size: 12px; font-family: verdana;" })
+            </td>
+
+            <td style="width:10%;text-align:right;">
+                <label style="color:#116b42;font-weight: bold;font-size: 1.5em;">Merge PPK &nbsp; </label>
+            </td>
+
+            <td style="width:10%;text-align:left;">
+                @Html.TextBoxFor(model => model.objInvMergeLoad.merge_ppk, new { @id = "ivm_merge_ppk", @class = "MergeField numericOnly", @maxlength = "6", @style = "width:70px;font-size: 12px; font-family: verdana;" })
+            </td>
+
+            <td style="width:10%;text-align:right;">
+                <label style="color:#116b42;font-weight: bold;font-size: 1.5em;">Merge Ctn(s) &nbsp; </label>
+            </td>
+            <td style="width:10%;text-align:left;">
+                @Html.TextBoxFor(model => model.objInvMergeLoad.merge_ctns, new { @id = "ivm_merge_ctns", @class = " numericOnly", @maxlength = "6", @disabled = "true", @style = "width:80px;font-size: 12px; font-family: verdana;" })
+            </td>
+
+
+
+
+            @*<td style="width:7%;text-align:center;">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Merge Qty
+                </span>
+            </td>
+            <td style="width:8%;text-align:center;">
+                @Html.TextBoxFor(model => model.objInvMergeLoad.merge_qty, new { @id = "ivm_merge_qty", @maxlength = "8", @disabled = "true", @style = "font-size: 12px; font-family: verdana;" })
+            </td>*@
+        </tr>
+        <tr>
+            <td colspan="6"><br /></td>
+        </tr>
+        <tr>
+            <td colspan="6"><br /></td>
+        </tr>
+        <tr>
+            <td style="width:7%;text-align:right;">
+                <label style="color:#116b42;font-weight: bold;font-size: 1.5em;"> Move Location   &nbsp; </label>
+
+            </td>
+            <td style="width:8%;text-align:center;">
+                @Html.TextBoxFor(model => model.objInvMergeLoad.merge_loc_id, new { @id = "ivm_merge_loc_id", @maxlength = "10", @style = "font-size: 12px; font-family: verdana;" })
+            </td>
+
+             <td style="width:10%;text-align:right;">
+                 <label style="color:#116b42;font-weight: bold;font-size: 1.5em;"> Odd PPK   &nbsp; </label>
+
+            </td>
+            <td style="width:10%;text-align:left;">
+                @Html.TextBoxFor(model => model.objInvMergeLoad.merge_odd_ppk, new { @id = "ivm_merge_odd_ppk", @class = " numericOnly", @maxlength = "6", @disabled = "true", @style = "width:50px; font-size: 12px; font-family: verdana;" })
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6"><br /></td>
+        </tr>
+        <tr>
+
+
+            @*<td style="width:15%;text-align:center;">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Required Qty
+                </span>
+            </td>*@
+            @*<td style="width:15%;text-align:center;">
+                @Html.TextBoxFor(model => model.objInvMergeLoad.reqd_qty, new { @id = "ivm_reqd_qty", @class = "numericOnly", @maxlength = "6", @disabled = "true", @style = "font-size: 12px; font-family: verdana;" })
+            </td>*@
+
+
+
+
+            </tr>
+            <tr>
+                <td colspan="6"><br /></td>
+            </tr>
+            <tr>
+            <td  style="width:20%;text-align:right;">
+                <label style="color:#116b42;font-weight: bold;font-size: 1.5em;"> Merge Note    &nbsp; </label>
+
+
+            </td>
+            <td colspan="4" style="width:60%;text-align:center;">
+                @Html.TextBoxFor(model => model.objInvMergeLoad.merge_note, new { @id = "ivm_merge_note", @class = "form-control txtlbl ", @maxlength = "200", @style = "width:400px font-size: 12px; font-family: verdana;" })
+            </td>
+
+                <td style="width:20%;text-align:center;">
+                    <button type="button" id="cmdVerifyMerge" class="btn_search" style="width: 140px; margin-left: 1%;">Verify</button>
+                </td>
+
+                <td style="width:20%;text-align:center;">
+                    <button type="button" id="cmdSaveMerge" class="btn_search" style="width: 140px; margin-left: 1%;">Save</button>
+                </td>
+
+
+        </tr>
+    </table>
+</div>
+
+<br />
+
+<div id="ajaxLoadingMerge" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+<div class="row" id="divInvMergeModal">
+    <div class="col-xs-12">
+        <div class="col-xs-8" style="text-align: right;">
+            <label id="lblMrgCmnt" style="font-size:14px;color:orangered"></label>
+        </div>
+
+        <div class="col-xs-2" style="text-align: left;">
+            <label for="chkMergerd" style="font-size:14px;">
+                <input type="checkbox" id="chkMergerd" />
+            </label>
+
+        </div>
+    </div>
+</div>
+<div class="box box-primary">
+    <table id="InvMergeInq" class="table table-bordered table-striped" style="border:1px solid #121213 ;table-layout:fixed">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Sel</th>
+                <th style="display:none;"></th>
+                <th style="display:none;"></th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:13%;">Style</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Color</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:9%;">Size</th>
+                <th style="display:none;"></th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Lot#</th>
+                <th style="display:none;"></th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">PoNumber</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">LocID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Ctn</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">PPK</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Qty</th>
+                <th style="display:none;"></th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Merge Ctns(s)</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Bal Qty</th>
+            </tr>
+        </thead>
+
+        <tbody style="background-color:white">
+            @for (int i = 0; i < Model.ListInvStkAdjDetail.Count; i++)
+            {
+                int l_int_cur_row = i + 1;
+                <tr>
+                    <td id="tdChkMergeLine" grd_id ="@l_int_cur_row"
+                     grd_ivm_loc_id="@Model.ListInvStkAdjDetail[i].loc_id"  grd_ivm_lot_id="@Model.ListInvStkAdjDetail[i].loc_id" grd_ivm_itm_ppk="@Model.ListInvStkAdjDetail[i].itm_qty" grd_ivm_avail_ctn="@Model.ListInvStkAdjDetail[i].avail_ctn" style="text-align:center">
+                        <input class="checkbox" id="chkMergeLine_@i" name="tblcheckboxItemCode" type="checkbox" />
+                    </td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].whs_id, new { @id = "ivm_whs_id_" + i, @rowId = @l_int_cur_row })</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].itm_code, new { @id = "ivm_itm_code_" + i, @rowId = @l_int_cur_row })</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].itm_num, new { @id = "ivm_itm_num_" + i, @disabled = "true", @style = "width:150px;text-align:left;background-color:lightyellow;" })</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].itm_color, new { @id = "ivm_itm_color_" + i, @disabled = "true", @style = "width:120px;text-align:left;background-color:lightyellow;" })</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].itm_size, new { @id = "ivm_itm_size_" + i, @disabled = "true", @style = "width:120px;text-align:left;background-color:lightyellow;" })</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].ib_doc_id, new { @id = "ivm_ib_doc_id_" + i, @rowId = @l_int_cur_row })</td>
+                    <td style="font-size:12px;color:black; font-weight:bold; font-family: verdana;">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].lot_id, new { @id = "ivm_lot_id_" + i, @disabled = "true", @style = "width:110px;text-align:left;background-color:lightyellow;" })</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;display:none; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].palet_id, new { @id = "ivm_palet_id_" + i, @rowId = @l_int_cur_row })</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].po_num, new { @id = "ivm_po_num_" + i, @disabled = "true", @style = "width:150px;text-align:left;background-color:lightyellow;" })</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].loc_id, new { @id = "ivm_loc_id_" + i, @disabled = "true", @style = "width:120px;text-align:left;background-color:lightyellow;" })</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].avail_ctn, new { @id = "tot_line_ctns_" + i, @disabled = "true", @style = "width:100px;text-align:right;background-color:lightyellow;" })</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].itm_qty, new { @id = "ivm_itm_qty_" + i, @disabled = "true", @style = "width:80px;text-align:right;background-color:white;" })</td>
+                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListInvStkAdjDetail[i].avail_qty</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].merge_ctns, new { @id = "prev_merge_ctns_" + i, @rowId = @l_int_cur_row })</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].merge_ctns, new { @class = "merge_ctns numericOnly", @id = "merge_ctns_" + i, @style = "width:100px;text-align:right;background-color:lightyellow;", @rowId = @l_int_cur_row })</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListInvStkAdjDetail[i].avail_qty, new { @id = "bal_qty_" + i, @style = "width:100px;text-align:right;background-color:lightyellow;", @rowId = @l_int_cur_row })</td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@Html.Hidden("lintSplitCount", lintSplitCount)
+@Html.Hidden("lintTotLines", lintTotLines)
+
+
+
+<script type="text/javascript">
+
+    $('#InvMergeInq td[id="tdChkMergeLine"]').click(function (event) {
+        debugger;
+        var lstrRowId = $(this).attr('grd_id');
+        var lintCurRow = lstrRowId - 1;
+        var lintMergeLine = "chkMergeLine_" + lintCurRow
+        var lblnLineSelected = document.getElementById(lintMergeLine).checked;
+        var lintCtns = $("#tot_line_ctns_" + lintCurRow).val();
+        var lintPPk = $("#ivm_itm_qty_" + lintCurRow).val();
+
+        var p_int_sel_merge_qty = $('#ivm_sel_qty').val();
+        var lintPrevMergeCtns = $("#prev_merge_ctns_" + lintCurRow).val();
+
+        var lintLineQty = parseInt(lintCtns) * parseInt(lintPPk);
+
+
+        if (lblnLineSelected)
+        {
+            p_int_sel_merge_qty = parseInt(p_int_sel_merge_qty) + ((parseInt(lintCtns) - parseInt(lintPrevMergeCtns)) * parseInt(lintPPk));
+            $("#ivm_sel_qty").val(p_int_sel_merge_qty);
+            $("#prev_merge_ctns_" + lintCurRow).val(lintCtns);
+            $("#merge_ctns_" + lintCurRow).val(lintCtns);
+            $("#bal_qty_" + lintCurRow).val('0');
+
+        }
+        else
+        {
+            p_int_sel_merge_qty = parseInt(p_int_sel_merge_qty) - (parseInt(lintPrevMergeCtns) * parseInt(lintPPk));
+            $("#ivm_sel_qty").val(p_int_sel_merge_qty);
+            $("#prev_merge_ctns_" + lintCurRow).val('0');
+            $("#merge_ctns_" + lintCurRow).val('0');
+            $("#bal_qty_" + lintCurRow).val(lintLineQty);
+        }
+
+        var lintMergePPK = $("#ivm_merge_ppk").val();
+        var lintMergeQty = $("#ivm_sel_qty").val();
+
+        if ((lintMergePPK == '') || (lintMergePPK == '0') || (lintMergeQty == '') || (lintMergeQty == '0')) {
+            $("#ivm_merge_ctns").val('0')
+            $("#ivm_merge_odd_ppk").val('0')
+        }
+        else {
+
+            var lintTotMergeCtns = Math.floor(parseInt(lintMergeQty) / parseInt(lintMergePPK));
+            var lintOddPPK = parseInt(lintMergeQty) % parseInt(lintMergePPK);
+            $("#ivm_merge_ctns").val(lintTotMergeCtns);
+            $("#ivm_merge_odd_ppk").val(lintOddPPK);
+
+        }
+    });
+</script>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+    $("#example1").DataTable();
+
+
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+<script type="text/javascript">
+    $("#ivm_merge_loc_id").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/InvStkAdj/ItemXGetLocDtl?cmp_id=" + $('#mrg_cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#ivm_merge_loc_id").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+    </script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        document.getElementById("cmdSaveMerge").setAttribute("hidden", "");
+        document.getElementById("divInvMergeModal").setAttribute("hidden", "");
+        $("#divInvMergeModal").attr('disabled', 'disabled');
+        $('#ivm_sel_qty').val('0');
+        $('#ivm_reqd_qty').val('0');
+
+    });
+
+    $("#cmdSaveMerge").click(function () {
+        debugger
+
+        var p_str_cmp_id = $("#mrg_cmp_id").val();
+        var p_int_merge_ppk = $('#ivm_merge_ppk').val();
+        var p_int_merge_ctns = $('#ivm_merge_ctns').val();
+        var p_int_merge_qty = parseInt(p_int_merge_ppk) * parseInt(p_int_merge_ctns);
+        var p_int_sel_merge_qty = $('#ivm_sel_qty').val();
+        var p_str_merge_loc_id = $('#ivm_merge_loc_id').val();
+        var p_str_merge_note = $('#ivm_merge_note').val();
+        var p_int_merge_odd_ppk = $('#ivm_merge_odd_ppk').val();
+        if (p_int_merge_odd_ppk == '')
+            p_int_merge_odd_ppk = '0';
+
+        if (p_str_merge_loc_id == '') {
+            swal("", "Merge Location can not be blank", "");
+            return false;
+        }
+        if (p_int_sel_merge_qty < 0) {
+            swal("", "Selected Qty is zero", "");
+            return false;
+        }
+        if (p_str_merge_note == '') {
+            swal("", " Please enter the Merge Notes ", "");
+            return false;
+        }
+
+
+        if ((p_int_merge_ppk <= 0) || (p_int_merge_ctns < 0)) {
+            swal("", "Merge Ctn(s) and Merge PPK can not be zero", "");
+            return false;
+        }
+        $("#cmdSaveMerge").attr('disabled', 'disabled');
+
+        var lintTotLines = $("#lintTotLines").val();
+        var l_int_line_num = '0';
+        var plstInvMergeCtns = new Array();
+        var p_str_itm_code = '';
+        var p_str_itm_num = '';
+        var p_str_itm_color = '';
+        var p_str_itm_size = '';
+
+        for (var i = 0; i < lintTotLines; i++) {
+            debugger
+            var l_int_merge_ctns = $("#merge_ctns_" + i).val();
+
+            if (l_int_merge_ctns != 0) {
+                l_int_line_num = parseInt(l_int_line_num) + 1;
+                var p_str_whs_id = $("#ivm_whs_id_" + i).val();
+                p_str_itm_code = $("#ivm_itm_code_" + i).val();
+                p_str_itm_num = $("#ivm_itm_num_" + i).val();
+                p_str_itm_color = $("#ivm_itm_color_" + i).val();
+                p_str_itm_size = $("#ivm_itm_size_" + i).val();
+                var p_str_ib_doc_id = $("#ivm_ib_doc_id_" + i).val();
+                var p_str_lot_id = $("#ivm_lot_id_" + i).val();
+                var p_str_loc_id = $("#ivm_loc_id_" + i).val();
+                var p_str_po_num = $("#ivm_po_num_" + i).val();
+                var p_str_palet_id = $("#ivm_palet_id_" + i).val();
+                var p_int_itm_qty = $("#ivm_itm_qty_" + i).val();
+                var p_str_merge_ctns = $("#merge_ctns_" + i).val();
+
+
+                var aryMergeCtn = {};
+
+                aryMergeCtn.cmp_id = p_str_cmp_id;
+                aryMergeCtn.whs_id = p_str_whs_id;
+                aryMergeCtn.merge_doc_id = '';
+                aryMergeCtn.line_num = l_int_line_num;
+                aryMergeCtn.itm_code = p_str_itm_code;
+                aryMergeCtn.itm_num = p_str_itm_num;
+                aryMergeCtn.itm_color = p_str_itm_color;
+                aryMergeCtn.itm_size = p_str_itm_size;
+                aryMergeCtn.ib_doc_id = p_str_ib_doc_id;
+                aryMergeCtn.lot_id = p_str_lot_id;
+                aryMergeCtn.loc_id = p_str_loc_id;
+                aryMergeCtn.po_num = p_str_po_num;
+                aryMergeCtn.palet_id = p_str_palet_id;
+                aryMergeCtn.itm_qty = p_int_itm_qty;
+                aryMergeCtn.merge_ctns = p_str_merge_ctns;
+                plstInvMergeCtns.push(aryMergeCtn);
+            }
+        }
+
+        var ObjInvMergeHdr = {};
+
+        ObjInvMergeHdr.cmp_id = p_str_cmp_id;
+        ObjInvMergeHdr.itm_code = p_str_itm_code;
+        ObjInvMergeHdr.itm_num = p_str_itm_num;
+        ObjInvMergeHdr.itm_color = p_str_itm_color;
+        ObjInvMergeHdr.itm_size = p_str_itm_size;
+        ObjInvMergeHdr.merge_ctns = p_int_merge_ctns;
+        ObjInvMergeHdr.merge_ppk = p_int_merge_ppk;
+        ObjInvMergeHdr.merge_loc_id = p_str_merge_loc_id;
+        ObjInvMergeHdr.merge_note = p_str_merge_note;
+        ObjInvMergeHdr.merge_odd_ppk = p_int_merge_odd_ppk;
+        //var ObjInvMergeHdr = new Array();
+        //ObjInvMergeHdr.push(aryObjMergeHdr);
+
+        $("#ajaxLoadingMerge").show();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/InvStkAdj/SaveMergeCtns")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                "pstrCmpId": p_str_cmp_id,
+                "ObjInvMergeHdr": ObjInvMergeHdr,
+                "plstInvMergeCtns": plstInvMergeCtns
+
+            }),
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+                $("#ajaxLoadingMerge").hide();
+
+                if (e == 'false') {
+                    swal({
+                        title: "",
+                        text: "Merge Carton(s) Failed",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    });
+                }
+
+                else {
+                    debugger
+                    swal({
+                        title: "",
+                        text: "Merge Carton(s) Saved successfully.",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+
+                    function ()
+                    {
+
+                        var p_str_cmp_id = $('#mrg_cmp_id').val();
+                        var p_str_itm_num = $('#mrg_itm_num').val();
+                        var p_str_itm_color = $('#mrg_itm_color').val();
+                        var p_str_itm_size = $('#mrg_itm_size').val();
+                        var p_str_itm_name = $('#mrg_itm_name').val();
+                        var p_str_status = 'SEARCH_EXACT';
+                        var p_str_ib_doc_id = $('#mrg_ib_doc_id').val();
+                        var p_str_cont_id = $('#mrg_cont_id').val();
+                        var p_str_lot_id = $('#mrg_lot_id').val();
+                        var p_str_loc_id = $('#mrg_loc_id').val();
+                        var p_str_ref_no = $('#mrg_ref_no').val();
+                        var p_str_whs_id = $('#mrg_whs_id').val();
+                        var p_str_rcvd_from_dt = $('#mrg_rcvd_from_dt').val();
+                        var p_str_rcvd_to_dt = $('#mrg_rcvd_to_dt').val();
+                        var p_str_po_num = $('#mrg_po_num').val();
+
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Content("~/InvStkAdj/GeInvMergeGridDetails")',
+                            data: {
+                                "p_str_cmp_id": p_str_cmp_id,
+                                "p_str_itm_num": p_str_itm_num,
+                                "p_str_itm_color": p_str_itm_color,
+                                "p_str_itm_size": p_str_itm_size,
+                                "p_str_itm_name": p_str_itm_name,
+                                "p_str_status": p_str_status,
+                                "p_str_ib_doc_id": p_str_ib_doc_id,
+                                "p_str_cont_id": p_str_cont_id,
+                                "p_str_lot_id": p_str_lot_id,
+                                "p_str_loc_id": p_str_loc_id,
+                                "p_str_ref_no": p_str_ref_no,
+                                "p_str_whs_id": p_str_whs_id,
+                                "p_str_rcvd_from_dt": p_str_rcvd_from_dt,
+                                "p_str_rcvd_to_dt": p_str_rcvd_to_dt,
+                                "p_str_po_num": p_str_po_num
+                            },
+                            dataType: 'html',
+                            success: function (e) {
+                                $("#ajaxLoadingMerge").hide();
+                                $('#gridEmpty').hide();
+                                $('#grdInvMove').html("");
+                                $('#grdInvMove').html(e);
+                                $("#cmdSaveMerge").removeAttr('disabled');
+                            },
+
+                        })
+
+                    }
+                    );
+
+                }
+                $("#cmdSaveMerge").removeAttr('disabled');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoadingMerge").hide();
+                $("#cmdSaveMerge").removeAttr('disabled');
+            }
+        });
+
+
+
+    });
+
+    $(function () {
+        $("#cmdVerifyMerge").click(function ()
+        {
+            debugger;
+
+            document.getElementById("divInvMergeModal").setAttribute("hidden", "");
+            $("#divInvMergeModal").attr('disabled', 'disabled');
+
+            var p_int_merge_ppk = $('#ivm_merge_ppk').val();
+            var p_int_merge_ctns = $('#ivm_merge_ctns').val();
+            var p_int_sel_merge_qty = $('#ivm_sel_qty').val();
+            var p_str_merge_loc_id = $('#ivm_merge_loc_id').val();
+
+            var pintOddCtnPPK = $('#ivm_merge_odd_ppk').val();
+
+
+            var is_changed = 'N';
+            var l_str_data_change = '';
+
+            if (p_str_merge_loc_id == '') {
+                swal("", "Merge Location can not be blank", "");
+                return false;
+            }
+            if (p_int_sel_merge_qty < 0) {
+                swal("", "Selected Qty is zero", "");
+                return false;
+            }
+            if ((p_int_merge_ppk <= 0) || (p_int_merge_ctns < 0)) {
+                swal("", "Merge Ctn(s) and Merge PPK can not be zero", "");
+                return false;
+            }
+
+            //var p_int_tot_merge_qty = parseInt(p_int_merge_ppk)  * parseInt(p_int_merge_ctns) ;
+
+            if (parseInt(p_int_sel_merge_qty) < (parseInt(p_int_merge_ppk))) {
+                swal("", " Selected Qty is less than PPK", "");
+                return false;
+            }
+            else {
+                if (parseInt(pintOddCtnPPK) > 0)
+                {
+                    l_str_data_change = l_str_data_change.concat(' Merge PPK ', p_int_merge_ppk, ' ; Merge Ctn(s)  ', p_int_merge_ctns, '  ; 1 Odd Ctn with PPK - ', pintOddCtnPPK);
+                }
+                else
+                    {
+                    l_str_data_change = l_str_data_change.concat(' Merge PPK ', p_int_merge_ppk, ' ; Merge Ctn(s)  ', p_int_merge_ctns);
+                }
+                is_changed = 'Y';
+            }
+
+
+
+            if (is_changed == 'Y') {
+
+                document.getElementById("cmdSaveMerge").removeAttribute("hidden");
+                document.getElementById("divInvMergeModal").removeAttribute("hidden");
+                document.getElementById('lblMrgCmnt').innerHTML = l_str_data_change;
+            }
+            else {
+                swal("", "No change in Merge Ctn(s) ", "");
+                document.getElementById("btnVerifyAdj").setAttribute("hidden", "");
+            }
+
+        })
+    });
+
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+
+    $(".MergeField").focusout(function () {
+        debugger;
+
+        var lintMergePPK = $("#ivm_merge_ppk").val();
+        var lintMergeQty = $("#ivm_sel_qty").val();
+
+        if ((lintMergePPK == '') || (lintMergePPK == '0') || (lintMergeQty == '') || (lintMergeQty == '0'))
+        {
+            $("#ivm_merge_ctns").val('0')
+            $("#ivm_merge_odd_ppk").val('0')
+        }
+        else
+        {
+            var lintTotMergeCtns = Math.floor(parseInt(lintMergeQty) / parseInt(lintMergePPK));
+            var lintOddPPK = parseInt(lintMergeQty) % parseInt(lintMergePPK);
+            $("#ivm_merge_ctns").val(lintTotMergeCtns);
+            $("#ivm_merge_odd_ppk").val(lintOddPPK);
+
+        }
+    });
+
+    $(".merge_ctns").focusout(function () {
+
+        debugger
+        var lintMergeCtns = $(this).val();
+
+        var $curLine = $(this);
+        var lintRowId = $curLine.attr('rowId');
+        var lintCurRow = parseFloat(lintRowId) - 1;
+        var lintTotLineCtns = $("#tot_line_ctns_" + lintCurRow).val();
+        var lintPrevMergeCtns = $("#prev_merge_ctns_" + lintCurRow).val();
+
+        if (parseInt(lintMergeCtns) != parseInt(lintPrevMergeCtns)) {
+            if (parseInt(lintMergeCtns) > parseInt(lintTotLineCtns)) {
+                swal("", "Merge Ctn(s) can not be greater than Available Ctn(s)", "");
+                $("#merge_ctns_" + lintCurRow).val(lintPrevMergeCtns);
+                return false;
+            }
+            else {
+                var lintPPK = $("#ivm_itm_qty_" + lintCurRow).val();
+
+                var lintDiffQty = (parseInt(lintMergeCtns) - parseInt(lintPrevMergeCtns)) * parseInt(lintPPK);
+                //var lintTotMergeQty = $("#ivm_merge_qty").val();
+                var lintSelMergeQty = $("#ivm_sel_qty").val();
+                //var lintReqdMergeQty = $("#ivm_reqd_qty").val();
+                lintSelMergeQty = parseInt(lintSelMergeQty) + parseInt(lintDiffQty);
+                $("#ivm_sel_qty").val(lintSelMergeQty);
+
+
+                var lintMergePPK = $("#ivm_merge_ppk").val();
+                var lintMergeQty = $("#ivm_sel_qty").val();
+
+                if ((lintMergePPK == '') || (lintMergePPK == '0') || (lintMergeQty == '') || (lintMergeQty == '0')) {
+                    $("#ivm_merge_ctns").val('0')
+                    $("#ivm_merge_odd_ppk").val('0')
+                }
+                else {
+                    var lintTotMergeCtns = Math.floor(parseInt(lintMergeQty) / parseInt(lintMergePPK));
+                    var lintOddPPK = parseInt(lintMergeQty) % parseInt(lintMergePPK);
+                    $("#ivm_merge_ctns").val(lintTotMergeCtns);
+                    $("#ivm_merge_odd_ppk").val(lintOddPPK);
+
+                }
+                var lintBalQty = (parseInt(lintTotLineCtns) - parseInt(lintMergeCtns)) * parseInt(lintPPK);
+                $("#bal_qty_" + lintCurRow).val(lintBalQty);
+
+                $("#chkMergeLine_" + lintCurRow).prop('checked', true);
+                $("#prev_merge_ctns_" + lintCurRow).val(lintMergeCtns);
+
+
+                $("#lintIsCtnDtlChanged").val('1');
+
+            }
+        }
+    });
+
+
+</script>

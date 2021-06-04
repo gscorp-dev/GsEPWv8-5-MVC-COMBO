@@ -1,0 +1,369 @@
+﻿
+@model GsEPWv8_5_MVC.Model.CompanyMasterModel
+
+@{
+    ViewBag.Title = "CompanyMaster";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+      .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+        .ItemSummary
+    {
+    height: 49px;  
+    background: #d2d6de;
+    }
+         div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+@Html.HiddenFor(model => model.cmp_id)
+@using (Html.BeginForm("CompanyMaster", "CompanyMaster", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <a href="/DashBoardB2B/DashboardB2B" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                
+                    Company Master
+
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+            </div>
+        </div>
+        <div class="box box-default">
+            <div class="box-header">
+                <div class="container">
+                    <div style="width:47%;margin-top: 6px;">
+                        <center>
+
+                            <table>
+                                <tr>
+                                    <td style="text-align: right;padding-top: 5px;padding-right: 8px;">
+                                        <label><b class="Lblmanual">Comp ID </b></label>
+                                    </td>
+                                    <td style="width: 10%; padding-left: 1%;">
+                                        @Html.DropDownListFor(model => model.cust_of_cmpid, new SelectList(Model.ListCustofCompanyPickDtl, "cust_of_cmpid", "cust_of_cmpname"), new { @class = "form-control txtlbl", @style = "width:420px;" })
+                                    </td>                                                                                                     
+                                </tr>                       
+                            </table>
+                        </center>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-left: 620px;">
+                            <button type="button" id="btnCompanyinquiry" class="btn_search" style="margin-left: 20px;font-size: 13px;">Search </button>
+                            <button type="reset" id="btnClear" class="btn-Clear" style="font-size: 13px;">Clear </button>
+                            <button type="reset" id="btnCompanyNewEntry" class="btn-Clear" style="background-color:#5ae77e;width: 130px;font-size: 13px;">New Company</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="showgrid" class="box-header" style="padding:5px;">
+            <div class="box-body">
+                <div class="ItemSummary">
+                    <br />
+                    <table>
+                        <tr>
+                            <td style="width: 5%;"></td>
+                            <td style="width:22%;">
+                                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                    Total Records:
+                                </span>
+                                <label class="totalCount" style="text-align:left">
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br />
+                <table id="" class="table table-bordered table-striped">
+
+                    <thead class="grid_backcolor">
+                        <tr>                  
+                            <th class="grid_header_backcolor" style="width:15%">Comp Name</th>
+                            <th class="grid_header_backcolor" style="width:10%">Action</th>
+                            <th class="grid_header_backcolor" style="width:15%">Attn</th>
+                            <th class="grid_header_backcolor" style="width:5%">City</th>
+                            <th class="grid_header_backcolor" style="width:5%">State</th>
+                            <th class="grid_header_backcolor" style="width:10%">Email</th>
+                            <th class="grid_header_backcolor" style="width:20%">Remit_Attn</th>
+                            <th class="grid_header_backcolor" style="width:10%">Remit_City</th>
+                            <th class="grid_header_backcolor" style="width:5%">Remit_StateID</th>
+                            <th class="grid_header_backcolor" style="width:5%">Remit_CntryID</th>                                                                            
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:white">
+                        @for (int i = 0; i < Model.ListCmpDetails.Count; i++)
+                        {
+                            <tr id="@Model.ListCmpDetails[i].cust_of_cmp_id ">
+
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].cmp_name</td>
+                                @if (Model.is_company_user == "Y")
+                                {
+                                    <td>
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="lnk_Cmp_View" V_str_cust_of_cmp_id="@Model.ListCmpDetails[i].cust_of_cmp_id"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+                                        <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="lnk_Cmp_Edit" E_str_cust_of_cmp_id="@Model.ListCmpDetails[i].cust_of_cmp_id"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                        <a href="javascript:void(0);" style="text-decoration:underline;color: red;" class="lnk_Cmp_Delete" D_str_cust_of_cmp_id="@Model.ListCmpDetails[i].cust_of_cmp_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                    </td>
+
+
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].attn</td>
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].city</td>
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].state_id</td>
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].email</td>
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].remit_attn</td>
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].Remit_City</td>
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].remit_state_id</td>
+                                <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].remit_cntry_id</td>
+
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="showgrids" class="box-header" style="padding:5px; ">
+        </div>
+
+    </div>
+}
+
+<div id='CompanyAdd' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 176%;left: -290px; ">
+                <div id='CompanyContentAdd' style="width: 1050px;height:620px;"></div>
+
+            </div>
+        </center>
+    </div>
+</div>
+<div id='CompanyEdit' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 176%;left: -290px; ">
+                <div id='CompanyContentEdit' style="width: 1050px;height:620px;"></div>
+
+            </div>
+        </center>
+    </div>
+
+</div>
+<div id='CompanyDelete' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 176%;left: -290px; ">
+                <div id='CompanyContentDelete' style="width: 1050px;height:620px;"></div>
+
+            </div>
+        </center>
+    </div>
+
+</div>
+<div id='CompanyView' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 176%;left: -290px; ">
+                <div id='CompanyContentView' style="width: 1050px;height:620px;"></div>
+
+            </div>
+        </center>
+    </div>
+
+</div>
+
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        $("#tabs").tabs();
+    });
+    $(function () {
+        $("#companytabs").tabs();
+    });
+
+    $("#btnCompanyNewEntry").click(function () {
+        debugger;
+        var p_str_cmpid = $('#cust_of_cmpid').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#cust_of_cmpid').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/CompanyMaster/Company_MASTER_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id
+            },
+
+            dataType: "json",
+            success: function (e) {
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: '/CompanyMaster/CompanyAdd',
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmpid": p_str_cmpid },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#CompanyContentAdd').html(data);
+                $('#CompanyAdd').modal(options);
+                $('#CompanyAdd').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+    $("#btnCompanyinquiry").click(function () {
+        debugger
+        var p_str_cmp_id = $("#cust_of_cmpid").val();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cust_of_cmpid').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $("#cust_of_cmpid").val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/CompanyMaster/GetCompanyDetails")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#showgrid').html("");
+                    $('#showgrid').html(e);
+                },
+
+            })
+        }
+    });
+
+    $("#btnDashboard").click(function () {
+        debugger
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseB2B").click(function () {
+        debugger
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("DashboardB2B", "DashboardB2B")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+</script>

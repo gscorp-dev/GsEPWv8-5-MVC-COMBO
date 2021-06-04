@@ -1,0 +1,1573 @@
+﻿@model GsEPWv8_5_MVC.Model.VasInquiryModel
+@{
+    ViewBag.Title = "VasInquiry";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var Ordercount = Model.ListVasInquiry.Count;
+    decimal l_dec_tot_bill_amnt = 0;
+}
+@for (int j = 0; j < Model.ListVasInquiry.Count(); j++)
+{
+    var bill_amt = (Model.ListVasInquiry[j].TotAmount);
+    decimal l_dec_bill_amnt = bill_amt;
+    if (l_dec_bill_amnt > 0)
+    {
+        l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+    }
+}
+<style>
+
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legen {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+        /*border-bottom: 1px solid #e5e5e5;*/
+    }
+</style>
+
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width" />
+
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+@Html.HiddenFor(model => model.screentitle)
+
+@using (Html.BeginForm("VasInquiry", "VasInquiry", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                @if (Model.screentitle == "VasVisibility")
+                {
+                    <td style="width: 60%" class="ScreenTitle">
+                        VAS Visibility & Analysis
+                        <input type="hidden" id="screenTitle" value="IBVisibility" />
+                    </td>
+                }
+                else
+                {
+                    <td style="width: 60%" class="ScreenTitle">
+                         VAS Inquiry and Analysis
+                        <input type="hidden" id="screenTitle" value="IBInquiry" />
+                    </td>
+                }
+
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-8 col-sm-8 col-xs-8">
+                            <table style="width:100%;padding-top:5px;">
+                                <tr>
+                                    <td style="text-align: right;width: 8%">
+                                        <label><b class="Lblmanual">Cust Id </b></label>
+                                    </td>
+                                    <td style="width: 35%; padding-left: 1%;">
+                                      
+                                        @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                        {
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                        }
+                                    </td>
+                                    <td style="text-align: right;width: 8%;">
+                                        <label><b class="Lblmanual">VASID Fm</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.vas_id_fm, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </td>
+                                    <td style="text-align: right; width:2%;">
+                                        <label><b class="Lblmanual"> To</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.vas_id_to, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </td>
+                                    <td rowspan=1 style="width: 10%;"></td>
+                                    <td rowspan=4></td>
+                                </tr>
+                            </table>
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100%;padding-top:5px;">
+                                <tr>
+                                    <td style="text-align: right;width:8%;">
+                                        <label><b class="Lblmanual">VASDt Fm</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.vas_date_fm, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                    </td>
+                                    <td style="text-align: right; width:3%;">
+                                        <label><b class="Lblmanual"> To</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.vas_date_to, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                    </td>
+                                    <td style="text-align: right; width:6%;">
+                                        <label><b class="Lblmanual">SR No</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.so_num, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </td>
+                                    <td style="text-align: right;width:6%;">
+                                        <label><b class="Lblmanual">Status </b></label>
+                                    </td>
+                                    <td style="width: 10%; padding-left: 1%;">
+                                        @Html.DropDownListFor(model => model.Status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @class = "form-control txtlbl" })
+                                    </td>                                   
+                                    <td style="width:25%; text-align:left;padding-left:3%;">
+                                    <button type="button" id="btninquiry" class="btn_search">Search </button>
+                                    <button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                    </td>                                  
+                                </tr>
+                            </table>
+                        <div id="divRateSec">
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100%;padding-top:5px;">
+                                <tr>
+                                    <td style="text-align: right;width:8%;">
+                                        <label><b class="Lblmanual">RateId </b></label>
+                                    </td>
+                                    <td style="width: 22%; padding-left: 1%;">
+                                        @Html.DropDownListFor(model => model.vasRateId, new SelectList(Model.ListVasRateIdDetails, "rate_id", "rate_desc"), "---Select All---", new { @class = "form-control txtlbl" })
+                                    </td>
+                                    <td style="text-align: right;width:70%;"></td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+                        </div>
+
+                        <div class="col-md-1 col-sm-1 col-xs-1">
+                            <fieldset style="margin-left: -31%;">
+                                <legend>Form Action</legend>
+                                <table style="margin-top:0px;">
+                                    <tr>
+                                        @if (Model.is_company_user == "Y")
+                                        {
+                                            <td style="padding-right: 5px;"><button type="button" id="btnNewEntry" class="btn_NewEntry" style="margin-left: 1%;" onclick="">New VAS Entry </button></td>
+                                        }
+                                    </tr>
+                                </table>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                            <fieldset>
+                                <legend>Report Selection</legend>
+
+                                <table style="margin-top:0px;">
+                                    <tr>
+                                        <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="Vas Post Report" name="radio1" checked /><b> VAS Post Report</b></td>
+                                        <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Inquiry Report" name="radio1" /><b> VAS Summary Report</b></td>  @*CR_3PL_MVC_VAS_2018_0324_001  Modified by Soniya*@
+                                    </tr>
+
+                                    <tr>
+                                        <td style="padding-top: 10px; "></td>
+                                        <td></td>
+                                    </tr>
+
+
+
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                        </td>
+                                        <td>
+
+                                            <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                <option>PDF</option>
+                                                <option>XLS</option>
+                                                @*<option>DOC</option>
+                                                    <option>CSV</option>*@
+                                            </select>
+
+                                        </td>
+                                        <td>
+                                            <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                        </td>
+                                        <td>
+
+                                            <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                <option>VIEW</option>
+                                                @*<option>EXPORT</option>*@
+                                                <option>EMAIL</option>
+
+                                            </select>
+
+
+                                        </td>
+                                        <td>
+
+                                            <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="showgrid" class="box-header" style="padding: 5px; ">
+        <br />
+        <div class="gridSummary">
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:16%;text-align: right;">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            Total Records:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @Ordercount
+                        </label>
+                    </td>
+                    <td style="width:74%;padding-left: 3%;">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            TotalBill Amount:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @l_dec_tot_bill_amnt.ToString("0.00")
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr class="break" />
+        <div class="box-body">
+
+  
+
+
+
+            <table id="GridVasInqdtl" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+                <thead class="grid_backcolor ">
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:3%;">Sel</th>
+                        <th class="grid_header_backcolor" style="width:7%;">CustID</th>
+                        <th class="grid_header_backcolor" style="width:8%;">VASID</th>
+                        @if (Model.is_company_user == "Y")
+                {
+                            <th class="grid_header_backcolor" style="width:10%;">Action</th>
+                        }
+                        <th class="grid_header_backcolor" style="width:8%;">VASDate</th>
+                        <th class="grid_header_backcolor" style="width:8%;">SR#</th>
+                        <th class="grid_header_backcolor" style="width:7%;">Status</th>
+                        <th class="grid_header_backcolor" style="width:7%;">BillAmount</th>
+                        <th class="grid_header_backcolor" style="width:7%;">Vas Bill Status</th>
+                        <th class="grid_header_backcolor" style="width:35%;">Note</th>
+                        <th class="grid_header_backcolor" style="display:none;">BatchID</th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:white">
+                    @for (int i = 0; i < Model.ListVasInquiry.Count; i++)
+                    {
+
+                        var BillAmt = (Model.ListVasInquiry[i].TotAmount);
+                        var l_dec_BillAmt = BillAmt.ToString("F2");
+                        var l_str_staus = @Model.ListVasInquiry[i].Status.Trim();
+                        var l_str_vas_bill_status = (@Model.ListVasInquiry[i].vas_bill_status == null || @Model.ListVasInquiry[i].vas_bill_status == "") ? string.Empty : @Model.ListVasInquiry[i].vas_bill_status.Trim();
+                        <tr id="@Model.ListVasInquiry[i].VasID ">
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" data-id2="@Model.ListVasInquiry[i].Status" name="tblcheckbox" type="checkbox" value="@Model.ListVasInquiry[i].VasID" /></td>
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListVasInquiry[i].Cust_ID</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="VasDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.ListVasInquiry[i].VasID">@Model.ListVasInquiry[i].VasID</a></td>
+                            @if (Model.is_company_user == "Y")
+                            {
+                                <td>
+                                    @if (@l_str_staus == "P")
+                                    {
+                                        <a></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="VasEdit" data-id="@Model.ListVasInquiry[i].VasID" data-id1="@Model.ListVasInquiry[i].Cust_ID" data-id2="@Model.ListVasInquiry[i].Status" data-id3="@Model.ListVasInquiry[i].whs_id"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (@l_str_staus == "P")
+                                    {
+                                        <a></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="VasDelete" data-id="@Model.ListVasInquiry[i].VasID" data-id1="@Model.ListVasInquiry[i].vas_bill_status"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+
+                                    }
+                                </td>
+                                    <td>
+                                        @if (@l_str_staus == "O")
+                                        {
+
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasPost" data-id="@Model.ListVasInquiry[i].VasID"><span style="font-size: 18px;"></span><b>Post</b></a>
+
+                                        }
+                                        else if (@l_str_staus == "P")
+                                        {
+
+                                            <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasUnPost" data-id="@Model.ListVasInquiry[i].VasID"><span style="font-size: 18px;"></span><b>Unpost</b></a>
+
+                                        }
+                                        else
+                                        {
+                                            <a></a>
+                                        }
+                                    </td>
+                            }
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListVasInquiry[i].VasDate</td>
+
+                            <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="VasSRDetail" style="text-decoration:underline; color:#034af3;" data-id1="@Model.ListVasInquiry[i].quote_num" data-id="@Model.ListVasInquiry[i].so_num">@Model.ListVasInquiry[i].so_num</a></td>
+                            @*<td style="font-size:12px; color:black; font-weight:bold;">@Model.ListVasInquiry[i].Status</td>*@
+                            @if (@Model.ListVasInquiry[i].Status.Trim() == "O")
+                            {
+                                <td style="font-size:12px; color:black; font-weight:bold;">OPEN</td>
+                            }
+                            else if (@Model.ListVasInquiry[i].Status.Trim() == "P")
+                            {
+                                <td style="font-size:12px; color:black; font-weight:bold;">POST</td>
+                            }
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@l_dec_BillAmt</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left;">
+                                @if (@l_str_vas_bill_status == "BILL")
+                                {
+
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasBillStatus" data-id="@Model.ListVasInquiry[i].cmp_id" data-id1="@Model.ListVasInquiry[i].VasID" data-id2="@Model.ListVasInquiry[i].VasDate"><span style="font-size: 18px;"></span><b>@Model.ListVasInquiry[i].vas_bill_status</b></a>
+
+                                }
+                                else if (@l_str_vas_bill_status == "TEMP")
+                                {
+
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasBillStatusInq" data-id3= "@Model.ListVasInquiry[i].bill_doc_id" data-id="@Model.ListVasInquiry[i].cmp_id" data-id1="@Model.ListVasInquiry[i].VasID" data-id2="@Model.ListVasInquiry[i].VasDate"><span style="font-size: 18px;"></span><b>@Model.ListVasInquiry[i].bill_doc_id</b></a>
+
+                                }
+                                else if (@l_str_vas_bill_status == "")
+                                {
+                                    <a></a>
+                                }
+                            </td>
+                            @*<td style="font-size:12px; color:black; font-weight:bold; text-align :left;">
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="VasBillStatus" data-id="@Model.ListVasInquiry[i].cmp_id" data-id1="@Model.ListVasInquiry[i].VasID" data-id2="@Model.ListVasInquiry[i].VasDate"><span style="font-size: 18px;"></span><b>@Model.ListVasInquiry[i].vas_bill_status</b></a>
+                                </td>*@
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListVasInquiry[i].Note</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right;display:none;">@Model.ListVasInquiry[i].quote_num</td>
+                        
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div id='myModalAdd' class='modal'>
+        <div class="modal-dialog">
+            <center>
+                <div class="modal-content" style="width: 187%;left:-183px;">
+                    <div id='myModalContentAdd' style="width: 1050px;height:3000px;"></div>
+                </div>
+            </center>
+        </div>
+
+    </div>
+
+    <div id='VasModal' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 198%; left:-160px;">
+                <div id='myVASContent' style="width: 100%; height: 650px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div id='VasSRModal' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 220%; left:-160px;">
+                <div id='myVASSRContent' style="width: 100%; height: 650px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id='myModalEmail' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 198%; left:-160px;">
+                <div id='myModalEmailContent' style="width: 100%; height: 700px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div id='myModalEdit' class='modal'>
+        <div class="modal-dialog">
+            <center>
+                <div class="modal-content" style="width: 200%;left:-280px; ">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">Vas Edit</h3></center>
+                        <button type="button" id="btnCancel" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 40px;background-color: #ef8f00">Cancel</button>
+                        <button type="button" id="btnUpdateVas" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 4px;background-color: #00c0ef;">Save</button>
+                    </div>
+                    <div id='myModalContentEdit' style="width: 1136px;height:3000px;"></div>
+                </div>
+            </center>
+        </div>
+    </div>
+
+    <div id='myModalDel' class='modal'>
+        <div class="modal-dialog">
+            <center>
+                <div class="modal-content" style="width: 200%;left: -280px; ">
+                    <div id='myModalContentDel' style="width: 1136px;height: 855px;"></div>
+                </div>
+            </center>
+        </div>
+    </div>
+    <div id='myModalVasBill' class='modal'>
+        <div class="modal-dialog">
+            <center>
+                <div class="modal-content" style="width: 218%; ">
+
+                    <div id='myModalContentVasBill' style="width: 1140px;height: 655px;"></div>
+
+                </div>
+            </center>
+        </div>
+
+    </div>
+
+    <div id='myModalVASDocUpload' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 220%; left:-365px;">
+                <div id='myModalVASDocUploadContent' style="width: 100%; height: 650px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+@*<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>*@
+<script src="~/Scripts/sweetalert.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript">
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackURL = '/VasInquiry/VasDetail';
+
+    $(function () {
+        $(".VasDetail").click(function () {
+            var $buttonClicked = $(this);
+            var VasId = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "VasId": VasId, "cmp_id": cmp_id },
+                datatype: "json",
+                success: function (data) {
+                    $('#myVASContent').html(data);
+                    $('#VasModal').modal(options);
+                    $('#VasModal').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    //alert("Dynamic content load failed.");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackEditURL = '/VasInquiry/Edit';
+    $(function () {
+        $(".VasEdit").click(function () {
+            debugger
+            var $buttonClicked = $(this);
+            var VasId = $buttonClicked.attr('data-id');
+            var CmpId = $buttonClicked.attr('data-id1');
+            var gridstatus = $buttonClicked.attr('data-id2');
+            var p_str_whs_id = $buttonClicked.attr('data-id3');
+            var p_str_scn_id = $('#screentitle').val();
+            if (gridstatus != "P") {
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_vas_id_fm = $('#vas_id_fm').val();
+                var p_str_vas_id_to = $('#vas_id_to').val();
+                var p_str_ship_vas_date_fm = $('#vas_date_fm').val();
+                var p_str_vas_date_to = $('#vas_date_to').val();
+                var p_str_so_num = $('#so_num').val();
+                var p_str_Status = $('#Status').val();
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/VasInquiry/VAS_INQ_HDR_DATA")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_vas_id_fm": p_str_vas_id_fm, "p_str_vas_id_to": p_str_vas_id_to, "p_str_ship_vas_date_fm": p_str_ship_vas_date_fm,
+                        "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num, "p_str_Status": p_str_Status
+
+                    },
+
+                    dataType: "json",
+                    success: function (e) {
+                        //alert(e)
+
+                    },
+
+                });
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackEditURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "VasId": VasId, "CmpId": CmpId, "p_str_scn_id": p_str_scn_id, "p_str_whs_id": p_str_whs_id },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContentEdit').html(data);
+                        $('#myModalEdit').modal(options);
+                        $('#myModalEdit').modal('show');
+
+                    },
+                    error: function () {
+                        swal("", "Dynamic content load failed.", "");
+                        //alert("Dynamic content load failed.");
+                    }
+                });
+
+            }
+            else {
+
+                swal("VAS Id Already Posted, Couldn't Modify")
+            }
+
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackDelURL = '/VasInquiry/Delete';
+    $(function () {
+        $(".VasDelete").click(function () {
+            var $buttonClicked = $(this);
+            var p_str_vas_id = $buttonClicked.attr('data-id');
+            var p_str_vas_bill_status = $buttonClicked.attr('data-id1');
+            var p_str_scn_id = $('#screentitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_vas_id_fm = $('#vas_id_fm').val();
+            var p_str_vas_id_to = $('#vas_id_to').val();
+            var p_str_ship_vas_date_fm = $('#vas_date_fm').val();
+            var p_str_vas_date_to = $('#vas_date_to').val();
+            var p_str_so_num = $('#so_num').val();
+            var p_str_Status = $('#Status').val();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/VasInquiry/VAS_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_vas_id_fm": p_str_vas_id_fm, "p_str_vas_id_to": p_str_vas_id_to, "p_str_ship_vas_date_fm": p_str_ship_vas_date_fm,
+                    "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num, "p_str_Status": p_str_Status
+
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackDelURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_vas_id": p_str_vas_id, "cmp_id": cmp_id, "p_str_vas_bill_status": p_str_vas_bill_status, "p_str_scn_id": p_str_scn_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentDel').html(data);
+                    $('#myModalDel').modal(options);
+                    $('#myModalDel').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    //alert("Dynamic content load failed.");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+            $(this).val("");
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var ShippingBackURL = '/VasInquiry/VasSRDetail';
+
+    $(function () {
+        $(".VasSRDetail").click(function () {
+            var $buttonClicked = $(this);
+            var SRId = $buttonClicked.attr('data-id');
+            var BatchId = $buttonClicked.attr('data-id1');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: ShippingBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "SRId": SRId, "cmp_id": cmp_id, "BatchId": BatchId },
+                datatype: "json",
+                success: function (data) {
+                    if (data == 0) {
+                        sweetAlert("", "No Ship Request Details Found.", "");
+                    }
+                    else {
+                        $('#myVASSRContent').html(data);
+                        $('#VasSRModal').modal(options);
+                        $('#VasSRModal').modal('show');
+                    }
+
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackPostURL = '/VasInquiry/Post';
+    $(function () {
+        $(".VasPost").click(function () {
+            var $buttonClicked = $(this);
+            var VasId = $buttonClicked.attr('data-id');
+            var p_str_scn_id = $('#screentitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_vas_id_fm = $('#vas_id_fm').val();
+            var p_str_vas_id_to = $('#vas_id_to').val();
+            var p_str_ship_vas_date_fm = $('#vas_date_fm').val();
+            var p_str_vas_date_to = $('#vas_date_to').val();
+            var p_str_so_num = $('#so_num').val();
+            var p_str_Status = $('#Status').val();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/VasInquiry/VAS_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_vas_id_fm": p_str_vas_id_fm, "p_str_vas_id_to": p_str_vas_id_to, "p_str_ship_vas_date_fm": p_str_ship_vas_date_fm,
+                    "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num, "p_str_Status": p_str_Status
+
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackPostURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "VasId": VasId, "cmp_id": cmp_id, "p_str_scn_id": p_str_scn_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentDel').html(data);
+                    $('#myModalDel').modal(options);
+                    $('#myModalDel').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    //alert("Dynamic content load failed.");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+    var p_str_cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackUnPostURL = '/VasInquiry/UnPost';
+    $(function () {
+        $(".VasUnPost").click(function () {
+            var $buttonClicked = $(this);
+            var p_str_vas_id = $buttonClicked.attr('data-id');
+            var p_str_bill_doc_id = $buttonClicked.attr('data-id1');
+            var p_str_scn_id = $('#screentitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_vas_id_fm = $('#vas_id_fm').val();
+            var p_str_vas_id_to = $('#vas_id_to').val();
+            var p_str_ship_vas_date_fm = $('#vas_date_fm').val();
+            var p_str_vas_date_to = $('#vas_date_to').val();
+            var p_str_so_num = $('#so_num').val();
+            var p_str_Status = $('#Status').val();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/VasInquiry/VAS_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_vas_id_fm": p_str_vas_id_fm, "p_str_vas_id_to": p_str_vas_id_to, "p_str_ship_vas_date_fm": p_str_ship_vas_date_fm,
+                    "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num, "p_str_Status": p_str_Status
+
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackUnPostURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_vas_id": p_str_vas_id, "p_str_cmp_id": p_str_cmp_id, "p_str_bill_doc_id": p_str_bill_doc_id, "p_str_scn_id": p_str_scn_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentDel').html(data);
+                    $('#myModalDel').modal(options);
+                    $('#myModalDel').modal('show');
+
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    //alert("Dynamic content load failed.");
+                }
+            });
+
+
+
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    $('#GridVasInqdtl').DataTable({
+        "paging": true,
+        "pageLength": 50,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+    });
+    $("#btnSearch").click(function () {
+        location.reload();
+    });
+
+    $('#vas_date_fm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#vas_date_to').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    //$('#vas_date_fm').datepicker({
+    //    autoclose: true
+    //});
+    //$('#vas_date_to').datepicker({
+    //    autoclose: true
+    //});
+    $('#example4').DataTable({
+        //"paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false
+    });
+    $("#btninquiry").click(function () {
+        debugger
+
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            //not2("Please Select The Company.")
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        else {
+            debugger
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_vas_id_fm = $('#vas_id_fm').val();
+            var p_str_vas_id_to = $('#vas_id_to').val();
+            var p_str_ship_vas_date_fm = $('#vas_date_fm').val();
+            var p_str_vas_date_to = $('#vas_date_to').val();
+            var p_str_so_num = $('#so_num').val();
+            var p_str_Status = $('#Status').val();
+            var pstrVASRateId =  $('#vasRateId').val(); 
+            var p_str_screentitle = $('#screentitle').val();
+            $("#ajaxLoading").show();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/VasInquiry/GetVasGridDetails")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_vas_id_fm": p_str_vas_id_fm,
+                    "p_str_vas_id_to": p_str_vas_id_to,
+                    "p_str_ship_vas_date_fm": p_str_ship_vas_date_fm,
+                    "p_str_vas_date_to": p_str_vas_date_to,
+                    "p_str_so_num": p_str_so_num,
+                    "p_str_Status": p_str_Status,
+                    "p_str_screentitle": p_str_screentitle,
+                    "pstrVASRateId": pstrVASRateId
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#showgrid').html("");
+                    $('#showgrid').html(e);
+                },
+
+            })
+        }
+    });
+    $("#btnUpdateVas").click(function () {
+        debugger
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_vas_id = $('#vas_id').val();
+        var p_str_vas_dt = $('#ship_dt').val();
+        var p_str_so_num = $('#Vassonum').val();
+        var p_str_whs_id = $('#whs_id').val();
+        var p_str_ship_to_id = $('#ship_to_id').val();
+        var p_str_cust_po_num = $('#cust_po_num').val();
+        var p_str_cust_po_dt = $('#cust_po_dt').val();
+        var p_str_note = $('#Note').val();
+        sweetAlert({
+            title: "",
+            text: "Do you want to Save the Selected items only?(After Insert details, Checkbox Click Must)",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+
+                       if (p_str_cmp_id == "") {
+                           swal("", "Please Select The Company.", "");
+                           $('#cmp_id').focus();
+                           $('body,html').animate({ scrollTop: 0 }, 0);
+                           er = 1;
+                           return false;
+                       }
+                       else {
+                           $.ajax({
+                               type: "GET",
+                               url: '@Url.Content("~/VasInquiry/UpdateVasEntry")',
+                               data: {
+                                   "p_str_cmp_id": p_str_cmp_id,
+                                   "p_str_vas_id": p_str_vas_id,
+                                   "p_str_vas_dt": p_str_vas_dt,
+                                   "p_str_so_num": p_str_so_num, "p_str_whs_id": p_str_whs_id, "p_str_ship_to_id": p_str_ship_to_id, "p_str_cust_po_num": p_str_cust_po_num,
+                                   "p_str_cust_po_dt": p_str_cust_po_dt, "p_str_note": p_str_note
+                               },
+                               dataType: 'html',
+                               success: function (e) {
+                                   $("#ajaxLoading").hide();
+                                   debugger
+                                   if (e == "false") {
+                                       swal({
+                                           title: "",
+                                           text: "No Records to Save",           //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                                           type: "",
+                                           showCancelButton: false,
+                                           confirmButtonClass: "btn-danger",
+                                           confirmButtonText: "Ok",
+                                           closeOnConfirm: true
+                                       });
+                                   }
+                                   else {
+                                       debugger
+                                       swal({
+                                           title: "",
+                                           text: "VASId " + p_str_vas_id + " Updated successfully.",
+                                           type: "",
+                                           showCancelButton: false,
+                                           confirmButtonClass: "btn-danger",
+                                           confirmButtonText: "Ok",
+                                           closeOnConfirm: true
+                                       },
+                                       //swal("", "Your record Added successfully.", "");
+                                       function () {
+                                           debugger
+                                           setTimeout(function () {
+                                               var p_str_screen_title = $('#screentitle').val();
+                                               var p_str_cmpid = $('#new_cmp_id').val();
+                                               var p_str_vasid = $('#vas_id').val();
+                                               var SelectedID = p_str_vasid;
+                                               var type = "PDF";
+                                               var var_name = "Vas Post Report";
+                                               var p_str_radio = var_name;
+                                               window.open('ShowReport?SelectedID=' + SelectedID + '&p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&type=' + type, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectedID)
+                                               debugger
+
+                                               $('#myModalEdit').modal('hide');
+                                               $.ajax({
+                                                   type: "get",
+                                                   url: "/VasInquiry/VasInquiryDtl",             //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                                                   data: {
+                                                       "p_str_cmp_id": p_str_cmp_id,
+                                                       "p_str_vas_id": p_str_vasid,
+                                                   },
+                                                   datatype: 'html',
+                                                   success: function (e) {
+                                                       debugger
+                                                       $("#ajaxloading").hide();
+                                                       $('#showgrid').html("");
+                                                       $('#showgrid').html(e);
+                                                   },
+                                               })
+
+                                               @*var url = '@Url.Action("OutboundInq", "OutboundInq")';
+
+                                url += '?cmp=' + p_str_cmp_id;
+                                url += '&screentitle=' + p_str_screen_title;
+                                window.location.href = url;*@
+                                           });
+                                       });
+
+                                   }
+                               },
+
+                           })
+                       }
+                   }
+               });
+    });
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    @*$("#btnDashboard").click(function () {
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })*@
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackAddURL = '/VasInquiry/Add';
+    $("#btnNewEntry").click(function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var cmpid = $('#cmp_id').val();
+        var Sonum = $('#so_num').val();
+        var p_str_scn_id = $('#screentitle').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_vas_id_fm = $('#vas_id_fm').val();
+        var p_str_vas_id_to = $('#vas_id_to').val();
+        var p_str_ship_vas_date_fm = $('#vas_date_fm').val();
+        var p_str_vas_date_to = $('#vas_date_to').val();
+        var p_str_so_num = $('#so_num').val();
+        var p_str_Status = $('#Status').val();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/VasInquiry/VAS_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_vas_id_fm": p_str_vas_id_fm, "p_str_vas_id_to": p_str_vas_id_to, "p_str_ship_vas_date_fm": p_str_ship_vas_date_fm,
+                "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num, "p_str_Status": p_str_Status
+
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "cmpid": cmpid, "Sonum": Sonum, "p_str_scn_id": p_str_scn_id },//CR-20180514-001 added by nithya
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#myModalContentAdd').html(data);
+                $('#myModalAdd').modal(options);
+                $('#myModalAdd').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+    });
+
+</script>
+
+<script>
+
+</script>
+<script>
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+
+
+
+    $("input[name='tblcheckbox']").click(function () {
+
+        if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+            $("#chkAll").prop("checked", true);
+        }
+        else {
+            $("#chkAll").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").on('change', function () {
+        $("input[name='tblcheckbox']").not(this).prop('checked', false);
+    });
+    $("#btnprocesss").click(function () {
+        debugger
+        var getFormat = $('#id_format').find(":selected").text();
+        var getMode = $('#id_mode').find(":selected").text();
+
+        if (getFormat == 'XLS' && getMode == 'VIEW') {
+            var type = "Excel";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio1']:checked").val();
+            debugger;
+            if (var_name == "Vas Inquiry Report") {
+                debugger
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_vas_id_fm = $('#vas_id_fm').val();
+                var p_str_vas_id_to = $('#vas_id_to').val();
+                var p_str_vas_date_fm = $('#vas_date_fm').val();
+                var p_str_vas_date_to = $('#vas_date_to').val();
+                var p_str_so_num = $('#so_num').val();
+                var p_str_Status = $('#Status').val();
+
+                window.location.replace("/VasInquiry/ShowReport?p_str_cmp_id=" + p_str_cmp_id + '&p_str_radio=' + p_str_radio + '&p_str_vas_id_fm=' + p_str_vas_id_fm
+          + '&p_str_vas_id_to=' + p_str_vas_id_to + '&p_str_vas_date_fm=' + p_str_vas_date_fm + '&p_str_vas_date_to=' + p_str_vas_date_to + '&p_str_so_num=' + p_str_so_num
+          + '&p_str_Status=' + p_str_Status + '&SelectedID=' + SelectdID + '&type=' + type)
+
+            }
+            else {
+                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                if (numberOfCheckboxes == 0) {
+                    swal("", "Please select the Record to Print.", "");
+                    //not2("Please select the Record to Print.");
+                }
+                else {
+                    $("input[name='tblcheckbox']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    debugger;
+                    var Count = $("input[name='tblcheckbox']:checked").length;
+                    if (Count > 0) {
+                        debugger;
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+
+                        });
+                        var var_name = $("input[name='radio1']:checked").val();
+                        var p_str_cmp_id = $('#cmp_id').val();
+                        var p_str_radio = var_name;
+
+
+                        window.location.replace("/VasInquiry/ShowReport?p_str_cmp_id=" + p_str_cmp_id + '&p_str_radio=' + p_str_radio + '&p_str_vas_id_fm=' + p_str_vas_id_fm
+       + '&p_str_vas_id_to=' + p_str_vas_id_to + '&p_str_vas_date_fm=' + p_str_vas_date_fm + '&p_str_vas_date_to=' + p_str_vas_date_to + '&p_str_so_num=' + p_str_so_num
+       + '&p_str_Status=' + p_str_Status + '&SelectedID=' + SelectdID + '&type=' + type)
+
+                    }
+                    else {
+
+                        $("input:checkbox").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                this.checked = !this.checked;
+                            }
+                        });
+
+                    }
+
+                }
+            }
+
+
+        }
+        if (getFormat == 'PDF' && getMode == 'VIEW') {
+            debugger
+            var type = "PDF";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio1']:checked").val();
+            debugger;
+            if (var_name == "Vas Inquiry Report") {
+                debugger
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_vas_id_fm = $('#vas_id_fm').val();
+                var p_str_vas_id_to = $('#vas_id_to').val();
+                var p_str_vas_date_fm = $('#vas_date_fm').val();
+                var p_str_vas_date_to = $('#vas_date_to').val();
+                var p_str_so_num = $('#so_num').val();
+                var p_str_Status = $('#Status').val();
+                debugger;
+                window.open('ShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_radio=' + p_str_radio + '&p_str_vas_id_fm=' + p_str_vas_id_fm
+           + '&p_str_vas_id_to=' + p_str_vas_id_to + '&p_str_vas_date_fm=' + p_str_vas_date_fm + '&p_str_vas_date_to=' + p_str_vas_date_to + '&p_str_so_num=' + p_str_so_num
+           + '&p_str_Status=' + p_str_Status + '&SelectedID=' + SelectdID + '&type=' + type, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+
+
+
+            }
+            else {
+                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                if (numberOfCheckboxes == 0) {
+                    swal("", "Please select the Record to Print.", "");
+                }
+                else {
+                    $("input[name='tblcheckbox']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    debugger;
+                    var Count = $("input[name='tblcheckbox']:checked").length;
+                    if (Count > 0) {
+                        debugger;
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+
+                        });
+                        var var_name = $("input[name='radio1']:checked").val();
+                        var p_str_cmp_id = $('#cmp_id').val();
+                        var p_str_radio = var_name;
+
+                        window.open('ShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_radio=' + p_str_radio + '&p_str_vas_id_fm=' + p_str_vas_id_fm
++ '&p_str_vas_id_to=' + p_str_vas_id_to + '&p_str_vas_date_fm=' + p_str_vas_date_fm + '&p_str_vas_date_to=' + p_str_vas_date_to + '&p_str_so_num=' + p_str_so_num
++ '&p_str_Status=' + p_str_Status + '&SelectedID=' + SelectdID + '&type=' + type, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+
+
+
+                    }
+                    else {
+
+                        $("input:checkbox").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                this.checked = !this.checked;
+                            }
+                        });
+
+                    }
+
+                }
+            }
+
+        }
+        if (getFormat == 'PDF' && getMode == 'EMAIL') {
+            var options = { "backdrop": "static", keyboard: true };
+            var TeamDetailPostemailBackURL = '/VasInquiry/EmailShowReport';
+            var type = "PDF";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio1']:checked").val();
+            debugger;
+            if (var_name == "Vas Inquiry Report") {
+                debugger
+                var p_str_radio = var_name;
+                //var type = getli;
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_vas_id_fm = $('#vas_id_fm').val();
+                var p_str_vas_id_to = $('#vas_id_to').val();
+                var p_str_vas_date_fm = $('#vas_date_fm').val();
+                var p_str_vas_date_to = $('#vas_date_to').val();
+                var p_str_so_num = $('#so_num').val();
+                var p_str_Status = $('#Status').val();
+                debugger;
+
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_radio": p_str_radio, "p_str_vas_id_fm": p_str_vas_id_fm,
+                        "p_str_vas_id_to": p_str_vas_id_to, "p_str_vas_date_fm": p_str_vas_date_fm, "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num,
+                        "p_str_Status": p_str_Status, "type": type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+
+            }
+            else {
+                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                if (numberOfCheckboxes == 0) {
+                    swal("", "Please select the Record to Print.", "");
+                }
+                else {
+                    $("input[name='tblcheckbox']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    debugger;
+                    var Count = $("input[name='tblcheckbox']:checked").length;
+                    if (Count > 0) {
+                        debugger;
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+
+                        });
+                        var var_name = $("input[name='radio1']:checked").val();
+                        var p_str_cmpid = $('#cmp_id').val();
+                        var p_str_radio = var_name;
+
+                        $.ajax({
+                            type: "GET",
+                            url: TeamDetailPostemailBackURL,
+                            contentType: "application/json; charset=utf-8",
+                            data: {
+                                "p_str_cmp_id": p_str_cmpid, "p_str_radio": p_str_radio, "p_str_vas_id_fm": p_str_vas_id_fm,
+                                "p_str_vas_id_to": p_str_vas_id_to, "p_str_vas_date_fm": p_str_vas_date_fm, "p_str_vas_date_to": p_str_vas_date_to, "p_str_so_num": p_str_so_num,
+                                "p_str_Status": p_str_Status, "SelectdID": SelectdID, "type": type
+                            },
+                            datatype: "json",
+                            success: function (data) {
+                                $('#myModalEmailContent').html(data);
+                                $('#myModalEmail').modal(options);
+                                $('#myModalEmail').modal('show');
+
+                            },
+                            error: function () {
+                                alert("Dynamic content load failed.");
+                            }
+                        });
+
+                    }
+                    else {
+
+                        $("input:checkbox").each(function () {
+                            var check = $(this);
+                            if (check.is(':checked')) {
+                                this.checked = !this.checked;
+                            }
+                        });
+
+                    }
+
+                }
+            }
+        }
+
+
+    })
+
+
+    var cmp_id = $("#cmp_id").val();
+    var VASDetailPostBackAddURL = '/BillingInquiry/LoadGenerateVASBillDetail';
+    $(".VasBillStatus").click(function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var p_str_cmpid = $('#cmp_id').val();
+        var p_str_vasid = $buttonClicked.attr('data-id1');
+        var p_str_vasdt = $buttonClicked.attr('data-id2');
+        var p_str_screentitle = $('#screentitle').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "GET",
+            url: VASDetailPostBackAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmpid": p_str_cmpid, "p_str_vasid": p_str_vasid, "p_str_vasdt": p_str_vasdt, "p_str_screentitle": p_str_screentitle },
+            datatype: "json",
+            success: function (data) {
+
+                $('#myModalContentVasBill').html(data);
+                $('#myModalVasBill').modal(options);
+                $('#myModalVasBill').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var VASBillDetailInq = '/BillingInquiry/GetSearchVASBillInqDtls';
+    $(".VasBillStatusInq").click(function () {
+        debugger;
+        var $buttonClicked = $(this);
+        var p_str_cmpid = $('#cmp_id').val();
+        var p_str_vasid = $buttonClicked.attr('data-id1');
+        var p_str_vasdt = $buttonClicked.attr('data-id2');
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_vas_bill_pd_fm = $buttonClicked.attr('data-id3');;
+
+        var p_str_cust_id = "";
+        var p_str_print_dt = "";
+        var p_str_vas_bill_pd_fm = "";
+        var p_str_vas_bill_pd_to = "";
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "GET",
+            url: VASBillDetailInq,
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmpid": p_str_cmpid, "p_str_cust_id": p_str_cust_id, "p_str_print_dt": p_str_print_dt, "p_str_vas_bill_pd_fm": p_str_vas_bill_pd_fm, "p_str_vas_bill_pd_to": p_str_vas_bill_pd_to, "p_str_vas_id": p_str_vasid, "p_str_vas_dt": p_str_vasdt, "p_str_screentitle": p_str_screentitle },
+            datatype: "json",
+            success: function (data) {
+
+                $('#myModalContentVasBill').html(data);
+                $('#myModalVasBill').modal(options);
+                $('#myModalVasBill').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $(function () {
+
+        $('#cmp_id').change(function () {
+            debugger;
+            var l_str_comp = this.value;
+            debugger
+            $("#p_str_company").val(l_str_comp);
+            var p_str_cmp_id = $(this).find(":selected").val();
+
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "VasInquiry")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "html",
+                success: function (e) {
+                    $('#divRateSec').html("");
+                    $('#divRateSec').html(e);
+                    $("#tmp_cmp_id").val(Session["g_str_cmp_id"].ToString());
+
+                },
+            });
+        });
+
+    });
+ 
+
+</script>
+
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}

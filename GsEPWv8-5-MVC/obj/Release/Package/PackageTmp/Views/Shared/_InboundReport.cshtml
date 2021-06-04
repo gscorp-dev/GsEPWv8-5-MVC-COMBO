@@ -1,0 +1,171 @@
+﻿@model GsEPWv8_5_MVC.Model.InboundReportModel
+
+@{
+    var Ordercount = Model.LstinboundRpt.Count;
+    Int32 l_dbl_total_ctns = Model.LstinboundRpt.Sum(item => item.Ctns);
+    decimal l_dbl_total_cube = Model.LstinboundRpt.Sum(item => (item.cube * item.Ctns));
+    decimal l_dbl_total_weight = Model.LstinboundRpt.Sum(item => (item.Wgt * item.Ctns));
+}
+<!-- /.box-header -->
+@*<div class="box-body">*@
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+               
+            </td>
+            <td style="width:20%;text-align:right">
+            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                Total Ctn(s):
+            </span>
+            <label class="totalCount" style="text-align:left">
+                @l_dbl_total_ctns
+            </label>
+            </td>
+            <td style="width:20%;text-align:right">
+
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Cube:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @l_dbl_total_cube
+                </label>
+
+            </td>
+            <td style="width:20%;text-align:right">
+
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Weight:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @l_dbl_total_weight
+                </label>
+            </td>  
+            <td></td>
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box box-primary">
+   
+    <div class="row">
+      
+    </div>
+    <br />
+
+    <table id="InqRpt" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                @*<th class="grid_header_backcolor">WHS</th>*@
+                <th class="grid_header_backcolor">CntrId</th>
+                <th class="grid_header_backcolor">IBdocId</th>
+                <th class="grid_header_backcolor">RcvdDt</th>
+                <th class="grid_header_backcolor">Style</th>
+                <th class="grid_header_backcolor">Color</th>
+                <th class="grid_header_backcolor">Size</th>
+                <th class="grid_header_backcolor">ItemName</th>                
+                <th class="grid_header_backcolor">PoNum</th>
+                <th class="grid_header_backcolor">LocId</th>
+                <th class="grid_header_backcolor">LotId</th>
+                <th class="grid_header_backcolor">Ctns</th>
+                <th class="grid_header_backcolor">PPK</th>
+                <th class="grid_header_backcolor">TotQty</th>
+                <th class="grid_header_backcolor">L/W/H</th>
+                <th class="grid_header_backcolor">Wgt</th>
+                <th class="grid_header_backcolor">Cube</th>
+                <th class="grid_header_backcolor">PaletId</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (int i = 0; i < Model.LstinboundRpt.Count; i++)
+            {
+                var Length = (Model.LstinboundRpt[i].length);
+                var Width = (Model.LstinboundRpt[i].Width);
+                var Height = (Model.LstinboundRpt[i].height);
+                var Cube = (Model.LstinboundRpt[i].cube);
+                var weight = (Model.LstinboundRpt[i].Wgt);
+                var l_dec_Length = Length.ToString("F2");
+                var l_dec_Width = Width.ToString("F2");
+                var l_dec_Height = Height.ToString("F2");
+                var l_dec_Cube = Cube.ToString("F3");
+                var l_dec_weight = weight.ToString("F2");
+                var l_str_LWH = l_dec_Length + "/" + l_dec_Width + "/" + l_dec_Height;
+                <tr class="row-select">
+                    @*<td style="font-size:10px; color:black; font-weight:bold; font-family:Verdana;">@Model.LstinboundRpt[i].whs_id</td>*@
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].cntr_id</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].ib_doc_id</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].RcvdDt</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana; ">@Model.LstinboundRpt[i].Style</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].Color</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].Size</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].ItmName</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].PoNum</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].LocId</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].LotId</td>                                       
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;text-align:right;">@Model.LstinboundRpt[i].Ctns</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;text-align:right;">@Model.LstinboundRpt[i].ppk</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;text-align:right;">@Model.LstinboundRpt[i].TotalQty</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@l_str_LWH</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;text-align:right;">@l_dec_weight</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana; text-align:right;">@l_dec_Cube</td>
+                    <td style="font-size:10px; color:black; font-weight:bold;font-family:Verdana;">@Model.LstinboundRpt[i].PaletId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+  
+    $('#InqRpt').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        // "scrollY": "280px",
+        "scrollCollapse": true,
+        //true
+        //"sDom": 't',
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").click(function () {
+
+        if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+            $("#chkAll").prop("checked", true);
+        }
+        else {
+            $("#chkAll").prop("checked", false);
+        }
+
+    });
+</script>
+
+
+
+
+

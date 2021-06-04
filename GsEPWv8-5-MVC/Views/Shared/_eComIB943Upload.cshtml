@@ -1,0 +1,113 @@
+﻿
+@model GsEPWv8_5_MVC.Model.eComIB943UploadModel
+
+@{
+    var Ordercount = Model.ListeCom940IB943UploadDtl.Count;
+}
+<style>
+
+</style>
+<div id="SR940showgrid" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+
+    <div class="gridSummary">
+        <table style="width:100%">
+            <tr>
+                <td style="width:20%;text-align:right">
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                        Total Records:
+                    </span>
+                    <label class="totalCount" style="text-align:left">
+                        @Ordercount
+                    </label>
+                </td>
+                <td style="width:105px;"></td>
+                <td style="width:105px;"></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+
+        <table class="table table-bordered table-striped " style="border:1px solid #121213 ;width:100%" id="GridEcomSR940Main">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="width:5%">Line#</th>
+                    <th class="grid_header_backcolor" style="width:8%">Container ID</th>
+                    <th class="grid_header_backcolor" style="width:7%">Style</th>
+                    <th class="grid_header_backcolor" style="width:6%">color </th>
+                    <th class="grid_header_backcolor" style="width:5%">Size</th>
+                    <th class="grid_header_backcolor" style="width:10%">Desc</th>
+                    <th class="grid_header_backcolor" style="width:6%">Item Qty</th>
+                    <th class="grid_header_backcolor" style="width:5%">Ctns</th>
+                    <th class="grid_header_backcolor" style="width:5%">PPK</th>
+                    <th class="grid_header_backcolor" style="width:5%">Length</th>
+                    <th class="grid_header_backcolor" style="width:5%">Width</th>
+                    <th class="grid_header_backcolor" style="width:5%">Height</th>
+                    <th class="grid_header_backcolor" style="width:5%">Cube</th>
+                    <th class="grid_header_backcolor" style="width:5%">Weight</th>
+                    <th class="grid_header_backcolor" style="width:18%">HeaderInfo</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (int i = 0; i < Model.ListeCom940IB943UploadDtl.Count; i++)
+                {
+                    var wgt = (Model.ListeCom940IB943UploadDtl[i].ctn_wgt);
+                    var cube = (Model.ListeCom940IB943UploadDtl[i].ctn_cube);
+                    var l_dec_wgt = wgt.ToString("F2");
+                    var l_dec_cube = cube.ToString("F3");
+                    <tr class="row-select">
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListeCom940IB943UploadDtl[i].dtl_line</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940IB943UploadDtl[i].cntr_id</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940IB943UploadDtl[i].itm_num</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align:left"> @Model.ListeCom940IB943UploadDtl[i].itm_color</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align:left">@Model.ListeCom940IB943UploadDtl[i].itm_size</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940IB943UploadDtl[i].itm_name</td>
+              
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListeCom940IB943UploadDtl[i].itm_qty</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListeCom940IB943UploadDtl[i].ctns</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListeCom940IB943UploadDtl[i].ctn_qty</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListeCom940IB943UploadDtl[i].ctn_length</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListeCom940IB943UploadDtl[i].ctn_width</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; text-align:right">@Model.ListeCom940IB943UploadDtl[i].ctn_height</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListeCom940IB943UploadDtl[i].ctn_cube</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListeCom940IB943UploadDtl[i].ctn_wgt</td>
+              
+                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListeCom940IB943UploadDtl[i].HeaderInfo</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+  
+
+</div>
+
+<script>
+
+
+        $(function () {
+            $('#GridEcomSR940Main').DataTable({
+                "paging": true,
+                "pageLength": 50,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": false,
+                "info": true,
+                "autoWidth": true,
+                // "scrollY": "280px",
+                "scrollCollapse": true,
+                //true
+                //"sDom": 't',
+                "sScrollY": "360px",
+                "sScrollX": "99%",
+            })
+        })
+</script>
+
+
+
+
+

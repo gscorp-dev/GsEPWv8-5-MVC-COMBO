@@ -1,0 +1,548 @@
+﻿@model GsEPWv8_5_MVC.Model.OBAllocationModel
+@{
+    var lSRCount = Model.ListOBGetSRSummary.Count;
+
+}
+
+
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+
+<center>
+
+    <div class="modal-header" style="width:100%;">
+        <div id="ajaxLoadingAlocByBatch" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Allocation Entry By Batch</h4>
+        <button type="button" id="btnOBAlocByBatchClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+    </div>
+    <div class="box-body">
+        <div class="box-header">
+            <fieldset>
+                <legend style="text-align:left;">Allocation By Batch</legend>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr class="row">
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label class="Lblmanual"><b>Company:</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    @Html.DropDownListFor(model => model.OBAlocInquiryByBatch.cmpId, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "alocCmpId", @style = "width:100%;", @class = "form-control txtlbl" })
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label><b class="Lblmanual">SO# From</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.OBAlocInquiryByBatch.srNumFrom, new { @id = "alocSrNumFrom", @class = "form-control txtlbl", @maxlength = "30" })
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label><b class="Lblmanual">SO# To</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.OBAlocInquiryByBatch.srNumTo, new { @id = "alocSrNumTo", @class = "form-control txtlbl", @maxlength = "10" })
+                                </td>
+                                <td style="text-align: left;" class="col-xs-2">
+
+                                    <button type="button" id="btnPrintAlocSummary" class="btn_Receive" style="width:80px;">Print-Summary </button>
+                                   
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label><b class="Lblmanual">Batch#</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.OBAlocInquiryByBatch.batchNum, new { @id = "alocBatchNum", @class = "form-control txtlbl", @maxlength = "10" })
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label><b class="Lblmanual">So Date From</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    @Html.TextBoxFor(model => model.OBAlocInquiryByBatch.srDtFrom, "{0:MM/dd/yyyy}", new { @id = "alocSrDtFrom", @class = "form-control txtlbl", @maxlength = "10" })
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label><b class="Lblmanual">So Date To</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    @Html.TextBoxFor(model => model.OBAlocInquiryByBatch.srDtTo, "{0:MM/dd/yyyy}", new { @id = "alocSrDtTo", @class = "form-control txtlbl", @maxlength = "10" })
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label><b class="Lblmanual">Load#</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.OBAlocInquiryByBatch.srLoadNum, new { @id = "alocLoadNum", @class = "form-control txtlbl", @maxlength = "10" })
+                                </td>
+
+                                <td style="text-align: right;" class="col-xs-3">
+                                    <fieldset>
+                                        <table>
+                                            <tr>
+                                                <td style="padding-right: 5px;">
+                                                    <button type="button" id="bthAlocByBatchSearch" class="btn_search">Search </button>
+                                                </td>
+                                                <td style="padding-right: 5px;">
+                                                    <button type="reset" id="btnClear" class="btn-Clear">Clear</button>
+                                                </td>
+                                                <td style="padding-right: 5px;">
+                                                    <button type="button" id="btnVeryStockByBatch" class="btn_NewEntry">Verify Stock </button>
+                                                </td>
+                                                <td style="padding-right: 5px;">
+                                                    <button type="button" id="btnSaveAloctionByBatch"  class="btn_NewEntry">Continue Allocation </button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+                                </td>
+                            </tr>
+
+                        </table>
+                   </div>
+                </div>
+
+                <br />
+
+            </fieldset>
+        </div>
+    </div>
+</center>
+
+<div id="childtabs">
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <ul>
+        <li><a href="#divAlocTab1" style="font-size:12px;">Allocation Details</a></li>
+        <li><a href="#divAlocTab2" style="font-size:12px;" id="hob">Allocation Details By Style and Location</a></li>
+    </ul>
+
+    <div id="divAlocTab1">
+        <div id="divAlocGrid" class="box-header" style="padding: 5px; ">
+
+            <div class="box-body">
+                <div>
+                    <table id="grdSRList" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                        <thead class="grid_backcolor">
+                            <tr>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:5%;">Select All <input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" /></th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Batch#</th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">SR#</th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">SR Date</th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:15%;">Customer</th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Cust Order#</th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Order Number</th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Ctns(s)</th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Weight</th>
+                                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Cube</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+                            @for (int i = 0; i < Model.ListOBGetSRSummary.Count; i++)
+                        {
+                            int line = i + 1;
+
+                            var l_int_ctns = (Model.ListOBGetSRSummary[i].tot_ctns);
+                            var l_int_weight = (Model.ListOBGetSRSummary[i].tot_weight);
+                            var l_int_cube = (Model.ListOBGetSRSummary[i].tot_cube);
+
+
+
+                                <tr style="background-color:white;">
+                                    <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckboxSRNum" type="checkbox" value="@Model.ListOBGetSRSummary[i].so_num" checked="checked" /></td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].batch_num</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].so_num</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListOBGetSRSummary[i].so_dt</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].cust_name</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].cust_ordr_num</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListOBGetSRSummary[i].ordr_num</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;width:60px;">@Model.ListOBGetSRSummary[i].tot_ctns</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListOBGetSRSummary[i].tot_weight</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListOBGetSRSummary[i].tot_cube</td>
+                                </tr>
+                        }
+                        </tbody>
+                    </table>
+                    @Html.Hidden("SRCount", lSRCount)
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div id="divAlocSummary" class="box-header" style="padding:4px;margin-top: -1%; width:auto">
+        </div>
+
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width: 1050px; height: 650px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" id="btnclose" style="margin-top: -38px;" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="load" class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="divAlocTab2">
+        <div id="divAlocGridByLoc">
+            <div id="divAlocSummaryByLoc" class="box-header" style="padding:4px;margin-top: -1%; width:auto">
+            </div>
+        </div>
+    </div>
+
+</div>
+    <script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $("#btnSaveAloctionByBatch").attr('disabled', 'disabled');
+            $("#btnSaveAloctionByBatch").attr("style", "background-color: #ccc;");
+            $("#btnPrintAlocSummary").attr('disabled', 'disabled');
+            $("#btnPrintAlocSummary").attr("style", "background-color: #ccc;");
+            
+        });
+
+ $(function () {
+        $("#tabs").tabs();
+    });
+    $(function () {
+        $("#childtabs").tabs();
+    });
+
+        debugger
+
+        $(document).ready(function () {
+            $("btnClear").each(function () {
+
+                $(this).val("");
+            });
+        });
+        $('#alocSrDtFrom').datetimepicker({
+            timepicker: false,
+            step: 15, format: 'm/d/Y'
+        });
+        $('#alocSrDtTo').datetimepicker({
+            timepicker: false,
+            step: 15, format: 'm/d/Y'
+        });
+
+
+
+        $("#bthAlocByBatchSearch").click(function () {
+            var p_str_cmp_id = $("#le_cmp_id").val();
+            if (p_str_cmp_id == "") {
+
+                sweetAlert("", "Please Select the Company", "");
+                $('#le_cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                debugger
+
+
+                var alocCmpId = $('#alocCmpId').val();
+                var alocBatchNum = $('#alocBatchNum').val();
+                var alocSrNumFrom = $('#alocSrNumFrom').val();
+                var alocSrNumTo = $('#alocSrNumTo').val();
+                var alocSrDtFrom = $('#alocSrDtFrom').val();
+                var alocSrDtTo = $('#alocSrDtTo').val();
+                var alocLoadNum = $('#alocLoadNum').val();
+
+                $("#ajaxLoadingAlocByBatch").show();
+                $.ajax({
+                    type: "GET",
+                    url: "/OBAllocation/OBAllocationByBatch",
+                    data: {
+                        "pstrCmpId": alocCmpId, "pstrBatchNum": alocBatchNum, "pstrSrNumFrom": alocSrNumFrom,
+                        "pstrSrNumTo": alocSrNumTo, "pstrSrDtFrom": alocSrDtFrom, "pstrSrDtTo": alocSrDtTo, "pstrSrLoadNum": alocLoadNum, "pstrScreenId": "GridAlocSRlist"
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        $("#ajaxLoadingAlocByBatch").hide();
+                        $('#divAlocGrid').html("");
+                        $('#divAlocGrid').html(e);
+                        $('#divAlocSummaryByLoc').html("");
+                        $('#divAlocSummaryByLoc').html("");
+                        $('#divAlocSummary').html("");
+                        $('#divAlocSummary').html("");
+                        $("#btnSaveAloctionByBatch").attr('disabled', 'disabled');
+                        $("#btnSaveAloctionByBatch").attr("style", "background-color: #ccc;");
+                        $("#btnPrintAlocSummary").attr('disabled', 'disabled');
+                        $("#btnPrintAlocSummary").attr("style", "background-color: #ccc;");
+                        
+                    },
+                })
+
+
+
+            }
+        });
+        $("#btnVeryStockByBatch").click(function () {
+            debugger;
+            var p_str_cmp_id = $("#le_cmp_id").val();
+            if (p_str_cmp_id == "") {
+
+                sweetAlert("", "Please Select the Company", "");
+                $('#le_cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            var alocCmpId = $('#alocCmpId').val();
+            var SrNumArray = [];
+            var SelectedRow = [];
+
+            var totalSelRecords = $("input[name='tblcheckboxSRNum']:checked").length;
+            if (totalSelRecords == 0) {
+
+                sweetAlert("", "Please select the Records to Verify Stock", "");
+                return false;
+            }
+            else {
+                $("input[name='tblcheckboxSRNum']:checked").each(function () {
+                    var check = $(this);
+                    if (check.is(':checked')) {
+                        SelectedRow.push(check.attr('id'));
+                        SrNumArray.push(check.val());
+                    }
+                });
+            }
+            var strSRNumList = '';
+            $.each(SrNumArray, function (i, v) {
+
+                if (strSRNumList == '')
+                    strSRNumList = v;
+                else
+                    strSRNumList = strSRNumList + '|' + v;
+            });
+
+            $("#ajaxLoadingAlocByBatch").show();
+            $.ajax({
+                type: "GET",
+                url: "/OBAllocation/VerifyStockByAlocbatch",
+                data: {
+                    "pstrCmpId": alocCmpId, "pstrSRNumList": strSRNumList
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $('#divAlocSummary').html("");
+                    $('#divAlocSummary').html(e);
+                    $.ajax({
+                        type: "GET",
+                        url: "/OBAllocation/getSRAlocDtlByLoc",
+                        data: {
+                            "pstrCmpId": alocCmpId, "pstrSRNumList": strSRNumList
+                        },
+                        dataType: 'html',
+                        success: function (e) {
+                            $("#ajaxLoadingAlocByBatch").hide();
+                            $('#divAlocSummaryByLoc').html("");
+                            $('#divAlocSummaryByLoc').html(e);
+
+                            $("#btnSaveAloctionByBatch").removeAttr('disabled');
+                            $("#btnSaveAloctionByBatch").attr("style", "background-color: #3d8def;");
+                            $("#btnPrintAlocSummary").removeAttr('disabled');
+                            $("#btnPrintAlocSummary").attr("style", "background-color: #3d8def;");
+                            
+                        },
+                    })
+                 
+                },
+            })
+
+        
+
+
+        });
+
+        $("#btnPrintAlocSummary").click(function () {
+            debugger;
+            var pstrCmpId = $('#alocCmpId').val();
+            window.location.replace("/OBAllocation/getOBSRAlocVerifyStk?pstrCmpId=" + pstrCmpId)
+        });
+
+        $("#btnOBAlocByBatchClose").click(function () {
+
+            debugger
+            sweetAlert({
+                title: "",
+                text: "Do you want to Close the Screen?",
+                type: "",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },
+                   function (isConfirm) {
+                       if (isConfirm) {
+                           $('#modalAllocationByBatch').modal('hide');
+                       }
+                   });
+        });
+        $("#btnSaveAloctionByBatch").click(function () {
+            debugger;
+            var lstrIsBackOrder = $("#isBackOrder").val();
+            if (lstrIsBackOrder == "Y") {
+                sweetAlert("", "Back Order Exists. Please unselect the Back-orders and Re-verify the Stock befor continue allocation ", "");
+                return false;
+            }
+            var p_str_cmp_id = $("#le_cmp_id").val();
+            if (p_str_cmp_id == "") {
+
+                sweetAlert("", "Please Select the Company", "");
+                $('#le_cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            var alocCmpId = $('#alocCmpId').val();
+            var SrNumArray = [];
+            var SelectedRow = [];
+
+            var totalSelRecords = $("input[name='tblcheckboxSRNum']:checked").length;
+            if (totalSelRecords == 0) {
+
+                sweetAlert("", "Please select the Records to Verify Stock", "");
+                return false;
+            }
+            else {
+                $("input[name='tblcheckboxSRNum']:checked").each(function () {
+                    var check = $(this);
+                    if (check.is(':checked')) {
+                        SelectedRow.push(check.attr('id'));
+                        SrNumArray.push(check.val());
+                    }
+                });
+            }
+            var strSRNumList = '';
+            $.each(SrNumArray, function (i, v) {
+
+                if (strSRNumList == '')
+                    strSRNumList = v;
+                else
+                    strSRNumList = strSRNumList + '|' + v;
+            });
+
+            $("#ajaxLoadingAlocByBatch").show();
+            $.ajax({
+                type: "GET",
+                url: "/OBAllocation/SaveAloctionByBatch",
+                data: {
+                    "pstrCmpId": alocCmpId, "pstrSRNumList": strSRNumList
+                },
+                dataType: 'html',
+                success: function (e) {
+                    
+                    sweetAlert({
+                                title: "",
+                                text: "Batch Alocation Saved Successfully, Do you want to print Lable and Package slip?",
+                                type: "",
+                                showCancelButton: true,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "No",
+                                cancelButtonText: "Yes",
+                                closeOnConfirm: true,
+                                closeOnCancel: true
+                            },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                $("#ajaxLoadingAlocByBatch").hide();
+                                $('#modalAllocationByBatch').modal('hide');
+
+                            }
+                            else
+                            {
+                                var TeamDetailPostemailBackURL = '/OBAllocation/BatchBinListPrint';
+                                var options = { "backdrop": "static", keyboard: true };
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "pstrCmpId": alocCmpId, "pstrSRNumList": strSRNumList,"pstrPrintFrom":"BATCH-ALOC"
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        debugger;
+
+                                        $('#ModalBatchBinPrintInq').modal('hide');
+                                        $('#myModalBatchBinPrintContent').html(data);
+                                        $('#myModalBatchBinPrint').modal(options);
+                                        $('#myModalBatchBinPrint').modal('show');
+                                        $('#modalAllocationByBatch').modal('hide');
+                                        $("#ajaxLoadingAlocByBatch").hide();
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        })
+   
+                      //$('#modalAllocationByBatch').modal('hide');
+              
+                }
+
+
+            });
+        });
+
+            $("input[name=chkAll").click(function () {
+                if ($(this).prop("checked") == true) {
+
+                    $("input[name='tblcheckboxLoadEntry']").prop("checked", true);
+                }
+                else if ($(this).prop("checked") == false) {
+
+                    $("input[name='tblcheckboxLoadEntry']").prop("checked", false);
+                }
+
+            });
+
+        
+
+        $("input[name='tblcheckboxLoadEntry']").click(function () {
+
+            if ($("input[name='tblcheckboxLoadEntry']").length == $("input[name='tblcheckboxLoadEntry']:checked").length) {
+                $("#chkAll").prop("checked", true);
+            }
+            else {
+                $("#chkAll").prop("checked", false);
+            }
+
+        });
+        $("input[name='tblcheckbox']").on('change', function () {
+            $("input[name='tblcheckboxLoadEntry']").not(this).prop('checked', false);
+        });
+
+    </script>
+
+    <script>
+
+        $('#chkSelectAll').click(function (event) {
+            if ($(this).is(":checked")) {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+    </script>

@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{68F342E8-A86A-4428-9669-EECB6E6DA730}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GsEPWv8_5_MVC.Core</RootNamespace>
+    <AssemblyName>GsEPWv8-5-MVC.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Reference\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OfficeOpenXml.Core.ExcelPackage">
+      <HintPath>..\packages\OfficeOpenXml.Core.ExcelPackage.1.0.0\lib\net46\OfficeOpenXml.Core.ExcelPackage.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Entity\BasicEntity.cs" />
+    <Compile Include="Entity\BillingInquiry.cs" />
+    <Compile Include="Entity\BinMaster.cs" />
+    <Compile Include="Entity\Carrier.cs" />
+    <Compile Include="Entity\ClsBillVASBillHdr.cs" />
+    <Compile Include="Entity\ClsEcomLink.cs" />
+    <Compile Include="Entity\clsEComOrders.cs" />
+    <Compile Include="Entity\ClsGetXlsIBStkSmryByLoc.cs" />
+    <Compile Include="Entity\ClsOBAllocation.cs" />
+    <Compile Include="Entity\ClsOBAlocEdit.cs" />
+    <Compile Include="Entity\cls_ob_940_sbs.cs" />
+    <Compile Include="Entity\cls_temp_iv_stk_move.cs" />
+    <Compile Include="Entity\Company.cs" />
+    <Compile Include="Entity\CompanyMaster.cs" />
+    <Compile Include="Entity\csvFileProcess.cs" />
+    <Compile Include="Entity\CustMaster.cs" />
+    <Compile Include="Entity\DailyFlashExceptionReport.cs" />
+    <Compile Include="Entity\DashBoard.cs" />
+    <Compile Include="Entity\DataUpdate.cs" />
+    <Compile Include="Entity\DocumentUpload.cs" />
+    <Compile Include="Entity\EcomBinScanOut.cs" />
+    <Compile Include="Entity\eComSR940.cs" />
+    <Compile Include="Entity\Email.cs" />
+    <Compile Include="Entity\EmailAlert.cs" />
+    <Compile Include="Entity\EmailSetup.cs" />
+    <Compile Include="Entity\ETAInquiry.cs" />
+    <Compile Include="Entity\ExceptionReports .cs" />
+    <Compile Include="Entity\ForgotPassword.cs" />
+    <Compile Include="Entity\get_ib_doc_excp_template.cs" />
+    <Compile Include="Entity\get_ib_excp_template.cs" />
+    <Compile Include="Entity\IB943UploadFile.cs" />
+    <Compile Include="Entity\IB943UploadFileInfo.cs" />
+    <Compile Include="Entity\IBRcvdDataUpdate.cs" />
+    <Compile Include="Entity\InboundDocumentFile.cs" />
+    <Compile Include="Entity\InboundInquiry.cs" />
+    <Compile Include="Entity\InboundReceiving.cs" />
+    <Compile Include="Entity\InboundReport.cs" />
+    <Compile Include="Entity\InvStkAdj.cs" />
+    <Compile Include="Entity\ItemMaster.cs" />
+    <Compile Include="Entity\LocationMaster.cs" />
+    <Compile Include="Entity\Login.cs" />
+    <Compile Include="Entity\LookUp.cs" />
+    <Compile Include="Entity\MailConfig.cs" />
+    <Compile Include="Entity\OB940UploadFile.cs" />
+    <Compile Include="Entity\OB940UploadFileDtl.cs" />
+    <Compile Include="Entity\OB940UploadFileHdr.cs" />
+    <Compile Include="Entity\OB940UploadFileInfo.cs" />
+    <Compile Include="Entity\OBLoadEntryBatch.cs" />
+    <Compile Include="Entity\OrderSummary.cs" />
+    <Compile Include="Entity\OrderVM.cs" />
+    <Compile Include="Entity\OutboundInq.cs" />
+    <Compile Include="Entity\OutboundShipInq.cs" />
+    <Compile Include="Entity\OutboundShipRpt.cs" />
+    <Compile Include="Entity\OutboundShipSchedulingInquiry.cs" />
+    <Compile Include="Entity\Pick.cs" />
+    <Compile Include="Entity\PickLabel.cs" />
+    <Compile Include="Entity\Priceuom.cs" />
+    <Compile Include="Entity\RateMaster.cs" />
+    <Compile Include="Entity\StockAsOfDate.cs" />
+    <Compile Include="Entity\StockChange.cs" />
+    <Compile Include="Entity\StockInquiryDtl.cs" />
+    <Compile Include="Entity\tbl_ib_doc_dtl.cs" />
+    <Compile Include="Entity\tbl_ib_doc_grid.cs" />
+    <Compile Include="Entity\tbl_ib_doc_hdr.cs" />
+    <Compile Include="Entity\tbl_ma_user.cs" />
+    <Compile Include="Entity\tbl_shipreq_grid.cs" />
+    <Compile Include="Entity\tbl_so_dtl.cs" />
+    <Compile Include="Entity\tbl_so_hdr.cs" />
+    <Compile Include="Entity\UserAccount.cs" />
+    <Compile Include="Entity\UserProfile.cs" />
+    <Compile Include="Entity\VasEntry.cs" />
+    <Compile Include="Entity\VasInquiry.cs" />
+    <Compile Include="Entity\WhsMaster.cs" />
+    <Compile Include="Entity\xls_bl_inout_bill_by_ctn.cs" />
+    <Compile Include="Entity\xls_bl_inout_bill_by_cube.cs" />
+    <Compile Include="Entity\xls_bl_inout_by_cube_cmpr.cs" />
+    <Compile Include="Entity\xls_bl_invoice_inout_bill_by_ctn.cs" />
+    <Compile Include="Entity\xls_bl_invoice_inout_bill_by_cube.cs" />
+    <Compile Include="Entity\xls_bl_invoice_strg_bill.cs" />
+    <Compile Include="Entity\xls_bl_invoice_vas_bill.cs" />
+    <Compile Include="Entity\xls_bl_strg_bill.cs" />
+    <Compile Include="Entity\xls_bl_strg_bill_by_style_smry.cs" />
+    <Compile Include="Entity\xls_bl_vas_bill.cs" />
+    <Compile Include="Entity\xls_Consalidate_Rpt_By_INOUT.cs" />
+    <Compile Include="Entity\xls_Consalidate_Rpt_By_VAS.cs" />
+    <Compile Include="Entity\xls_Grid_Summary.cs" />
+    <Compile Include="Entity\xls_IB_943_ACK.cs" />
+    <Compile Include="Entity\xls_IB_Acknowledgement_Excel.cs" />
+    <Compile Include="Entity\xls_IB_Confirmation_Excel.cs" />
+    <Compile Include="Entity\xls_IB_GridSummary_Excel.cs" />
+    <Compile Include="Entity\xls_ib_rcvd_summary.cs" />
+    <Compile Include="Entity\xls_IB_Recv_By_Container_Excel.cs" />
+    <Compile Include="Entity\xls_IB_Recv_By_Date_Excel.cs" />
+    <Compile Include="Entity\xls_IB_Recv_By_Style_Excel.cs" />
+    <Compile Include="Entity\xls_IB_TallySheet_Excel.cs" />
+    <Compile Include="Entity\xls_IB_Worksheet_Excel.cs" />
+    <Compile Include="Entity\xls_inv_as_of_date_by_style.cs" />
+    <Compile Include="Entity\xls_inv_as_of_date_by_style_smry.cs" />
+    <Compile Include="Entity\xls_Item_and_Stock_Dim_Comp.cs" />
+    <Compile Include="Entity\xls_Item_Details_Excel.cs" />
+    <Compile Include="Entity\xls_IV_Stk_Detail_By_Loc.cs" />
+    <Compile Include="Entity\xls_iv_stk_smry_by_loc.cs" />
+    <Compile Include="Entity\xls_iv_stk_smry_by_style.cs" />
+    <Compile Include="Entity\xls_IV_Style_Dtl_Excel.cs" />
+    <Compile Include="Entity\xls_OB_BILL_OF_LADDING_Excel.cs" />
+    <Compile Include="Entity\xls_OB_Grid_Summary.cs" />
+    <Compile Include="Entity\xls_OB_Pick_Ticket_By_Location.cs" />
+    <Compile Include="Entity\xls_OB_Pick_Ticket_By_Style.cs" />
+    <Compile Include="Entity\xls_OB_SR940_Summary.cs" />
+    <Compile Include="Entity\xls_OB_SR_ACK_Excel.cs" />
+    <Compile Include="Entity\xls_ob_sr_aloc_status.cs" />
+    <Compile Include="Entity\xls_ob_sr_aloc_verify_stk.cs" />
+    <Compile Include="Entity\xls_OB_SR_Summary_Excel.cs" />
+    <Compile Include="Entity\xls_Rate_Master_Summary_Excel.cs" />
+    <Compile Include="Entity\xls_VAS_Post_Excel.cs" />
+    <Compile Include="Entity\xls_VAS_Summary_Excel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

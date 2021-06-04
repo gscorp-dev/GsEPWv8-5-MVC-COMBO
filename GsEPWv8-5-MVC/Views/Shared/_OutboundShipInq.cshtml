@@ -1,0 +1,343 @@
+﻿@model GsEPWv8_5_MVC.Model.OutboundShipInqModel
+
+@{
+    var Ordercount = Model.LstOutboundShipInqdetail.Count;
+}
+<!-- /.box-header -->
+@*<div class="box-body">*@
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style=" width:105px;"></td>
+            <td style=" width:105px;"></td>
+            <td>
+                @*<button type="button" id="btnClose" class="btn-Close">Close</button>*@
+
+            </td>
+        </tr>
+    </table>
+</div>
+@*<br />*@
+<div class="box box-primary">
+    <div>
+    </div>
+    <br />
+    <table id="GridShipInqs" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">Sel</th>
+                <th class="grid_header_backcolor">BOL</th>
+                <th class="grid_header_backcolor">Ship Date</th>
+                <th class="grid_header_backcolor">Status</th>
+                <th class="grid_header_backcolor">AlocdocId</th>
+                <th class="grid_header_backcolor">CustId</th>
+                <th class="grid_header_backcolor">WhsId</th>
+                <th class="grid_header_backcolor">ShipVia</th>
+                <th class="grid_header_backcolor">ShipTo</th>
+                <th class="grid_header_backcolor">ShipPostDate</th>
+                @if (Model.is_company_user == "Y") //CR_3PL_MVC _2018_0316_005
+                {
+                    <th class="grid_header_backcolor">Post</th>
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (int i = 0; i < Model.LstOutboundShipInqdetail.Count; i++)
+            {
+                <tr class="row-select">
+                    <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.LstOutboundShipInqdetail[i].ship_doc_id" /></td>
+                    <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="ShippingDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.LstOutboundShipInqdetail[i].ship_doc_id">@Model.LstOutboundShipInqdetail[i].ship_doc_id</a></td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipInqdetail[i].Ship_dt</td>
+                    @if (@Model.LstOutboundShipInqdetail[i].status.Trim() == "S")
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;">SHIP</td>
+                    }
+                    else if (@Model.LstOutboundShipInqdetail[i].status.Trim() == "P")
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;">POST</td>
+                    }
+                    else
+                    {
+                        <td style="font-size:12px; color:black; font-weight:bold;"></td>
+
+                    }
+                    @*<td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipInqdetail[i].status</td>*@
+                    <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstOutboundShipInqdetail[i].aloc_doc_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipInqdetail[i].cust_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipInqdetail[i].whs_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipInqdetail[i].ship_via_name</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipInqdetail[i].ship_to</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipInqdetail[i].ship_post_dt</td>
+                    @if (Model.is_company_user == "Y") //CR_3PL_MVC _2018_0316_005
+                    {
+                        if (@Model.LstOutboundShipInqdetail[i].ship_post_dt == "" || @Model.LstOutboundShipInqdetail[i].ship_post_dt == null)
+                        {
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;font-size:12px;" class="ShipPostDetail" data-id1="@Model.LstOutboundShipInqdetail[i].cmp_id" data-id="@Model.LstOutboundShipInqdetail[i].ship_doc_id" data-id2="@Model.LstOutboundShipInqdetail[i].ship_post_dt" data-id3="@Model.LstOutboundShipInqdetail[i].Ship_dt"><span style="font-size: 18px;"></span><b>Post</b></a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <span style="color :green;font-size:12px; font-weight:bold;"><b>Posted</b></span>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;font-size:12px;" class="ShipUnPostDetail" data-id1="@Model.LstOutboundShipInqdetail[i].cmp_id" data-id="@Model.LstOutboundShipInqdetail[i].ship_doc_id" data-id2="@Model.LstOutboundShipInqdetail[i].ship_post_dt" data-id3="@Model.LstOutboundShipInqdetail[i].Ship_dt"><span style="font-size: 18px;"></span><b>UnPost</b></a>
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 243%;left:-281px;">
+            <div id='myModalContent' style="width: 100%; height: 700px;"></div>
+        </div>
+    </div>
+
+</div>
+</div>
+<div id='myModalPost' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 250%; left:-365px;">
+            <div id='myModalContentPost' style="width: 100%; height: 900px;"></div>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(function () {
+        $('#GridShipInqs').DataTable({
+            "paging": true,
+            "pageLength": 50,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+        });
+    })
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackShipPostURL = '/OutboundShipInq/ShipPost';
+    $(function () {
+        //$(".ShipPostDetail").click(function () {
+        $('#GridShipInqs tbody').on('click', '.ShipPostDetail', function () { //CR2018-04-07-001 Added by Nithya
+
+            debugger
+            var $buttonClicked = $(this);
+            var CmpId = $buttonClicked.attr('data-id1');
+            var ShipDocId = $buttonClicked.attr('data-id');
+            var ShipPostdt = $buttonClicked.attr('data-id2');
+            var Shipdt = $buttonClicked.attr('data-id2');
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ship_docId_Fm = $('#ship_doc_id_Fm').val();
+            var p_str_ship_docId_To = $('#ship_doc_id_To').val();
+            var p_str_ship_dt_frm = $('#Ship_dt_Fm').val();
+            var p_str_ship_dt_to = $('#Ship_dt_To').val();
+            var p_str_CustId = $('#cust_id').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Shipto = $('#ship_to').val();
+            var p_str_ship_via_name = $('#ship_via_name').val();
+            var p_str_status = $('#status').val();
+            var p_str_Whsid = $('#whs_id').val();
+            var p_str_screentitle = "Shipping Post";
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundShipInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ship_docId_Fm": p_str_ship_docId_Fm, "p_str_ship_docId_To": p_str_ship_docId_To, "p_str_ship_dt_frm": p_str_ship_dt_frm, "p_str_ship_dt_to": p_str_ship_dt_to, "p_str_CustId": p_str_CustId, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Shipto": p_str_Shipto,
+                    "p_str_ship_via_name": p_str_ship_via_name,
+                    "p_str_Whsid": p_str_Whsid,
+                    "p_str_status": p_str_status,
+                    "p_str_screentitle": p_str_screentitle
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+
+            });
+            debugger
+            if (ShipPostdt == "") {
+                var options = { "backdrop": "static", keyboard: true };
+                var windowHeight = $(window).height();
+                var windowWidth = $(window).width();
+                var boxHeight = $('.modal-content').height();
+                var boxWidth = $('.modal').width();
+                var boxContent = $('.modal-content').width();
+                debugger
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackShipPostURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "CmpId": CmpId, "ShipDocId": ShipDocId, "Shipdt": Shipdt },
+                    datatype: "json",
+
+                    success: function (data) {
+                        $('#myModalContentPost').html(data);
+                        $('#myModalPost').modal(options);
+                        $('#myModalPost').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+            else {
+                swal("", "BOL# already posted", "")
+            }
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackShipUnPostURL = '/OutboundShipInq/ShipUnPost';
+    $(function () {
+        //$(".ShipPostDetail").click(function () {
+        $('#GridShipInqs tbody').on('click', '.ShipUnPostDetail', function () { //CR2018-04-07-001 Added by Nithya
+            debugger
+            var $buttonClicked = $(this);
+            var CmpId = $buttonClicked.attr('data-id1');
+            var ShipDocId = $buttonClicked.attr('data-id');
+            var ShipPostdt = $buttonClicked.attr('data-id2');
+            var Shipdt = $buttonClicked.attr('data-id2');
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ship_docId_Fm = $('#ship_doc_id_Fm').val();
+            var p_str_ship_docId_To = $('#ship_doc_id_To').val();
+            var p_str_ship_dt_frm = $('#Ship_dt_Fm').val();
+            var p_str_ship_dt_to = $('#Ship_dt_To').val();
+            var p_str_CustId = $('#cust_id').val();
+            var p_str_AlocId = $('#aloc_doc_id').val();
+            var p_str_Shipto = $('#ship_to').val();
+            var p_str_ship_via_name = $('#ship_via_name').val();
+            var p_str_status = $('#status').val();
+            var p_str_Whsid = $('#whs_id').val();
+            var p_str_screentitle = "Shipping UnPost";
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundShipInq/OB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ship_docId_Fm": p_str_ship_docId_Fm, "p_str_ship_docId_To": p_str_ship_docId_To, "p_str_ship_dt_frm": p_str_ship_dt_frm, "p_str_ship_dt_to": p_str_ship_dt_to, "p_str_CustId": p_str_CustId, "p_str_AlocId": p_str_AlocId,
+                    "p_str_Shipto": p_str_Shipto,
+                    "p_str_ship_via_name": p_str_ship_via_name,
+                    "p_str_Whsid": p_str_Whsid,
+                    "p_str_status": p_str_status,
+                    "p_str_screentitle": p_str_screentitle
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            debugger
+     
+                var options = { "backdrop": "static", keyboard: true };
+                var windowHeight = $(window).height();
+                var windowWidth = $(window).width();
+                var boxHeight = $('.modal-content').height();
+                var boxWidth = $('.modal').width();
+                var boxContent = $('.modal-content').width();
+                debugger
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackShipUnPostURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "CmpId": CmpId, "ShipDocId": ShipDocId, "Shipdt": Shipdt, "screentitle": p_str_screentitle, "ShipPostdt": ShipPostdt },
+                    datatype: "json",
+
+                    success: function (data) {
+                        $('#myModalContentPost').html(data);
+                        $('#myModalPost').modal(options);
+                        $('#myModalPost').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });            
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackURL = '/OutboundShipInq/ShippingDetail';
+    $(function () {
+        //$(".ShippingDetail").click(function () {
+        $('#GridShipInqs tbody').on('click', '.ShippingDetail', function () { //CR2018-04-07-001 Added by Nithya
+            var $buttonClicked = $(this);
+            var shipdocid = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "shipdocid": shipdocid, "cmp_id": cmp_id },
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").click(function () {
+
+        if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+            $("#chkAll").prop("checked", true);
+        }
+        else {
+            $("#chkAll").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").on('change', function () {
+        $("input[name='tblcheckbox']").not(this).prop('checked', false);
+    });
+
+
+</script>
+
+
+
+

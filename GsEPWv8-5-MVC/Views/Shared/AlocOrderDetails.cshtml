@@ -1,0 +1,182 @@
+﻿@model GsEPWv8_5_MVC.Model.OutboundInqModel
+@{
+
+
+}
+@Html.HiddenFor(model => model.cmp_id)
+@Html.HiddenFor(model => model.View_Flag)
+@Html.HiddenFor(model => model.LineNum)
+<input type="hidden" id="LineNums" value="@Session["lineNum"]" />
+<div>   
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <h6><b style="font-size: 14px;color: mediumvioletred;margin-left: -90%;">Allocation Orders</b></h6>
+                    <div class="scrollmenu">
+                        <table id="" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                            <thead class="grid_backcolor">
+                                <tr>
+                                    <th class="grid_header_backcolor">Sel</th>
+                                    <th class="grid_header_backcolor">Status</th>
+                                    <th colspan="2">
+                                        <table>
+                                            <tr>
+                                                <td class="grid_header_backcolor">SoNum</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">Line#</td>
+                                                <td class="grid_header_backcolor" style="width:80px">Due</td>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                    <th colspan="1">
+                                        <table>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">Allocation#</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">AlocLine#</td>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                    <th colspan="3">
+                                        <table>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:200px">Style</td>
+                                                <td class="grid_header_backcolor" style="width:80px">Color</td>
+                                                <td class="grid_header_backcolor" style="width:80px">Size</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:200px">Description</td>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                    <th class="grid_header_backcolor" style="width:80px">Ordr Qty</th>
+                                    <th colspan="1">
+                                        <table>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">Due Qty</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">unit</td>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                    <th colspan="1">
+                                        <table>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">Aloc</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">unit</td>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                    <th colspan="1">
+                                        <table>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">B/O</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="grid_header_backcolor" style="width:80px">Allocated</td>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @for (int i = 0; i < Model.lstShipAlocdtl.Count; i++)
+                                {
+                                    <tr class="row-select">
+                                        <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.lstShipAlocdtl[i].so_num" checked /></td>
+                                        <td style="font-size:10px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].status, new { @style = "background-color:lightyellow; width:80px;", @disabled = true })</td>
+                                        <td colspan="2">
+                                            <table>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;padding-bottom: 5%;"> @Html.TextBoxFor(model => model.lstShipAlocdtl[i].so_num, new { @style = "background-color:lightyellow; width:95px ;", @disabled = true })</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].dtl_line, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].due_line, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td colspan="1">
+                                            <table>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;padding-bottom: 5%;">@Html.TextBoxFor(model => model.AlocdocId, new { @style = "background-color:lightyellow; width:92px", @disabled = true })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].aloc_line, new { @style = "background-color:lightyellow; width:92px", @disabled = true })</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td colspan="3">
+                                            <table>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;padding-bottom:2%;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].itm_num, new { @style = "background-color:lightyellow; width:200px", @disabled = true })</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;padding-left: 5%;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].itm_color, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;padding-left:7%;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].itm_size, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].itm_name, new { @style = "background-color:lightyellow; width:200px", @disabled = true })</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].due_qty, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                        <td colspan="1">
+                                            <table>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;padding-bottom: 5%;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].due_qty, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].qty_uom, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td colspan="1">
+                                            <table>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;padding-bottom: 5%;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].aloc_qty, new { @style = "background-color:lightyellow; width:80px" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].qty_uom, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td colspan="1">
+                                            <table>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;padding-bottom: 5%;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].back_ordr_qty, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.lstShipAlocdtl[i].aloc_qty, new { @style = "background-color:lightyellow; width:80px", @disabled = true })</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-8"></div>
+                        <div class="col-xs-4">
+                            <button type="button" id="btn1Next" class="btn-Clear" style="font-size: 13px;">Next>> </button>
+                            <button type="button" id="btnback" class="btn_search" style="font-size: 13px;">Back</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+</div>
+
+
+
+

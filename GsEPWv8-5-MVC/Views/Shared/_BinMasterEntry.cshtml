@@ -1,0 +1,958 @@
+﻿BIN_@model GsEPWv8_5_MVC.Model.BinMasterModel
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+      .ui-autocomplete li {
+        font-size: 12px;
+        line-height: 30px;
+        color: darkblue;
+        font-family: Verdana;
+        font-weight: bold;
+        background-color: lightcyan;
+    }
+        .text-muted {
+        color:black;
+    }
+</style>
+<style>
+    fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+</style>
+@Html.HiddenFor(model => model.objBinMater.itm_code, new { @id = "a_itm_code" })
+@Html.HiddenFor(model => model.view_flag, new { @id = "a_view_flag" })
+<center>
+    @using (Html.BeginForm("BinMasterEntry", "BinMaster", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+    {
+        <div class="modal-header">
+            @if (Model.view_flag == "V")
+                {
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Bin Master - View</h4>
+                <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px">Close</button>
+            }
+            @if (Model.view_flag == "D")
+                {
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Bin Master - Delete</h4>
+                <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px">Close</button>
+                <button type="button" id="btnWhsDelete" class="btn-Close" style="float:right;margin-top: -18px;background-color: #e38a2f">Delete</button>
+            }
+            @if (Model.view_flag == "M")
+                {
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Bin Master - Modify</h4>
+                <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" onclick="closeModal();" style="float:right;margin-top: -18px">Close</button>
+                <button type="button" id="btnWhsEditSave" class="btn-Close" style="float:right;margin-top: -18px;background-color: #e38a2f">Save</button>
+            }
+            @if (Model.view_flag == "A")
+                {
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Bin Master - Add</h4>
+                <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px">Close</button>
+                <button type="button" id="btnBinEntrySave" class="btn-Close" style="float:right;margin-top: -18px;background-color: #e38a2f">Save</button>
+            }
+        </div>
+        <hr />
+
+        <div class="box-body">
+
+                <div class="box-header" id="whs_master_add_hdr_sec">
+                  <br />
+
+
+                    <table style="border-collapse: separate; border-spacing: 0px 0.5em;width:100% ">
+                        <tr>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Company</label>
+                            </td>
+                            <td style="padding-left: 5px;width:45%">
+                                @Html.DropDownListFor(model => model.objBinMater.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl", @style = "font-size: 10px; font-family: verdana; width: 800px;background-color:lightyellow;", @id = "a_cmp_id" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Warehouse</label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+                                @Html.TextBoxFor(model => model.objBinMater.whs_id, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "10", @style = "font-size: 10px; font-family: verdana; width: 200px;background-color:lightyellow;", @id = "a_whs_id" })
+                            </td>
+                            
+                            <td style="padding-left: 5px;width:20%"> </td>
+                            </tr>
+                        </table>
+                    <br />
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                <tr>
+                                    <td style="text-align: right;width:9%">
+                                        <label class="Lblmanual">Bin Id</label>
+                                    </td>
+                    @if (Model.view_flag == "M")
+                    {
+                    <td style="padding-left: 5px;width:10%">
+                        @Html.TextBoxFor(model => model.objBinMater.bin_id, new { @class = "form-control txtlbl VLDTITMFILD ", @maxlength = "10", @style = "font-size: 12px; font-weight: bold;font-family: verdana; width: 180px;background-color:lightyellow;", @id = "a_bin_id", @disabled = "true" })
+                    </td>
+                    }
+                    else
+                    {
+                        <td style="padding-left: 5px;width:10%">
+                            @Html.TextBoxFor(model => model.objBinMater.bin_id, new { @class = "form-control txtlbl VLDTITMFILD ", @maxlength = "10", @style = "font-size: 12px; font-weight: bold;font-family: verdana; width: 180px;background-color:lightyellow;", @id = "a_bin_id" })
+                        </td>
+                     }
+
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">Type</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:15%">
+                                        @Html.DropDownListFor(model => model.objBinMater.bin_type, new SelectList(Model.ListLookUpBinType, "name", "description"), new { @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana; ", @id = "a_bin_type" })
+                                    </td>
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">Desc</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:20%">
+                                        @Html.TextBoxFor(model => model.objBinMater.bin_desc, new { @class = "form-control txtlbl ", @maxlength = "100", @style = "font-size: 12px;font-weight: bold; font-family: verdana; width: 400px;background-color:lightyellow;", @id = "a_bin_desc" })
+                                    </td>
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">Location</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.objBinMater.bin_loc, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "10", @style = "font-size: 12px; font-weight: bold;font-family: verdana; width: 200px;background-color:lightyellow;", @id = "a_bin_loc", @disabled = "true" })
+                                    </td>
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">Status</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.DropDownListFor(model => model.objBinMater.status, new SelectList(Model.ListStatus, "name", "description"), new { @class = "form-control txtlbl", @maxlength = "10", @style = "font-weight: bold;width:180px;background-color:lightyellow;", @id = "a_status" })
+
+                                    </td>
+                                    <td style="padding-left: 5px;width:6%"> </td>
+                                </tr>
+                            </table>
+                            <br />
+
+                    @if (Model.view_flag == "M")
+                    {  
+                        <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                        <tr>
+
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Style</label>
+                            </td>
+                            <td style="padding-left: 5px;width:15%">
+                                @Html.TextBoxFor(model => model.objBinMater.itm_num, new { @class = "form-control txtlbl NotaloowedSplchar VLDTITMFILD", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana;background-color:lightyellow;", @disabled = "true", @id = "a_itm_num" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Color</label>
+                            </td>
+                            <td style="padding-left: 5px;width:15%">
+                                @Html.TextBoxFor(model => model.objBinMater.itm_color, new { @class = "form-control txtlbl VLDTITMFILD NotaloowedSplchar", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana; background-color:lightyellow;", @id = "a_itm_color", @disabled = "true" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Size</label>
+                            </td>
+                            <td style="padding-left: 5px;width:15%">
+                                @Html.TextBoxFor(model => model.objBinMater.itm_size, new { @class = "form-control txtlbl VLDTITMFILD NotaloowedSplchar", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana; background-color:lightyellow;", @id = "a_itm_size", @disabled = "true" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Desc</label>
+                            </td>
+                            <td style="padding-left: 5px;width:30%">
+                                @Html.TextBoxFor(model => model.objBinMater.itm_name, new { @class = "form-control txtlbl", @maxlength = "100", @style = "font-size: 12px;font-weight: bold; font-family: verdana;background-color:lightyellow;", @id = "a_itm_name", @disabled = "true" })
+
+                            </td>
+                            <td style="padding-left: 5px;width:5%"> </td>
+                        </tr>
+                    </table>
+                    }
+                    else
+                    {         
+                         <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                        <tr>
+
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Style</label>
+                            </td>
+                            <td style="padding-left: 5px;width:15%">
+                                @Html.TextBoxFor(model => model.objBinMater.itm_num, new { @class = "form-control txtlbl NotaloowedSplchar VLDTITMFILD", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana;background-color:lightyellow;", @id = "a_itm_num" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Color</label>
+                            </td>
+                            <td style="padding-left: 5px;width:15%">
+                                @Html.TextBoxFor(model => model.objBinMater.itm_color, new { @class = "form-control txtlbl VLDTITMFILD NotaloowedSplchar", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana; background-color:lightyellow;", @id = "a_itm_color" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Size</label>
+                            </td>
+                            <td style="padding-left: 5px;width:15%">
+                                @Html.TextBoxFor(model => model.objBinMater.itm_size, new { @class = "form-control txtlbl VLDTITMFILD NotaloowedSplchar", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana; background-color:lightyellow;", @id = "a_itm_size" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Desc</label>
+                            </td>
+                            <td style="padding-left: 5px;width:30%">
+                                @Html.TextBoxFor(model => model.objBinMater.itm_name, new { @class = "form-control txtlbl", @maxlength = "100", @style = "font-size: 12px;font-weight: bold; font-family: verdana;background-color:lightyellow;", @id = "a_itm_name" })
+
+                            </td>
+                            <td style="padding-left: 5px;width:5%"> </td>
+                        </tr>
+                    </table>
+
+}
+                  
+
+                            <br />
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                <tr>
+
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">B.Length</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.objBinMater.bin_length, new { @class = "form-control two-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_length" })
+
+                                    </td>
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">B.Width</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.objBinMater.bin_width, new { @class = "form-control two-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_width" })
+                                    </td>
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">B.Height</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.objBinMater.bin_height, new { @class = "form-control two-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_height" })
+                                    </td>
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">B.Cube</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.objBinMater.bin_cube, new { @class = "form-control two-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_cube" })
+                                    </td>
+                                    <td style="text-align: right;width:5%">
+                                        <label class="Lblmanual">B.Weight</label>
+                                    </td>
+                                    <td style="padding-left: 5px;width:10%">
+                                        @Html.TextBoxFor(model => model.objBinMater.bin_wgt, new { @class = "form-control three-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_wgt" })
+
+                                    </td>
+                                    <td style="padding-left: 5px;width:25%"> </td>
+                                </tr>
+
+                            </table>
+
+
+                            <br />
+                    <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                        <tr>
+
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">MinQty</label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+
+                                @Html.TextBoxFor(model => model.objBinMater.min_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_min_qty" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Max Qty</label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+                                @Html.TextBoxFor(model => model.objBinMater.max_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_max_qty" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Order Qty </label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+                                @Html.TextBoxFor(model => model.objBinMater.ordr_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_ordr_qty" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Qty UoM</label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+                                @Html.DropDownListFor(model => model.objBinMater.qty_uom, new SelectList(Model.ListQtyUoM, "qty_uom", "uom_desc"), new { @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana; ", @id = "a_qty_uom" })
+                            </td>
+                            <td style="padding-left: 5px;width:40%"> </td>
+                        </tr>
+
+                    </table>
+
+
+                    <br />
+                    <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                        <tr>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">B.PPK</label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+                                @Html.TextBoxFor(model => model.objBinMater.bin_ppk, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_bin_ppk" })
+
+                            </td>
+
+
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Price</label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+
+                                @Html.TextBoxFor(model => model.objBinMater.price, new { @class = "form-control txtlbl two-decimals", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_price" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">QPM</label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+                                @Html.TextBoxFor(model => model.objBinMater.qpm, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_qpm" })
+                            </td>
+                            <td style="text-align: right;width:5%">
+                                <label class="Lblmanual">Lead Time </label>
+                            </td>
+                            <td style="padding-left: 5px;width:10%">
+                                @Html.TextBoxFor(model => model.objBinMater.lead_time, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_lead_time" })
+                            </td>
+                            <td style="padding-left: 5px;width:40%"> </td>
+          
+                        </tr>
+                    </table>
+                    <br />
+                    <fieldset>
+                        <legend style="text-align:left;">Per Piece Dimension Details </legend>
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr>
+                                <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                    <label><b class="Lblmanual">Length(IN)</b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 3%;">
+                                    @Html.TextBoxFor(model => model.objBinMater.pce_length, new { @class = "form-control txtlbl two-decimals ", @maxlength = "10", @id = "a_pce_length" })
+                                </td>
+                                <td style="text-align: right; width: 9%;">
+                                    <label><b class="Lblmanual">Width(IN) </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.objBinMater.pce_width, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "a_pce_width" })
+                                </td>
+                                <td style="text-align: right; width: 7%;">
+                                    <label><b class="Lblmanual">Depth(IN)</b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.objBinMater.pce_depth, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "a_pce_depth" })
+                                </td>
+                                <td style="text-align: right; width: 7%;">
+                                    <label><b class="Lblmanual">Cube(CI) </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.objBinMater.pce_cube, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "a_pce_cube" })
+                                </td>
+                                <td style="text-align: right; width: 7%;">
+                                    <label><b class="Lblmanual">Weight(LB) </b></label>
+                                </td>
+                                <td style="width: 12%; padding-left: 1%;">
+                                    @Html.TextBoxFor(model => model.objBinMater.pce_wgt, new { @class = "form-control txtlbl three-decimals", @maxlength = "10", @id = "a_pce_wgt" })
+                                </td>
+                            </tr>
+
+                        </table>
+                    </fieldset>
+                </div>
+            
+</div>
+}
+</center>
+
+
+<script type="text/javascript">
+
+    $("#a_itm_num").autocomplete({
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/InboundInquiry/ItemXGetitmDtl?cmp_id=" + $('#a_cmp_id').val() + "&",
+        select: function (event, ui) {
+
+            $("#a_itm_color").val(ui.item.itm_color);
+            $("#a_itm_size").val(ui.item.itm_size);
+            $("#a_itm_name").val(ui.item.itm_name);
+            $("#a_itm_code").val(ui.item.itm_code);
+
+            closeOnSelect: false
+        }
+
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+
+
+<script type="text/javascript">
+    $("#a_bin_loc").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/inboundinquiry/ItemXGetLocDtl?cmp_id=" + $('#a_cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#a_bin_loc").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+
+<script>
+    $(".two-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(2);
+        if (this.value == 'NaN') {
+            $('#ctn_qty').val(0);
+        }
+    });
+    $(".three-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(3);
+        if (this.value == 'NaN') {
+
+            $("#doccube").val(0);
+            return false;
+        }
+    });
+
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+</script>
+
+<script>
+    $(function () {
+        debugger;
+        $("#a_bin_id").on('change', function () {
+            debugger;
+            $("#a_bin_loc").val($('#a_bin_id').val());
+        })
+    });
+
+</script>
+
+<script>
+
+    $("#btnBinEntrySave, #btnWhsEditSave,#btnWhsDelete ").click(function () {
+        debugger
+        var pstrCmpId = $('#a_cmp_id').val();
+        if (pstrCmpId == "") {
+            swal("", "Please Select The Company.", "");
+            $('#a_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        var pstrBinId = $('#a_bin_id').val();
+        if (pstrBinId == "") {
+            swal("", "Please Enter the  Bin Id", "");
+            $('#a_bin_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        var Validated = '';
+        var pstrItmName = $('#a_itm_name').val();
+            
+        var pstrWhsId = $('#a_whs_id').val();
+        var pstrBinType = $('#a_bin_type').val();
+        var pstrBinDesc = $('#a_bin_desc').val();
+        var pstrBinLoc = $('#a_bin_loc').val();
+        var pstrStatus = $('#a_status').val();
+       
+        var pstrItmNum = $('#a_itm_num').val();
+        var pstrItmColor = $('#a_itm_color').val();
+        var pstrItmSize = $('#a_itm_size').val();
+      
+        var pstrBinLength = $('#a_bin_length').val();
+        var pstrBinWidth = $('#a_bin_width').val();
+        var pstrBinHeight = $('#a_bin_height').val();
+        var pstrBinCube = $('#a_bin_cube').val();
+        var pstrBinWgt = $('#a_bin_wgt').val();
+        var pstrMaxQty = $('#a_max_qty').val();
+        var pstrOrdrQty = $('#a_ordr_qty').val();
+        var pstrQtyUom = $('#a_qty_uom').val();
+
+
+        var pintBinPPK = $('#a_bin_ppk').val();
+        var pdecPcsLength = $('#a_pce_length').val();
+        var pdecPcsWidth = $('#a_pce_width').val();
+        var pdecPcsDepth = $('#a_pce_depth').val();
+        var pdecPcsCube = $('#a_pce_cube').val();
+        var pdecPcsWgt = $('#a_pce_wgt').val();
+
+        var pstrPrice = $('#a_price').val();
+        var pstrQPM = $('#a_qpm').val();
+        var pstrLeadTime = $('#a_lead_time').val();
+        var pstrMinQty = $('#a_min_qty').val();
+        var pstrMode = $('#a_view_flag').val();
+        pstrItmCode = $('#a_itm_code').val();
+        if (pstrMode == "A" || pstrMode == "M" )
+        {
+        if (pstrWhsId == "") {
+            swal("", "Please Enter the  Whs ID.", "");
+            $('#a_whs_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+       
+        if (pstrBinLoc == "") {
+
+            $("#a_bin_loc").val(pstrBinId);
+
+        }
+
+        if (pstrBinDesc == "") {
+            swal("", "Please Enter the  Bin Description", "");
+            $('#a_bin_desc').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+  
+        if (pstrBinDesc == "") {
+            swal("", "Please Enter the  Bin Location", "");
+            $('#a_bin_loc').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (pstrBinDesc == "") {
+            swal("", "Please Enter the Style ", "");
+            $('#a_itm_num').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+   
+        if (pstrItmColor == "") {
+            swal("", "Please Enter the Color", "");
+            $('#a_itm_color').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+       
+        if (pstrItmSize == "") {
+            swal("", "Please Enter the Color", "");
+            $('#a_itm_size').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        
+        if (pstrItmName == "") {
+            swal("", "Please Enter the Item Name", "");
+            $('#a_itm_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (pstrMaxQty == "") {
+            swal("", "Please Enter the Maximum Qty ", "");
+            $('#a_max_qty').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+      
+        if (pstrMinQty == "") {
+            swal("", "Please Enter the Minimum Qty", "");
+            $('#a_min_qty').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (parseInt(pstrMinQty) > parseInt(pstrMaxQty)) {
+            swal("", "Minimum Qty Can not be greayter than Max Qty", "");
+            $('#a_min_qty').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (pstrBinId != "")
+            {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/GetItemCode")',
+                data: { "l_str_cmp_id": pstrCmpId, "l_str_Itmdtl": pstrItmNum, "l_str_itm_color": pstrItmColor, "l_str_itm_size": pstrItmSize },
+                success: function (e) {
+                    debugger
+                    if (e.data1 == "Y") {
+                        var itemCode = e.data2;
+                        var itemname = e.data3;
+                        $('#a_itm_code').val((itemCode));
+                        $('#a_itm_name').val((itemname));
+                        pstrItmCode = $('#a_itm_code').val();
+                        pstrItmName = $('#a_itm_name').val();
+                       
+                    }
+                    else if (e.data1 == "N") {
+                        swal("", "Invalid Style/ Color and Size", "");
+                        return false;
+                    }
+
+                },
+            });
+        }
+           
+        }
+
+        if (pstrBinId == "")
+        {
+            swal("", "Validation Error", "");
+            return false;
+        }
+        else {
+
+            var objBinMaster = {
+                cmp_id: pstrCmpId,
+                whs_id: pstrWhsId,
+                bin_id: pstrBinId,
+                bin_type: pstrBinType,
+                bin_loc: pstrBinLoc,
+                bin_desc: pstrBinDesc,
+                status: pstrStatus,
+                itm_code: pstrItmCode,
+                itm_num: pstrItmNum,
+                itm_color: pstrItmColor,
+                itm_size:pstrItmSize,
+                itm_name: pstrItmName,
+              
+                bin_length:pstrBinLength,
+                bin_width:pstrBinWidth,
+                bin_height:pstrBinHeight,
+                bin_cube:pstrBinCube,
+                bin_wgt:pstrBinWgt,
+                min_qty: pstrMinQty,
+                max_qty:pstrMaxQty,
+                ordr_qty:pstrOrdrQty,
+                qty_uom:pstrQtyUom,
+                price: pstrPrice,
+                qpm: pstrQPM,
+                lead_time: pstrLeadTime,
+                bin_ppk: pintBinPPK,
+                pce_length: pdecPcsLength,
+                pce_width: pdecPcsWidth,
+                pce_depth: pdecPcsDepth,
+                pce_cube: pdecPcsCube,
+                pce_wgt: pdecPcsWgt,
+
+                bin_dt:'',
+                user_id:'',
+                process_id:''
+
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/BinMaster/SaveBinMasterEntry")',
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                dataType: "json",
+                data: JSON.stringify({
+                    objBinMaster: objBinMaster, pstrMode: pstrMode
+                    
+                }),
+                success: function (e) {
+                    if (e == "true") {
+                        swal({
+                            title: "",
+                            text: "Bin  " + pstrBinId + " Saved successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                    function () {
+                        debugger
+                        setTimeout(function () {
+                            debugger
+                            var f_str_cmp_id = $('#a_cmp_id').val();
+                            $('#modalBinMaster').modal('hide');
+                            $.ajax({
+                                type: "get",
+                                url: "/BinMaster/BinMasterInquiryGridDtl",
+                                data: {
+                                    "p_str_cmp_id": pstrCmpId, "p_str_bin_id": '', p_str_bin_desc: '', p_str_whs_id: '',
+                                    p_str_itm_num: '', p_str_itm_color: '', p_str_itm_size:''
+                                },
+                                datatype: 'html',
+                                success: function (e) {
+                                    debugger
+                                    $("#ajaxloading").hide();
+                
+                                    $('#grdBinMaster').html("");
+                                    $('#grdBinMaster').html(e);
+                                  
+
+                                },
+                            })
+                        });
+                    });
+
+                    }
+                    else if  (e == "BinExists") {
+                        swal("", "Bin ID Already Exist", "");
+                        $('#a_bin_desc').focus();
+                        $('body,html').animate({ scrollTop: 0 }, 0);
+                        er = 1;
+                        return false;
+
+                    }
+
+                    else if (e == "StyleExists") {
+                        swal("", "Style Already Available in Another Bin", "");
+                        $('#a_itm_num').focus();
+                        $('body,html').animate({ scrollTop: 0 }, 0);
+                        er = 1;
+                        return false;
+
+                    }
+
+                    else   {
+                        swal("", " Other Exception Found", "");
+                        return false;
+
+                    }
+                },
+
+            })
+        }
+    });
+</script>
+
+<script>
+    $('#a_bin_length,#a_bin_width,#a_bin_height,#a_bin_cube, #a_bin_wgt,#a_pce_length, #a_pce_width, #a_pce_depth, #a_pce_cube, #a_pce_wgt').keyup(function () {
+        var val = $(this).val();
+        if (isNaN(val)) {
+            val = val.replace(/[^0-9\.]/g, '');
+            if (val.split('.').length > 2)
+                val = val.replace(/\.+$/, "");
+        }
+        $(this).val(val);
+    });
+
+    $('#a_bin_length').focusout(function () {
+        debugger
+        var a = $('#a_bin_length').val();
+
+        if (a == 'NaN') {
+            $('#a_bin_length').val(0);
+            return false;
+        }
+    });
+
+
+    $('#a_bin_width').focusout(function () {
+        debugger
+        var a = $('#a_bin_width').val();
+
+        if (a == 'NaN') {
+            $('#a_bin_width').val(0);
+            return false;
+        }
+    });
+
+    $('#a_bin_height').focusout(function () {
+        debugger
+        var a = $('#a_bin_height').val();
+
+        if (a == 'NaN') {
+            $('#a_bin_height').val(0);
+            return false;
+        }
+    });
+
+    $('#a_bin_cube').focusout(function () {
+        debugger
+        var a = $('#a_bin_cube').val();
+
+        if (a == 'NaN') {
+            $('#a_bin_cube').val(0);
+            return false;
+        }
+    });
+
+    $('#a_bin_wgt').focusout(function () {
+        debugger
+        var a = $('#a_bin_wgt').val();
+
+        if (a == 'NaN') {
+            $('#a_bin_wgt').val(0);
+            return false;
+        }
+    });
+
+
+    $('#a_pce_length').focusout(function () {
+        debugger
+        var a = $('#a_pce_length').val();
+
+        if (a == 'NaN') {
+            $('#a_pce_length').val(0);
+            return false;
+        }
+    });
+
+
+    $('#a_pce_width').focusout(function () {
+        debugger
+        var a = $('#a_pce_width').val();
+
+        if (a == 'NaN') {
+            $('#a_pce_width').val(0);
+            return false;
+        }
+    });
+
+    $('#a_pce_depth').focusout(function () {
+        debugger
+        var a = $('#a_pce_depth').val();
+
+        if (a == 'NaN') {
+            $('#a_pce_depth').val(0);
+            return false;
+        }
+    });
+
+    $('#a_pce_cube').focusout(function () {
+        debugger
+        var a = $('#a_pce_cube').val();
+
+        if (a == 'NaN') {
+            $('#a_pce_cube').val(0);
+            return false;
+        }
+    });
+
+    $('#a_pce_wgt').focusout(function () {
+        debugger
+        var a = $('#a_pce_wgt').val();
+
+        if (a == 'NaN') {
+            $('#a_pce_wgt').val(0);
+            return false;
+        }
+    });
+
+
+    $("#a_bin_type").focusout(function () {
+        debugger
+        var p_bin_type = $('#a_bin_type').val();
+        var p_int_length = $('#a_bin_length').val();
+        var p_int_width = $('#a_bin_width').val();
+        var p_int_height = $('#a_bin_height').val();
+
+        if (p_int_width == 0 && p_int_width == 0 && p_int_height == 0) {
+            if (p_bin_type == 'Mid')
+            {
+                $('#a_bin_length').val('25.00');
+                $('#a_bin_width').val('19.00');
+                $('#a_bin_height').val('49.00');
+                $('#a_bin_cube').val('13.50');
+            }
+
+        }
+    });
+    $(document).ready(function () {
+        $('.VLDTITMFILD').keyup(function () {
+            $(this).val($(this).val().toUpperCase());
+        });
+    });
+
+
+    $("#a_itm_num, #a_itm_color,#a_itm_size").blur(function () {
+        debugger
+        var pstrMode = $('#a_view_flag').val();
+        var pstrPceLenghth = $("#a_pce_length").val();
+       if ((pstrMode == "A") && (pstrPceLenghth == 0 || pstrPceLenghth == '')) {
+            var pstrCmpId = $('#a_cmp_id').val();
+            var pstrItmNum = $('#a_itm_num').val();
+            var pstrItmColor = $('#a_itm_color').val();
+            var pstrItmSize = $('#a_itm_size').val();
+
+
+
+            var pintBinPPK = $('#a_bin_ppk').val();
+            var pdecPcsLength = $('#a_pce_length').val();
+            var pdecPcsWidth = $('#a_pce_width').val();
+            var pdecPcsDepth = $('#a_pce_depth').val();
+            var pdecPcsCube = $('#a_pce_cube').val();
+            var pdecPcsWgt = $('#a_pce_wgt').val();
+
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BinMaster/fnGetItemPcsDimDtl")',
+                data: {
+                    "pstrCmpId": pstrCmpId, "pstrItmNum": pstrItmNum, "pstrItmColor": pstrItmColor, "pstrItmSize": pstrItmSize
+                },
+
+                dataType: "json",
+                success: function (ItemPcsDim) {
+                    debugger
+                    if (ItemPcsDim == "Y") {
+                        debugger
+                        $("#a_pce_length").val(0);
+                        $("#a_pce_width").val(0);
+                        $("#a_pce_depth").val(0);
+                        $("#a_pce_cube").val(0);
+                        $("#a_pce_wgt").val(0);
+                    }
+                    else {
+                        debugger
+                        $.each(ItemPcsDim, function () {
+                            $('#a_pce_length').val(ItemPcsDim.pce_length);
+                            $('#a_pce_width').val(ItemPcsDim.pce_width);
+                            $('#a_pce_depth').val(ItemPcsDim.pce_depth);
+                            $('#a_pce_cube').val(ItemPcsDim.pce_cube);
+                            $('#a_pce_wgt').val(ItemPcsDim.pce_wgt);
+                        });
+                    }
+
+                },
+
+            });
+        }
+    });
+
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}

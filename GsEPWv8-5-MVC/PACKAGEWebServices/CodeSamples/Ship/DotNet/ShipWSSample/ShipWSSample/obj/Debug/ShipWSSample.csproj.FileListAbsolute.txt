@@ -1,0 +1,6 @@
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\Ship\DotNet\ShipWSSample\ShipWSSample\bin\Debug\ShipWSSample.exe.config
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\Ship\DotNet\ShipWSSample\ShipWSSample\bin\Debug\ShipWSSample.exe
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\Ship\DotNet\ShipWSSample\ShipWSSample\bin\Debug\ShipWSSample.pdb
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\Ship\DotNet\ShipWSSample\ShipWSSample\obj\Debug\ShipWSSample.csprojResolveAssemblyReference.cache
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\Ship\DotNet\ShipWSSample\ShipWSSample\obj\Debug\ShipWSSample.exe
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\Ship\DotNet\ShipWSSample\ShipWSSample\obj\Debug\ShipWSSample.pdb

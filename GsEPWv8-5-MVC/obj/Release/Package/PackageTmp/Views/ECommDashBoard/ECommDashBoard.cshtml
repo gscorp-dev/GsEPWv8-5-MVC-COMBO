@@ -1,0 +1,576 @@
+﻿@model GsEPWv8_5_MVC.Model.OrderSummaryModel
+@{
+    ViewBag.Title = "ECommDashBoard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h1 style="height: 1px;"></h1>
+<h3 class="dashboardstyle" style="margin-top: 30px; margin-left: 11px;">3PL-ECom Dashboard</h3>
+
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+</style>
+<style type="text/css">
+    .actionlink {
+    }
+
+        .actionlink:hover {
+            text-decoration: none;
+            border-bottom: 1px solid #072c9a;
+            color: #000000;
+        }
+</style>
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+<div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+<br />
+<br /> 
+<table style="width:100%">
+
+    <tr>
+        <td style="width: 10%"></td>
+        <td colspan=" 3">
+            <div>
+                <center>
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width: 10%;padding-bottom: 27px; font-family: verdana;text-align: right;">
+                                <label><b style="font-size: 12px;">Company ID </b></label>
+                            </td>
+                            <td style="width:33%;padding-bottom: 30px;padding-left: 1%">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select---", new { @class = "form-control", @style = "margin-bottom: -2px;" })
+                                @Html.HiddenFor(model => model.p_str_cmp_id)
+                            </td>
+
+                            <td style="padding-bottom: 30px;width: 6%;padding-left: 1%;text-align: right;">
+                                <label><b class="Lblmanual"> Date Fm </b></label>
+                            </td>
+                            <td style="width: 11%;padding-bottom: 30px;padding-left: 1%">
+
+                                @Html.TextBoxFor(model => model.frm_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                @Html.HiddenFor(model => model.p_str_frm_dt)
+
+                            </td>
+                            <td style="text-align:right; padding-bottom: 30px;padding-left: 1%;width:2%;">
+                                <label><b class="Lblmanual"> To </b></label>
+                            </td>
+                            <td style="width:11%;padding-bottom: 30px;padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.to_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                @Html.HiddenFor(model => model.p_str_to_dt)
+                            </td>
+                            <td style="width: 10%;padding-bottom: 30px; padding-left: 1%">
+                                <button type="button" id="btnRefresh" class="btn_NewEntry" style="background-color: #3d8def;width: 110px">Refresh </button>
+                            </td>
+                            <td style="width:18%;"></td>
+                            <td style="width:18%;"></td>
+                            <td style="width:18%;"></td>
+                        </tr>
+                    </table>
+                </center>
+            </div>
+        </td>
+
+        <td style="width: 10%"></td>
+
+
+    </tr>
+
+</table>
+<br />
+<div id="ShowDashboard" class="box-header" style="padding: 5px;text-align:left ">
+    <div class="row">
+        <div class="col-lg-3 col-xs-3" style="margin-left:150px">
+            <!-- small box -->
+            <div class="small-box bg-aqua-active" style="height: 300px;">
+                <div class="inner" style="padding:10px 10px 0px 10px;background-color: #6A0888;border-bottom: 1px solid #3a7fe6;">
+                    @*<p class="dashboardhdr">  </p>*@
+                    <table>
+                        <tr>
+                            <td style="width: 200px;">
+                                <p class="dashboardhdr" style="color:white;padding-bottom:0px;">ECom Gateway Link Download </p>
+                            </td>
+                            <td style="text-align:left;font-size:50px;color:#00c0ef;width: 50px;padding-bottom:0px;">
+                                <p style="color:white;font-size:x-large">@Model.ecom_open_orders</p>
+                            </td>
+                            <td style="text-align:right;font-size:35px;color:#ffffff;width: 50px;padding-left:45px;padding-bottom:0px;">
+                                <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                            </td>
+
+
+                        </tr>
+                    </table>
+                </div>
+
+                <table id="exampl" border="1" class="table" style="background-color:white">
+                    <tr>
+                        <td>
+                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session[" g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" style="color:darkblue;font-size:small">
+                                <b>940 - SPS-ORDERS (CSV) </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OB940ChubUploadFile/OB940ChubUploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" style="color:darkblue;font-size:small">
+                                <b>940 - CommerceHub-ORDERS (CSV) </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session[" g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" style="color:darkblue;font-size:small">
+                                <b>940 - TrueCommerce™-ORDERS (CSV) </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SRUpload" style="color:darkblue;font-size:small">
+                                <b> 940 - SHIPPER SLF PICK ORDER UPLOAD (CSV) </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/EcomOrders/SearchEcomOrders?FullFillType=ALL&Status=TEMP" style="color:darkblue;font-size:small">
+                                <b>WALMART Market Place ECom Orders </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <a href="/EcomOrders/SearchEcomOrders?FullFillType=ALL&Status=TEMP" style="color:darkblue;font-size:small">
+                                <b>HOMEDEPOT Market Place ECom Orders </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <a href="/EcomOrders/SearchEcomOrders?FullFillType=ALL&Status=TEMP" style="color:darkblue;font-size:small">
+                                <b>Send ERP-ECom Orders to CUST </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-3">
+            <!-- small box -->
+            <div class="small-box bg-light-blue" style="height:120px;">
+                <div class="inner" style="padding:10px 10px 0px 10px;background-color: #8A0868;border-bottom: 1px solid #3a7fe6;">
+                    <table>
+                        <tr>
+                            <td style="width: 220px;">
+                                <p class="dashboardhdr" style="color:white;padding-bottom:0px;">3PL-ECom Order Inquiry and Analysis</p>
+                            </td>
+                            <td style="text-align:left;font-size:50px;color:#00c0ef;width: 50px;padding-bottom:0px;">
+                                <p style="color:white;font-size:x-large;margin-left:5px">@Model.ecom_open_orders</p>
+                            </td>
+                            <td style="text-align:right;font-size:35px;color:#ffffff;width: 50px;padding-bottom:0px">
+                                <i class="fa fa-file-text" aria-hidden="true"></i>
+                            </td>
+
+                        </tr>
+
+                       
+
+                    </table>
+                </div>
+                <table border="1" id="exampl" class="table" style="background-color:white">
+                    <tr>
+                        <td>
+                            <a href="/EcomOutboundInq/EcomOutboundInq?cmp=@Session["g_str_cmp_id"]&status=ALL&DateFm=@Session["dflt_dt_from"]&@Session["dflt_dt_to"]&screentitle=OBInquiry" style="color:darkblue;font-size:small;">
+                                <b>  3PL-ECom Order Inquiry and Analysis </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;"></td>
+                    </tr>
+                </table>
+                <br />
+
+                <table border="1" id="exampl" class="table" style="background-color:white">
+                    <tr>
+                        <td>
+                            <a href="/VasInquiry/VasInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&p_str_scn_id=VasInquiry" style="color:darkblue;font-size:small;">
+                             
+                                <b> VAS Visibility & Analysis </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;"></td>
+                    </tr>
+                </table>
+
+
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-2 col-xs-2">
+            <!-- small box -->
+            <div class="small-box bg-blue" style="height: 120px;">
+                <div class="inner" style="padding:10px 10px 0px 10px;background-color: #DF7401;border-bottom: 1px solid #3a7fe6;">
+                    <table>
+                        <tr>
+                            <td style="width: 180px;">
+                                <p class="dashboardhdr" style="color:white;padding-bottom:0px;">3PL-ECom Order Proccesing</p>
+                            </td>
+                            <td style="text-align:center;font-size:50px;color:#00c0ef;width: 40px;padding-bottom:0px;">
+                                <p style="color:white;font-size:x-large;">@Model.ecom_open_orders</p>
+                            </td>
+                            <td style="text-align:right;font-size:35px;color:#ffffff;width: 40px;padding-bottom:0px">
+                                <i class="fa fa-bookmark" aria-hidden="true"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <table id="exampl" border="1" class="table" style="background-color:white">
+                    <tr>
+                        <td>
+                            <a href="/OutboundInq/OutboundInq?cmp=@Session["g_str_cmp_id"]&status=ALL&DateFm=@Session["dflt_dt_from"]&@Session["dflt_dt_to"]&screentitle=OBInquiry" style="color:darkblue;font-size:small;">
+                                <b>3PL-ECom Order Allocation </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/EcomBinScanOut/ListEcomBinScanOut" style="color:darkblue;font-size:small;">
+                                <b>BIN Pick Fulfillment (BPF) </b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                            @*<i class="fa fa-bookmark" aria-hidden="true"></i>*@
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- ./col -->
+        <!-- ./col -->
+        <div class="col-lg-2 col-xs-2">
+            <!-- small box -->
+            <div class="small-box bg-blue-active" style="height: 200px;">
+                <div class="inner" style="padding:10px 10px 0px 10px;background-color: #088A08;border-bottom: 1px solid #3a7fe6;">
+                    <table>
+                        <tr>
+                            <td style="width: 220px;">
+                                <p class="dashboardhdr" style="color:white;padding-bottom:0px;">ECom Gateway Link Upload</p>
+                            </td>
+                            <td style="text-align:left;font-size:50px;color:#00c0ef;width: 60px;padding-bottom:0px;">
+                                <p style="color:white;font-size:x-large;margin-left:5px">@Model.ecom_open_orders</p>
+                            </td>
+                            <td style="text-align:right;font-size:40px;color:#ffffff;width: 50px;padding-bottom:0px;">
+                                <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <table id="exampl" border="1" class="table" style="background-color:white">
+                    <tr>
+                        <td>
+                            <a href="/OderLifeCycle/ViewOrder?Status=CLOSED&Fullfiltype=Vendor" style="color:darkblue;font-size:small;">
+                                <b>855 - Order Acknowledgement</b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OderLifeCycle/ViewOrder?Status=CLOSED&Fullfiltype=Vendor" style="color:darkblue;font-size:small;">
+                                <b>856 - Order Ship-Confirm</b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OderLifeCycle/ViewOrder?Status=CLOSED&Fullfiltype=Vendor" style="color:darkblue;font-size:small;">
+                                <b>810 - Order Invoice Upload</b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OderLifeCycle/ViewOrder?Status=CLOSED&Fullfiltype=Vendor" style="color:darkblue;font-size:small;">
+                                <b>846 - Inventry stock Upload</b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                            @*<i class="fa fa-cloud-upload" aria-hidden="true"></i>*@
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- ./col -->
+
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    @*<div class="row">
+            <div class="col-lg-3 col-xs-3" style="margin-left:250px">
+
+                <div class="small-box bg-green-gradient" style="height: 120px;">
+                    <div class="inner">
+                        <table>
+                            <tr>
+                                <td style="width: 220px;">
+                                    <p class="dashboardhdr" style="color:white;padding-bottom:0px;">ECom Order Shiping</p>
+                                </td>
+                                <td style="text-align:left;font-size:50px;color:#00c0ef;width: 50px;padding-bottom:0px;">
+                                    <p style="color:white;font-size:x-large;margin-left:5px">@Model.ecom_open_orders</p>
+                                </td>
+                                <td style="text-align:right;font-size:40px;color:#ffffff;width: 50px;padding-left:50px;padding-bottom:0px;">
+                                    <i class="fa fa-ship" aria-hidden="true"></i>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <table id="exampl" class="table" style="background-color:white">
+                        <tr>
+                            <td>
+                                <a href="/OutboundInq/OutboundInq?cmp=@Session["g_str_cmp_id"]&status=ALL&DateFm=@Session["dflt_dt_from"]&@Session["dflt_dt_to"]&screentitle=OBInquiry" style="color:darkblue;font-size:small;">
+                                    <b> 3PL-ECom Order Inquiry and Analysis</b> <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;font-size:30px;color:#00c0ef;">
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-xs-2">
+
+                <div class="small-box bg-olive" style="height: 150px;">
+                    <div class="inner">
+                        <table>
+                            <tr>
+                                <td style="width: 300px;">
+                                    <p class="dashboardhdr" style="color:white;">3PL-ECom Order Ship-Track Uploading</p>
+                                </td>
+                                <td style="text-align:left;font-size:50px;color:#00c0ef;width: 50px;padding-bottom:0px;">
+                                    <p style="color:white;font-size:x-large;margin-left:5px">@Model.ecom_open_orders</p>
+
+                                </td>
+                                <td style="text-align:right;font-size:40px;color:#ffffff;width: 35px;padding-bottom:0px;">
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+
+                    <table id="exampl" class="table" style="background-color:white">
+                        <tr>
+                            <td>
+                                <a href="/OutboundInq/OutboundInq?cmp=@Session["g_str_cmp_id"]&status=ALL&DateFm=@Session["dflt_dt_from"]&@Session["dflt_dt_to"]&screentitle=OBInquiry" style="color:darkblue;font-size:small;">
+                                    <b>3PL-ECom Order Inquiry and Analysis </b> <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="/OderLifeCycle/ViewOrder" style="color:darkblue;font-size:small;">
+                                    <b>945 3PL-ECom Order Ship Confirmation</b> <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;font-size:30px;color:#00c0ef;">
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-2 col-xs-2">
+
+                <div class="small-box bg-blue-active" style="height: 120px;">
+                    <div class="inner">
+                        <table>
+                            <tr>
+                                <td style="width: 180px;">
+                                    <p class="dashboardhdr" style="color:white;padding-bottom:0px;">ECom Order Picking</p>
+                                </td>
+                                <td style="text-align:left;font-size:50px;color:#00c0ef;width:50px;padding-bottom:0px;">
+                                    <p style="color:white;font-size:x-large;">@Model.ecom_open_orders</p>
+                                </td>
+                                <td style="text-align:right;font-size:38px;color:#ffffff;width: 50px;padding-bottom:0px;">
+                                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <table id="exampl" class="table" style="background-color:white">
+                        <tr>
+                            <td>
+                                <a href="/EcomBinScanOut/ListEcomBinScanOut" style="color:darkblue;font-size:small;">
+                                    <b>BIN Pick Fulfillment (BPF) </b>  <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;font-size:30px;color:#00c0ef;">
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="col-lg-2 col-xs-2">
+
+                <div class="small-box bg-orange" style="height: 120px;">
+                    <div class="inner">
+                        <table>
+                            <tr>
+                                <td style="width: 220px;">
+                                    <p class="dashboardhdr" style="color:white;padding-bottom:0px;">Order History</p>
+                                </td>
+                                <td style="text-align:left;font-size:30px;color:#00c0ef;width: 60px;padding-bottom:0px;">
+                                    <p style="color:white;font-size:x-large;margin-left:5px">@Model.ecom_open_orders</p>
+                                </td>
+                                <td style="text-align:right;font-size:40px;color:#ffffff;width: 50px;padding-top:0px;">
+                                    <i class="fa fa-history" aria-hidden="true"></i>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <table id="exampl" class="table" style="background-color:white">
+                        <tr>
+                            <td>
+                                <a href="/OutboundInq/OutboundInq?cmp=@Session["g_str_cmp_id"]&status=ALL&DateFm=@Session["dflt_dt_from"]&@Session["dflt_dt_to"]&screentitle=OBInquiry" style="color:darkblue;font-size:small;">
+                                    <b>3PL-ECom Order Inquiry and Analysis</b> <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;font-size:30px;color:#00c0ef;">
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>*@
+</div>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript">
+    $("#cmp_id").change(function () {
+        var end = this.value;
+        //alert(end)
+        $("#p_str_cmp_id").val(end);
+    });
+
+    $('#frm_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#to_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $(function () {
+        $('#cmp_id').change(function () {
+            debugger;
+            var id = $(this).find(":selected").val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                url: '@Url.Action("GetModels", "ECommDashBoard")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "id": id
+                },
+
+                dataType: "html",
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#ShowDashboard').html("");
+                    $('#ShowDashboard').html(e);
+                },
+            });
+        });
+
+    });
+    $("#btnRefresh").click(function () {
+            debugger;
+            var p_str_cmp_Id = $('#cmp_id').val();
+            var p_str_frm_dt = $('#frm_dt').val();
+            var p_str_to_dt = $('#to_dt').val();
+            var options = { "backdrop": "static", keyboard: true };
+
+            $("#ajaxLoading").show();
+            $.ajax({
+                url: '@Url.Action("DateOnChangeGetModels", "ECommDashBoard")',
+                type: 'GET',
+                cache: false,
+                data: { "p_str_frm_dt": p_str_frm_dt, "p_str_to_dt": p_str_to_dt, "p_str_cmp_Id": p_str_cmp_Id },
+
+
+                dataType: "html",
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#ShowDashboard').html("");
+                    $('#ShowDashboard').html(e);
+                },
+            });
+        });
+
+
+</script>

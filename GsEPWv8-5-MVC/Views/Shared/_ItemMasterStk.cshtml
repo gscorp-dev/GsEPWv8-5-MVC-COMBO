@@ -1,0 +1,66 @@
+﻿@model GsEPWv8_5_MVC.Model.ItemMasterModel
+    <div class="box-body">
+        <div class="box-header">
+            <fieldset>
+                <legend style="text-align:left;"> Item Stock Details</legend>
+                <div class="box box-primary">
+                    <table id="InvMergeInq" class="table table-bordered table-striped" style="border:1px solid #121213 ;table-layout:fixed">
+                        <thead class="grid_backcolor">
+                            <tr>
+
+                                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Select All <input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" /></th>
+                                <th style="display:none;"></th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">IBDocId</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Rcvd Date</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:14%;">Container</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Lot#</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">PO#</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">LocID</th>
+
+                                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Length</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Width</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Depth</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Cube</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Weight</th>
+
+                                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Avl Ctn</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">PPK</th>
+                                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Avl Qty</th>
+                            </tr>
+                        </thead>
+
+                        <tbody style="background-color:white">
+                            @for (int i = 0; i < Model.ListItemStock.Count; i++)
+                            {
+                                int l_int_cur_row = i + 1;
+                                <tr>
+                                    <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckboxUpdateDim" type="checkbox" value="@Model.ListItemStock[i].ib_doc_id" /></td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => model.ListItemStock[i].ib_doc_id, new { @id = "edit_ib_doc_id" + i, @rowId = @l_int_cur_row })</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].ib_doc_id</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].rcvd_dt</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].cont_id</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].lot_id</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].po_num</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].loc_id</td>
+
+
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].Length</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].Width</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].Depth</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].Cube</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].Weight</td>
+
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].avail_ctn</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].itm_qty</td>
+                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].avail_qty</td>
+
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+

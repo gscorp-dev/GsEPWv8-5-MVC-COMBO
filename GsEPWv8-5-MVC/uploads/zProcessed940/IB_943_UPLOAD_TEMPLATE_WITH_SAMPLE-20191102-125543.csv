@@ -1,0 +1,9 @@
+SLF943,CompID,cntr_id,line_num,po_num / Ref#,itm_Num,itm_color,itm_size,itm_name,itm_qty,ctn_qty,ctns,L,W,H,ctn_cube,ctn_wgt,ENTRY-DT,ETA-DT,SUPPLIER,HeaderNote,LineNote
+SLF943,TEST,TEST20191122,1,HMMU9055560,TESTITEM1,NUDE/BLK,-,IJOY LINQ MAGNET WIRELESS EARBUDS - PACKED 6/24 - COLOR BLACK/RED,4008,24,167,0,0,0,0,0,2/16/2019,2/12/2019,-,PO#INV-LINQ-1120,Item with 24 PPK
+SLF943,TEST,TEST20191122,2,HMMU9055560,TESTITEM1,NUDE/BLK,-,IJOY LINQ MAGNET WIRELESS EARBUDS - PACKED 6/24 - COLOR BLACK/SILVER,4008,24,167,,0,0,0,10.67,2/16/2019,2/12/2019,-,PO#INV-LINQ-1120,Item with 24 PPK
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,

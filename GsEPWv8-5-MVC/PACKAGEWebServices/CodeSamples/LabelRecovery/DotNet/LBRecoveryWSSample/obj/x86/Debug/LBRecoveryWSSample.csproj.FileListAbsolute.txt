@@ -1,0 +1,6 @@
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\LabelRecovery\DotNet\LBRecoveryWSSample\bin\Debug\lbdotnet.exe.config
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\LabelRecovery\DotNet\LBRecoveryWSSample\bin\Debug\lbdotnet.exe
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\LabelRecovery\DotNet\LBRecoveryWSSample\bin\Debug\lbdotnet.pdb
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\LabelRecovery\DotNet\LBRecoveryWSSample\obj\x86\Debug\LBRecoveryWSSample.csprojResolveAssemblyReference.cache
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\LabelRecovery\DotNet\LBRecoveryWSSample\obj\x86\Debug\lbdotnet.exe
+C:\Users\admin\Desktop\3PL\Shipping_Pkg_Gnd\ShippingPACKAGE\PACKAGEWebServices\CodeSamples\LabelRecovery\DotNet\LBRecoveryWSSample\obj\x86\Debug\lbdotnet.pdb

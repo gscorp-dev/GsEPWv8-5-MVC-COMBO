@@ -1,0 +1,78 @@
+﻿@model GsEPWv8_5_MVC.Model.ExceptionReportsModel
+
+@{
+    var Ordercount = Model.LstIVExceptionRpt.Count;
+}
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style="width:105px;"></td>
+            <td style="width:105px;"></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box box-primary">
+    <br />
+    <table id="ParIvGrdExceptionRpt" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">CMP ID</th>
+                <th class="grid_header_backcolor">ITM CODE</th>
+                <th class="grid_header_backcolor">RCVD QTY</th>
+                <th class="grid_header_backcolor">ALOC QTY</th>
+                <th class="grid_header_backcolor">AVAIL QTY IN</th>
+                <th class="grid_header_backcolor">ALOC QTY OUT</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.LstIVExceptionRpt.Count; i++)
+            {
+                <tr class="row-select">                    
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIVExceptionRpt[i].CMP_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIVExceptionRpt[i].ITM_CODE</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIVExceptionRpt[i].RCVD_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIVExceptionRpt[i].ALOC_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIVExceptionRpt[i].AVAIL_QTY_IN</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIVExceptionRpt[i].ALOC_QTY_OUT</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+
+    $('#ParIvGrdExceptionRpt').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+</script>
+
+
+
+
+
+
+
+

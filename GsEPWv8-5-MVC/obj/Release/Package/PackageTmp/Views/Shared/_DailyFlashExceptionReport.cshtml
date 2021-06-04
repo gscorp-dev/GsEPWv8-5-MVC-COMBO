@@ -1,0 +1,225 @@
+﻿@model GsEPWv8_5_MVC.Model.DailyFlashExceptionReportModel
+
+@{
+    var Ordercount = Model.ListExceptionRptDetails.Count;
+}
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style="width:105px;"></td>
+            <td style="width:105px;"></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box box-primary">
+    <br />
+    <table id="ParGrdExceptionRpt" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">REPORT ID</th>
+                <th class="grid_header_backcolor">COMP ID</th>
+                <th class="grid_header_backcolor">REPORT RUN</th>
+                <th class="grid_header_backcolor">ACTION</th>
+                <th class="grid_header_backcolor">DAY</th>
+                <th class="grid_header_backcolor">TIME</th>
+                <th class="grid_header_backcolor">EMAIL TO</th>
+                <th class="grid_header_backcolor">EMAILCC</th>
+                <th class="grid_header_backcolor">FORMAT</th>
+                <th class="grid_header_backcolor">STATUS</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.ListExceptionRptDetails.Count; i++)
+            {
+                <tr class="row-select">
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].rpt_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].cmp_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">
+                        <a class="btn btn-danger btnEmail" align="center" id="btnEmailss" data-cmp_id="@Model.ListExceptionRptDetails[i].cmp_id" data-rpt_id="@Model.ListExceptionRptDetails[i].rpt_id"><span class="glyphicon glyphicon-envelope"></span></a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" style="text-decoration:underline;color:#59822c;" class="ExpRptViewDetail" data-cmp_id="@Model.ListExceptionRptDetails[i].cmp_id" data-rpt_id="@Model.ListExceptionRptDetails[i].rpt_id" data-days="@Model.ListExceptionRptDetails[i].rpt_run_days" data-time="@Model.ListExceptionRptDetails[i].rpt_run_time"
+                           data-emailto="@Model.ListExceptionRptDetails[i].email_to" data-emailcc="@Model.ListExceptionRptDetails[i].email_cc"
+                           data-status="@Model.ListExceptionRptDetails[i].rpt_status" data-emailmsg="@Model.ListExceptionRptDetails[i].email_msg"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+
+                        <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="ExpRptEditDetail" data-cmp_id="@Model.ListExceptionRptDetails[i].cmp_id" data-rpt_id="@Model.ListExceptionRptDetails[i].rpt_id" data-days="@Model.ListExceptionRptDetails[i].rpt_run_days" data-time="@Model.ListExceptionRptDetails[i].rpt_run_time"
+                           data-emailto="@Model.ListExceptionRptDetails[i].email_to" data-emailcc="@Model.ListExceptionRptDetails[i].email_cc"
+                           data-status="@Model.ListExceptionRptDetails[i].rpt_status" data-emailmsg="@Model.ListExceptionRptDetails[i].email_msg"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+
+                        <a href="javascript:void(0);" style="text-decoration:underline;color: red;" class="ExpRptDeleteDetail" data-cmp_id="@Model.ListExceptionRptDetails[i].cmp_id" data-rpt_id="@Model.ListExceptionRptDetails[i].rpt_id" data-days="@Model.ListExceptionRptDetails[i].rpt_run_days" data-time="@Model.ListExceptionRptDetails[i].rpt_run_time"
+                           data-emailto="@Model.ListExceptionRptDetails[i].email_to" data-emailcc="@Model.ListExceptionRptDetails[i].email_cc"
+                           data-status="@Model.ListExceptionRptDetails[i].rpt_status" data-emailmsg="@Model.ListExceptionRptDetails[i].email_msg"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+
+                    </td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].rpt_run_days</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].rpt_run_time</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].email_to</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].email_cc</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].dflt_frmt</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].rpt_status</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(".ExpRptEditDetail").click(function () {
+     var TeamDetailPostBackLocEditRptURL = '/DailyFlashExceptionReport/DailyFlashExceptionReportDetailEditView';
+
+        var $buttonClicked = $(this);
+        debugger
+        var p_str_cmp_id = $buttonClicked.attr('data-cmp_id');
+        var p_str_rpt_id = $buttonClicked.attr('data-rpt_id');
+        var p_str_mail_to = $buttonClicked.attr('data-emailto');
+        var p_str_mail_cc = $buttonClicked.attr('data-emailcc');
+        var p_str_content = $buttonClicked.attr('data-emailmsg');
+        var p_str_status = $buttonClicked.attr('data-status');
+        var p_str_action= "2";
+        var p_str_RunningDays = $buttonClicked.attr('data-days');
+        var p_str_Time = $buttonClicked.attr('data-time');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackLocEditRptURL,
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_mail_to": p_str_mail_to, "p_str_mail_cc": p_str_mail_cc, "p_str_content": p_str_content,
+                "p_str_status": p_str_status, "p_str_action": p_str_action, "p_str_RunningDays": p_str_RunningDays, "p_str_Time": p_str_Time
+            },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#myModalContentEditExpRpt').html(data);
+                $('#myModalEditExpRpt').modal(options);
+                $('#myModalEditExpRpt').modal('show');
+            },
+            error: function () {
+                swal("", "Dynamic content load failed.", "");
+                $("#ajaxLoading").hide();
+            }
+        });
+ });
+    $(".ExpRptViewDetail").click(function () {
+     var TeamDetailPostBackLocViewRptURL = '/DailyFlashExceptionReport/DailyFlashExceptionReportDetailEditView';
+
+     var $buttonClicked = $(this);
+     debugger
+     var p_str_cmp_id = $buttonClicked.attr('data-cmp_id');
+     var p_str_rpt_id = $buttonClicked.attr('data-rpt_id');
+     var p_str_mail_to = $buttonClicked.attr('data-emailto');
+     var p_str_mail_cc = $buttonClicked.attr('data-emailcc');
+     var p_str_content = $buttonClicked.attr('data-emailmsg');
+     var p_str_status = $buttonClicked.attr('data-status');
+     var p_str_action = "3";
+     var p_str_RunningDays = $buttonClicked.attr('data-days');
+     var p_str_Time = $buttonClicked.attr('data-time');
+     var options = { "backdrop": "static", keyboard: true };
+     $("#ajaxLoading").show();
+     $.ajax({
+         type: "GET",
+         url: TeamDetailPostBackLocViewRptURL,
+         contentType: "application/json; charset=utf-8",
+         data: {
+             "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_mail_to": p_str_mail_to, "p_str_mail_cc": p_str_mail_cc, "p_str_content": p_str_content,
+             "p_str_status": p_str_status, "p_str_action": p_str_action, "p_str_RunningDays": p_str_RunningDays, "p_str_Time": p_str_Time
+         },
+         datatype: "json",
+         success: function (data) {
+             $("#ajaxLoading").hide();
+             $('#myModalContentViewExpRpt').html(data);
+             $('#myModalViewExpRpt').modal(options);
+             $('#myModalViewExpRpt').modal('show');
+         },
+         error: function () {
+             swal("", "Dynamic content load failed.", "");
+             $("#ajaxLoading").hide();
+         }
+     });
+ });
+    $(".ExpRptDeleteDetail").click(function () {
+     var TeamDetailPostBackLocsDeleteRptURL = '/DailyFlashExceptionReport/DailyFlashExceptionReportDetailEditView';
+
+     var $buttonClicked = $(this);
+     debugger
+     var p_str_cmp_id = $buttonClicked.attr('data-cmp_id');
+     var p_str_rpt_id = $buttonClicked.attr('data-rpt_id');
+     var p_str_mail_to = $buttonClicked.attr('data-emailto');
+     var p_str_mail_cc = $buttonClicked.attr('data-emailcc');
+     var p_str_content = $buttonClicked.attr('data-emailmsg');
+     var p_str_status = $buttonClicked.attr('data-status');
+     var p_str_action = "4";
+     var p_str_RunningDays = $buttonClicked.attr('data-days');
+     var p_str_Time = $buttonClicked.attr('data-time');
+     var options = { "backdrop": "static", keyboard: true };
+     $("#ajaxLoading").show();
+     $.ajax({
+         type: "GET",
+         url: TeamDetailPostBackLocsDeleteRptURL,
+         contentType: "application/json; charset=utf-8",
+         data: {
+             "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_mail_to": p_str_mail_to, "p_str_mail_cc": p_str_mail_cc, "p_str_content": p_str_content,
+             "p_str_status": p_str_status, "p_str_action": p_str_action, "p_str_RunningDays": p_str_RunningDays, "p_str_Time": p_str_Time
+         },
+         datatype: "json",
+         success: function (data) {
+             $("#ajaxLoading").hide();
+             $('#myModalContentDeleteExpRpt').html(data);
+             $('#myModalDeleteExpRpt').modal(options);
+             $('#myModalDeleteExpRpt').modal('show');
+         },
+         error: function () {
+             swal("", "Dynamic content load failed.", "");
+             $("#ajaxLoading").hide();
+         }
+     });
+    });
+
+
+    $(".btnEmail").click(function () {
+        var TeamDetailPostBackEmailRptURL = '/DailyFlashExceptionReport/EmailShowReport';
+
+        var $buttonClicked = $(this);
+        debugger
+        var p_str_cmp_id = $buttonClicked.attr('data-cmp_id');
+        var p_str_rpt_id = $buttonClicked.attr('data-rpt_id');
+        var p_str_SR_dtFm = "";
+        var p_str_SR_dtTo = "";
+        var p_str_itm_code = "";
+        var p_str_type = "PDF";
+        $("#ajaxLoading").show();
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackEmailRptURL,
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_SR_dtFm": p_str_SR_dtFm, "p_str_SR_dtTo": p_str_SR_dtTo, "p_str_itm_code": p_str_itm_code,
+                "p_str_type": p_str_type
+            },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#myModalEmailContent').html(data);
+                $('#myModalEmail').modal(options);
+                $('#myModalEmail').modal('show');
+            },
+            error: function () {
+                swal("", "Dynamic content load failed.", "");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,1103 @@
+﻿@model GsEPWv8_5_MVC.Model.OutboundInqModel
+@{
+    var Ordercount = Model.LstStockverify.Count;
+    int BackOrdercount = 0;
+    int BackOrder_count = 0;
+
+    int BackOrder = 0;
+    int stock_count = 0;
+
+}
+<style type="text/css">
+
+    div#ajaxLoadingBlue {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .sweet-alert {
+        background-color: #8cd6f7; /*//CR20180531 Added by nithya*/ /*#f1e9e9;*/
+        width: 478px;
+        padding: 17px;
+        border-radius: 5px;
+        text-align: center;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -256px;
+        margin-top: -200px;
+        overflow: hidden;
+        display: none;
+        z-index: 2000;
+    }
+
+    .text-muted {
+        color: black;
+    }
+
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+
+    #GrdStockverify tr td:nth-child(1){
+     width:11.4%;
+    }
+    #GrdStockverify tr td:nth-child(2){
+       width:11.3%;
+    }
+    #GrdStockverify tr td:nth-child(3){
+       width:11.3%;
+    }
+    #GrdStockverify tr td:nth-child(4){
+        width:11.3%;
+    }
+    #GrdStockverify tr td:nth-child(5){
+         width:11.3%;
+    }
+    #GrdStockverify tr td:nth-child(6){
+          width:11.3%;
+    }
+    #GrdStockverify tr td:nth-child(7){
+         width:11.3%;
+    }
+    #GrdStockverify tr td:nth-child(8){
+         width:11.3%;    
+    }
+  
+</style>
+@Html.HiddenFor(model => model.backorderCount)
+@Html.HiddenFor(model => model.cmp_id)
+@Html.HiddenFor(model => model.Sonum)
+@Html.HiddenFor(model => model.so_numFm)
+@Html.HiddenFor(model => model.so_numTo)
+@Html.HiddenFor(model => model.screentitle)
+@Html.HiddenFor(model => model.quote_num)
+@Html.HiddenFor(model => model.ScreenMode)
+
+<div id="ajaxLoadingBlue" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+@for (int j = 0; j < Model.LstStockverify.Count; j++)
+{
+    if (Model.LstStockverify[j].backorderCount != 0)
+    {
+        BackOrder_count = Model.LstStockverify[j].backorderCount;
+        BackOrdercount = BackOrdercount + 1;
+
+    }
+    stock_count = Ordercount - BackOrdercount;
+}
+
+<center>
+
+    <div class="modal-header" style="width: 1400px;    margin-left:-2px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:900;">Stock Verification</h4>
+        <button type="button" id="btn_StkClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+    </div>
+</center>
+<br />
+<div class="box-body">
+    <div class="col-xs-12">
+        <div class="col-xs-8">
+            <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                <tr>
+                    <td style="width:7%;text-align: right;">
+                        <label><b class="Lblmanual">Cmp Id </b></label>
+                    </td>
+                    <td style="width: 38%; padding-left: 1%;">
+                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @style = "background-color:lightyellow;" })
+                        @Html.HiddenFor(model => model.p_str_cmpid)
+                    </td>
+
+                    <td style="text-align: center; width: 9%;">
+                        <label><b class="Lblmanual">Batch Id</b></label>
+                    </td>
+                    <td style="width: 12%; padding-left: 5%;">
+                        @Html.TextBoxFor(model => model.quote_num, new { @id = "BatchId", @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; width: 170px;margin-left: -23px;background-color:lightyellow;" })
+                    </td>
+                                
+                </tr>
+            </table>
+            <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                <tr> 
+                    <td style="width:4%;text-align: right;">
+                        <label><b class="Lblmanual">SR #</b></label>
+                    </td>                      
+                    <td style="width: 38%; padding-left:2%;">
+                        @Html.TextBoxFor(model => model.so_num, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;background-color:lightyellow;width:25%" })
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-4">
+            <fieldset>
+                <legend style="text-align:center">Report Selection</legend>
+                <table>
+                    <tr>
+
+                        <td style="padding-left: 10px;font-size: 1.2em;padding-bottom:8px;"><input type="radio" value="RptStkBySr" name="radioStk" checked /><b> Stock Report </b></td>
+                        <td style="padding-left: 35px;font-size: 1.2em;padding-bottom:8px;"><input type="radio" value="RptBackOrdr" name="radioStk" /><b>Back Order</b></td>
+
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <b style="color:blue;font-size: 12px;">Format</b>
+                            <select id="Formatstockverifyid" class="btn-Format" type="button" style="margin-left:6px;width:60px; text-align:right" data-toggle="dropdown">
+                                <option>XLS</option>
+                                <option>PDF</option>
+                            </select>
+
+                        </td>
+                        <td>
+                            <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                            <select id="Modestockverifyid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                <option>VIEW</option>
+                           @*     <option>EMAIL</option>*@
+                      
+                            </select>
+
+
+                        </td>
+                        <td>
+
+                            <button type="button" id="btnstockverifyrpt" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                        </td>
+
+                    </tr>
+
+
+                </table>
+            </fieldset>
+            </div>
+        
+    </div>
+
+</div>
+<br />
+
+<br />
+<div class="box-body">
+    <div class="gridSummary" id="Gridstock">
+        <div style="padding-left: 2%;">
+            <table>
+                <tr>
+                    <td>
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Item(s):
+                        </span>
+                    </td>
+                    <td style="width: 10%;">
+                        <label class="totalCount" style="text-align:left">
+                            @Ordercount
+                        </label>
+                    </td>
+                    <td>
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total B/O Item(s):
+                        </span>
+                    </td>
+                    <td style="width: 49%;">
+                        <label class="totalCount" style="text-align:left">
+                            @BackOrdercount
+                        </label>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<div id="ShowSTRGBillGrid" class="box-header" style="padding:4px;margin-top: -1%; width:auto">
+    <div>
+        <table id="GrdStockverify" class="table table-bordered table-striped" style="border:1px solid #121213;">
+            <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+      
+                <tr>
+                    <th class="grid_header_backcolor" style="width:10%;">Style</th>
+                    <th class="grid_header_backcolor"  style="width:10%;">Color</th>
+                    <th class="grid_header_backcolor"  style="width:10%;">Size</th>
+                    <th class="grid_header_backcolor"  style="width:30%;">ItemName</th>
+                    <th class="grid_header_backcolor"  style="width:10%;">Due Qty</th>
+                    <th class="grid_header_backcolor"  style="width:10%;">Avail Qty</th>
+                    <th class="grid_header_backcolor"  style="width:10%;">B/O qty</th>
+                    <th class="grid_header_backcolor"  style="width:10%;">Balance Qty</th>
+                </tr>
+            </thead>
+            <tbody style="background-color:rgba(0, 0, 0, 0.12); display:table; width:100%; max-height:600px; overflow-y:scroll;">
+                @for (int i = 0; i < Model.LstStockverify.Count; i++)
+                {
+                    BackOrder = @Model.LstStockverify[i].back_ordr_qty;
+
+                    <tr style="background-color:white; display:table; width:100%; table-layout:fixed;">
+                        <td  style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.LstStockverify[i].Style</td>
+                        <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.LstStockverify[i].Color</td>
+                        <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.LstStockverify[i].Size</td>
+                        <td style="width:30%;font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.LstStockverify[i].itm_name</td>
+                        <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstStockverify[i].OrderQty</td>
+                        <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstStockverify[i].avail_qty</td>
+                        <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:right;color:red;">@Model.LstStockverify[i].back_ordr_qty</td>
+                        <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:right;color:green;">@Model.LstStockverify[i].balance_qty</td>
+                
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if(BackOrdercount > 0)
+        {
+        
+        <br />
+            <h4 class="modal-title" id="modBO" style="color:red;font-weight:900;">Back Order List</h4>
+        <br />
+            <table id="GrdBackOrder" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:10%;">Style</th>
+                        <th class="grid_header_backcolor" style="width:10%;">Color</th>
+                        <th class="grid_header_backcolor" style="width:10%;">Size</th>
+                        <th class="grid_header_backcolor" style="width:30%;">ItemName</th>
+                        <th class="grid_header_backcolor" style="width:10%;">Due Qty</th>
+                        <th class="grid_header_backcolor" style="width:10%;">Avail Qty</th>
+                        <th class="grid_header_backcolor" style="width:10%;">B/O qty</th>
+                        <th class="grid_header_backcolor" style="width:10%;">Balance Qty</th>
+                    </tr>
+                </thead>
+
+                <tbody style="background-color:rgba(0, 0, 0, 0.12); display:table; width:100%; max-height:600px; overflow-y:scroll;">
+                    @for (int i = 0; i < Model.LstStockverify.Count; i++)
+                    {
+                        if (@Model.LstStockverify[i].back_ordr_qty > 0)
+                        {
+
+                            <tr style="background-color:white; display:table; width:100%; table-layout:fixed;">
+                                <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:left;color:red;">@Model.LstStockverify[i].Style</td>
+                                <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:left;color:red;">@Model.LstStockverify[i].Color</td>
+                                <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:left;"color:red;>@Model.LstStockverify[i].Size</td>
+                                <td style="width:30%;font-size:12px; color:black; font-weight:bold;text-align:left;color:red;">@Model.LstStockverify[i].itm_name</td>
+                                <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:right;color:red;">@Model.LstStockverify[i].OrderQty</td>
+                                <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:right;color:red;">@Model.LstStockverify[i].avail_qty</td>
+                                <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:right;color:red;">@Model.LstStockverify[i].back_ordr_qty</td>
+                                <td style="width:10%;font-size:12px; color:black; font-weight:bold;text-align:right;color:green;">@Model.LstStockverify[i].balance_qty</td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+            <div class="StockgridSummary" id="Gridstock">
+                @for (int k = 0; k < Model.LstStockverify.Count; k++)
+            {
+                BackOrder = @Model.LstStockverify[k].back_ordr_qty;
+
+            }
+                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+
+                    @if (@BackOrdercount > 0)
+                    {
+                        <tr>
+                            <td style="width:15%;text-align:right;">
+                                <label class="totalCountStock" style="text-align:left;color:#ff5600;">
+                                    No Of Items :
+                                </label>
+                            </td>
+                            <td style="width:10%;">
+                                <label class="totalCountStock" style="text-align:left;color:blue;">
+                                    @Ordercount
+                                </label>
+                            </td>
+                            <td style="width:15%;">
+                                <label class="totalCountStock" style="text-align:left;color:#ff5600;">
+                                    Available Items :
+                                </label>
+                            </td>
+                            <td style="width:10%;">
+                                <label class="totalCountStock" style="text-align:left;color:blue;">
+                                    @stock_count
+                                </label>
+                            </td>
+                            <td style="width:60%;"></td>
+                        </tr>
+                        <tr>
+                            <td style="width:15%;text-align:left;padding-left: 5%;" colspan="3">
+                                <label class="totalCountStock" style="text-align:left;color:#ff5600;">
+                                    Back Order Items :
+                                </label>
+                                <label class="totalCountStock" style="text-align:left;color:blue;">
+                                    @BackOrdercount
+                                </label>
+                            </td>
+                            <td style="width:10%;"></td>
+                            <td style="width:60%;"></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="width:15%;text-align:right;">
+                                <label class="totalCountStock" style="text-align:left;color:#ff5600;">
+                                    No Of Items :
+                                </label>
+                            </td>
+                            <td style="width:10%;">
+                                <label class="totalCountStock" style="text-align:left;color:blue;">
+                                    @Ordercount
+                                </label>
+                            </td>
+                            <td style="width:15%;">
+                                <label class="totalCountStock" style="text-align:left;color:#ff5600;">
+                                    Available Items :
+                                </label>
+                            </td>
+                            <td style="width:10%;">
+                                <label class="totalCountStock" style="text-align:left;color:blue;">
+                                    @stock_count
+                                </label>
+                            </td>
+                            <td style="width:60%;"></td>
+                        </tr>
+                        <tr>
+                            <td style="width:15%;text-align:left;padding-left: 5%;" colspan="3">
+                                <label class="totalCountStock" style="text-align:right;color:#560acc;">
+                                    <span style="color :#ff5600"></span>  No back Orders<span style="color :#ff5600"></span>
+                                </label>
+                            </td>
+                            <td style="width:10%;"></td>
+                            <td style="width:60%;"></td>
+                        </tr>
+                    }
+                </table>
+                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                    <tr>
+                        <td style="width: 60%;"></td>
+                        <td style="width:20%;"></td>
+
+                        @if (@Model.ScreenMode == "A")
+                        {
+                            <td style="width:20%;">
+                                <button type="button" id="btnContinueAloc" class="btn-Close" style="float:right;width: 100%;background-color: #e38a2f">Continue Allocation</button>
+
+                            </td>
+
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+</div>
+
+
+<br />
+
+<br />
+
+<script>
+
+
+    debugger
+    //$(".sweet-alert").css('background-color', '#d0cbcb');
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+
+            $(this).val("");
+        });
+    });
+   
+   
+    $("#btn_StkClose").click(function () {
+        var p_str_cmp_id = $("#cmp_id").val();
+        var p_str_ShipReq_id = $("#Sonum").val();
+        var p_str_AlocdocId = "";
+        debugger
+        $('#myModalShipStockverify').modal('hide');
+        $.ajax({
+            type: "get",
+            url: "/OutboundInq/GetOutboundInqDtl",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_so_num": p_str_ShipReq_id
+            },
+            datatype: 'html',
+            success: function (e) {
+                debugger
+                $("#ajaxloading").hide();
+                $('#showgrid').html("");
+                $('#showgrid').html(e);
+            },
+        })
+        
+    });
+
+   
+    $("#btnbackOrderStack").click(function () {
+
+        var p_str_cmp_id = $('#cmp_id').val();
+        var cmpid = $('#cmp_id').val();
+        var p_str_screen_title = $('#screenTitle').val();
+        var p_str_so_numfrm = $('#so_numFm').val();
+        var p_str_so_numTo = $('#so_numTo').val();
+        var p_str_batchid = $('#quote_num').val();
+        var p_str_so_num = $('#Sonum').val();
+        var P_str_screen_MOde = $('#ScreenMode').val();
+        var BackShipstockverifyURL = '/OutboundInq/StockVerifyGrid';
+        $("#ajaxLoadingBlue").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/SaveStockBackOrderAuotoAdd")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_Sonum": p_str_so_num
+
+            },
+            dataType: 'html',
+            success: function (e) {
+                debugger
+                sweetAlert({
+                    title: "",
+                    text: "Back order auto add saved successFully Do you want to reverify stock?",      //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                    type: "",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "No",
+                    cancelButtonText: "Yes",
+                    closeOnConfirm: true,
+                    closeOnCancel: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $("#ajaxLoadingBlue").hide();
+                       
+                    }
+                    else {
+                        debugger
+                        $.ajax({
+                            type: "GET",
+                            url: BackShipstockverifyURL,
+                            contentType: "application/json; charset=utf-8",
+                            data: { "p_str_cmp_id": cmpid, "p_str_screen_title": p_str_screen_title, "p_str_Sonum": p_str_so_num, "p_str_batchId": p_str_batchid, "P_str_SoNumFm": p_str_so_numfrm, "P_str_SoNumTo": p_str_so_numTo, "P_str_screen_MOde": P_str_screen_MOde },
+                            datatype: "json",
+                            success: function (data) {
+                                debugger;
+                                if (data == 1) {
+                                    sweetAlert("", "No open SR# found for the selection", "");
+                                    $("#ajaxLoadingBlue").hide();
+                                }
+                                else {
+                                    $("#ajaxLoadingBlue").hide();
+                                    $('#ShowSTRGBillGrid').html("");
+                                    $('#ShowSTRGBillGrid').html(data);
+                                    $("#Gridstock").hide();
+                                    $("#btnobAllocation").show();
+                                    $("#btnbackOrderStack").hide();
+
+                                }
+                            },
+
+                            error: function () {
+                                alert("Dynamic content load failed.");
+                            }
+                        });
+                    }
+                });
+
+
+
+
+
+            },
+
+        })
+
+    });
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailShipAlocBackURL = '/OutboundInq/ShipReqAllocation';
+    $("#btnAllocation").click(function () {
+        debugger
+        var id = $('#Sonum').val();
+        var batchId = $('#quote_num').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoadingBlue").show();
+        $('#btnEmail').attr('disabled', 'disabled');
+        $('#btnPrint').attr('disabled', 'disabled');
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_so_num_frm = $('#so_numFm').val();
+        var p_str_so_num_To = $('#so_numTo').val();
+        var p_str_so_dt_frm = $('#so_dtFm').val();
+        var p_str_so_dt_to = $('#so_dtTo').val();
+        var p_str_CustPO = $('#cust_ordr_num').val();
+        var p_str_AlocId = $('#aloc_doc_id').val();
+        var p_str_Store = $('#store_id').val();
+        var p_str_batch_id = $('#quote_num').val();
+        var p_str_status = $('#status').val();
+        var p_str_shipdtFm = $('#ShipdtFm').val();
+        var p_str_shipdtTo = $('#ShipdtTo').val();
+        var p_str_cust_name = $('#cust_name').val();
+        var p_str_screen_title = $('#screenTitle').val();
+        var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                "p_str_Store": p_str_Store,
+                "p_str_batch_id": p_str_batch_id,
+                "p_str_shipdtFm": p_str_shipdtFm,
+                "p_str_shipdtTo": p_str_shipdtTo,
+                "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/AlocStockVerify")',
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmp_id": p_str_cmp_id, "p_str_screen_title": p_str_screen_title, "p_str_Sonum": id, "p_str_batchId": batchId, "P_str_SoNumFm": p_str_so_num_frm, "P_str_SoNumTo": p_str_so_num_To },
+            datatype: "json",
+            success: function (data) {
+                if (data == 1) {
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailShipAlocBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "Id": id, "cmp_id": cmp_id ," p_str_batch_id":p_str_batch_id},
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            $.ajax({
+                                type: "GET",
+                                url: '@Url.Content("~/OutboundInq/AlocSummaryCount")',
+                                data: {
+
+                                },
+
+                                dataType: "json",
+                                success: function (e) {
+                                    debugger
+                                    if (e > 0) {
+                                        swal({
+                                            title: "",
+                                            text: "" + e + ": Item(s) Successfully Allocated",
+                                            type: "",
+                                            showCancelButton: false,
+                                            confirmButtonClass: "btn-danger",
+                                            confirmButtonText: "Ok",
+                                            closeOnConfirm: true
+                                        },
+                                        function () {
+                                            setTimeout(function () {
+                                                $("#ajaxLoadingBlue").hide();
+                                                $('#myModalShipStockverify').modal('hide');
+                                                $('#myModalShipReqAlocContent').html(data);
+                                                $('#myModalShipreqAloc').modal(options);
+                                                $('#myModalShipreqAloc').modal('show');
+                                            });
+                                        });
+                                    }
+                                    else {
+                                        alert("1");
+                                        sweetAlert("", "NoStock available  to Allocate.", "");
+                                        $("#ajaxLoading").hide();
+                                        return false;
+                                    }
+                                },
+
+                            });
+                        },
+                        error: function () {
+                            sweetAlert("", "Dynamic content load failed.", "");
+                        }
+                    });
+                }
+                else {
+                    $('#myModalShipStockverifycontent').html(data);
+                    $('#myModalShipStockverify').modal(options);
+                    $('#myModalShipStockverify').modal('show');
+                    $("#ajaxLoadingBlue").hide();
+                    $('#btnEmail').removeAttr('disabled');
+                    $('#btnPrint').removeAttr('disabled');
+                }
+            },
+        });
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailShipAlocBackURL = '/OutboundInq/ShipReqAllocation';
+    $("#btnobAllocation").click(function () {
+        debugger
+        var id = $('#Sonum').val();
+        var batchId = $('#quote_num').val();
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoadingBlue").show();
+        $('#btnEmail').attr('disabled', 'disabled');
+        $('#btnPrint').attr('disabled', 'disabled');
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_so_num_frm = $('#so_numFm').val();
+        var p_str_so_num_To = $('#so_numTo').val();
+        var p_str_so_dt_frm = $('#so_dtFm').val();
+        var p_str_so_dt_to = $('#so_dtTo').val();
+        var p_str_CustPO = $('#cust_ordr_num').val();
+        var p_str_AlocId = $('#aloc_doc_id').val();
+        var p_str_Store = $('#store_id').val();
+        var p_str_batch_id = $('#quote_num').val();
+        var p_str_status = $('#status').val();
+        var p_str_shipdtFm = $('#ShipdtFm').val();
+        var p_str_shipdtTo = $('#ShipdtTo').val();
+        var p_str_cust_name = $('#cust_name').val();
+        var p_str_screen_title = $('#screenTitle').val();
+        var p_str_Style = $('#obItmdtl').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        var p_str_color = $('#obItmcolor').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        var p_str_size = $('#obItmsize').val();//CR_MVC_3PL_20180605-001 Added By NIthya
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/OB_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To, "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId,
+                "p_str_Store": p_str_Store,
+                "p_str_batch_id": p_str_batch_id,
+                "p_str_shipdtFm": p_str_shipdtFm,
+                "p_str_shipdtTo": p_str_shipdtTo,
+                "p_str_status": p_str_status, "p_str_cust_name": p_str_cust_name, "p_str_screen_title": p_str_screen_title,
+                "p_str_Style": p_str_Style, "p_str_color": p_str_color, "p_str_size": p_str_size//CR_MVC_3PL_20180605-001 Added By NIthya
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/AlocStockVerify")',
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmp_id": p_str_cmp_id, "p_str_screen_title": p_str_screen_title, "p_str_Sonum": id, "p_str_batchId": batchId, "P_str_SoNumFm": p_str_so_num_frm, "P_str_SoNumTo": p_str_so_num_To },
+            datatype: "json",
+            success: function (data) {
+                if (data == 1) {
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailShipAlocBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "Id": id, "cmp_id": cmp_id, "p_str_batch_id": p_str_batch_id },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            $.ajax({
+                                type: "GET",
+                                url: '@Url.Content("~/OutboundInq/AlocSummaryCount")',
+                                data: {
+
+                                },
+
+                                dataType: "json",
+                                success: function (e) {
+                                    debugger
+                                    if (e > 0) {
+                                        swal({
+                                            title: "",
+                                            text: "" + e + ": Item(s) Successfully Allocated",
+                                            type: "",
+                                            showCancelButton: false,
+                                            confirmButtonClass: "btn-danger",
+                                            confirmButtonText: "Ok",
+                                            closeOnConfirm: true
+                                        },
+                                        function () {
+                                            setTimeout(function () {
+                                                $("#ajaxLoadingBlue").hide();
+                                                $('#myModalShipStockverify').modal('hide');
+                                                $('#myModalShipReqAlocContent').html(data);
+                                                $('#myModalShipreqAloc').modal(options);
+                                                $('#myModalShipreqAloc').modal('show');
+                                            });
+                                        });
+                                    }
+                                    else {
+                                        alert("2");
+                                        sweetAlert("", "NoStock available  to Allocate.", "");
+                                        $("#ajaxLoading").hide();
+                                        return false;
+                                    }
+                                },
+
+                            });
+                        },
+                        error: function () {
+                            sweetAlert("", "Dynamic content load failed.", "");
+                        }
+                    });
+                }
+                else {
+                    $('#myModalShipStockverifycontent').html(data);
+                    $('#myModalShipStockverify').modal(options);
+                    $('#myModalShipStockverify').modal('show');
+                    $("#ajaxLoadingBlue").hide();
+                    $('#btnEmail').removeAttr('disabled');
+                    $('#btnPrint').removeAttr('disabled');
+                }
+            },
+        });
+    });
+</script>
+
+
+
+<script>
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailShipAlocBackURL = '/OutboundInq/ShipReqAllocation';
+    $(function () {
+        $("#btnContinueAloc").click(function () {
+            var $buttonClicked = $(this);
+            debugger
+            var id = $buttonClicked.attr('data-id');
+            var batchId = $buttonClicked.attr('data-id1');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoadingBlue").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+
+            var p_str_Sonum = $('#so_num').val();
+            var p_str_so_num_frm = $('#so_num').val();
+            var p_str_so_num_To = $('#so_num').val();
+            var p_str_batch_id = $('#BatchId').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/AlocStockVerify")',
+                contentType: "application/json; charset=utf-8",
+                data: { "p_str_cmp_id": p_str_cmp_id, "p_str_screen_title": p_str_screen_title, "p_str_Sonum": p_str_Sonum, "p_str_batchId": p_str_batch_id, "P_str_SoNumFm": p_str_so_num_frm, "P_str_SoNumTo": p_str_so_num_To },
+                datatype: "json",
+                success: function (data) {
+                    debugger
+                    if (data == 1) {
+                        sweetAlert("", "No open allocation record Exists", "");
+                        $("#ajaxLoading").hide();
+                    }
+                    if (data == 2) {
+                        $.ajax({
+                            type: "GET",
+                            url: TeamDetailShipAlocBackURL,
+                            contentType: "application/json; charset=utf-8",
+                            data: { "Id": p_str_Sonum, "cmp_id": cmp_id, "p_str_batch_id": p_str_batch_id },
+                            datatype: "json",
+                            success: function (data) {
+                                debugger
+                                $.ajax({
+                                    type: "GET",
+                                    url: '@Url.Content("~/OutboundInq/AlocSummaryCount")',
+                                    data: {
+                                        "p_str_so_num": p_str_Sonum
+                                    },
+
+                                    dataType: "json",
+                                    success: function (e) {
+                                        debugger
+                                        if (e > 0) {
+                                            swal({
+                                                title: "",
+                                                text: "" + e + ": Item(s) Successfully Allocated",
+                                                type: "",
+                                                showCancelButton: false,
+                                                confirmButtonClass: "btn-danger",
+                                                confirmButtonText: "Ok",
+                                                closeOnConfirm: true
+                                            },
+                                            function () {
+                                                setTimeout(function () {
+                                                    $("#ajaxLoadingBlue").hide();
+                                                    $('#myModalShipStockverify').modal('hide');
+                                                    $('#myModalShipReqAlocContent').html(data);
+                                                    $('#myModalShipreqAloc').modal(options);
+                                                    $('#myModalShipreqAloc').modal('show');
+                                                    $('[href="#childtabsAloc-4"]').closest('li').hide(); //CR20180908
+
+                                                });
+                                            });
+                                        }
+                                        else {
+                                            alert("3");
+                                            sweetAlert("", "NoStock available  to Allocate.", "");
+                                            $("#ajaxLoadingBlue").hide();
+                                            return false;
+                                        }
+                                    },
+
+                                });
+                            },
+                            error: function () {
+                                sweetAlert("", "Dynamic content load failed.", "");
+                            }
+                        });
+                    }
+                    //if (data == 4) {
+                    //    sweetAlert("", "No Available Stock Exists", "");
+                    //    $("#ajaxLoading").hide();
+                    //}
+                    else {
+                        debugger
+                        // sweetAlert("", "Back Order Exist , Do you want to Continue ?", "");
+                        //$('#myModalShipStockverifycontent').html(data);
+                        //$('#myModalShipStockverify').modal(options);
+                        //$('#myModalShipStockverify').modal('show');
+                        //$("#ajaxLoading").hide();
+                        //$("#btnAllocation").hide();
+                        //$(document).ready(function () {
+                        //    var x = document.getElementById("btnAllocation");
+                        //    x.style.display = "none";
+                        //});
+                        sweetAlert({
+                            title: "",
+                            text: " Back Order Exist , Do you want to Continue ?",
+                            type: "",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "No",
+                            cancelButtonText: "Yes",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+          function (isConfirm) {
+              if (isConfirm) {
+
+                  $("#ajaxLoadingBlue").hide();
+                  //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+              }
+
+              else {
+
+                  $("#ajaxLoadingBlue").show();
+                  $.ajax({
+                      type: "GET",
+                      url: TeamDetailShipAlocBackURL,
+                      contentType: "application/json; charset=utf-8",
+                      data: { "Id": p_str_Sonum, "cmp_id": cmp_id },
+                      datatype: "json",
+                      success: function (data) {
+                          debugger
+                          $.ajax({
+                              type: "GET",
+                              url: '@Url.Content("~/OutboundInq/AlocSummaryCount")',
+                              data: {
+
+                              },
+
+                              dataType: "json",
+                              success: function (e) {
+                                  debugger
+                                  alert(e);
+                                  if (e > 0) {
+                                      debugger
+                                      swal({
+                                          title: "",
+                                          text: "" + e + ": Item(s) Successfully Allocated",
+                                          type: "",
+                                          showCancelButton: false,
+                                          confirmButtonClass: "btn-danger",
+                                          confirmButtonText: "Ok",
+                                          closeOnConfirm: true
+                                      },
+                                      function () {
+                                          setTimeout(function () {
+                                              debugger
+                                              $("#ajaxLoadingBlue").hide();
+                                              $('#myModalShipStockverify').modal('hide');
+                                              $('#myModalShipReqAlocContent').html(data);
+                                              $('#myModalShipreqAloc').modal(options);
+                                              $('#myModalShipreqAloc').modal('show');
+                                              $('[href="#childtabsAloc-4"]').closest('li').hide(); //CR20180908
+                                          });
+                                      });
+                                  }
+
+                                  else {
+                                      $("#ajaxLoadingBlue").hide();
+                                      alert("4");
+                                      sweetAlert("", "NoStock available  to Allocate.", "");
+                                      $("#ajaxLoadingBlue").hide();
+                                      return false;
+                                  }
+                              },
+
+                          });
+                      },
+                      error: function () {
+                          $("#ajaxLoadingBlue").hide();
+                          sweetAlert("", "Dynamic content load failed.", "");
+                      }
+                  });
+              }
+          });
+
+
+                    }
+                },
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    $(function () {
+        $('#GrdStockverify').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        });
+        $('#GrdStockverify_paginate').hide();
+    })
+
+   
+   
+</script>
+<script>
+    $("#btnstockverifyrpt").click(function () {
+
+        debugger
+        var getli = $('#Formatstockverifyid').find(":selected").text();
+        var getli2 = $('#Modestockverifyid').find(":selected").text();
+        var pstrRptId = $("input[name='radioStk']:checked").val();
+
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+            $("#ajaxLoadingBlue").show();
+            var cmpid = $('#cmp_id').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_so_numfrm = $('#so_numFm').val();
+            var p_str_so_numTo = $('#so_numTo').val();
+            var p_str_batchid = $('#quote_num').val();
+            var p_str_so_num = $('#Sonum').val();
+            if (p_str_so_numfrm == "" || p_str_so_numTo == "") {
+                p_str_so_numfrm = p_str_so_num;
+            }
+            var type = "PDF";
+            window.open("/OutboundInq/ShowStockverifyPDF?p_str_cmpid=" + cmpid + '&p_str_Sonum=' + p_str_so_num + '&p_str_batchId=' + p_str_batchid + '&P_str_SoNumFm='
+                + p_str_so_numfrm + '&P_str_SoNumTo=' + p_str_so_numTo, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowStockverifyPDF')
+            $("#ajaxLoadingBlue").hide();
+        }
+        if (getli == 'XLS' && getli2 == 'VIEW')
+        {
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_ShipReq_id = $('#Sonum').val();
+        var type = "Excel";
+        window.location.replace("/OutboundInq/ShowStockVerifyExcel?p_str_cmpid=" + p_str_cmp_id + '&p_str_ShipReq_id=' + p_str_ShipReq_id + '&pstrRptId=' + pstrRptId)
+        }
+        if (getli == 'PDF' && getli2 == 'EMAIL')
+        {
+            var TeamDetailPostemailstkBackURL = '/OutboundInq/ShowEmailstkReport';
+
+            var options = { "backdrop": "static", keyboard: true };
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var type = "PDF";
+            var cmpid = $('#cmp_id').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_so_numfrm = $('#so_numFm').val();
+            var p_str_so_numTo = $('#so_numTo').val();
+            var p_str_batchid = $('#quote_num').val();
+            var p_str_so_num = $('#Sonum').val();
+            if (p_str_so_numfrm == "" || p_str_so_numTo == "") {
+                p_str_so_numfrm = p_str_so_num;
+            }
+            var type = "PDF";
+            $("#ajaxLoadingBlue").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostemailstkBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmpid": cmpid, "p_str_so_num": p_str_so_num, "p_str_batchId": p_str_batchid, "P_str_SoNumFm": p_str_so_numfrm, "P_str_SoNumTo": p_str_so_numTo, "type": type
+                },
+                datatype: "json",
+                success: function (data) {
+                    //alert("hjk")
+                    debugger;
+                    $("#ajaxLoadingBlue").hide();
+                    $('#myModalEmailContent').html(data);
+                    $('#myModalEmail').modal(options);
+                    $('#myModalEmail').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoadingBlue").hide();
+                }
+            });
+        }
+        if (getli == 'XLS' && getli2 == 'EMAIL') {
+            var TeamDetailPostemailstkBackURL = '/OutboundInq/ShowEmailstkReport';
+
+            var options = { "backdrop": "static", keyboard: true };
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var type = "PDF";
+            var cmpid = $('#cmp_id').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var p_str_so_numfrm = $('#so_numFm').val();
+            var p_str_so_numTo = $('#so_numTo').val();
+            var p_str_batchid = $('#quote_num').val();
+            var p_str_so_num = $('#Sonum').val();
+            if (p_str_so_numfrm == "" || p_str_so_numTo == "") {
+                p_str_so_numfrm = p_str_so_num;
+            }
+            var type = "EXCEL";
+
+            $("#ajaxLoadingBlue").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostemailstkBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmpid": cmpid, "p_str_so_num": p_str_so_num, "p_str_batchId": p_str_batchid, "P_str_SoNumFm": p_str_so_numfrm, "P_str_SoNumTo": p_str_so_numTo, "type": type
+                },
+                datatype: "json",
+                success: function (data) {
+                    //alert("hjk")
+                    debugger;
+                    $("#ajaxLoadingBlue").hide();
+                    $('#myModalEmailContent').html(data);
+                    $('#myModalEmail').modal(options);
+                    $('#myModalEmail').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoadingBlue").hide();
+
+                }
+            });
+
+        }
+    })
+   
+    
+</script>

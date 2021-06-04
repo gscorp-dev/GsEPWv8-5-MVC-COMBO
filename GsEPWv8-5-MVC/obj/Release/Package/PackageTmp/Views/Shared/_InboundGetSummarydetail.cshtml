@@ -1,0 +1,184 @@
+﻿@model GsEPWv8_5_MVC.Model.InboundReceivingModel
+@{
+
+
+}
+@Html.HiddenFor(model => model.cmp_id)
+<div class="box-body">
+    <fieldset>
+        <legend style="color:cornflowerblue; font-size:15px;">Header</legend>
+        <div class="box-header" style="margin-top:-27px;">
+            <table id="example1" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                <thead class="grid_backcolor">
+                    <tr>
+
+                        <td class="grid_header_backcolor"><input class="checkbox" id="chkAll" name="chkAll" type="checkbox" /></td>
+                        <th class="grid_header_backcolor">Whs</th>
+                        <th class="grid_header_backcolor">IBDocID</th>
+                        <th class="grid_header_backcolor">RefNo.</th>
+                        <th class="grid_header_backcolor">Rcvddate</th>
+                        <th class="grid_header_backcolor">Container</th>
+                        <th class="grid_header_backcolor">Totltm Lines</th>
+                        <th class="grid_header_backcolor">TotQty Received</th>
+                        <th class="grid_header_backcolor">Tot Ctns</th>
+                        <th class="grid_header_backcolor">944 Sent Status</th>
+                        <th class="grid_header_backcolor">944 Sent Date</th>
+
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+                    @for (int i = 0; i < Model.LstInboundReceiving.Count; i++)
+                    {
+
+                        <tr style="background-color:white; " id="@Model.LstInboundReceiving[i].ib_doc_id ">
+
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.LstInboundReceiving[i].ib_doc_id" onclick="test()" /></td>
+                            <td style="font-size:12px; color:black; font-weight:bold;" id="@Model.LstInboundReceiving[i].ib_doc_id" value="@Model.LstInboundReceiving[i].ib_doc_id" onclick="test()">@Model.LstInboundReceiving[i].WhsId</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceiving[i].ib_doc_id  </td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceiving[i].po_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceiving[i].rcvd_dt</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceiving[i].cont_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceiving[i].TotLots</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceiving[i].TotQty</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceiving[i].TotCtns</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align:right;">@Model.LstInboundReceiving[i].status</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align:right;">@Model.LstInboundReceiving[i].sent_dt</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </fieldset>
+    <div id="hdrgrid">
+        <fieldset>
+            <legend style="color:cornflowerblue; font-size:15px;">Details</legend>
+            <div class="box-header" style=" margin-top:-27px;">
+                <div style=" overflow auto;">
+                    <table id="example3" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                        <thead class="grid_backcolor">
+                            <tr>
+                                <th class="grid_header_backcolor">Status</th>
+                                <th class="grid_header_backcolor">Container#</th>
+                                <th class="grid_header_backcolor">IBDocId</th>
+                                <th class="grid_header_backcolor">Style</th>
+                                <th class="grid_header_backcolor">Color</th>
+                                <th class="grid_header_backcolor">Size</th>
+                                <th class="grid_header_backcolor">Description</th>
+                                <th class="grid_header_backcolor">Lot#</th>
+                                <th class="grid_header_backcolor">PONO</th>
+                                <th class="grid_header_backcolor">RcvdDt</th>
+                                <th class="grid_header_backcolor">Rcvd Ctns</th>
+                                <th class="grid_header_backcolor">PPK</th>
+                                <th class="grid_header_backcolor">RcvdQty</th>
+                                <th class="grid_header_backcolor">Length</th>
+                                <th class="grid_header_backcolor">Width</th>
+                                <th class="grid_header_backcolor">Height</th>
+                                <th class="grid_header_backcolor">Weight</th>
+                                <th class="grid_header_backcolor">Cube</th>
+                                <th class="grid_header_backcolor">PaletID</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                            <tr style="background-color:white;">
+
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold; "></td>
+                                <td style="font-size:12px; color:black; font-weight:bold; "></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div id="hdrgridshow"></div>
+</div>
+
+<script type="text/javascript">
+    $('#example1 tr').click(function (event) {
+        var tablerowvalue = $(this).attr('id');
+        var p_str_cmp_id = $('#cmp_id').val();
+        $.ajax({
+            type: "GET",
+            url: "/InboundReceiving/GetSummaryhdr",
+            data: {
+                "tablerowvalue": tablerowvalue, "p_str_cmp_id": p_str_cmp_id
+            },
+            dataType: 'html',
+            success: function (e) {
+                $('#hdrgrid').hide();
+                $('#hdrgridshow').html("");
+                $('#hdrgridshow').html(e);
+            },
+        })
+
+    });
+
+
+    $("#example1").DataTable();
+    $('#example3').DataTable({
+        "pageLength": 10,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        'autoWidth': false,
+    });
+    $("#example1 tr").not(':first').hover(
+function () {
+    $(this).css("background", "#dcf4ff");
+},
+function () {
+    $(this).css("background", "white");
+}
+);
+    $("#example2 tr").not(':first').hover(
+function () {
+    $(this).css("background", "#dcf4ff");
+},
+function () {
+    $(this).css("background", "white");
+}
+);
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Adminpage", "Home")';
+    })
+    $("input[name=chkAll]").click(function () {
+        if ($(this).prop("checked") == true) {
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").on('change', function () {
+        $("input[name='tblcheckbox']").not(this).prop('checked', false);
+    });
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+</script>

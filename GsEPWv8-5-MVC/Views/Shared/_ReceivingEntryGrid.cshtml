@@ -1,0 +1,382 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+
+@{
+    var Ordercounts = Model.ListRcvgDtl.Count;
+    int Ordercount = 0;
+    int TotalQty = 0;
+    int Totalctn = 0;
+
+}
+@for (int i = 0; i < Model.LstRcvdEntryCountDtl.Count; i++)
+{
+    Ordercount = Model.LstRcvdEntryCountDtl[i].recvcount;
+}
+<!-- /.box-header -->
+@for (int j = 0; j < Model.ListRcvgDtl.Count(); j++)
+{
+    var qty = (Model.ListRcvgDtl[j].tot_qty);
+    if (qty > 0)
+    {
+        TotalQty = TotalQty + qty;
+    }
+    var ctn = (Model.ListRcvgDtl[j].tot_ctn);
+    if (ctn > 0)
+    {
+        Totalctn = Totalctn + ctn;
+    }
+
+}
+
+<div id="GridShowPartialRecvEntry">
+    <table style="width:100%">
+        <tr style="display:inline-block;width:30%">
+            <td style="width:66%;">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+            </td>
+
+            <td style="width:30%;">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercounts
+                </label>
+            </td>
+
+        </tr>
+        <tr style="display:inline-block;width:30%">
+            <td>
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Qty:
+                </span>
+            </td>
+
+            <td style="width:30%;">
+                <label class="totalCount" style="text-align:left">
+                    @TotalQty
+                </label>
+            </td>
+
+        </tr>
+        <tr style="display:inline-block;width:30%">
+            <td>
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Ctns:
+                </span>
+            </td>
+
+            <td style="width:40%;">
+                <label class="totalCount" style="text-align:left">
+                    @Totalctn
+                </label>
+            </td>
+
+        </tr>
+    </table>
+
+</div>
+<br />
+<div class="box">
+    <div id="table-Details">
+        <div style="overflow-y:auto; height:auto; width:auto;">
+            <table id="GridDocRecvEntryPartial" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">Line</th>
+                        <th class="grid_header_backcolor">CtnLine</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">Description</th>
+                        <th class="grid_header_backcolor">L/W/H</th>
+                        <th class="grid_header_backcolor">Cube</th>
+                        <th class="grid_header_backcolor">Weight</th>
+                        <th class="grid_header_backcolor">Ctn(s)</th>
+                        <th class="grid_header_backcolor">PPk</th>
+                        <th class="grid_header_backcolor">TotQty</th>
+
+                        <th class="grid_header_backcolor" style="display:none;">Factory</th>
+                        <th class="grid_header_backcolor">Vend PO</th>
+                        <th class="grid_header_backcolor" style="display:none;">Customer</th>
+                        <th class="grid_header_backcolor">CustPO</th>
+                        <th class="grid_header_backcolor">Pick List</th>
+                        <th class="grid_header_backcolor">Loc Id</th>
+                        <th class="grid_header_backcolor">Strg</th>
+                        <th class="grid_header_backcolor">InOut</th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                    @for (int i = 0; i < Model.ListRcvgDtl.Count; i++)
+                    {
+                        string lstrLWH = Model.ListRcvgDtl[i].length + "|" + Model.ListRcvgDtl[i].width + " | " + Model.ListRcvgDtl[i].depth;
+                        <tr id="@Model.ListRcvgDtl[i].cmp_id ">
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListRcvgDtl[i].dtl_line</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListRcvgDtl[i].ctn_line</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].itm_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].itm_color</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].itm_size</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].itm_name</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@lstrLWH</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].cube</td>
+
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].wgt</td>
+
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].tot_ctn</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].ctn_qty</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].tot_qty</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;display:none;">@Model.ListRcvgDtl[i].factory_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].po_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;display:none;">@Model.ListRcvgDtl[i].cust_name</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].cust_po_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].pick_list</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].loc_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].st_rate_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].io_rate_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left;display:none;">@Model.ListRcvgDtl[i].lot_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; text-align :left;display:none;">@Model.ListRcvgDtl[i].palet_id</td>
+                            @if (Model.View_Flag == "V")
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="DocRecvEntryEditGridDetail" data-id="@Model.ListRcvgDtl[i].cmp_id" data-id1="@Model.ListRcvgDtl[i].itm_num" data-id2="@Model.ListRcvgDtl[i].itm_color" data-id3="@Model.ListRcvgDtl[i].itm_size" data-id4="@Model.ListRcvgDtl[i].ib_doc_id" data-id5="@Model.ListRcvgDtl[i].dtl_line" data-id6="@Model.ListRcvgDtl[i].itm_code" data-id7="@Model.ListRcvgDtl[i].itm_line"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+
+                                </td>
+                            }
+                            @if (Model.View_Flag == "V")
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="DocRecvEntryDelDetail" data-id="@Model.ListRcvgDtl[i].cmp_id" data-id1="@Model.ListRcvgDtl[i].itm_code" data-id2="@Model.ListRcvgDtl[i].ib_doc_id" data-id3="@Model.ListRcvgDtl[i].dtl_line" data-id4="@Model.ListRcvgDtl[i].itm_line"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                </td>
+                            }
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+        $("#btnClose").click(function () {
+
+            window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+        })
+        $("input[name=chkAll").click(function () {
+            if ($(this).prop("checked") == true) {
+
+                $("input[name='tblcheckbox']").prop("checked", true);
+            }
+            else if ($(this).prop("checked") == false) {
+
+                $("input[name='tblcheckbox']").prop("checked", false);
+            }
+
+        });
+        $("input[name='tblcheckbox']").click(function () {
+
+            if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+                $("#chkAll").prop("checked", true);
+            }
+            else {
+                $("#chkAll").prop("checked", false);
+            }
+
+        });
+
+        //$(".DocRecvEntryEditGridDetail").click(function () {
+        $('#GridDocRecvEntryPartial tbody').on('click', '.DocRecvEntryEditGridDetail', function () {
+
+            debugger
+            var $buttonClicked = $(this);
+            var P_Str_CmpId = $buttonClicked.attr('data-id');
+            var P_Str_itmNum = $buttonClicked.attr('data-id1');
+            var P_Str_Color = $buttonClicked.attr('data-id2');
+            var P_Str_Size = $buttonClicked.attr('data-id3');
+            var P_str_ibdocId = $buttonClicked.attr('data-id4');
+            var P_str_LineNum = $buttonClicked.attr('data-id5');
+            var P_str_itmCode = $buttonClicked.attr('data-id6');
+            var P_str_ctn_line = $buttonClicked.attr('data-id7');
+            //CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+            var p_str_Edit_flag = $('#l_bool_edit_flag').val();
+            if (p_str_Edit_flag == "true") {
+                swal("", "Another Item is already selected for edit", "");
+                return false;
+            }
+            //End CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+            $(document).ready(function () {
+                var x = document.getElementById("btnCancel");
+                x.style.display = "block";
+            });
+            $(document).ready(function () {
+                var x = document.getElementById("btnDtlClr");
+                x.style.display = "none";
+            });
+            $(this).closest('tr').remove();
+            //$(this).closest('tr').remove();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/DocrecvEntryEditDisplayGridToTextbox")',
+                contentType: "application/json; charset=utf-8",
+                data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_itmNum": P_Str_itmNum, "P_Str_Color": P_Str_Color, "P_Str_Size": P_Str_Size, "P_str_ibdocId": P_str_ibdocId, "P_str_LineNum": P_str_LineNum, "P_str_itmCode": P_str_itmCode, "P_str_ctn_line": P_str_ctn_line },
+                datatype: "json",
+                success: function (e) {
+                    debugger
+                    $.each(e, function () {
+                        $("#R_Itmdtl").val(this.itm_num);
+                        $("#R_itm_color").val(this.itm_color);
+                        $("#R_itm_size").val(this.itm_size);
+                        $("#R_itm_name").val(this.itm_name);
+                        $("#R_doclength").val(this.length);
+                        $("#R_docwidth").val(this.width);
+                        $("#R_docheight").val(this.depth);
+                        $("#R_docweight").val(this.wgt);
+                        $("#R_doccube").val(this.cube);
+                        $("#ordr_qty").val(this.tot_qty);
+                        $("#dtl_line").val(this.dtl_line);
+                        $("#ctn_line").val(this.ctn_line);
+                        //CR201480914-001
+                        //$("#tot_qty").val(this.tot_qty);
+                        //$("#R_ctn").val(this.tot_ctn);
+                        //$("#ppk").val(this.ctn_qty);
+                        //$("#R_ppk").val(this.ctn_qty);
+                        //END
+                        $("#rcv_po_num").val(this.po_num);
+                        $("#rcv_factory_id").val(this.factory_id);
+                        $("#rcv_cust_name").val(this.cust_name);
+                        $("#rcv_cust_po_num").val(this.cust_po_num);
+                        $("#rcv_pick_list").val(this.pick_list);
+                        $("#R_loc_id").val(this.loc_id);
+                        $("#inout_rate").val(this.io_rate_id);
+                        $("#strg_rate").val(this.st_rate_id);
+                        $("#itm_code").val(this.itm_code);
+                        $("#ibdocid").val(this.ib_doc_id);
+                        $("#status").val(this.status);
+                        $('#ordr_qty').val(this.ordr_qty);
+                        $('#rcvd_qty').val(this.rcvd_qty);
+                        $('#balance').val(this.balance);
+                        //$('#tot_qty').val(this.tot_qty);
+                        $('#recving_qty').val(this.recving_qty);
+                        $('#l_bool_edit_flag').val('true'); // CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                        // CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                        $("#R_Itmdtl").attr('disabled', 'disabled');
+                        $("#R_itm_color").attr('disabled', 'disabled');
+                        $("#R_itm_size").attr('disabled', 'disabled');
+                        $("#R_itm_name").attr('disabled', 'disabled');
+                        $("#btnRecvnondocItm").attr('disabled', 'disabled');
+                        $(document).ready(function () {
+                            var x = document.getElementById("btnRecvInclude");
+                            x.style.display = "block";
+                        });
+                        $("#recving_qty").focus();
+                        return false;
+                        // End CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                    //    $('#tmp_recving_qty').val(this.recving_qty);
+
+                    });
+                },
+            });
+        });
+
+        //$(".DocRecvEntryDelDetail").click(function () {
+    $('#GridDocRecvEntryPartial tbody').on('click', '.DocRecvEntryDelDetail', function () {
+
+            debugger
+            var $buttonClicked = $(this);
+            var P_Str_CmpId = $buttonClicked.attr('data-id');
+            var P_Str_ItmCode = $buttonClicked.attr('data-id1');
+            var P_Str_LineNum = $buttonClicked.attr('data-id3');
+            var P_Str_IbdocId = $buttonClicked.attr('data-id2');
+            var P_Str_ctnLine = $buttonClicked.attr('data-id4');
+            //CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+            var p_str_Edit_flag = $('#l_bool_edit_flag').val();
+            if (p_str_Edit_flag == "true") {
+                swal("", "Another Item is already selected for edit", "");
+                return false;
+            }
+            //End CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+            $("#ajaxLoading").show();
+            $(document).ready(function () {
+                var x = document.getElementById("btnCancel");
+                x.style.display = "none";
+            });
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/DocRecvEntryDeleteGridData")',
+                data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId, "P_Str_LineNum": P_Str_LineNum, "P_Str_ItmCode": P_Str_ItmCode, "P_Str_ctnLine": P_Str_ctnLine },
+
+                datatype: "html",
+                success: function (e) {
+                    debugger
+                    $("#ajaxLoading").hide();
+                    document.getElementById('MainRcvdEntry').style.display = 'none';
+                    $('#GridDocRecvEntry').html("");
+                    $('#GridDocRecvEntry').html(e);
+                    debugger
+                    sweetAlert("", "Item Deleted Successfully", "");
+                    //var p_str_ib_doc_id = $('#DocEntryCount').val();
+                    //$("#DocEntryCount").val(this.DocEntryCount);
+
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/DocRecvEntryCount")',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId },
+                        datatype: "json",
+                        success: function (e) {
+                            debugger
+                            var rowCount = e;
+                            $('#dtl_line').val((rowCount * 1) + 1);
+
+
+
+                        },
+                    });
+
+                    //var rowCount = $("#    td").closest("tr").length;
+                    //alert(rowCount)
+                    //var val = $('#LineNum').val();
+
+
+
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+</script>
+<script>
+ $(function () {
+     $('#GridDocRecvEntryPartial').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+     $('#GridDocRecvEntryPartial_paginate').hide();
+    })
+
+</script>
+
+
+

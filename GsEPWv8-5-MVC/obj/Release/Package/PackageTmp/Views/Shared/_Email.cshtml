@@ -1,0 +1,230 @@
+﻿@model GsEPWv8_5_MVC.Model.EmailModel
+@{
+    var gstrmailTo = "";
+    var gstrmailCC = "";
+}
+
+@Html.HiddenFor(model => model.EmailMessage)
+@Html.HiddenFor(model => model.CmpId)
+@Html.HiddenFor(model => model.FilePath)
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+
+    }
+</style>
+<style>
+    div#ajaxLoadingEmail {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<script>
+$(document).ready(function(){
+    var myHid = $('#EmailMessage').val(EmailMsg);
+
+});
+</script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<div class="modal-header">
+    <center><h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Send Email</h4></center>
+</div>
+<div id="ajaxLoadingEmail" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+<div>
+
+    <button type="button" class="btn_mclose" data-dismiss="modal" aria-hidden="true" style="float:right;">Close</button>
+    <button type="button" id="btnSendEmail" class="btn-Close" style="float:right;background-color: #00c0ef;">Send</button>
+    
+</div>
+<br />
+<hr />
+<div class="box-body">
+    <div class="box-header">
+        <div class="container">
+            <div style="border: 1px solid #ada8a8;margin-top:-33px;">
+                <table>
+                    <tr>
+                        <td style="width:13%; text-align:right;">
+                            <b style="font-size: 14px;">Email To:</b>
+                        </td>
+                        <td style="width:13%;padding-bottom: 12px;padding-left: 10px;padding-top: 14px;">
+                            <table>
+                                <tr>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.EmailTo, new { @type = "email", @id = "EmailTo", @class = "form-control", placeholder = "To", @maxlength = "200", @style = "width:952px; height:50px; Font-weight:bold;" }) 
+                                    </td>
+                                    <td>
+                                        <button type="button" id="btnSelectEmailTo" class="btn-Close" style="background-color: #ffac00;width:90px">Pick Cust Email</button>
+                                    </td>
+                                </tr>
+                            </table>
+                         
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td style="width:13%; text-align:right;">
+                            <b style="font-size: 14px;"> Email CC:</b>
+                        </td>
+                        <td style="padding-bottom: 10px;padding-left: 10px;">
+                            <table>
+                                <tr>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.EmailCC, new { @id = "EmailCC", @class = "form-control", placeholder = "CC", required = "required", @maxlength = "200", @style = "width: 956px; height:50px; Font-weight:bold;" })
+                                    </td>
+                                    <td>
+                                        <button type="button" id="btnSelectEmailCC" class="btn-Close" style="background-color: #ffac00;width:90px">Pick Cmp Email</button>
+                                    </td>
+                                </tr>
+                            </table>
+                          
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td style="width:13%; text-align:right;">
+                            <b style="font-size: 14px;">Subject:</b>
+                        </td>
+                        <td style="padding-bottom: 10px;padding-left: 10px;">
+                            @Html.TextBoxFor(model => model.EmailSubject, new { @id = "EmailSubject", @class = "form-control", placeholder = "Subject", required = "required", @maxlength = "500", @style = "Font-weight:bold; width: 956px; height:50px;" })
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td style="width:13%; text-align:right;">
+                            <b style="font-size: 14px;"> Message:</b>
+                        </td>
+
+                        <td style="padding-bottom: 10px;padding-left: 10px;text-align:right">
+                            @Html.TextAreaFor(model => model.EmailMessage, new { @id = "EmailMsg", @class = "form-control", placeholder = "Message", required = "required", @maxlength = "1000", @style = "height:230px; Font-weight:bold;" })
+                        </td>
+                    </tr>
+
+                    <tr>
+
+                        <td style="width:13%; text-align:right;padding-bottom: 16px;">
+                            <b style="font-size: 14px;"> Attachment:</b>
+                        </td>
+                        <td style="padding-bottom: 15px;padding-left: 10px;">
+                            @Html.TextBoxFor(model => model.Attachment, new { @class = "form-control ", placeholder = "Attachments", @maxlength = "100", @style = "width: 956px; height:50px; Font-weight:bold;", @disabled = "true" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("hdnEmailTo", gstrmailTo)
+    @Html.Hidden("hdnEmailCC", gstrmailCC)
+  
+</div>
+
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+
+    <script type="text/javascript">
+        $('#btnSendEmail').click(function () {
+            debugger
+            $("#ajaxLoadingEmail").show();
+            var EmailTo = $('#EmailTo').val();
+            var EmailCc = $('#EmailCC').val();
+            var EmailSubject = $('#EmailSubject').val();
+            var EmailMessage = $('#EmailMsg').val();
+            var EmailAttachment = $('#Attachment').val();
+            var FilePath = $('#FilePath').val();
+            if ($('#EmailTo').val() == '') {
+                $('#EmailTo').css('border-color', 'red');
+                return false;
+                $("#ajaxLoadingEmail").hide();
+            }
+
+            else {
+                $.ajax({
+                    url: '@Url.Action("SendMail", "SendMailer")',
+                    type: 'POST',
+                    cache: false,
+                    data: { "EmailTo": EmailTo, "EmailCc": EmailCc, "EmailSubject": EmailSubject, "EmailMessage": EmailMessage, "EmailAttachment": EmailAttachment, "FilePath": FilePath },
+                    success: function (data) {
+                        if (data == "Email") {
+                            $("#ajaxLoadingEmail").hide();
+                            sweetAlert("", "Email Sent Successfully", "");
+                            $('#myModalEmail').modal('hide');
+                         
+
+                        }
+                        else
+                        {
+                            $("#ajaxLoadingEmail").hide();
+                        }
+
+                    }
+                });
+            }
+        })
+        $('#btnSelectEmailTo').click(function () {
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $("#cmp_id").val();
+            var p_str_email_to = $("#EmailTo").val();
+            $('#hdnEmailTo').val(p_str_email_to);
+            $("#ajaxLoadingEmail").show();
+            $.ajax({
+                url: '@Url.Action("GetEmailToList", "SendMailer")',
+                contentType: "application/json; charset=utf-8",
+                type: 'GET',
+                data: { "p_str_cmp_id": p_str_cmp_id, "p_str_email_to": p_str_email_to },
+                datatype: "json",
+                success: function (data) {
+                    $('#UsersEmailContent').html(data);
+                    $('#UsersEmail').modal(options);
+                    $('#UsersEmail').modal('show');
+                    $("#ajaxLoadingEmail").hide();
+                }
+            });
+        })
+
+        $('#btnSelectEmailCC').click(function () {
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $("#cmp_id").val();
+            var p_str_email_cc = $("#EmailCC").val();
+            $("#ajaxLoadingEmail").show();
+            $.ajax({
+                url: '@Url.Action("GetEmailCCList", "SendMailer")',
+                contentType: "application/json; charset=utf-8",
+                type: 'GET',
+                data: { "p_str_cmp_id": p_str_cmp_id, "p_str_email_cc": p_str_email_cc },
+                datatype: "json",
+                success: function (data) {
+                    $('#UsersEmailContent').html(data);
+                    $('#UsersEmail').modal(options);
+                    $('#UsersEmail').modal('show');
+                    $("#ajaxLoadingEmail").hide();
+                }
+            });
+        })
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-GsEPWv8-4-MVC-20170802031550.mdf;Initial Catalog=aspnet-GsEPWv8-5-MVC-20170802031550;Integrated Security=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="D:\\PROD-SOURCE\\GsEPWv8-5-MVC-COMBO\\GsEPWv8-5-MVC\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+  <parameter name="GenSoftConnection-Web.config Connection String" description="GenSoftConnection Connection String used in web.config by the application to access the database." defaultValue="Server=10.1.10.21;Database=Gs3PLv8-5-CDC-PROD;User ID=sa;Password=sqL2015;Trusted_Connection=False;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="D:\\PROD-SOURCE\\GsEPWv8-5-MVC-COMBO\\GsEPWv8-5-MVC\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='GenSoftConnection']/@connectionString" />
+  </parameter>
+</parameters>

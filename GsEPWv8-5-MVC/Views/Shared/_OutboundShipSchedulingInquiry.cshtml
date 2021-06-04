@@ -1,0 +1,306 @@
+﻿
+@model GsEPWv8_5_MVC.Model.OutboundShipSchedulingInquiryModel
+
+@{
+    var Ordercount = Model.LstOutboundShipScheduleInqdetail.Count;
+}
+
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style=" width:105px;"></td>
+            <td style=" width:105px;"></td>
+        </tr>
+    </table>
+</div>
+@Html.HiddenFor(model=>model.Ship_dt_Fm)
+@Html.HiddenFor(model => model.Ship_dt_To)
+<div class="box box-primary">
+    <div>
+    </div>
+    <br />
+    <table id="GridShipSchedulePartial" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%">Select</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%">SR.No</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%">Status</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%">Alloc.No</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%">Alloc.Date</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:5%">WhsID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%">CustID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:15%">ShipVia</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:15%">ShipTo</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%">ShipSchdlID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%">ShipSchdlDate</th>
+                <th class="grid_header_backcolor" style="font-size:11px;width:10%">CarrierID</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (int i = 0; i < Model.LstOutboundShipScheduleInqdetail.Count; i++)
+            {
+                var l_str_ship_schdl_date = @Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date;
+                <tr class="row-select">
+                    <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.LstOutboundShipScheduleInqdetail[i].ship_doc_id" /></td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].so_num</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].status</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].aloc_dt</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].whs_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].cust_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].ship_via_name</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].ship_to</td>
+                    <td>
+                        <table>
+                            <tr>
+                                @if (l_str_ship_schdl_date == "" || l_str_ship_schdl_date == null)
+                                {
+                                    <td>
+                                        <a href="javascript:void(0);" class="btn btn-primary small ShipScheduleAddDetail" style="color: white;margin-left:115px;height: 17px;width: 44px;border-radius: 7px;font-size: 12px;font-family: bold;padding: 0px;margin-top:8%;" data-id="@Model.LstOutboundShipScheduleInqdetail[i].cmp_id" data-id1="@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundShipScheduleInqdetail[i].status">ADD</a>
+                                    </td>
+
+                                }
+
+                                else
+                                {
+                                    <td>
+                                        <table>
+                                            <tr>
+                                             
+                                                <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="ShipScheduleDetail" style="text-decoration:underline; color:#034af3;padding:0px 5px" data-id="@Model.LstOutboundShipScheduleInqdetail[i].cmp_id" data-id1="@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundShipScheduleInqdetail[i].status"
+                                                       data-id3="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_doc_id" data-id4="@Model.LstOutboundShipScheduleInqdetail[i].ship_car_name"
+                                                       data-id5="@Model.LstOutboundShipScheduleInqdetail[i].truck_id" data-id6="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date"
+                                                       data-id7="@Model.LstOutboundShipScheduleInqdetail[i].notes">@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_doc_id </a></td>
+                                                <td> </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline;color: blue;padding:0px 5px" class="ShipScheduleEditDetail" data-id="@Model.LstOutboundShipScheduleInqdetail[i].cmp_id" data-id1="@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundShipScheduleInqdetail[i].status" data-id3="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_doc_id" data-id4="@Model.LstOutboundShipScheduleInqdetail[i].ship_car_name" data-id5="@Model.LstOutboundShipScheduleInqdetail[i].truck_id" data-id6="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date" data-id7="@Model.LstOutboundShipScheduleInqdetail[i].notes"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>E</b></a>
+                                                </td>
+                                                <td> </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline; color: red;padding:0px 5px" class="ShipScheduleDelDetail" data-id="@Model.LstOutboundShipScheduleInqdetail[i].cmp_id" data-id1="@Model.LstOutboundShipScheduleInqdetail[i].aloc_doc_id" data-id2="@Model.LstOutboundShipScheduleInqdetail[i].status" data-id3="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_doc_id" data-id4="@Model.LstOutboundShipScheduleInqdetail[i].ship_car_name" data-id5="@Model.LstOutboundShipScheduleInqdetail[i].truck_id" data-id6="@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date" data-id7="@Model.LstOutboundShipScheduleInqdetail[i].notes"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>D</b></a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                }
+
+                            </tr>
+            </table>
+        </td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].ship_schdl_date</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipScheduleInqdetail[i].truck_id</td>
+
+                        </tr>
+    }
+
+
+        </tbody>
+    </table>
+</div>
+<div id='myModalEdit' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%;left:-281px;">
+            <div id='myModalContentEdit' style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalDel' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:150%;left:-281px;">
+            <div id='myModalContentDel' style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalAdd' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%; left:-365px;">
+            <div id='myModalContentAdd' style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalView' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 150%; left:-365px;">
+            <div id='myModalContentView' style="width: 100%; height:400px;"></div>
+        </div>
+    </div>
+    </div>
+    <script>
+        $(function () {
+            $('#GridShipSchedulePartial').DataTable({
+                "pageLength": 10,
+                'paging': true,
+                'lengthChange': false,
+                'searching': false,
+                'ordering': false,
+                'info': false,
+                'autoWidth': false,
+            });
+            $('#GridShipSchedulePartial_paginate').hide();
+        })
+        var TeamDetailoutboundAddURL = '/OutboundShipSchedulingInquiry/NewShipScheduleEntry';
+        $(function () {
+            $(".ShipScheduleAddDetail").click(function () {
+                var $buttonClicked = $(this);
+                var cmp_id = $buttonClicked.attr('data-id');
+                var aloc_doc_id = $buttonClicked.attr('data-id1');
+                var status = $buttonClicked.attr('data-id2');
+                var ship_dt_fm = $('#Ship_dt_Fm').val();
+                var ship_dt_to = $('#Ship_dt_To').val();
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailoutboundAddURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "cmp_id": cmp_id, "aloc_doc_id": aloc_doc_id, "status": status
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContentAdd').html(data);
+                        $('#myModalAdd').modal(options);
+                        $('#myModalAdd').modal('show');
+
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+
+        });
+
+
+
+        var TeamDetailoutboundEditURL = '/OutboundShipSchedulingInquiry/EditShipScheduleEntry';
+        $(function () {
+            $(".ShipScheduleEditDetail").click(function () {
+                var $buttonClicked = $(this);
+                var cmp_id = $buttonClicked.attr('data-id');
+                var aloc_doc_id = $buttonClicked.attr('data-id1');
+                var status = $buttonClicked.attr('data-id2');
+                var ship_schdl_doc_id = $buttonClicked.attr('data-id3');
+                var ship_car_name = $buttonClicked.attr('data-id4');
+                var truck_id = $buttonClicked.attr('data-id5');
+                var ship_schdl_date = $buttonClicked.attr('data-id6');
+                var ship_notes = $buttonClicked.attr('data-id7');
+                var state_id = "Edit";
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailoutboundEditURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "cmp_id": cmp_id, "aloc_doc_id": aloc_doc_id, "status": status, "ship_schdl_doc_id": ship_schdl_doc_id, "ship_car_name": ship_car_name, "truck_id": truck_id, "ship_schdl_date": ship_schdl_date, "ship_notes": ship_notes, "state_id": state_id
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContentEdit').html(data);
+                        $('#myModalEdit').modal(options);
+                        $('#myModalEdit').modal('show');
+
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+
+        });
+        var TeamDetailoutboundDeleteURL = '/OutboundShipSchedulingInquiry/EditShipScheduleEntry';
+        $(function () {
+            $(".ShipScheduleDelDetail").click(function () {
+                var $buttonClicked = $(this);
+                var cmp_id = $buttonClicked.attr('data-id');
+                var aloc_doc_id = $buttonClicked.attr('data-id1');
+                var status = $buttonClicked.attr('data-id2');
+                var ship_schdl_doc_id = $buttonClicked.attr('data-id3');
+                var ship_car_name = $buttonClicked.attr('data-id4');
+                var truck_id = $buttonClicked.attr('data-id5');
+                var ship_schdl_date = $buttonClicked.attr('data-id6');
+                var ship_notes = $buttonClicked.attr('data-id7');
+                var state_id = "Delete";
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailoutboundDeleteURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "cmp_id": cmp_id, "aloc_doc_id": aloc_doc_id, "status": status, "ship_schdl_doc_id": ship_schdl_doc_id, "ship_car_name": ship_car_name, "truck_id": truck_id, "ship_schdl_date": ship_schdl_date, "ship_notes": ship_notes, "state_id": state_id
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContentDel').html(data);
+                        $('#myModalDel').modal(options);
+                        $('#myModalDel').modal('show');
+
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+
+        });
+    </script>
+    <script>
+        var TeamDetailoutboundViewURL = '/OutboundShipSchedulingInquiry/EditShipScheduleEntry';
+        $(function () {
+            $(".ShipScheduleDetail").click(function () {
+                var $buttonClicked = $(this);
+                var cmp_id = $buttonClicked.attr('data-id');
+                var aloc_doc_id = $buttonClicked.attr('data-id1');
+                var status = $buttonClicked.attr('data-id2');
+                var ship_schdl_doc_id = $buttonClicked.attr('data-id3');
+                var ship_car_name = $buttonClicked.attr('data-id4');
+                var truck_id = $buttonClicked.attr('data-id5');
+                var ship_schdl_date = $buttonClicked.attr('data-id6');
+                var ship_notes = $buttonClicked.attr('data-id7');
+                var state_id = "View";
+                var options = { "backdrop": "static", keyboard: true };
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailoutboundViewURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "cmp_id": cmp_id, "aloc_doc_id": aloc_doc_id, "status": status, "ship_schdl_doc_id": ship_schdl_doc_id, "ship_car_name": ship_car_name, "truck_id": truck_id, "ship_schdl_date": ship_schdl_date, "ship_notes": ship_notes, "state_id": state_id
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoading").hide();
+                        $('#myModalContentView').html(data);
+                        $('#myModalView').modal(options);
+                        $('#myModalView').modal('show');
+
+                    },
+                    error: function () {
+                        $("#ajaxLoading").hide();
+                        swal("Dynamic content load failed.");
+                    }
+                });
+            });
+
+        });
+    </script>

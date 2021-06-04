@@ -1,0 +1,128 @@
+cmp_name,Container_Number,Line_num,Po_num,Item_Number,Color_Code,itm_siz,Itm_name,Qty,ctn_qty,ctns,Loc,st-rate,io-rate,Carton_Length,Carton_Width,Carton_Height,Cube,Wgt,note
+ORLY,TCNU1582175,1,7141-TG        ,XCROSS-TGWS-DG ,MULTC,-,MULTICOLOR                                        ,10206,18,567,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,2,7141-TG        ,XCROSS-TGWS-DG ,MULTC,-,MULTICOLOR                                        ,10206,18,567,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,3,7141-TG        ,XCROSS-TGWS-DG ,MULTC,-,MULTICOLOR                                        ,10206,18,567,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,4,7141-TG        ,XCROSS-TGWS-DG ,MULTC,-,MULTICOLOR                                        ,10206,18,567,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,5,7141-TG        ,XCROSS-TGWS-DG ,MULTC,-,MULTICOLOR                                        ,10206,18,567,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,6,7141-TG        ,XCROSS-TGWS-DG ,MULTC,-,MULTICOLOR                                        ,10206,18,567,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,7,7173-TG        ,SHARKSL-TBS-DG1,ASST ,-,ASSORTED                                          ,18522,18,1029,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,8,7173-TG        ,SHARKSL-TBS-DG1,ASST ,-,ASSORTED                                          ,18522,18,1029,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,9,7173-TG        ,SHARKSL-TBS-DG1,ASST ,-,ASSORTED                                          ,18522,18,1029,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,10,7199-A         ,COURTNEY-LWS-CT,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,11,7199-A         ,COURTNEY-LWS-CT,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,12,7199-A         ,COURTNEY-LWS-CT,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,13,7199-A         ,COURTNEY-LWS-CT,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,14,7199-A         ,COURTNEY-LWS-CT,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,15,7199-A         ,COURTNEY-LWS-CT,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,16,7199-A         ,COURTNEY-LWS-CT,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,17,7199-A         ,COURTNEY-LWS-CT,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,18,7199-A         ,COURTNEY-LWS-CT,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,19,7199-A         ,COURTNEY-LWS-CT,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,20,7199-A         ,COURTNEY-LWS-CT,GRN  ,-,GREEN                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,21,7199-A         ,COURTNEY-LWS-CT,GRN  ,-,GREEN                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,22,7199-A         ,COURTNEY-LWS-CT,GRN  ,-,GREEN                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,23,7199-A         ,COURTNEY-LWS-CT,GRN  ,-,GREEN                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,24,7199-A         ,COURTNEY-LWS-CT,GRN  ,-,GREEN                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,25,7199-A         ,COURTNEY-LWS-CT,PINK ,-,PINK                                              ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,26,7199-A         ,COURTNEY-LWS-CT,PINK ,-,PINK                                              ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,27,7199-A         ,COURTNEY-LWS-CT,PINK ,-,PINK                                              ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,28,7199-A         ,COURTNEY-LWS-CT,PINK ,-,PINK                                              ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,29,7199-A         ,COURTNEY-LWS-CT,PINK ,-,PINK                                              ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,30,7199-A         ,COURTNEY-LWS-CT,RED  ,-,RED                                               ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,31,7199-A         ,COURTNEY-LWS-CT,RED  ,-,RED                                               ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,32,7199-A         ,COURTNEY-LWS-CT,RED  ,-,RED                                               ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,33,7199-A         ,COURTNEY-LWS-CT,RED  ,-,RED                                               ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,34,7199-A         ,COURTNEY-LWS-CT,RED  ,-,RED                                               ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,35,7199-A         ,ELAS333-LWS-CT ,BKPAT,-,BLACK PATTERN                                     ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,36,7199-A         ,ELAS333-LWS-CT ,BKPAT,-,BLACK PATTERN                                     ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,37,7199-A         ,ELAS333-LWS-CT ,BKPAT,-,BLACK PATTERN                                     ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,38,7199-A         ,ELAS333-LWS-CT ,BKPAT,-,BLACK PATTERN                                     ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,39,7199-A         ,ELAS333-LWS-CT ,BKPAT,-,BLACK PATTERN                                     ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,40,7199-A         ,ELAS333-LWS-CT ,BLDNM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,41,7199-A         ,ELAS333-LWS-CT ,BLDNM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,42,7199-A         ,ELAS333-LWS-CT ,BLDNM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,43,7199-A         ,ELAS333-LWS-CT ,BLDNM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,44,7199-A         ,ELAS333-LWS-CT ,BLDNM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,45,7199-A         ,ELAS333-LWS-CT ,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,46,7199-A         ,ELAS333-LWS-CT ,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,47,7199-A         ,ELAS333-LWS-CT ,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,48,7199-A         ,ELAS333-LWS-CT ,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,49,7199-A         ,ELAS333-LWS-CT ,BLK  ,-,BLACK                                             ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,50,7200,SELENE2-LWS-CT ,BLK  ,-,BLACK                                             ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,51,7200,SELENE2-LWS-CT ,BLK  ,-,BLACK                                             ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,52,7200,SELENE2-LWS-CT ,BLK  ,-,BLACK                                             ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,53,7200,SELENE2-LWS-CT ,BLK  ,-,BLACK                                             ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,54,7200,SELENE2-LWS-CT ,BLK  ,-,BLACK                                             ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,55,7200,SELENE2-LWS-CT ,BLKSD,-,BLACK SUEDE                                       ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,note
+ORLY,TCNU1582175,56,7200,SELENE2-LWS-CT ,BLKSD,-,BLACK SUEDE                                       ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,57,7200,SELENE2-LWS-CT ,BLKSD,-,BLACK SUEDE                                       ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,58,7200,SELENE2-LWS-CT ,BLKSD,-,BLACK SUEDE                                       ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,59,7200,SELENE2-LWS-CT ,BLKSD,-,BLACK SUEDE                                       ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,60,7200,SELENE2-LWS-CT ,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,61,7200,SELENE2-LWS-CT ,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,62,7200,SELENE2-LWS-CT ,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,63,7200,SELENE2-LWS-CT ,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,64,7200,SELENE2-LWS-CT ,BLUDM,-,BLUE DENIM-12A                                    ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,65,7200,SELENE2-LWS-CT ,BROWN,-,BROWN                                             ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,66,7200,SELENE2-LWS-CT ,BROWN,-,BROWN                                             ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,67,7200,SELENE2-LWS-CT ,BROWN,-,BROWN                                             ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,68,7200,SELENE2-LWS-CT ,BROWN,-,BROWN                                             ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,69,7200,SELENE2-LWS-CT ,BROWN,-,BROWN                                             ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,70,7200,SELENE2-LWS-CT ,BRZEA,-,BRONZE AMBER                                      ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,71,7200,SELENE2-LWS-CT ,BRZEA,-,BRONZE AMBER                                      ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,72,7200,SELENE2-LWS-CT ,BRZEA,-,BRONZE AMBER                                      ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,73,7200,SELENE2-LWS-CT ,BRZEA,-,BRONZE AMBER                                      ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,74,7200,SELENE2-LWS-CT ,BRZEA,-,BRONZE AMBER                                      ,288,18,16,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,75,7200,SELENE2-LWS-CT ,GOMU ,-,GOLD MUSTARD                                      ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,76,7200,SELENE2-LWS-CT ,GOMU ,-,GOLD MUSTARD                                      ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,77,7200,SELENE2-LWS-CT ,GOMU ,-,GOLD MUSTARD                                      ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,78,7200,SELENE2-LWS-CT ,GOMU ,-,GOLD MUSTARD                                      ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,79,7200,SELENE2-LWS-CT ,GOMU ,-,GOLD MUSTARD                                      ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,80,7200,SELENE2-LWS-CT ,ORANG,-,ORANGE                                            ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,81,7200,SELENE2-LWS-CT ,ORANG,-,ORANGE                                            ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,82,7200,SELENE2-LWS-CT ,ORANG,-,ORANGE                                            ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,83,7200,SELENE2-LWS-CT ,ORANG,-,ORANGE                                            ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,84,7200,SELENE2-LWS-CT ,ORANG,-,ORANGE                                            ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,85,7200,SELENE2-LWS-CT ,RED  ,-,RED                                               ,1080,18,60,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,86,7200,SELENE2-LWS-CT ,RED  ,-,RED                                               ,1080,18,60,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,87,7200,SELENE2-LWS-CT ,RED  ,-,RED                                               ,1080,18,60,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,88,7200,SELENE2-LWS-CT ,RED  ,-,RED                                               ,1080,18,60,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,89,7200,SELENE2-LWS-CT ,RED  ,-,RED                                               ,1080,18,60,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,90,7200,SELENE2-LWS-CT ,TAN  ,-,TAN                                               ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,91,7200,SELENE2-LWS-CT ,TAN  ,-,TAN                                               ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,92,7200,SELENE2-LWS-CT ,TAN  ,-,TAN                                               ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,93,7200,SELENE2-LWS-CT ,TAN  ,-,TAN                                               ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,94,7200,SELENE2-LWS-CT ,TAN  ,-,TAN                                               ,756,18,42,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,95,7200,SELENE2-LWS-CT ,TURQS,-,TURQUOISE                                         ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,96,7200,SELENE2-LWS-CT ,TURQS,-,TURQUOISE                                         ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,97,7200,SELENE2-LWS-CT ,TURQS,-,TURQUOISE                                         ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,98,7200,SELENE2-LWS-CT ,TURQS,-,TURQUOISE                                         ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,99,7200,SELENE2-LWS-CT ,TURQS,-,TURQUOISE                                         ,180,18,10,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,100,7200,SELENE2-LWS-CT ,WHT  ,-,WHITE                                             ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,101,7200,SELENE2-LWS-CT ,WHT  ,-,WHITE                                             ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,102,7200,SELENE2-LWS-CT ,WHT  ,-,WHITE                                             ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,103,7200,SELENE2-LWS-CT ,WHT  ,-,WHITE                                             ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,104,7200,SELENE2-LWS-CT ,WHT  ,-,WHITE                                             ,936,18,52,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,105,7200,SELENE2-LWS-CT ,YLLOW,-,YELLOW                                            ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,106,7200,SELENE2-LWS-CT ,YLLOW,-,YELLOW                                            ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,107,7200,SELENE2-LWS-CT ,YLLOW,-,YELLOW                                            ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,108,7200,SELENE2-LWS-CT ,YLLOW,-,YELLOW                                            ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,109,7200,SELENE2-LWS-CT ,YLLOW,-,YELLOW                                            ,1242,18,69,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,110,7440-CH        ,CAGENSI-GFS-CT ,BLK  ,-,BLACK                                             ,378,18,21,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,111,7440-CH        ,CAGENSI-GFS-CT ,BLK  ,-,BLACK                                             ,378,18,21,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,112,7440-CH        ,CAGENSI-GFS-CT ,BLK  ,-,BLACK                                             ,378,18,21,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,113,7440-CH        ,CAGENSI-GFS-CT ,BLK  ,-,BLACK                                             ,378,18,21,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,114,7440-CH        ,CAGENSI-GFS-CT ,BLK  ,-,BLACK                                             ,378,18,21,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,115,7440-CH        ,CAGENSI-GFS-CT ,BLK  ,-,BLACK                                             ,378,18,21,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,116,7440-CH        ,CAGENSI-GFS-CT ,BLUSH,-,BLUSH                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,117,7440-CH        ,CAGENSI-GFS-CT ,BLUSH,-,BLUSH                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,118,7440-CH        ,CAGENSI-GFS-CT ,BLUSH,-,BLUSH                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,119,7440-CH        ,CAGENSI-GFS-CT ,BLUSH,-,BLUSH                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,120,7440-CH        ,CAGENSI-GFS-CT ,BLUSH,-,BLUSH                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,121,7440-CH        ,CAGENSI-GFS-CT ,BLUSH,-,BLUSH                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,122,7440-CH        ,CAGENSI-GFS-CT ,WHT  ,-,WHITE                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,123,7440-CH        ,CAGENSI-GFS-CT ,WHT  ,-,WHITE                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,124,7440-CH        ,CAGENSI-GFS-CT ,WHT  ,-,WHITE                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,125,7440-CH        ,CAGENSI-GFS-CT ,WHT  ,-,WHITE                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,126,7440-CH        ,CAGENSI-GFS-CT ,WHT  ,-,WHITE                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175
+ORLY,TCNU1582175,127,7440-CH        ,CAGENSI-GFS-CT ,WHT  ,-,WHITE                                             ,648,18,36,R01,STRG,INOUT,15,12,10,5,11,Total for Container Number TCNU1582175

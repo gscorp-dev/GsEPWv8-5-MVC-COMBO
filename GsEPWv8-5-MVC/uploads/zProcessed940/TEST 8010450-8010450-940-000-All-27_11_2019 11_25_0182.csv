@@ -1,0 +1,2 @@
+SLF940,CompID,REFNUM,BATCHID,CUSTID,CustPO,PickLine,ItemNum,Color,Size,Cust-SKU,ItmQty,Ctns,ctn_qty,ctn_cube,ctn_wgt,itm_name,DtlCount,PO-Num,Rel-ID,ReqDt,StartDt,CancelDt,Dept,STORE,ShipToName,ShipToAdd1,ShipToAdd2,City,State,ZipCode,Ship_to_Country,HdrNote,Ship-via
+SLF940,QUEST,8010452,99.5DSW,TEST,000562456,1,IJPB-0007-DW,-,-,,10000,625,16,,,,1,,,12/4/2019,12/9/2019,12/13/2019,60,1,DSW INC,4150 E FIFTH AVE,,COLUMBUS,OH,43219,USA,ROUTE,TBD

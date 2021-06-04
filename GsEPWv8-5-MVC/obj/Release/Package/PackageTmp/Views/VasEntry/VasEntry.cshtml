@@ -1,0 +1,227 @@
+﻿@model GsEPWv8_5_MVC.Model.VasEntryModel
+@{
+    ViewBag.Title = "VasEntry";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width" />
+
+<!-- bootstrap datepicker -->
+<link rel="stylesheet" href="~/plugins/datepicker/datepicker3.css">
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+@using (Html.BeginForm("VasEntry", "VasEntry", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+<h3>VAS Entry</h3>
+<div class="box box-default">
+    <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+        <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+        <div class="box-tools">
+
+            <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="box-header">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12">
+
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%;">
+                            <label><b>Cust Id </b></label>
+                        </div>
+                        <div class="col-xs-3" style="width: 150px;">
+                            @Html.DropDownListFor(model => model.cust_id, new List<SelectListItem>
+                                {
+                                new SelectListItem() {Text = "Freight Horse Company", Value="FHC"},
+                                new SelectListItem() {Text = "One Step Up", Value="OSU"},
+                                new SelectListItem() {Text = "Dorman Horse Company", Value="DHC"},
+                                }, new { @class = "form-control", })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%">
+                            <label><b>Vas ID</b></label>
+
+                        </div>
+                        <div class="col-xs-3" style="width: 140px;">
+                            @Html.TextBoxFor(model => model.vas_id, new { @class = "form-control", , @maxlength = "50" })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%">
+                            <label><b>Vas Date</b></label>
+
+                        </div>
+                        <div class="col-xs-3" style="width: 130px;">
+                            @Html.TextBoxFor(model => model.vas_date, new { @class = "form-control", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+
+
+
+                        <div class="col-xs-1" style=" text-align: right;  margin-top: 6px; width: 12%">
+                            <label><b>Status </b></label>
+                        </div>
+                        <div class="col-xs-2" style=" text-align: right; width: 130px">
+                            @Html.DropDownListFor(model => model.status, new List<SelectListItem>
+                                {
+                                new SelectListItem() {Text = "ALL", Value="ALL"},
+                                new SelectListItem() {Text = "SHIP", Value="S"},
+                                new SelectListItem() {Text = "POST", Value="P"},
+                                }, new { @class = "form-control", })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%">
+                            <label><b>SR#</b></label>
+
+                        </div>
+                        <div class="col-xs-2" style="width: 150px;">
+                            @Html.TextBoxFor(model => model.sr_num, new { @class = "form-control",  @maxlength = "50" })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%">
+                            <label><b>FOB</b></label>
+
+                        </div>
+                        <div class="col-xs-2" style="width: 140px;">
+                            @Html.TextBoxFor(model => model.fob, new { @class = "form-control",  @maxlength = "50" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%">
+                            <label><b>ShipTo ID</b></label>
+
+                        </div>
+                        <div class="col-xs-2" style="width: 140px;">
+                            @Html.TextBoxFor(model => model.ship_to_id, new { @class = "form-control", @maxlength = "50" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="box-header">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%;">
+                            <label><b>Cust PO </b></label>
+                        </div>
+                        <div class="col-xs-3" style="width: 150px;">
+
+                        </div>
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%">
+                            <label><b>CustPO Date</b></label>
+
+                        </div>
+                        <div class="col-xs-3" style="width: 140px;">
+                            @Html.TextBoxFor(model => model.vas_id, new { @class = "form-control", placeholder = "VAS#", @maxlength = "50" })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px; width: 12%">
+                            <label><b>Header Note</b></label>
+
+                        </div>
+                        <div class="col-xs-3" style="width: 130px;">
+                            @Html.TextBoxFor(model => model.vas_date, new { @class = "form-control", placeholder = "VAS Date", @maxlength = "50" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div id="showgrid" class="box-header" style="padding: 5px; ">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-xs-12" style=" margin-top : -20px;">
+                    <div class="col-xs-2" style="width: 151px;">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Records:
+                        </span>
+                    </div>
+                    <div class="col-xs-8" style="text-align:left">
+                        <label class="totalCount" style="text-align:left">
+
+                        </label>
+                    </div>
+
+                    <div class="col-xs-2">
+                        <table>
+                            <tr>
+
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn-Email" type="button" style=" width:100px; text-align: right;" id="btnEmail" data-toggle="dropdown">
+                                            Email
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">WORD</a></li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn-Print" type="button" id="btnPrint" style=" width:105px;" data-toggle="dropdown">
+                                            Print/View
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">WORD</a></li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button type="button" id="btnClose" class="btn-Close">Close</button>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <table id="example1" class="table table-bordered table-striped">
+
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">CustID</th>
+                        <th class="grid_header_backcolor">VasID</th>
+                        <th class="grid_header_backcolor">Vas Date</th>
+                        <th class="grid_header_backcolor">SR#</th>
+                        <th class="grid_header_backcolor">Status</th>
+                        <th class="grid_header_backcolor">Bill Amount</th>
+                        <th class="grid_header_backcolor">Note</th>
+
+
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+                        }
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>

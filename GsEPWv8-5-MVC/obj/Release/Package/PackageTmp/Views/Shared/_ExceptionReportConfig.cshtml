@@ -1,0 +1,1512 @@
+﻿@model  GsEPWv8_5_MVC.Model.DailyFlashExceptionReportModel
+
+@{
+    ViewBag.Title = "DailyFlashExceptionReport";
+
+
+}
+
+<style>
+    div#ajaxLoadingSaveExpRpt {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+@Html.HiddenFor(model => model.action)
+@*@Html.HiddenFor(model => model.action)*@
+<div class="modal-header">
+    @if (Model.action == "1")
+    {
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">ExceptionReport New Configuration </h4>
+        <button type="button" id="btnNewExpClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+        <button type="button" id="btnNewExpSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;margin-left:-28px;background-color: #00c0ef;">Save</button>
+
+    }
+    else if (Model.action == "2")
+    {
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">ExceptionReport Edit Configuration </h4>
+        <button type="button" id="btnNewExpEditClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+        <button type="button" id="btnNewExpEdit" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;margin-left:-28px;background-color: #00c0ef;">Save</button>
+    }
+    else if (Model.action == "3")
+    {
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">ExceptionReport View Configuration </h4>
+        <button type="button" id="btnNewViewClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+    }
+    else
+    {
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">ExceptionReport Delete Configuration </h4>
+        <button type="button" id="btnNewDeleteClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+        <button type="button" id="btnNewDelete" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;margin-left:-28px;background-color: #00c0ef;">Delete</button>
+    }
+</div>
+<div id="ajaxLoadingSaveExpRpt" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+@if (Model.action == "1")
+{
+    <fieldset style="margin-top:-1px;">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Comp ID:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -20px;width:38%;">
+                                @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:270px", @id = "new_cmp_id" })
+                            </div>
+                            <div class="col-xs-2" style="left:-106px">
+                                <button class="btn-Clear" id="btnExpCompanySelect" type="button" style="background-color:blue;width:145px" align="center">Pick CompanyList</button>
+                            </div>
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;margin-left:-120px">
+                                <label><b class="Lblmanual">Status:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -20px;">
+                                @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "Active", Value="Active"},
+                                            new SelectListItem() {Text = "InActive", Value="InActive"},
+                                            }, new { @class = "form-control txtlbl", @style = "background-color:lightyellow;" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                            <label><b class="Lblmanual">Report ID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.rpt_name, new SelectList(Model.ListReportName, "rpt_id", "rpt_id"), "ALL ", new { @class = "form-control txtlbl", @style = "width:303px;background-color:lightyellow;", @id = "NewRptId" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:65px;">
+                            <label><b class="Lblmanual">  At:</b></label>
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.DropDownListFor(model => model.Time, new List<SelectListItem>
+                                            {
+
+                                                new SelectListItem() {Text = "00 hh", Value="00"},
+                                                new SelectListItem() {Text = "01 hh", Value="01"},
+                                                new SelectListItem() {Text = "02 hh", Value="02"},
+                                                new SelectListItem() {Text = "03 hh", Value="03"},
+                                                new SelectListItem() {Text = "04 hh", Value="04"},
+                                                new SelectListItem() {Text = "05 hh", Value="05"},
+                                                new SelectListItem() {Text = "06 hh", Value="06"},
+                                                new SelectListItem() {Text = "07 hh", Value="07"},
+                                                new SelectListItem() {Text = "08 hh", Value="08"},
+                                                new SelectListItem() {Text = "09 hh", Value="09"},
+                                                new SelectListItem() {Text = "10 hh", Value="10"},
+                                                new SelectListItem() {Text = "11 hh", Value="11"},
+                                                new SelectListItem() {Text = "12 hh", Value="12"},
+                                                new SelectListItem() {Text = "13 hh", Value="13"},
+                                                new SelectListItem() {Text = "14 hh", Value="14"},
+                                                new SelectListItem() {Text = "15 hh", Value="15"},
+                                                new SelectListItem() {Text = "16 hh", Value="16"},
+                                                new SelectListItem() {Text = "17 hh", Value="17"},
+                                                new SelectListItem() {Text = "18 hh", Value="18"},
+                                                new SelectListItem() {Text = "19 hh", Value="19"},
+                                                new SelectListItem() {Text = "20 hh", Value="20"},
+                                                new SelectListItem() {Text = "21 hh", Value="21"},
+                                                new SelectListItem() {Text = "22 hh", Value="22"},
+                                                new SelectListItem() {Text = "23 hh", Value="23"},
+
+
+                                            }, new
+                                            {
+                                                @class = "form-control txtlbl",
+                                                @style = "font-family: verdana; height: 31px; font-size:11px; font-weight: bold;border: 1px solid #909090;width:120px;background-color:lightyellow;"
+
+                                            })
+
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;">
+                            <label class=" Lblmanual" for="first-name">:</label>
+                        </div>
+                        <div class="col-xs-1" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.Timemin, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "00 mr", Value="00"},
+                                            new SelectListItem() {Text = "01 mr", Value="01"},
+                                            new SelectListItem() {Text = "02 mr", Value="02"},
+                                            new SelectListItem() {Text = "03 mr", Value="03"},
+                                            new SelectListItem() {Text = "04 mr", Value="04"},
+                                            new SelectListItem() {Text = "05 mr", Value="05"},
+                                            new SelectListItem() {Text = "06 mr", Value="06"},
+                                            new SelectListItem() {Text = "07 mr", Value="07"},
+                                            new SelectListItem() {Text = "08 mr", Value="08"},
+                                            new SelectListItem() {Text = "09 mr", Value="09"},
+                                            new SelectListItem() {Text = "10 mr", Value="10"},
+                                            new SelectListItem() {Text = "11 mr", Value="11"},
+                                            new SelectListItem() {Text = "12 mr", Value="12"},
+                                            new SelectListItem() {Text = "13 mr", Value="13"},
+                                            new SelectListItem() {Text = "14 mr", Value="14"},
+                                            new SelectListItem() {Text = "15 mr", Value="15"},
+                                            new SelectListItem() {Text = "16 mr", Value="16"},
+                                            new SelectListItem() {Text = "17 mr", Value="17"},
+                                            new SelectListItem() {Text = "18 mr", Value="18"},
+                                            new SelectListItem() {Text = "19 mr", Value="19"},
+                                            new SelectListItem() {Text = "20 mr", Value="20"},
+                                            new SelectListItem() {Text = "21 mr", Value="21"},
+                                            new SelectListItem() {Text = "22 mr", Value="22"},
+                                            new SelectListItem() {Text = "23 mr", Value="23"},
+                                            new SelectListItem() {Text = "24 mr", Value="24"},
+                                            new SelectListItem() {Text = "25 mr", Value="25"},
+                                            new SelectListItem() {Text = "26 mr", Value="26"},
+                                            new SelectListItem() {Text = "27 mr", Value="27"},
+                                            new SelectListItem() {Text = "28 mr", Value="28"},
+                                            new SelectListItem() {Text = "29 mr", Value="29"},
+                                            new SelectListItem() {Text = "30 mr", Value="30"},
+                                            new SelectListItem() {Text = "31 mr", Value="31"},
+                                            new SelectListItem() {Text = "32 mr", Value="32"},
+                                            new SelectListItem() {Text = "33 mr", Value="33"},
+                                            new SelectListItem() {Text = "34 mr", Value="34"},
+                                            new SelectListItem() {Text = "35 mr", Value="35"},
+                                            new SelectListItem() {Text = "36 mr", Value="36"},
+                                            new SelectListItem() {Text = "37 mr", Value="37"},
+                                            new SelectListItem() {Text = "38 mr", Value="38"},
+                                            new SelectListItem() {Text = "39 mr", Value="39"},
+                                            new SelectListItem() {Text = "40 mr", Value="40"},
+                                            new SelectListItem() {Text = "41 mr", Value="41"},
+                                            new SelectListItem() {Text = "42 mr", Value="42"},
+                                            new SelectListItem() {Text = "43 mr", Value="43"},
+                                            new SelectListItem() {Text = "44 mr", Value="44"},
+                                            new SelectListItem() {Text = "45 mr", Value="45"},
+                                            new SelectListItem() {Text = "46 mr", Value="46"},
+                                            new SelectListItem() {Text = "47 mr", Value="47"},
+                                            new SelectListItem() {Text = "48 mr", Value="48"},
+                                            new SelectListItem() {Text = "49 mr", Value="49"},
+                                            new SelectListItem() {Text = "50 mr", Value="50"},
+                                            new SelectListItem() {Text = "51 mr", Value="51"},
+                                            new SelectListItem() {Text = "52 mr", Value="52"},
+                                            new SelectListItem() {Text = "53 mr", Value="53"},
+                                            new SelectListItem() {Text = "54 mr", Value="54"},
+                                            new SelectListItem() {Text = "55 mr", Value="55"},
+                                            new SelectListItem() {Text = "56 mr", Value="56"},
+                                            new SelectListItem() {Text = "57 mr", Value="57"},
+                                            new SelectListItem() {Text = "58 mr", Value="58"},
+                                            new SelectListItem() {Text = "59 mr", Value="59"},
+                                            }, new { @class = "form-control txtlbl", @style = "font-family: verdana; height: 31px; font-size:11px; font-weight: bold;border: 1px solid #909090;width:120px;background-color:lightyellow;" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="width:200px;padding-top:3px">
+                                Running Days:
+                            </label>
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="left:-80px">
+                                <input type="checkbox" value="MON" name="SelectedDaysIDSave" group="SelectedDaysIDSave" /><b class="Lblmanual">MON</b>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="left:-80px">
+                                <input type="checkbox" value="TUE" name="SelectedDaysIDSave" group="SelectedDaysIDSave" /><b class="Lblmanual">TUE</b>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="left:-80px">
+                                <input type="checkbox" value="WED" name="SelectedDaysIDSave" group="SelectedDaysIDSave" /><b class="Lblmanual">WED</b>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="left:-80px">
+                                <input type="checkbox" value="THU" name="SelectedDaysIDSave" group="SelectedDaysIDSave" /><b class="Lblmanual">THU</b>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="left:-80px">
+                                <input type="checkbox" value="FRI" name="SelectedDaysIDSave" group="SelectedDaysIDSave" /><b class="Lblmanual">FRI</b>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="left:-80px">
+                                <input type="checkbox" value="SAT" name="SelectedDaysIDSave" group="SelectedDaysIDSave" /><b class="Lblmanual">SAT</b>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="left:-80px">
+                                <input type="checkbox" value="SUN" name="SelectedDaysIDSave" group="SelectedDaysIDSave" /><b class="Lblmanual">SUN</b>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email To:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-12px;">
+                            @Html.TextBoxFor(model => model.email_to, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:670px", @id = "NewEmailTo" })
+                        </div>
+                        <div class="col-xs-2" style="text-align:right;margin-top:0px;font-size:12px;width: 120px;margin-left:520px;">
+                            <button class="btn-Clear" id="btnExpEmailSelect" type="button" style="background-color:red;width:132px" align="center">Pick UsersList</button>
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email CC:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -12px;">
+                            @Html.TextBoxFor(model => model.email_cc, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:670px", @id = "NewEmailCC" })
+                        </div>
+                        <div class="col-xs-3" style="text-align:right;margin-top:0px;font-size:12px;width:279px;margin-left:504px;">
+                            <label><b class="Lblmanual">Use(",") to Include Multiple Mails</b></label>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;left:12px;">
+                        <label><b class="Lblmanual">Message:</b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left:3px;">
+                        @Html.TextAreaFor(model => model.email_msg, new { @class = "form-control txtlbl", @maxlength = "100", @style = "width:670px;height:122px", @id = "NewEmailMsg" })
+                    </div>
+                </div>
+                <div>
+                    @Html.HiddenFor(model => model.selected_email, new { @id = "SelectList" })
+                </div>
+                <div>
+                    @Html.HiddenFor(model => model.selected_company, new { @id = "SelectCompanyList" })
+
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+
+}
+else if (Model.action == "2")
+{
+    <fieldset style="margin-top:-1px;">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="text-align:right; margin-top: 6px; font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Comp ID:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -20px;width:38%;">
+                                @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:270px", @id = "new_cmp_id", @disabled = "true" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Status:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left:-20px;">
+                                @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "Active", Value="Active"},
+                                            new SelectListItem() {Text = "InActive", Value="InActive"},
+                                            }, new { @class = "form-control txtlbl", @style = "background-color:lightyellow;" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                            <label><b class="Lblmanual">Report ID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.rpt_name, new SelectList(Model.ListReportName, "rpt_id", "rpt_id"), "ALL ", new { @class = "form-control txtlbl", @style = "width:303px;background-color:lightyellow;", @id = "NewRptId", @disabled = "true" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:65px;">
+                            <label><b class="Lblmanual">  At:</b></label>
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.DropDownListFor(model => model.Time, new List<SelectListItem>
+                                            {
+
+                                                new SelectListItem() {Text = "00 hh", Value="00"},
+                                                new SelectListItem() {Text = "01 hh", Value="01"},
+                                                new SelectListItem() {Text = "02 hh", Value="02"},
+                                                new SelectListItem() {Text = "03 hh", Value="03"},
+                                                new SelectListItem() {Text = "04 hh", Value="04"},
+                                                new SelectListItem() {Text = "05 hh", Value="05"},
+                                                new SelectListItem() {Text = "06 hh", Value="06"},
+                                                new SelectListItem() {Text = "07 hh", Value="07"},
+                                                new SelectListItem() {Text = "08 hh", Value="08"},
+                                                new SelectListItem() {Text = "09 hh", Value="09"},
+                                                new SelectListItem() {Text = "10 hh", Value="10"},
+                                                new SelectListItem() {Text = "11 hh", Value="11"},
+                                                new SelectListItem() {Text = "12 hh", Value="12"},
+                                                new SelectListItem() {Text = "13 hh", Value="13"},
+                                                new SelectListItem() {Text = "14 hh", Value="14"},
+                                                new SelectListItem() {Text = "15 hh", Value="15"},
+                                                new SelectListItem() {Text = "16 hh", Value="16"},
+                                                new SelectListItem() {Text = "17 hh", Value="17"},
+                                                new SelectListItem() {Text = "18 hh", Value="18"},
+                                                new SelectListItem() {Text = "19 hh", Value="19"},
+                                                new SelectListItem() {Text = "20 hh", Value="20"},
+                                                new SelectListItem() {Text = "21 hh", Value="21"},
+                                                new SelectListItem() {Text = "22 hh", Value="22"},
+                                                new SelectListItem() {Text = "23 hh", Value="23"},
+
+
+                                            }, new
+                                            {
+                                                @class = "form-control txtlbl",
+                                                @style = "font-family: verdana; height: 31px; font-size:11px; font-weight: bold;border: 1px solid #909090;width:120px;background-color:lightyellow;"
+
+                                            })
+
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;">
+                            <label class=" Lblmanual" for="first-name">:</label>
+                        </div>
+                        <div class="col-xs-1" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.Timemin, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "00 mr", Value="00"},
+                                            new SelectListItem() {Text = "01 mr", Value="01"},
+                                            new SelectListItem() {Text = "02 mr", Value="02"},
+                                            new SelectListItem() {Text = "03 mr", Value="03"},
+                                            new SelectListItem() {Text = "04 mr", Value="04"},
+                                            new SelectListItem() {Text = "05 mr", Value="05"},
+                                            new SelectListItem() {Text = "06 mr", Value="06"},
+                                            new SelectListItem() {Text = "07 mr", Value="07"},
+                                            new SelectListItem() {Text = "08 mr", Value="08"},
+                                            new SelectListItem() {Text = "09 mr", Value="09"},
+                                            new SelectListItem() {Text = "10 mr", Value="10"},
+                                            new SelectListItem() {Text = "11 mr", Value="11"},
+                                            new SelectListItem() {Text = "12 mr", Value="12"},
+                                            new SelectListItem() {Text = "13 mr", Value="13"},
+                                            new SelectListItem() {Text = "14 mr", Value="14"},
+                                            new SelectListItem() {Text = "15 mr", Value="15"},
+                                            new SelectListItem() {Text = "16 mr", Value="16"},
+                                            new SelectListItem() {Text = "17 mr", Value="17"},
+                                            new SelectListItem() {Text = "18 mr", Value="18"},
+                                            new SelectListItem() {Text = "19 mr", Value="19"},
+                                            new SelectListItem() {Text = "20 mr", Value="20"},
+                                            new SelectListItem() {Text = "21 mr", Value="21"},
+                                            new SelectListItem() {Text = "22 mr", Value="22"},
+                                            new SelectListItem() {Text = "23 mr", Value="23"},
+                                            new SelectListItem() {Text = "24 mr", Value="24"},
+                                            new SelectListItem() {Text = "25 mr", Value="25"},
+                                            new SelectListItem() {Text = "26 mr", Value="26"},
+                                            new SelectListItem() {Text = "27 mr", Value="27"},
+                                            new SelectListItem() {Text = "28 mr", Value="28"},
+                                            new SelectListItem() {Text = "29 mr", Value="29"},
+                                            new SelectListItem() {Text = "30 mr", Value="30"},
+                                            new SelectListItem() {Text = "31 mr", Value="31"},
+                                            new SelectListItem() {Text = "32 mr", Value="32"},
+                                            new SelectListItem() {Text = "33 mr", Value="33"},
+                                            new SelectListItem() {Text = "34 mr", Value="34"},
+                                            new SelectListItem() {Text = "35 mr", Value="35"},
+                                            new SelectListItem() {Text = "36 mr", Value="36"},
+                                            new SelectListItem() {Text = "37 mr", Value="37"},
+                                            new SelectListItem() {Text = "38 mr", Value="38"},
+                                            new SelectListItem() {Text = "39 mr", Value="39"},
+                                            new SelectListItem() {Text = "40 mr", Value="40"},
+                                            new SelectListItem() {Text = "41 mr", Value="41"},
+                                            new SelectListItem() {Text = "42 mr", Value="42"},
+                                            new SelectListItem() {Text = "43 mr", Value="43"},
+                                            new SelectListItem() {Text = "44 mr", Value="44"},
+                                            new SelectListItem() {Text = "45 mr", Value="45"},
+                                            new SelectListItem() {Text = "46 mr", Value="46"},
+                                            new SelectListItem() {Text = "47 mr", Value="47"},
+                                            new SelectListItem() {Text = "48 mr", Value="48"},
+                                            new SelectListItem() {Text = "49 mr", Value="49"},
+                                            new SelectListItem() {Text = "50 mr", Value="50"},
+                                            new SelectListItem() {Text = "51 mr", Value="51"},
+                                            new SelectListItem() {Text = "52 mr", Value="52"},
+                                            new SelectListItem() {Text = "53 mr", Value="53"},
+                                            new SelectListItem() {Text = "54 mr", Value="54"},
+                                            new SelectListItem() {Text = "55 mr", Value="55"},
+                                            new SelectListItem() {Text = "56 mr", Value="56"},
+                                            new SelectListItem() {Text = "57 mr", Value="57"},
+                                            new SelectListItem() {Text = "58 mr", Value="58"},
+                                            new SelectListItem() {Text = "59 mr", Value="59"},
+                                            }, new { @class = "form-control txtlbl", @style = "font-family: verdana; height: 31px; font-size:11px; font-weight: bold;border: 1px solid #909090;width:120px;background-color:lightyellow;" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="width:200px;padding-top:3px">
+                                Running Days:
+                            </label>
+
+                            @for (int j = 0; j < Model.ListDays.Count(); j++)
+                            {
+                                <div class="col-md-1 col-sm-1 col-xs-1">
+
+                                    <input id="checkbox704_@j" name="SelectedDaysIDEdit" type="checkbox" value="@Model.ListDays[j].Days" />
+                                    <label for="checkbox704_@j">
+                                        @Model.ListDays[j].Days
+                                    </label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email To:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-12px;">
+                            @Html.TextBoxFor(model => model.email_to, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:670px", @id = "NewEmailTo" })
+                        </div>
+                        <div class="col-xs-2" style="text-align:right;margin-top:0px;font-size:12px;width: 120px;margin-left:520px;">
+                            <button class="btn-Clear" id="btnEditExpEmailSelect" type="button" style="background-color:red;width:132px" align="center">Pick UsersList</button>
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email CC:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -12px;">
+                            @Html.TextBoxFor(model => model.email_cc, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:670px", @id = "NewEmailCC" })
+                        </div>
+                        <div class="col-xs-3" style="text-align:right;margin-top:0px;font-size:12px;width:279px;margin-left:504px;">
+                            <label><b class="Lblmanual">Use(",") to Include Multiple Mails</b></label>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;left:12px;">
+                        <label><b class="Lblmanual">Message:</b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left:3px;">
+                        @Html.TextAreaFor(model => model.email_msg, new { @class = "form-control txtlbl", @maxlength = "100", @style = "width:670px;height:122px", @id = "NewEmailMsg" })
+                    </div>
+                </div>
+                <div>
+                    @Html.HiddenFor(model => model.dflt_frmt, new { @id = "SelectList" })
+                </div>
+            </div>
+
+        </div>
+
+    </fieldset>
+}
+else if (Model.action == "3")
+{
+    <fieldset style="margin-top:-1px;">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Comp ID:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -20px;width:38%;">
+                                @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:270px", @id = "new_cmp_id", @disabled = "true" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Status:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -20px;">
+                                @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "Active", Value="Active"},
+                                            new SelectListItem() {Text = "InActive", Value="InActive"},
+                                            }, new { @class = "form-control txtlbl", @style = "background-color:lightyellow;", @disabled = "true" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                            <label><b class="Lblmanual">Report ID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.rpt_name, new SelectList(Model.ListReportName, "rpt_id", "rpt_id"), "ALL ", new { @class = "form-control txtlbl", @style = "width:303px;background-color:lightyellow;", @id = "NewRptId", @disabled = "true" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:65px;">
+                            <label><b class="Lblmanual">  At:</b></label>
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.DropDownListFor(model => model.Time, new List<SelectListItem>
+                                            {
+
+                                                new SelectListItem() {Text = "00 hh", Value="00"},
+                                                new SelectListItem() {Text = "01 hh", Value="01"},
+                                                new SelectListItem() {Text = "02 hh", Value="02"},
+                                                new SelectListItem() {Text = "03 hh", Value="03"},
+                                                new SelectListItem() {Text = "04 hh", Value="04"},
+                                                new SelectListItem() {Text = "05 hh", Value="05"},
+                                                new SelectListItem() {Text = "06 hh", Value="06"},
+                                                new SelectListItem() {Text = "07 hh", Value="07"},
+                                                new SelectListItem() {Text = "08 hh", Value="08"},
+                                                new SelectListItem() {Text = "09 hh", Value="09"},
+                                                new SelectListItem() {Text = "10 hh", Value="10"},
+                                                new SelectListItem() {Text = "11 hh", Value="11"},
+                                                new SelectListItem() {Text = "12 hh", Value="12"},
+                                                new SelectListItem() {Text = "13 hh", Value="13"},
+                                                new SelectListItem() {Text = "14 hh", Value="14"},
+                                                new SelectListItem() {Text = "15 hh", Value="15"},
+                                                new SelectListItem() {Text = "16 hh", Value="16"},
+                                                new SelectListItem() {Text = "17 hh", Value="17"},
+                                                new SelectListItem() {Text = "18 hh", Value="18"},
+                                                new SelectListItem() {Text = "19 hh", Value="19"},
+                                                new SelectListItem() {Text = "20 hh", Value="20"},
+                                                new SelectListItem() {Text = "21 hh", Value="21"},
+                                                new SelectListItem() {Text = "22 hh", Value="22"},
+                                                new SelectListItem() {Text = "23 hh", Value="23"},
+
+
+                                            }, new
+                                            {
+                                                @class = "form-control txtlbl",
+                                                @style = "font-family: verdana; height: 31px; font-size:11px; font-weight: bold;border: 1px solid #909090;width:120px;background-color:lightyellow;",
+                                                @disabled = "true"
+
+                                            })
+
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;">
+                            <label class=" Lblmanual" for="first-name">:</label>
+                        </div>
+                        <div class="col-xs-1" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.Timemin, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "00 mr", Value="00"},
+                                            new SelectListItem() {Text = "01 mr", Value="01"},
+                                            new SelectListItem() {Text = "02 mr", Value="02"},
+                                            new SelectListItem() {Text = "03 mr", Value="03"},
+                                            new SelectListItem() {Text = "04 mr", Value="04"},
+                                            new SelectListItem() {Text = "05 mr", Value="05"},
+                                            new SelectListItem() {Text = "06 mr", Value="06"},
+                                            new SelectListItem() {Text = "07 mr", Value="07"},
+                                            new SelectListItem() {Text = "08 mr", Value="08"},
+                                            new SelectListItem() {Text = "09 mr", Value="09"},
+                                            new SelectListItem() {Text = "10 mr", Value="10"},
+                                            new SelectListItem() {Text = "11 mr", Value="11"},
+                                            new SelectListItem() {Text = "12 mr", Value="12"},
+                                            new SelectListItem() {Text = "13 mr", Value="13"},
+                                            new SelectListItem() {Text = "14 mr", Value="14"},
+                                            new SelectListItem() {Text = "15 mr", Value="15"},
+                                            new SelectListItem() {Text = "16 mr", Value="16"},
+                                            new SelectListItem() {Text = "17 mr", Value="17"},
+                                            new SelectListItem() {Text = "18 mr", Value="18"},
+                                            new SelectListItem() {Text = "19 mr", Value="19"},
+                                            new SelectListItem() {Text = "20 mr", Value="20"},
+                                            new SelectListItem() {Text = "21 mr", Value="21"},
+                                            new SelectListItem() {Text = "22 mr", Value="22"},
+                                            new SelectListItem() {Text = "23 mr", Value="23"},
+                                            new SelectListItem() {Text = "24 mr", Value="24"},
+                                            new SelectListItem() {Text = "25 mr", Value="25"},
+                                            new SelectListItem() {Text = "26 mr", Value="26"},
+                                            new SelectListItem() {Text = "27 mr", Value="27"},
+                                            new SelectListItem() {Text = "28 mr", Value="28"},
+                                            new SelectListItem() {Text = "29 mr", Value="29"},
+                                            new SelectListItem() {Text = "30 mr", Value="30"},
+                                            new SelectListItem() {Text = "31 mr", Value="31"},
+                                            new SelectListItem() {Text = "32 mr", Value="32"},
+                                            new SelectListItem() {Text = "33 mr", Value="33"},
+                                            new SelectListItem() {Text = "34 mr", Value="34"},
+                                            new SelectListItem() {Text = "35 mr", Value="35"},
+                                            new SelectListItem() {Text = "36 mr", Value="36"},
+                                            new SelectListItem() {Text = "37 mr", Value="37"},
+                                            new SelectListItem() {Text = "38 mr", Value="38"},
+                                            new SelectListItem() {Text = "39 mr", Value="39"},
+                                            new SelectListItem() {Text = "40 mr", Value="40"},
+                                            new SelectListItem() {Text = "41 mr", Value="41"},
+                                            new SelectListItem() {Text = "42 mr", Value="42"},
+                                            new SelectListItem() {Text = "43 mr", Value="43"},
+                                            new SelectListItem() {Text = "44 mr", Value="44"},
+                                            new SelectListItem() {Text = "45 mr", Value="45"},
+                                            new SelectListItem() {Text = "46 mr", Value="46"},
+                                            new SelectListItem() {Text = "47 mr", Value="47"},
+                                            new SelectListItem() {Text = "48 mr", Value="48"},
+                                            new SelectListItem() {Text = "49 mr", Value="49"},
+                                            new SelectListItem() {Text = "50 mr", Value="50"},
+                                            new SelectListItem() {Text = "51 mr", Value="51"},
+                                            new SelectListItem() {Text = "52 mr", Value="52"},
+                                            new SelectListItem() {Text = "53 mr", Value="53"},
+                                            new SelectListItem() {Text = "54 mr", Value="54"},
+                                            new SelectListItem() {Text = "55 mr", Value="55"},
+                                            new SelectListItem() {Text = "56 mr", Value="56"},
+                                            new SelectListItem() {Text = "57 mr", Value="57"},
+                                            new SelectListItem() {Text = "58 mr", Value="58"},
+                                            new SelectListItem() {Text = "59 mr", Value="59"},
+                                            }, new { @class = "form-control txtlbl", @style = "font-family: verdana; height: 31px; font-size:11px; font-weight: bold;border: 1px solid #909090;width:120px;background-color:lightyellow;", @disabled = "true" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="width:200px;padding-top:3px">
+                                Running Days:
+                            </label>
+                            @for (int j = 0; j < Model.ListDays.Count(); j++)
+                            {
+                                <div class="col-md-1 col-sm-1 col-xs-1" style="left:-8px;">
+
+                                    <input id="checkbox704_@j" name="SelectedDaysIDView" type="checkbox" value="@Model.ListDays[j].Days" disabled="disabled" />
+                                    <label for="checkbox704_@j">
+                                        @Model.ListDays[j].Days
+                                    </label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email To:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-12px;">
+                            @Html.TextBoxFor(model => model.email_to, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:670px", @id = "NewEmailTo", @disabled = "true" })
+                        </div>
+
+
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email CC:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -12px;">
+                            @Html.TextBoxFor(model => model.email_cc, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:670px", @id = "NewEmailCC", @disabled = "true" })
+                        </div>
+                        <div class="col-xs-3" style="text-align:right;margin-top:0px;font-size:12px;width:279px;margin-left:504px;">
+                            <label><b class="Lblmanual">Use(",") to Include Multiple Mails</b></label>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;left:12px;">
+                        <label><b class="Lblmanual">Message:</b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left:3px;">
+                        @Html.TextAreaFor(model => model.email_msg, new { @class = "form-control txtlbl", @maxlength = "100", @style = "width:670px;height:122px", @id = "NewEmailMsg", @disabled = "true" })
+                    </div>
+                </div>
+                <div>
+                    @Html.HiddenFor(model => model.dflt_frmt, new { @id = "SelectList" })
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+}
+else
+{
+    <fieldset style="margin-top:-1px;">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Comp ID:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -20px;width:38%;">
+                                @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:270px", @id = "new_cmp_id", @disabled = "true" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                                <label><b class="Lblmanual">Status:</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -20px;">
+                                @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "Active", Value="Active"},
+                                            new SelectListItem() {Text = "InActive", Value="InActive"},
+                                            }, new { @class = "form-control txtlbl", @style = "background-color:lightyellow;", @disabled = "true" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                            <label><b class="Lblmanual">Report ID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.rpt_name, new SelectList(Model.ListReportName, "rpt_id", "rpt_id"), "ALL ", new { @class = "form-control txtlbl", @style = "width:303px;background-color:lightyellow;", @id = "NewRptId", @disabled = "true" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:65px;">
+                            <label><b class="Lblmanual">  At:</b></label>
+                        </div>
+                        <div class="col-xs-1">
+                            @Html.DropDownListFor(model => model.Time, new List<SelectListItem>
+                                            {
+
+                                                new SelectListItem() {Text = "00 hh", Value="00"},
+                                                new SelectListItem() {Text = "01 hh", Value="01"},
+                                                new SelectListItem() {Text = "02 hh", Value="02"},
+                                                new SelectListItem() {Text = "03 hh", Value="03"},
+                                                new SelectListItem() {Text = "04 hh", Value="04"},
+                                                new SelectListItem() {Text = "05 hh", Value="05"},
+                                                new SelectListItem() {Text = "06 hh", Value="06"},
+                                                new SelectListItem() {Text = "07 hh", Value="07"},
+                                                new SelectListItem() {Text = "08 hh", Value="08"},
+                                                new SelectListItem() {Text = "09 hh", Value="09"},
+                                                new SelectListItem() {Text = "10 hh", Value="10"},
+                                                new SelectListItem() {Text = "11 hh", Value="11"},
+                                                new SelectListItem() {Text = "12 hh", Value="12"},
+                                                new SelectListItem() {Text = "13 hh", Value="13"},
+                                                new SelectListItem() {Text = "14 hh", Value="14"},
+                                                new SelectListItem() {Text = "15 hh", Value="15"},
+                                                new SelectListItem() {Text = "16 hh", Value="16"},
+                                                new SelectListItem() {Text = "17 hh", Value="17"},
+                                                new SelectListItem() {Text = "18 hh", Value="18"},
+                                                new SelectListItem() {Text = "19 hh", Value="19"},
+                                                new SelectListItem() {Text = "20 hh", Value="20"},
+                                                new SelectListItem() {Text = "21 hh", Value="21"},
+                                                new SelectListItem() {Text = "22 hh", Value="22"},
+                                                new SelectListItem() {Text = "23 hh", Value="23"},
+
+
+                                            }, new
+                                            {
+                                                @class = "form-control txtlbl",
+                                                @style = "font-family: verdana; height: 31px; font-size:11px; font-weight: bold;border: 1px solid #909090;width:120px;background-color:lightyellow;",
+                                                @disabled = "true"
+
+                                            })
+
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;">
+                            <label class=" Lblmanual" for="first-name">:</label>
+                        </div>
+                        <div class="col-xs-1" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.Timemin, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "00 mr", Value="00"},
+                                            new SelectListItem() {Text = "01 mr", Value="01"},
+                                            new SelectListItem() {Text = "02 mr", Value="02"},
+                                            new SelectListItem() {Text = "03 mr", Value="03"},
+                                            new SelectListItem() {Text = "04 mr", Value="04"},
+                                            new SelectListItem() {Text = "05 mr", Value="05"},
+                                            new SelectListItem() {Text = "06 mr", Value="06"},
+                                            new SelectListItem() {Text = "07 mr", Value="07"},
+                                            new SelectListItem() {Text = "08 mr", Value="08"},
+                                            new SelectListItem() {Text = "09 mr", Value="09"},
+                                            new SelectListItem() {Text = "10 mr", Value="10"},
+                                            new SelectListItem() {Text = "11 mr", Value="11"},
+                                            new SelectListItem() {Text = "12 mr", Value="12"},
+                                            new SelectListItem() {Text = "13 mr", Value="13"},
+                                            new SelectListItem() {Text = "14 mr", Value="14"},
+                                            new SelectListItem() {Text = "15 mr", Value="15"},
+                                            new SelectListItem() {Text = "16 mr", Value="16"},
+                                            new SelectListItem() {Text = "17 mr", Value="17"},
+                                            new SelectListItem() {Text = "18 mr", Value="18"},
+                                            new SelectListItem() {Text = "19 mr", Value="19"},
+                                            new SelectListItem() {Text = "20 mr", Value="20"},
+                                            new SelectListItem() {Text = "21 mr", Value="21"},
+                                            new SelectListItem() {Text = "22 mr", Value="22"},
+                                            new SelectListItem() {Text = "23 mr", Value="23"},
+                                            new SelectListItem() {Text = "24 mr", Value="24"},
+                                            new SelectListItem() {Text = "25 mr", Value="25"},
+                                            new SelectListItem() {Text = "26 mr", Value="26"},
+                                            new SelectListItem() {Text = "27 mr", Value="27"},
+                                            new SelectListItem() {Text = "28 mr", Value="28"},
+                                            new SelectListItem() {Text = "29 mr", Value="29"},
+                                            new SelectListItem() {Text = "30 mr", Value="30"},
+                                            new SelectListItem() {Text = "31 mr", Value="31"},
+                                            new SelectListItem() {Text = "32 mr", Value="32"},
+                                            new SelectListItem() {Text = "33 mr", Value="33"},
+                                            new SelectListItem() {Text = "34 mr", Value="34"},
+                                            new SelectListItem() {Text = "35 mr", Value="35"},
+                                            new SelectListItem() {Text = "36 mr", Value="36"},
+                                            new SelectListItem() {Text = "37 mr", Value="37"},
+                                            new SelectListItem() {Text = "38 mr", Value="38"},
+                                            new SelectListItem() {Text = "39 mr", Value="39"},
+                                            new SelectListItem() {Text = "40 mr", Value="40"},
+                                            new SelectListItem() {Text = "41 mr", Value="41"},
+                                            new SelectListItem() {Text = "42 mr", Value="42"},
+                                            new SelectListItem() {Text = "43 mr", Value="43"},
+                                            new SelectListItem() {Text = "44 mr", Value="44"},
+                                            new SelectListItem() {Text = "45 mr", Value="45"},
+                                            new SelectListItem() {Text = "46 mr", Value="46"},
+                                            new SelectListItem() {Text = "47 mr", Value="47"},
+                                            new SelectListItem() {Text = "48 mr", Value="48"},
+                                            new SelectListItem() {Text = "49 mr", Value="49"},
+                                            new SelectListItem() {Text = "50 mr", Value="50"},
+                                            new SelectListItem() {Text = "51 mr", Value="51"},
+                                            new SelectListItem() {Text = "52 mr", Value="52"},
+                                            new SelectListItem() {Text = "53 mr", Value="53"},
+                                            new SelectListItem() {Text = "54 mr", Value="54"},
+                                            new SelectListItem() {Text = "55 mr", Value="55"},
+                                            new SelectListItem() {Text = "56 mr", Value="56"},
+                                            new SelectListItem() {Text = "57 mr", Value="57"},
+                                            new SelectListItem() {Text = "58 mr", Value="58"},
+                                            new SelectListItem() {Text = "59 mr", Value="59"},
+                                            }, new { @class = "form-control txtlbl", @style = "font-family: verdana; height: 31px; font-size:11px; font-weight: bold;border: 1px solid #909090;width:120px;background-color:lightyellow;", @disabled = "true" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="width:200px;padding-top:3px">
+                                Running Days:
+                            </label>
+                            @for (int j = 0; j < Model.ListDays.Count(); j++)
+                            {
+                                <div class="col-md-1 col-sm-1 col-xs-1" style="left:-8px;">
+
+                                    <input id="checkbox704_@j" name="SelectedDaysIDDelete" type="checkbox" value="@Model.ListDays[j].Days" disabled="disabled" />
+                                    <label for="checkbox704_@j">
+                                        @Model.ListDays[j].Days
+                                    </label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email To:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-12px;">
+                            @Html.TextBoxFor(model => model.email_to, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:670px", @id = "NewEmailTo", @disabled = "true" })
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">
+                        <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email CC:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -12px;">
+                            @Html.TextBoxFor(model => model.email_cc, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:670px", @id = "NewEmailCC", @disabled = "true" })
+                        </div>
+                        <div class="col-xs-3" style="text-align:right;margin-top:0px;font-size:12px;width:279px;margin-left:504px;">
+                            <label><b class="Lblmanual">Use(",") to Include Multiple Mails</b></label>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;left:12px;">
+                        <label><b class="Lblmanual">Message:</b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left:3px;">
+                        @Html.TextAreaFor(model => model.email_msg, new { @class = "form-control txtlbl", @maxlength = "100", @style = "width:670px;height:122px", @id = "NewEmailMsg", @disabled = "true" })
+                    </div>
+                </div>
+                <div>
+                    @Html.HiddenFor(model => model.dflt_frmt, new { @id = "SelectList" })
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+}
+
+<script>
+    $("#btnNewExpClose").click(function () {
+        $('#myModalAddExpRpt').modal('hide');
+        $("#ajaxLoadingSaveExpRpt").hide();
+    })
+    $("#btnNewExpEditClose").click(function () {
+        $('#myModalEditExpRpt').modal('hide');
+        $("#ajaxLoadingSaveExpRpt").hide();
+    })
+    $("#btnNewViewClose").click(function () {
+        $('#myModalViewExpRpt').modal('hide');
+        $("#ajaxLoadingSaveExpRpt").hide();
+    })
+    $("#btnNewDeleteClose").click(function () {
+        $('#myModalDeleteExpRpt').modal('hide');
+        $("#ajaxLoadingSaveExpRpt").hide();
+    })
+</script>
+<script type="text/javascript">
+    var action = @{@Html.Raw(Json.Encode(Model.action));};
+    var selected_days= @{@Html.Raw(Json.Encode(Model.rpt_run_days));};
+    debugger
+
+
+    if (action == "2") {
+        $(document).ready(function () {
+            $("input[name='SelectedDaysIDView'][value='']").attr('checked', false);
+            $("input[name='SelectedDaysIDDelete'][value='']").attr('checked', false);
+            var SelectedeCategoryIdsEdit_array = selected_days.split(";");
+            if (SelectedeCategoryIdsEdit_array != null) {
+                $.each(SelectedeCategoryIdsEdit_array, function (i) {
+                    $("input[name='SelectedDaysIDEdit'][value='" + SelectedeCategoryIdsEdit_array[i] + "']").attr('checked', true);
+                });
+
+
+            }
+
+
+        });
+    }
+    if (action == "3") {
+        $(document).ready(function () {
+            $("input[name='SelectedDaysIDEdit'][value='']").attr('checked', false);
+            $("input[name='SelectedDaysIDDelete'][value='']").attr('checked', false);
+            var SelectedeCategoryIdsView_array = selected_days.split(";");
+            if (SelectedeCategoryIdsView_array != null) {
+                $.each(SelectedeCategoryIdsView_array, function (i) {
+                    $("input[name='SelectedDaysIDView'][value='" + SelectedeCategoryIdsView_array[i] + "']").attr('checked', true);
+                });
+
+
+            }
+
+
+        });
+    }
+    if (action == "4") {
+        $(document).ready(function () {
+            $("input[name='SelectedDaysIDEdit'][value='']").attr('checked', false);
+            $("input[name='SelectedDaysIDView'][value='']").attr('checked', false);
+            var SelectedeCategoryIdsDelete_array = selected_days.split(";");
+            if (SelectedeCategoryIdsDelete_array != null) {
+                $.each(SelectedeCategoryIdsDelete_array, function (i) {
+                    $("input[name='SelectedDaysIDDelete'][value='" + SelectedeCategoryIdsDelete_array[i] + "']").attr('checked', true);
+                });
+
+
+            }
+
+
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    var TeamDetailPostBackURL = '/MailConfig/LoadMailList';
+    debugger
+         $(function () {
+             $("#btnExpEmailSelect").click(function () {
+                 var compid = $('#new_cmp_id').val();
+                 var SelectedMailList = $('#SelectList').val();
+                 var options = { "backdrop": "static", keyboard: true };
+                 $("#ajaxLoadingSaveExpRpt").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "compid": compid, "SelectedMailList": SelectedMailList
+                },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                    $('#myModalNewContentEmailList').html(data);
+                    $('#myModalNewEmailList').modal(options);
+                    $('#myModalNewEmailList').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModalNewEmailList').modal('hide');
+            $("#ajaxLoadingSaveExpRpt").hide();
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    var TeamDetailEditPostBackURL = '/MailConfig/LoadMailList';
+    debugger
+         $(function () {
+             $("#btnEditExpEmailSelect").click(function () {
+                 var compid = $('#new_cmp_id').val();
+                 var SelectedMailList = $('#SelectList').val();
+                 var options = { "backdrop": "static", keyboard: true };
+                 $("#ajaxLoadingSaveExpRpt").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailEditPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "compid": compid, "SelectedMailList": SelectedMailList
+                },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                    $('#myModalNewContentEmailList').html(data);
+                    $('#myModalNewEmailList').modal(options);
+                    $('#myModalNewEmailList').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModalNewEmailList').modal('hide');
+            $("#ajaxLoadingSaveExpRpt").hide();
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    var TeamDetailInsertCompanyPostBackURL = '/DailyFlashExceptionReport/LoadCompanyList';
+    debugger
+         $(function () {
+             $("#btnExpCompanySelect").click(function () {
+                 var p_str_cmp_id = $('#new_cmp_id').val();
+                 var p_str_selected_cmp_list = $('#SelectCompanyList').val();
+                 var options = { "backdrop": "static", keyboard: true };
+                 $("#ajaxLoadingSaveExpRpt").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailInsertCompanyPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_selected_cmp_list": p_str_selected_cmp_list
+                },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                    $('#myModalContentCompanyList').html(data);
+                    $('#myModalCompanyList').modal(options);
+                    $('#myModalCompanyList').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModalCompanyList').modal('hide');
+            $("#ajaxLoadingSaveExpRpt").hide();
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    var TeamDetailEditCompanyPostBackURL = '/DailyFlashExceptionReport/LoadCompanyList';
+    debugger
+         $(function () {
+             $("#btnEditExpCompanySelect").click(function () {
+                 var p_str_cmp_id = $('#new_cmp_id').val();
+                 var p_str_selected_cmp_list = $('#SelectCompanyList').val();
+                 var options = { "backdrop": "static", keyboard: true };
+                 $("#ajaxLoadingSaveExpRpt").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailEditCompanyPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_selected_cmp_list": p_str_selected_cmp_list
+                },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                    $('#myModalContentCompanyList').html(data);
+                    $('#myModalCompanyList').modal(options);
+                    $('#myModalCompanyList').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModalCompanyList').modal('hide');
+            $("#ajaxLoadingSaveExpRpt").hide();
+        });
+    });
+</script>
+
+<script>
+    $('#btnNewExpSave').click(function () {
+            debugger
+            var p_str_cmp_id = $('#new_cmp_id').val();
+            var p_str_rpt_id = $('#NewRptId').val();
+            var p_str_mail_to = $('#NewEmailTo').val();
+            var p_str_mail_cc = $('#NewEmailCC').val();
+            var p_str_content = $('#NewEmailMsg').val();
+            var p_str_status = $('#Status').val();
+            var p_str_Timehr = $('#Time').val();
+            var p_str_Timemin = $('#Timemin').val();
+            var p_str_Time = p_str_Timehr + ":" + p_str_Timemin;
+            var p_str_action="1";
+            var favorite = [];
+            $.each($("input[name='SelectedDaysIDSave']:checked"), function () {
+                favorite.push($(this).val());
+            });
+            var p_str_RunningDays = favorite.join(";");
+            if (p_str_Timehr == "00")
+            {
+                sweetAlert("", "Time Required", "");
+                return false;
+            }
+            if (p_str_rpt_id == "") {
+                sweetAlert("", "ReportName is Required", "");
+                return false;
+            }
+            if (p_str_mail_to == "") {
+                sweetAlert("", "Atleast One Email To is Required", "");
+                return false;
+            }
+            if (p_str_status == "") {
+                sweetAlert("", "Status is Required", "");
+                return false;
+            }
+            if (p_str_Timehr == "")
+            {
+                sweetAlert("", "Hour is Required.", "");
+                return false;
+            }
+            if (p_str_Timemin == "") {
+                sweetAlert("", "Minutes is Required.", "");
+                return false;
+            }
+            if (p_str_RunningDays == "") {
+                swal("", "Days are Required", "");
+                return false;
+            }
+
+            $("#ajaxLoadingSaveExpRpt").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/DailyFlashExceptionReport/SaveExceptionReportConfig")',
+                data:{
+                    "p_str_cmp_id":p_str_cmp_id,"p_str_rpt_id":p_str_rpt_id,"p_str_mail_to":p_str_mail_to,"p_str_mail_cc":p_str_mail_cc,"p_str_content":p_str_content,
+                    "p_str_status":p_str_status,"p_str_action":p_str_action,"p_str_RunningDays":p_str_RunningDays,"p_str_Time":p_str_Time
+                },
+
+                dataType: "json",
+
+                success: function (e) {
+                    if (e == true) {
+                        swal({
+                            title: "",
+                            text: " Details Saved successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+
+                       function () {
+                           setTimeout(function () {
+                               var cmp = $('#new_cmp_id').val();
+                            var url = '@Url.Action("DailyFlashExceptionReport", "DailyFlashExceptionReport")';
+                               url += '?id=' + cmp;
+                            window.location.href = url;
+                           }, 10);
+                       });
+
+                    }
+                    else
+                    {
+                        sweetAlert("", "Details are already Exist Please Check it", "");
+                        $("#ajaxLoadingSaveExpRpt").hide();
+                        $('#myModalAddExpRpt').modal('hide');
+
+                    }
+                },
+
+                failure: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                }
+            });
+
+
+
+        })
+
+</script>
+
+<script>
+    $('#btnNewExpEdit').click(function () {
+            debugger
+            var p_str_cmp_id = $('#new_cmp_id').val();
+            var p_str_rpt_id = $('#NewRptId').val();
+            var p_str_mail_to = $('#NewEmailTo').val();
+            var p_str_mail_cc = $('#NewEmailCC').val();
+            var p_str_content = $('#NewEmailMsg').val();
+            var p_str_status = $('#Status').val();
+            var p_str_Timehr = $('#Time').val();
+            var p_str_Timemin = $('#Timemin').val();
+            var p_str_Time = p_str_Timehr + ":" + p_str_Timemin;
+            var p_str_action="2";
+            var favorite = [];
+            $.each($("input[name='SelectedDaysIDEdit']:checked"), function () {
+                favorite.push($(this).val());
+            });
+            var p_str_RunningDays = favorite.join(";");
+
+            if (p_str_rpt_id == "") {
+                sweetAlert("", "ReportName is Required", "");
+                return false;
+            }
+            if (p_str_mail_to == "") {
+                sweetAlert("", "Atleast One Email To is Required", "");
+                return false;
+            }
+            if (p_str_status == "") {
+                sweetAlert("", "Status is Required", "");
+                return false;
+            }
+            if (p_str_Timehr == "")
+            {
+                sweetAlert("", "Hour is Required.", "");
+                return false;
+            }
+            if (p_str_Timemin == "") {
+                sweetAlert("", "Minutes is Required.", "");
+                return false;
+            }
+            if (p_str_RunningDays == "") {
+                swal("", "Days are Required", "");
+                return false;
+            }
+
+            $("#ajaxLoadingSaveExpRpt").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/DailyFlashExceptionReport/SaveExceptionReportConfig")',
+                data:{
+                    "p_str_cmp_id":p_str_cmp_id,"p_str_rpt_id":p_str_rpt_id,"p_str_mail_to":p_str_mail_to,"p_str_mail_cc":p_str_mail_cc,"p_str_content":p_str_content,
+                    "p_str_status":p_str_status,"p_str_action":p_str_action,"p_str_RunningDays":p_str_RunningDays,"p_str_Time":p_str_Time
+                },
+
+                dataType: "json",
+
+                success: function (e) {
+                    if (e == true) {
+                        swal({
+                            title: "",
+                            text: " Details Updated successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+
+                        function () {
+                            setTimeout(function () {
+                                var cmp = $('#new_cmp_id').val();
+                                var url = '@Url.Action("DailyFlashExceptionReport", "DailyFlashExceptionReport")';
+                                url += '?id=' + cmp;
+                                window.location.href = url;
+                            }, 10);
+                        });
+
+                    }
+                    else
+                    {
+                        sweetAlert("", "Details are not updated", "");
+                        $("#ajaxLoadingSaveExpRpt").hide();
+                        $('#myModalAddExpRpt').modal('hide');
+                    }
+                },
+
+                failure: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                }
+            });
+
+
+
+        })
+
+</script>
+
+
+<script>
+    $('#btnNewDelete').click(function () {
+            debugger
+            var p_str_cmp_id = $('#new_cmp_id').val();
+            var p_str_rpt_id = $('#NewRptId').val();
+            var p_str_action="3"
+
+            if (p_str_rpt_id == "") {
+                sweetAlert("", "ReportName is Required", "");
+                return false;
+            }
+            $("#ajaxLoadingSaveExpRpt").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/DailyFlashExceptionReport/SaveExceptionReportConfig")',
+                data:{
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_action": p_str_action,
+
+                },
+
+                dataType: "json",
+
+                success: function (e) {
+                    if (e == true) {
+                        swal({
+                            title: "",
+                            text: " Details Deleted successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+
+                         function () {
+                             setTimeout(function () {
+                                 var cmp = $('#new_cmp_id').val();
+                                 var url = '@Url.Action("DailyFlashExceptionReport", "DailyFlashExceptionReport")';
+                                 url += '?id=' + cmp;
+                                 window.location.href = url;
+                             }, 10);
+                         });
+
+                    }
+                    else
+                    {
+                        sweetAlert("", "Details are not Deleted", "");
+                        $("#ajaxLoadingSaveExpRpt").hide();
+                        $('#showgrid').show();
+                        $('#showgridDetail').hide();
+                    }
+                },
+
+                failure: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveExpRpt").hide();
+                }
+            });
+
+
+
+        })
+
+</script>

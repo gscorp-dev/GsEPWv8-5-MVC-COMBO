@@ -1,0 +1,501 @@
+﻿@model GsEPWv8_5_MVC.Model.CustMasterModel
+
+@{
+    ViewBag.Title = "CustMaster";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<style>
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ItemSummary {
+        height: 49px;
+        background: #d2d6de;
+    }
+      legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+      fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+        width: 362px;
+    }
+</style>
+@using (Html.BeginForm("CustMaster", "CustMaster", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <a href="/DashBoardB2B/DashboardB2B" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                 Customer Master
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                   @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                   {
+                    <button type="button" id="btnClose" class="btn-Close">Close</button>
+                   }
+                   @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                   @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                <tr>
+                                    <td style="text-align: right;">
+                                        <label><b class="Lblmanual">Cmp Id</b></label>
+                                    </td>
+                                    <td style="text-align: left;padding-left: 1%;">
+                                        @Html.DropDownListFor(model => model.cust_of_cmpid, new SelectList(Model.ListCustofCompanyPickDtl, "cust_of_cmpid", "cust_of_cmpname"), new { @id = "v_custofcmp_id", @class = "form-control txtlbl" })
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label><b class="Lblmanual">Cust Id</b></label>
+                                    </td>
+                                    <td style="text-align: left;padding-left: 1%;">
+                                        @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                                {
+                                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @id = "v_cmp_id", @class = "form-control txtlbl", @style = "width: 50%;" })
+
+                                                }
+                                                else
+                                                {
+                                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @id = "v_cmp_id", @class = "form-control txtlbl", @style = "width: 50%;" })
+                                                }
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td style="text-align: right;">
+                                        <label><b class="Lblmanual">Whs Id</b></label>
+                                    </td>
+                                    <td style="width: 25%; padding-left: 1%;">
+                                        @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListwhsPickDtl, "whs_id", "whs_name"), "---Select All---", new { @id = "v_whs_id", @class = "form-control txtlbl" })
+                                    </td>
+
+                                </tr>
+
+
+                            </table>
+                        </div>
+
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+
+                            <div class="container" style="margin-left:0px; width:100%;">
+                                <fieldset>
+                                    <legend>Form Action</legend>
+                                    <table style="margin-top:-30px;">
+                                        <tr>
+                                            <td>
+
+                                                <button type="button" id="btnCustinquiry" class="btn_search" style="margin-left: 20px;font-size: 13px;">Search </button>
+                                                <button type="reset" id="btnClear" class="btn-Clear" style="font-size: 13px;">Clear </button>
+                                                <button type="reset" id="btnNewCustEntry" class="btn-Clear" style="background-color:#5ae77e;width: 130px;font-size: 13px;">New Customer</button>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </fieldset>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3" style="width:410px">
+                            <div class="container" style="margin-left:0px; width:100%;">
+                                <fieldset>
+                                    <legend style="text-align:center">Report Selection</legend>
+                                    <table style="margin-top:-30px;">
+                                        <tr>
+                                            <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="CustomerDetails" name="custmasterradiobtn" checked /><b>CustomerDetails Summary Report</b></td>
+                                        </tr>
+                                    </table>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <b style="color:blue;font-size: 12px;">Format</b>
+                                                <select id="FormatCustMaster" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right" data-toggle="dropdown">
+                                                    <option>PDF</option>
+                                                    <option>XLS</option>
+                                                </select>
+
+                                            </td>
+                                            <td>
+                                                <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                                                <select id="ModeCustMaster" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                                    <option>VIEW</option>
+                                                    <option>EMAIL</option>
+
+                                                </select>
+
+
+                                            </td>
+                                            <td>
+
+                                                <button type="button" id="btncustmasterrpt" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                            </td>
+
+                                        </tr>
+
+
+                                    </table>
+                                </fieldset>
+                            </div>
+
+                        </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+
+        <div id="CustomerGrid" class="box-header" style="padding:5px;">
+            <div class="box-body">
+                <div class="ItemSummary">
+                    <br />
+                    <table>
+                        <tr>
+                            <td style="width: 5%;"></td>
+                            <td style="width:22%;">
+                                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                    Total Records:
+                                </span>
+                                <label class="totalCount" style="text-align:left">
+                                    @*@hdrcount*@
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br />
+             
+                <table id="GridCust" class="table table-bordered table-striped">
+
+                    <thead class="grid_backcolor">
+                        <tr>
+                            <th class="grid_header_backcolor" style="width:10%">Cmp Id</th>
+                            <th class="grid_header_backcolor" style="width:10%">Cust Id</th>
+                            <th class="grid_header_backcolor" style="width:10%">Action</th>
+                            <th class="grid_header_backcolor" style="width:15%">Customer Name</th>
+                            <th class="grid_header_backcolor" style="width:5%">Status</th>
+                            <th class="grid_header_backcolor" style="width:5%">Whs ID</th>
+                            <th class="grid_header_backcolor" style="width:15%">Contact</th>
+                            <th class="grid_header_backcolor" style="width:15%">Email ID</th>
+                            <th class="grid_header_backcolor" style="width:15%">Phone No</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div id="CustomerGrids" class="box-header" style="padding:5px; ">
+        </div>
+
+    </div>
+}
+
+<div id='CustomerAdd' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 250%;left: -370px; ">        
+                <div id='ContentCustomerAdd' style="width: 100%; height: 900px;"></div>      
+            </div>
+        </center>
+    </div>
+</div>
+<div id='CustomerView' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 225%;left: -370px; ">
+
+                <div id='CustomerContentView' style="width: 100%;height:900px;"></div>
+
+            </div>
+        </center>
+    </div>
+
+</div>
+<div id='CustomerEdit' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 250%;left: -370px; ">
+                <div id='CustomerContentEdit' style="width: 100%;height:900px;"></div>
+            </div>
+        </center>
+    </div>
+
+</div>
+<div id='CustomerDel' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 250%;left: -370px; ">
+
+                <div id='CustomerContentDel' style="width: 100%;height:900px;"></div>
+
+            </div>
+        </center>
+    </div>
+
+</div>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+    $('#GridCust').DataTable({
+        "paging": true,
+        "pageLength": 20,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+    $(function () {
+        $("#tabs").tabs();
+    });
+    $(function () {
+        $("#childtabs").tabs();
+    });
+    $('#dt_of_entry').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#last_chg_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+
+
+    $("#btnNewCustEntry").click(function () {
+        debugger;
+        var cmpid = $('#v_custofcmp_id').val();
+        var TeamDetailPostBackAddURL = '/CustMaster/CustomerAdd';
+        if (cmpid == "") {
+            swal("", "Please Select The Company.", "");
+            $('#v_custofcmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        var options = { "backdrop": "static", keyboard: true };
+
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#v_custofcmp_id').val();
+        var p_str_cust_id = $('#v_cmp_id').val();
+
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/CustMaster/SaveInqSecInSession")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_cust_id": p_str_cust_id
+            },
+
+            dataType: "json",
+            success: function (e) {
+
+
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cmp_id": p_str_cmp_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#ContentCustomerAdd').html(data);
+                $('#CustomerAdd').modal(options);
+                $('#CustomerAdd').modal('show');
+            },
+            error: function () {
+                swal("Dynamic content load failed.");
+            }
+        });
+    });
+
+    $("#btnCustinquiry").click(function () {
+        debugger
+
+        var cust_of_cmp_id = $("#v_custofcmp_id").val();
+        if (cust_of_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#v_custofcmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        else {
+            var p_str_cust_id = $('#v_custofcmp_id').val();
+            var p_str_cmp_id = $('#v_cmp_id').val();
+            var p_str_whs_id = $('#v_whs_id').val();
+
+            $("#ajaxLoading").show();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/CustMaster/GetCustomerDetails")',
+                data: {
+                    "p_str_cust_id": p_str_cust_id,
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_whs_id": p_str_whs_id
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#CustomerGrid').html("");
+                    $('#CustomerGrid').html(e);
+                },
+                error: function () {
+                    swal("Get Customer Details failed.");
+                }
+
+            })
+        }
+    });
+
+    $("#btnClose").click(function () {
+
+        var p_str_cmp_id = $('#v_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+
+    })
+
+    $("#btnCloseecom").click(function () {
+
+        var p_str_cmp_id = $('#v_cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+
+    })
+
+    
+    $("#btnCloseB2B").click(function () {
+
+        var p_str_cmp_id = $('#v_cmp_id').val();
+        var url = '@Url.Action("DashboardB2B", "DashboardB2B")';
+        url += '?id=' + p_str_cmp_id;
+
+        window.location.href = url;
+
+    })
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#v_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+
+
+    })
+</script>
+<script>
+    $("#btncustmasterrpt").click(function () {
+
+        debugger
+        var getli = $('#FormatCustMaster').find(":selected").text();
+        var getli2 = $('#ModeCustMaster').find(":selected").text();
+        var p_str_cmpid = $('#v_custofcmp_id').val();
+        var p_str_cust_id = $('#v_cmp_id').val();
+        var p_str_report_selection_name = $("input[name='custmasterradiobtn']:checked").val();
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+          
+            var p_str_report_type = "PDF";
+            if (p_str_report_selection_name == "CustomerDetails") {
+                $("#ajaxLoadingratemaster").show();
+                window.open('ShowReport?p_str_cmpid=' + p_str_cmpid + '&p_str_cust_id=' + p_str_cust_id + '&p_str_report_selection_name=' + p_str_report_selection_name + '&p_str_report_type=' + p_str_report_type, 'CustMaster', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+                $("#ajaxLoadingratemaster").hide();
+            }
+            
+        }
+        if (getli == 'XLS' && getli2 == 'VIEW')
+        {
+             window.location.replace("/CustMaster/ShowReport?p_str_cmpid=" + p_str_cmpid + '&p_str_cust_id=' + p_str_cust_id + '&p_str_report_selection_name=' + p_str_report_selection_name + '&p_str_report_type=' + p_str_report_type)
+        }
+       
+
+    })
+
+</script>

@@ -1,0 +1,764 @@
+﻿
+
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+@{
+    var Ordercount = Model.ListRcvgPost.Count;
+    var Ordercount1 = Model.ListLotItem.Count;
+    var Ordercount2 = Model.ListRcvgUnPost.Count;
+    int Totalctns = 0;
+    int TotalQty = Model.tot_qty;
+
+}
+@if (Model.View_Flag == "P")
+{
+    for (int i = 0; i < Model.ListRcvgPost.Count; i++)
+    {
+        int ctn = Model.ListRcvgPost[i].tot_ctn;
+        Totalctns = Totalctns + ctn;
+        Model.TotQty = Totalctns;
+    }
+}
+
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: verdana;
+        font-size: 12px;
+    }
+
+    div#RecvpostajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<center>
+    <div id="RecvpostajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="modal-header">
+        @if (Model.View_Flag == "P")
+        {
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inbound Receiving Post</h4>
+            <button type="button" id="btnPostClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnRcvngPost" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Post</button>
+        }
+        @if (Model.View_Flag == "UP")
+            {
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inbound Receiving UnPost</h4>
+            <button type="button" id="btnPostClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnRcvngUnPost" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">UnPost</button>
+        }
+
+    </div>
+    <div id="childtabsrcvpost">
+        <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+            <li><a href="#childtabsrcvpost-1" style="font-size:12px;">Header</a></li>
+            <li><a href="#childtabsrcvpost-2" style="font-size:12px;">Detail</a></li>
+
+        </ul>
+        <div id="childtabsrcvpost-1">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;padding-top: 6px;">
+                                <label class="Lblmanual">Cmp Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @disabled = "true", @style = "width: 195%;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 11%;text-align: right;padding-top: 6px;margin-left:10%">
+                                <label class="Lblmanual">Cont Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.cont_id, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; width: 190px;" })
+                            </div>
+
+                            <div class="col-xs-1" style="width: 8%;text-align: right;padding-top: 6px;margin-left:-3%">
+                                <label class="Lblmanual">IB Doc Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.ibdocid, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; width: 188px;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left;display:none;">
+                                @Html.TextBoxFor(model => model.lot_id, new { @id = "new_lot_id", @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px; font-family: verdana; width: 188px;" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="col-xs-2" style="width: 7%;text-align: right;">
+                                <label class="Lblmanual">Receiving Date</label>
+                            </div>
+                                 <div class="col-xs-2" style="text-align:left ">
+                                    @Html.TextBoxFor(model => model.ib_doc_dt, "{0:MM/dd/yyyy}", new { @id = "post_rcvd_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana; width: 140px;background-color:lightyellow;" })
+                                </div>
+                           
+                        </div>
+                    </div>
+
+                    @Html.HiddenFor(model => model.DocumentdateFrom)
+                    @Html.HiddenFor(model => model.DocumentdateTo)
+                    @Html.HiddenFor(model => model.rcvd_dt)
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;padding-top: 6px;">
+                                <label class="Lblmanual">Ctns</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.TotQty, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px;font-family: verdana; width: 190px;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 6%;text-align: right;padding-top: 6px;margin-left:-3%">
+                                <label class="Lblmanual">Tot Qty</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.tot_qty, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "font-size: 12px;font-family: verdana; width: 190px;" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                  
+                    @if (Model.bill_inout_type == "Container")
+                    {
+                        <br />
+                        <div id="childtabsrcvposts">
+                            <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+                                <li><a href="#childtabsrcvposts-1" style="font-size:12px; background-color:cornflowerblue;">INBOUND CONTAINER RECEIVING DETAILS</a></li>
+
+
+                            </ul>
+                            <div id="childtabsrcvposts-1">
+                                <div id="table-Details">
+                                   <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="col-xs-2">
+                                                <label class="Lblmanual">Container ID</label>
+                                                @Html.DropDownListFor(model => model.CONTAINERID, new SelectList(Model.ListGETContainerID, "CONTAINERID", "CONTAINERID"), new { @class = "form-control txtlbl" })
+
+                                            </div>
+                                            <div class="col-xs-2">
+                                                <label class="Lblmanual">PO #</label>
+                                                @Html.DropDownListFor(model => model.po_num, new SelectList(Model.ListGetPONUM, "po_num", "po_num"), new { @class = "form-control txtlbl" })
+
+                                            </div>
+
+                                            <div class="col-xs-2">
+                                                <label class="Lblmanual">Inout Rate</label>
+                                                @Html.DropDownListFor(model => model.RATEID, new SelectList(Model.ListGETRateID, "RATEID", "RATEID"), new { @class = "form-control txtlbl" })
+                                            </div>
+                                            <div class="col-xs-2">
+                                                <label class="Lblmanual">STRG RATE</label>
+                                                @Html.DropDownListFor(model => model.st_rate_id, new SelectList(Model.ListGetSTRG_ID, "st_rate_id", "st_rate_id"), new { @class = "form-control txtlbl" })
+
+                                            </div>
+                                            <div class="col-xs-2">
+                                                <label class="Lblmanual">No. Of Pallets</label>
+                                                @Html.TextBoxFor(model => model.CNTR_PALLET, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "font-size: 12px;font-family: verdana; text-align: right;" })
+                                            </div>
+                                            <div class="col-xs-1">
+                                                <label class="Lblmanual">Weight</label>
+                                                @Html.TextBoxFor(model => model.CNTR_WEIGHT, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;text-align: right;" })
+                                            </div>
+                                            <div class="col-xs-1">
+                                                <label class="Lblmanual">Cube </label>
+                                                @Html.TextBoxFor(model => model.CNTR_CUBE, new { @class = "form-control txtlbl numericOnly", @maxlength = "50", @style = "font-size: 12px;font-family: verdana; text-align: right;" })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="col-xs-10">
+                                                <label class="Lblmanual">Note</label>
+                                                @Html.TextAreaFor(model => model.CNTR_NOTE, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                        </div>
+                    }
+
+
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="left:-21px">
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                                    Total Records:
+                                </span>
+                            </div>
+                            <div class="col-xs-2" style="left:-163px">
+                                <label class="totalCount" style="text-align:left">
+                                    @if (Model.View_Flag == "P")
+                                    {
+                                        @Ordercount
+                                    }
+                                    else
+                                    {
+                                        @Ordercount2
+                                    }
+                                </label>
+                            </div>
+
+                            <div class="col-xs-2" style="left:-21px">
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                                    Total Qty:
+                                </span>
+                            </div>
+                            <div class="col-xs-2" style="left:-163px">
+                                <label class="totalCount" style="text-align:left">
+                                    @TotalQty
+                                </label>
+                            </div>
+                            <div class="col-xs-2" style="left:-21px">
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                                    Total Ctns:
+                                </span>
+                            </div>
+                            <div class="col-xs-2" style="left:-163px">
+                                <label class="totalCount" style="text-align:left">
+                                    @Totalctns
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    @Html.HiddenFor(model => model.DocumentdateFrom)
+                    @Html.HiddenFor(model => model.DocumentdateTo)
+                    @Html.HiddenFor(model => model.bill_inout_type)           
+
+                    <div class="box">
+                        @if (Model.View_Flag == "P")
+                        {
+                            <div id="table-Details">
+                                <div style="overflow-y:auto; height:auto; width:auto;">
+
+                                    <table id="GridDocRcvngPost" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                        <thead class="grid_backcolor">
+                                            <tr>
+                                                <th class="grid_header_backcolor">Line</th>
+                                                <th class="grid_header_backcolor">Whs</th>
+                                                <th class="grid_header_backcolor">Style</th>
+                                                <th class="grid_header_backcolor">Color</th>
+                                                <th class="grid_header_backcolor">Size</th>
+                                                <th class="grid_header_backcolor">LotId</th>
+                                                <th class="grid_header_backcolor">LocId</th>
+                                                <th class="grid_header_backcolor">VendorPO#</th>
+                                                <th class="grid_header_backcolor">CustPO#</th>
+                                                <th class="grid_header_backcolor">Pick List</th>
+                                                <th class="grid_header_backcolor">RcvdDt</th>
+                                                <th class="grid_header_backcolor">Ctns</th>
+                                                <th class="grid_header_backcolor">PPK</th>
+                                                <th class="grid_header_backcolor">RcvdQty</th>
+                                                <th class="grid_header_backcolor">PaletId</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                                            @for (int i = 0; i < Model.ListRcvgPost.Count; i++)
+                                            {
+                                                int line = i + 1;
+                                                var l_str_temp_ppk = (Model.ListRcvgPost[i].ctn_qty);
+                                                var l_str_temp_qty = (Model.ListRcvgPost[i].tot_ctn);
+                                                var l_str_Rcvd_qty = (l_str_temp_ppk * l_str_temp_qty);
+                                                <tr id="@Model.ListRcvgPost[i].cmp_id ">
+                                                    <td style="font-size:12px; color:black; font-weight:bold; ">@line</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListRcvgPost[i].whs_id</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgPost[i].itm_num</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgPost[i].itm_color</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgPost[i].itm_size</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgPost[i].lot_id</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgPost[i].loc_id</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgPost[i].po_num</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgPost[i].cust_po_num</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgPost[i].pick_list</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgPost[i].palet_dt</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgPost[i].tot_ctn</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgPost[i].ctn_qty</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@l_str_Rcvd_qty</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgPost[i].palet_id</td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="table-Details">
+                                <div style="overflow-y:auto; height:auto; width:auto;">
+
+                                    <table id="GridDocRcvngUnPost" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                        <thead class="grid_backcolor">
+                                            <tr>
+                                                <th class="grid_header_backcolor">Line</th>
+                                                <th class="grid_header_backcolor">Whs</th>
+                                                <th class="grid_header_backcolor">Style</th>
+                                                <th class="grid_header_backcolor">Color</th>
+                                                <th class="grid_header_backcolor">Size</th>
+                                                <th class="grid_header_backcolor">LotId</th>
+                                                <th class="grid_header_backcolor">LocId</th>
+                                                <th class="grid_header_backcolor">PO#</th>
+                                                <th class="grid_header_backcolor">RcvdDt</th>
+
+                                                <th class="grid_header_backcolor">RcvdQty</th>
+                                                <th class="grid_header_backcolor">PaletId</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                                            @for (int i = 0; i < Model.ListRcvgUnPost.Count; i++)
+                                            {
+                                                int line = i + 1;
+
+                                                <tr id="@Model.ListRcvgUnPost[i].cmp_id ">
+                                                    <td style="font-size:12px; color:black; font-weight:bold; ">@line</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListRcvgUnPost[i].whs_id</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgUnPost[i].itm_num</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgUnPost[i].itm_color</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgUnPost[i].itm_size</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgUnPost[i].lot_id</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgUnPost[i].loc_id</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgUnPost[i].po_num</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgUnPost[i].palet_dt</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgUnPost[i].tot_qty</td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgUnPost[i].palet_id</td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="childtabsrcvpost-2">
+            <div class="box-body">
+                <div class="box-header">
+                    <table>
+                        <tr>
+                            <td style="width:9%;">
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                    Total Records:
+                                </span>
+                            </td>
+                            <td style="width: 93%;">
+                                <label class="totalCount" style="text-align:left">
+                                    @Ordercount1
+                                </label>
+                            </td>
+
+                        </tr>
+                    </table>
+                    <br />
+                    <div class="box">
+                        <div id="table-Details">
+                            <div style="overflow-y:auto; height:auto; width:auto;">
+                                <table id="GridDocRcvngDtlPost" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                    <thead class="grid_backcolor">
+                                        <tr>
+                                            <th class="grid_header_backcolor">DtlLine</th>
+                                            <th class="grid_header_backcolor">ItmLine</th>
+                                            <th class="grid_header_backcolor">ItmCode</th>
+                                            <th class="grid_header_backcolor">Style</th>
+                                            <th class="grid_header_backcolor">Color</th>
+                                            <th class="grid_header_backcolor">Size</th>
+                                            <th class="grid_header_backcolor">NumOfCtns</th>
+                                            <th class="grid_header_backcolor">CtnQty</th>
+                                            <th class="grid_header_backcolor">ItmQty</th>
+                                            <th class="grid_header_backcolor">PaletId</th>
+                                            <th class="grid_header_backcolor">TotQty</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                                        @for (int i = 0; i < Model.ListLotItem.Count; i++)
+                                        {
+                                            int line = i + 1;
+                                            var l_str_temp_ppk = (Model.ListLotItem[i].ctn_qty);
+                                            var l_str_temp_qty = (Model.ListLotItem[i].tot_ctn);
+                                            var l_str_Tot_qty = (l_str_temp_ppk * l_str_temp_qty);
+                                            <tr id="@Model.ListLotItem[i].cmp_id ">
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListLotItem[i].dtl_line</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListLotItem[i].itm_line</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLotItem[i].itm_code</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLotItem[i].itm_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLotItem[i].itm_color</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListLotItem[i].itm_size</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListLotItem[i].tot_ctn</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListLotItem[i].ctn_qty</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListLotItem[i].itm_qty</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListLotItem[i].palet_id</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@l_str_Tot_qty</td>
+
+                                            </tr>
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</center>
+<script>
+    $(function () {
+        $("#childtabsrcvpost").tabs();
+        $("#childtabsrcvposts").tabs();
+    });
+    $('#post_rcvd_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#GridDocRcvngDtlPost').DataTable({
+        "pageLength": 20,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        'autoWidth': false,
+    })
+    $('#GridDocRcvngDtlPost_paginate').hide();
+
+    $('#GridDocRcvngPost').DataTable({
+        "pageLength": 20,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        'autoWidth': false,
+
+    });
+    $('#GridDocRcvngPost_paginate').hide();
+    $('#GridDocRcvngUnPost').DataTable({
+        "pageLength": 20,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        'autoWidth': false,
+    })
+    $('#GridDocRcvngUnPost_paginate').hide();
+    $("#btnRcvngPost").click(function () {
+        debugger
+        $("#btnRcvngPost").attr('disabled', 'disabled');
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_ib_doc_id = $('#ibdocid').val();
+
+        var p_str_cntr_id = $('#cont_id').val();
+        var P_STR_CNTR_PALLET = $('#CNTR_PALLET').val();
+        var P_STR_CNTR_WEIGHT = $('#CNTR_WEIGHT').val();
+        var P_STR_CNTR_CUBE = $('#CNTR_CUBE').val();
+        var P_STR_RATEID = $('#RATEID').val();
+        var P_STR_CNTR_NOTE = $('#CNTR_NOTE').val();
+        var P_STR_CNTR_PO_NUM = $('#po_num').val();
+        var P_STR_CNTR_ST_RATE_ID = $('#st_rate_id').val();
+        var P_STR_BILL_TYPE = $('#bill_inout_type').val();        
+        var p_rcvd_dt = $('#post_rcvd_dt').val();
+        var p_rcvd_dt_keyed = $('#rcvd_dt').val();
+       
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnRcvngPost").removeAttr('disabled');
+            return false;
+        }
+
+        
+
+        if (p_rcvd_dt == "") {
+            swal("", "Please Enter the Receiving Date ", "");
+            $("#btnRcvngPost").removeAttr('disabled');
+            $('#rcvd_dt').focus();
+            return false;
+        }
+
+        if (p_rcvd_dt != p_rcvd_dt_keyed) {
+            sweetAlert("", "Receiving Date Note matched. Please check the Receiving Date", "");
+            $('#post_rcvd_dt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnRcvngPost").removeAttr('disabled');
+            $('#rcvd_dt').focus();
+            return false;
+        }
+
+        if (P_STR_CNTR_PALLET == "") {
+            not2('Please Enter No Of Pallets')
+            $('#CNTR_PALLET').focus().select();
+            $("#btnRcvngPost").removeAttr('disabled');
+            return false;
+        }
+        else {
+            $("#RecvpostajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/SaveReceivingPost")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_ib_doc_id": p_str_ib_doc_id,
+                    "p_str_cntr_id": p_str_cntr_id,
+                    "P_STR_CNTR_PALLET": P_STR_CNTR_PALLET,
+                    "P_STR_CNTR_WEIGHT": P_STR_CNTR_WEIGHT,
+                    "P_STR_CNTR_CUBE": P_STR_CNTR_CUBE,
+                    "P_STR_RATEID": P_STR_RATEID,
+                    "P_STR_CNTR_NOTE": P_STR_CNTR_NOTE,
+                    "P_STR_CNTR_PO_NUM": P_STR_CNTR_PO_NUM,
+                    "P_STR_CNTR_ST_RATE_ID": P_STR_CNTR_ST_RATE_ID,
+                    "P_STR_BILL_TYPE": P_STR_BILL_TYPE                 
+
+                },
+                dataType: 'html',
+                success: function (e) {
+                    if (e != null) {
+                        swal({
+                            title: "",
+                            text: "IBDocId #" + p_str_ib_doc_id + " Posted successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+    function () {
+        setTimeout(function () {
+            var p_str_ib_doc_id = $('#ibdocid').val();
+            var p_str_cmpid = $('#cmp_id').val();
+            var p_str_datefrom = $('#DocumentdateFrom').val(); 
+            var p_str_dateto = $('#DocumentdateTo').val();     
+                        var type = "PDF";
+                        var p_str_radio = "TallySheet";
+                        var SelectdID = p_str_ib_doc_id;
+                        ;
+            window.open('ShowReport?SelectdID=' + SelectdID + '&p_str_radio=' + p_str_radio + '&p_str_cmpid=' + p_str_cmpid + '&type=' + type, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectdID);
+
+            $('#myModalRecvPost').modal('hide');
+            $.ajax({
+                type: "get",
+                url: "/inboundinquiry/inboundinquirydtl",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_ibdocid": SelectdID
+                },
+                datatype: 'html',
+                success: function (e) {
+                    debugger
+                    $("#RecvpostajaxLoading").hide();
+                    $('#showgrid').html("");
+                    $('#showgrid').html(e);
+                },
+            })
+        }, 10);
+    });
+
+
+
+                    }
+
+                },
+
+            })
+        }
+    });
+
+    $("#btnRcvngUnPost").click(function () {
+        debugger
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_ibdocid = $('#ibdocid').val();
+        var p_str_lotid = $('#new_lot_id').val();
+        $("#btnRcvngUnPost").attr('disabled', 'disabled');
+        $("#RecvpostajaxLoading").show();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnRcvngUnPost").removeAttr('disabled');
+            return false;
+        }
+
+        if (p_str_ibdocid == "") {
+            sweetAlert("", "Please Enter Doc Id", "");
+            $('#ibdocid').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnRcvngUnPost").removeAttr('disabled');
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/SaveReceivingUnPost")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_ibdocid": p_str_ibdocid,
+                    "p_str_lotid": p_str_lotid
+
+
+                },
+                dataType: 'html',
+                success: function (e) {
+                    debugger
+                    if (e != null) {
+                        swal({
+                            title: "",
+                            text: "IBDocId #" + p_str_ibdocid + "UnPosted successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+    function () {
+        setTimeout(function () {
+        var p_str_lotid = $('#new_lot_id').val();
+        var p_str_ibdocid = $('#ibdocid').val();
+        var p_str_cmpid = $('#cmp_id').val();
+        var p_str_datefrom = $('#DocumentdateFrom').val(); 
+        var p_str_dateto = $('#DocumentdateTo').val();     
+        window.open('ShowDocRcvngUnPostReport?p_str_cmpid=' + p_str_cmpid + '&p_str_lotid=' + p_str_lotid + '&p_str_ibdocid=' + p_str_ibdocid, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowDocRcvngUnPostReport');
+
+        $('#myModalRecvPost').modal('hide');
+        $.ajax({
+            type: "get",
+            url: "/inboundinquiry/inboundinquirydtl",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_ibdocid": p_str_ibdocid
+            },
+            datatype: 'html',
+            success: function (e) {
+                debugger
+                $("#RecvpostajaxLoading").hide();
+                $('#showgrid').html("");
+                $('#showgrid').html(e);
+            },
+        })
+        }, 1000);
+});
+
+
+                    }
+                },
+
+            })
+        }
+    });
+
+
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+    $("#btnPostClose").click(function () {
+        var p_str_cmp_id = $("#g_str_tmp_cmp_id").val();
+        var p_str_doc_id = $("#ibdocid").val();
+        var p_str_screentitle = $('#screentitle').val();
+        $("#RecvpostajaxLoading").show();
+        debugger
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+                       debugger
+                       $('#myModalRecvPost').modal('hide');
+                       $.ajax({
+                           type: "get",
+                           url: "/inboundinquiry/inboundinquirydtl",
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_ibdocid": p_str_doc_id
+                           },
+                           datatype: 'html',
+                           success: function (e) {
+                               debugger
+                               $("#RecvpostajaxLoading").hide();
+                               $('#showgrid').html("");
+                               $('#showgrid').html(e);
+                           },
+                       })
+
+                       }
+               });
+    });
+</script>
+
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}

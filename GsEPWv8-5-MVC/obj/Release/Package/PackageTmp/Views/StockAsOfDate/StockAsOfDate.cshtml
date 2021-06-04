@@ -1,0 +1,998 @@
+﻿@model  GsEPWv8_5_MVC.Model.StockAsOfDateModel
+
+@{
+    ViewBag.Title = "StockAsOfDate";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    //var Ordercount = Model.ListStockInquiryGrid.Count;
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+    .ui-autocomplete li {
+        font-size: 12px;
+        line-height: 30px;
+        color: darkblue;
+        font-family: Verdana;
+        font-weight: bold;
+        background-color: lightcyan;
+    }
+</style>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/plugins/jQueryUI/jquery-ui.js"></script>
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+
+@using (Html.BeginForm("StockAsOfDate", "StockAsOfDate", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <a href="/DashBoardB2B/DashBoardB2B" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    Inventory Stock As Of Date
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-8 col-sm-8 col-xs-8">
+
+                            <table style="border-collapse: separate;border-spacing: 0px 0.5em;    ">
+                                <tr>
+                                    <td style="text-align: right;width: 6%;">
+                                        <label><b class="Lblmanual">Cmp Id </b></label>
+                                    </td>
+
+                                    @Html.HiddenFor(model => model.p_str_company)
+
+
+                                    @Html.HiddenFor(model => model.p_str_cmpid)
+                                    <td colspan="3" style="width: 45%; padding-left: 1%;">
+                                        @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                        {
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                        }
+
+
+                                    </td>
+                                    <td style="text-align: right; width: 7%;">
+                                        <label><b class="Lblmanual">IB Doc Id</b></label>
+                                    </td>
+                                    <td style="width: 10%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.ib_doc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </td>
+                                    <td style="text-align: right;width:7%;">
+                                        <label><b class="Lblmanual">As_Of_Dt</b></label>
+                                    </td>
+                                    <td style="width:10%; padding-left:1%;">
+                                        @Html.TextBoxFor(model => model.As_Of_Date, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                    </td>
+                                    @*<td style="text-align: right; width: 5%;">
+                                            <label><b class="Lblmanual">PO No</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.po_num, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                        </td>*@
+                                    @*<td style="text-align: right;    width: 5%;">
+                                            <label><b class="Lblmanual">Ref No</b></label>
+                                        </td>
+                                        <td style="width: 10%; padding-left: 1%; ">
+                                            @Html.TextBoxFor(model => model.grn_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                        </td>*@
+                                    <td colspan="2" style="width: 11%;"></td>
+
+                                </tr>
+                                <tr style="padding-bottom:2%">
+                                    <td style="text-align: right;width: 6%;">
+                                        <label><b class="Lblmanual">Cont ID</b></label>
+                                    </td>
+                                    <td style="width: 10%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.cont_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </td>
+                                    <td style="text-align: right; width: 5%;">
+                                        <label><b class="Lblmanual">Loc ID</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.loc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </td>
+                                    <td style="text-align: right; width: 5%;">
+                                        <label><b class="Lblmanual">WhsId</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.whs_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </td>
+                                    <td style="width:4%; padding-left: 1%;font-family: verdana;">
+                                        <input type="radio" id="Radiadetail" value="DetailbyStyle" name="radio4" checked /><b class="Lblmanual">Detail</b>
+                                    </td>
+                                    <td style="width:4%; padding-left: 1%;font-family: verdana;">
+                                        <input type="radio" id="RadiaSummary" value="SummaryStyle" name="radio4" /><b class="Lblmanual">Summary</b>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="text-align: right;width: 6%;">
+                                        <label><b class="Lblmanual">Style</b></label>
+                                    </td>
+                                    <td style="width: 15%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow; font_size=bold;" })
+                                    </td>
+                                    <td style="text-align: right; width: 7%;">
+                                        <label><b class="Lblmanual">Color</b></label>
+                                    </td>
+                                    <td style="width: 8%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td style="text-align: right; width: 5%;">
+                                        <label><b class="Lblmanual">Size</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td style="text-align: right; width: 5%;">
+                                        <label><b class="Lblmanual">Desc</b></label>
+                                    </td>
+                                    <td style="width: 12%; padding-left: 1%;">
+                                        @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                    </td>
+                                    <td style="width: 11%; padding-left: 1%;">
+                                        @Html.DropDownListFor(model => model.status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @class = "form-control txtlbl" })
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td colspan="9" style="width: 71%;">
+                                        <button type="button" id="btnSearch" class="btn_search" style="margin-left:74%;">Search </button>
+                                        <button type="reset" id="btnClear" class="btn-Clear">Clear </button>
+                                    </td>
+
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <table>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <fieldset>
+                                            <legend>Report Selection</legend>
+
+
+                                            <table style="margin-top:0px;">
+                                                <tr>
+                                                    <td style="padding-left: 10px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="DetailbyStyle" name="radio3" checked /><b> As Of Date Stock Detail Report</b></td>
+                                                    <td style="padding-left: 5px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="SummarybyStyle" name="radio3" /><b> As Of Date Stock Summary Report</b></td>
+                                                </tr>
+                                                <tr></tr>
+                                            </table>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                                    </td>
+                                                    <td>
+
+                                                        <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right " data-toggle="dropdown">
+                                                            <option>XLS</option>
+                                                            <option>PDF</option>
+
+                                                        </select>
+
+                                                    </td>
+                                                    <td>
+                                                        <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                                    </td>
+                                                    <td>
+                                                        <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:65px; text-align:right " data-toggle="dropdown">
+                                                            <option>VIEW</option>
+                                                            <option>EMAIL</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+
+                                                        <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                    </td>
+
+                                                </tr>
+                                            </table>
+
+                                        </fieldset>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <hr class="break" />
+    <div class="box-body">
+        <div>
+            <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+            <div id="childtabsgrid">
+                <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+                    <li><a href="#childtabsgrid-1" style="font-size:12px;">detail</a></li>
+                    <li><a href="#childtabsgrid-2" style="font-size:12px;">Summary</a></li>
+                </ul>
+                <div id="childtabsgrid-1">
+                    <fieldset>
+                        <legend style="color:cornflowerblue; font-size:1.1px;">detail</legend>
+                        <div class="box-header" style="margin-top:-27px;">
+                            <div id="showgrid" class="box-header" style="padding:5px;">
+                                <div class="box-body">
+                                    <br />
+                                    <table>
+                                        <tr>
+                                            <td style="width:22%;text-align:center;">
+                                                <span style="font-size:1.5em;color:#116b42;font-weight: bold;">
+                                                    Total Records:
+                                                </span>
+                                                <label class="totalCount" style="text-align:left">
+                                                    @*@Ordercount*@
+                                                </label>
+                                            </td>
+                                            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                                                Avl Ctn:
+                                            </td>
+                                            <td>
+                                                <input type="text" value="0" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red; " />
+                                            </td>
+                                            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-left:30px;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                                                Avl Qty:
+                                            </td>
+                                            <td>
+                                                <input type="text" value="0" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red; " />
+                                            </td>
+                                            @*<td style="font-size:1.5em;color:black;font-weight: bold;text-align:left; padding-left:36px;padding-right: 10px;font-family:Verdana;font-weight:200;">
+                                                    Aloc Qty:
+                                                </td>
+                                                <td>
+                                                    <input id="txtAlocQty" type="text" name="AlocQty" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red; ">
+                                                </td>*@
+                                        </tr>
+                                    </table>
+
+                                    <br />
+
+                                    <table id="Grid_Iv_Stk_inq" class="table table-bordered table-striped">
+
+                                        <thead class="grid_backcolor">
+                                            <tr>
+                                                <th class="grid_header_backcolor">IBDocID</th>
+                                                <th class="grid_header_backcolor">Rcvd Dt</th>
+                                                <th class="grid_header_backcolor">ContID</th>
+                                                <th class="grid_header_backcolor">Style</th>
+                                                <th class="grid_header_backcolor">Color</th>
+                                                <th class="grid_header_backcolor">Size</th>
+                                                <th class="grid_header_backcolor">Desc</th>
+                                                <th class="grid_header_backcolor">Whs</th>
+                                                <th class="grid_header_backcolor">LocID</th>
+                                                <th class="grid_header_backcolor">AvlCtn</th>
+                                                <th class="grid_header_backcolor">PPK</th>
+                                                <th class="grid_header_backcolor">AvlQty</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="showgridstock_inq" class="box-header" style="padding:0px; ">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div id="childtabsgrid-2" style="display:none">
+                    <fieldset>
+                        <legend style="color:cornflowerblue; font-size:1.1px;">Summary</legend>
+                        <div class="box-header" style="margin-top:-27px;">
+                            <div id="showgridSummary" class="box-header" style="padding:5px;">
+                                <div class="box-body">
+                                    <br />
+                                    <table>
+                                        <tr>
+                                            <td style="width:22%;text-align:center;">
+                                                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                                    Total Records:
+                                                </span>
+                                                <label class="totalCount" style="text-align:left">
+                                                    @*@Ordercount*@
+                                                </label>
+                                            </td>
+                                            <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-left:30px;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                                                Avl Qty:
+                                            </td>
+                                            <td>
+                                                <input type="text" value="0" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red; " />
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <br />
+
+                                    <table id="Grid_Iv_Stk_inq_Summary" class="table table-bordered table-striped">
+
+                                        <thead class="grid_backcolor">
+                                            <tr>
+                                                <th class="grid_header_backcolor">Style</th>
+                                                <th class="grid_header_backcolor">Color</th>
+                                                <th class="grid_header_backcolor">Size</th>
+                                                <th class="grid_header_backcolor">Desc</th>
+                                                <th class="grid_header_backcolor">AvlQty</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="showgridstock_inqSummary" class="box-header" style="padding:0px; ">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+ <div id='myModalEmailAlert' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 250%; left:-300px;">
+                <div id='myModalEmailAlertContent' style="width: 100%; height: 1000px;"></div>
+            </div>
+        </div>
+    </div>
+
+<div id='UsersEmail' class='modal' style="padding-left:947px;padding-top:271px">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 100%;">
+            <div id='UsersEmailContent' style="width: 100%; height: 360px;"></div>
+        </div>
+    </div>
+</div>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#childtabsgrid").tabs();
+    });
+
+    $("#RadiaSummary").click(function () {
+        $("#childtabsgrid").tabs("option", "active", $("#childtabsgrid").tabs('option', 'active') + 1);
+    })
+    $("#Radiadetail").click(function () {
+        $("#childtabsgrid").tabs("option", "active", $("#childtabsgrid").tabs('option', 'active') - 1);
+    })
+    $('#As_Of_Date').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $(function () {
+
+        $("#cmp_id").change(function () {
+            var l_str_comp = this.value;
+            debugger
+            $("#p_str_company").val(l_str_comp);
+        });
+
+        $("#Itmdtl").autocomplete({
+            source: function (request, response) {
+                $.getJSON("/StockInquiry/ItemXGetitmDtl", {
+                    term: request.term,
+                    cmp_id: $('#p_str_company').val(),
+                },
+                          response);
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                $("#itm_size").val(ui.item.itm_size);
+                $("#itm_color").val(ui.item.itm_color);    //action
+                $("#itm_name").val(ui.item.itm_name);
+            }
+        });
+    });
+    $("#btnSearch").click(function () {
+    debugger
+        var cmp_id = $("#cmp_id").val();
+        var As_Of_Date = $("#As_Of_Date").val();
+        var var_name = $("input[name='radio4']:checked").val();
+        if (var_name == "SummaryStyle") {
+
+            if (cmp_id == "") {
+                //not2("Please Select The Company.")
+                swal("", "Please Select The Company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            if (As_Of_Date == "") {
+                //not2("Please Select the Style.")
+                swal("", "Please Select the As_Of_Date", "");
+                $('#As_Of_Date').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+            else {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = "";
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_As_Of_Date = $('#As_Of_Date').val();
+                var p_str_Status = $('#status').val();
+                var p_str_radio = var_name;
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/StockAsOfDate/GetStockASOfDateDetails")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id,
+                        "p_str_itm_num": p_str_itm_num,
+                        "p_str_itm_color": p_str_itm_color,
+                        "p_str_itm_size": p_str_itm_size,
+                        "p_str_itm_name": p_str_itm_name,
+                        "p_str_Status": p_str_Status,
+                        "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_cont_id": p_str_cont_id,
+                        "p_str_lot_id": p_str_lot_id,
+                        "p_str_loc_id": p_str_loc_id,
+                        "p_str_grn_id": p_str_grn_id,
+                        "p_str_whs_id": p_str_whs_id,
+                        "p_str_As_Of_Date": p_str_As_Of_Date,
+                        "p_str_radio": p_str_radio
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        $("#ajaxLoading").hide();
+                        $('#showgridSummary').hide();
+                        $('#showgridstock_inqSummary').html("");
+                        $('#showgridstock_inqSummary').html(e);
+                    },
+
+                })
+            }
+        }
+        else
+        {
+            if (cmp_id == "") {
+                //not2("Please Select The Company.")
+                swal("", "Please Select The Company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            if (As_Of_Date == "") {
+                //not2("Please Select the Style.")
+                swal("", "Please Select the As_Of_Date", "");
+                $('#As_Of_Date').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+            else {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = "";
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_As_Of_Date = $('#As_Of_Date').val();
+                var p_str_Status = $('#status').val();
+                var p_str_radio = var_name;
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/StockAsOfDate/GetStockASOfDateDetails")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id,
+                        "p_str_itm_num": p_str_itm_num,
+                        "p_str_itm_color": p_str_itm_color,
+                        "p_str_itm_size": p_str_itm_size,
+                        "p_str_itm_name": p_str_itm_name,
+                        "p_str_Status": p_str_Status,
+                        "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_cont_id": p_str_cont_id,
+                        "p_str_lot_id": p_str_lot_id,
+                        "p_str_loc_id": p_str_loc_id,
+                        "p_str_grn_id": p_str_grn_id,
+                        "p_str_whs_id": p_str_whs_id,
+                        "p_str_As_Of_Date": p_str_As_Of_Date,
+                        "p_str_radio": p_str_radio
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        $("#ajaxLoading").hide();
+                        $('#showgrid').hide();
+                        $('#showgridstock_inq').html("");
+                        $('#showgridstock_inq').html(e);
+                    },
+
+                })
+            }
+        }
+    });
+
+    $("#btnprocesss").click(function () {
+        debugger
+        var getFormat = $('#id_format').find(":selected").text();
+        var getMode = $('#id_mode').find(":selected").text();
+        var p_str_style_stearch = $('#status').val();
+        //var l_str_ParView_rowcount = $('#StockAsofdateInq tr').length;
+        //var l_str_MainView_rowcount = $('#Grid_Iv_Stk_inq tr').length;
+        //if (l_str_ParView_rowcount > 1 || l_str_MainView_rowcount > 1) 
+            if (getFormat == 'XLS' && getMode == 'VIEW') {
+                var type = "Excel";
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var var_name = $("input[name='radio3']:checked").val();
+                if (var_name == "DetailbyStyle") {
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_itm_num = $('#Itmdtl').val();
+                    var p_str_itm_color = $('#itm_color').val();
+                    var p_str_itm_size = $('#itm_size').val();
+                    var p_str_itm_name = "";
+                    var p_str_cont_id = $('#cont_id').val();
+                    var p_str_loc_id = $('#loc_id').val();
+                    var p_str_whs_id = $('#whs_id').val();
+                    var p_str_As_Of_Date = $('#As_Of_Date').val();
+                    var p_str_Status = $('#Status').val();
+                    var lblalocqty = $('#avail_qty').val();
+                    var p_str_Status = $('#status').val();
+                    window.location.replace("/StockAsOfDate/ShowReport?var_name=" + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                        + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_loc_id=' + p_str_loc_id
+                        + '&p_str_whs_id=' + p_str_whs_id + '&p_str_As_Of_Date=' + p_str_As_Of_Date + '&p_str_Status=' + p_str_Status + '&type=' + type + '&p_str_style_stearch=' + p_str_style_stearch)
+
+                }
+                if (var_name == "SummarybyStyle") {
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_itm_num = $('#Itmdtl').val();
+                    var p_str_itm_color = $('#itm_color').val();
+                    var p_str_itm_size = $('#itm_size').val();
+                    var p_str_itm_name ="";
+                    var p_str_cont_id = $('#cont_id').val();
+                    var p_str_loc_id = $('#loc_id').val();
+                    var p_str_whs_id = $('#whs_id').val();
+                    var p_str_As_Of_Date = $('#As_Of_Date').val();
+                    var p_str_Status = $('#status').val();
+                    window.location.replace("/StockAsOfDate/ShowReport?var_name=" + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+        + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id +'&p_str_loc_id=' + p_str_loc_id
+        + '&p_str_whs_id=' + p_str_whs_id + '&p_str_As_Of_Date=' + p_str_As_Of_Date + '&p_str_Status=' + p_str_Status + '&type=' + type + '&p_str_style_stearch=' + p_str_style_stearch)
+
+                }
+            }
+            if (getFormat == 'PDF' && getMode == 'VIEW') {
+                debugger
+
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var var_name = $("input[name='radio3']:checked").val();
+                if (var_name == "DetailbyStyle") {
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_itm_num = $('#Itmdtl').val();
+                    var p_str_itm_color = $('#itm_color').val();
+                    var p_str_itm_size = $('#itm_size').val();
+                    var p_str_itm_name ="";
+                    var p_str_cont_id = $('#cont_id').val();
+                    var p_str_loc_id = $('#loc_id').val();
+                    var p_str_whs_id = $('#whs_id').val();
+                    var p_str_As_Of_Date = $('#As_Of_Date').val();
+                    var p_str_Status = $('#status').val();
+                    var lblalocqty = $('#avail_qty').val();
+                    var type = "PDF";
+                    window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                        + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_loc_id=' + p_str_loc_id
+                         + '&p_str_whs_id=' + p_str_whs_id + '&p_str_As_Of_Date=' + p_str_As_Of_Date + '&p_str_Status=' + p_str_Status + '&type=' + type + '&p_str_style_stearch=' + p_str_style_stearch, 'StockAsOfDate', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+                }
+                if (var_name == "SummarybyStyle") {
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_itm_num = $('#Itmdtl').val();
+                    var p_str_itm_color = $('#itm_color').val();
+                    var p_str_itm_size = $('#itm_size').val();
+                    var p_str_itm_name = "";
+                    var p_str_cont_id = $('#cont_id').val();
+                    var p_str_loc_id = $('#loc_id').val();
+                    var p_str_whs_id = $('#whs_id').val();
+                    var p_str_As_Of_Date = $('#As_Of_Date').val();
+                    var p_str_Status = $('#status').val();
+                    var type = "PDF";
+                    window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                         + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id +'&p_str_loc_id=' + p_str_loc_id
+                         + '&p_str_whs_id=' + p_str_whs_id + '&p_str_As_Of_Date=' + p_str_As_Of_Date + '&p_str_Status=' + p_str_Status + '&type=' + type + '&p_str_style_stearch=' + p_str_style_stearch, 'StockAsOfDate', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+                }
+            }
+
+            if (getFormat == 'PDF' && getMode == 'EMAIL') {
+                var options = { "backdrop": "static", keyboard: true };
+
+                var TeamDetailPostemailBackURL = '/StockAsOfDate/EmailShowReport';
+
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var var_name = $("input[name='radio3']:checked").val();
+                if (var_name == "DetailbyStyle") {
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_itm_num = $('#Itmdtl').val();
+                    var p_str_itm_color = $('#itm_color').val();
+                    var p_str_itm_size = $('#itm_size').val();
+                    var p_str_itm_name ="";
+                    var p_str_cont_id = $('#cont_id').val();
+                    var p_str_loc_id = $('#loc_id').val();
+                    var p_str_whs_id = $('#whs_id').val();
+                    var p_str_As_Of_Date = $('#As_Of_Date').val();
+                    var p_str_Status = $('#status').val();
+                    var lblalocqty = $('#avail_qty').val();
+                    var type = "PDF";
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostemailBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                            "p_str_cont_id": p_str_cont_id,  "p_str_loc_id": p_str_loc_id,  "p_str_whs_id": p_str_whs_id,
+                            "p_str_As_Of_Date": p_str_As_Of_Date, "p_str_Status": p_str_Status, "type": type, "p_str_style_stearch": p_str_style_stearch
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            $('#myModalEmailAlertContent').html(data);
+                            $('#myModalEmailAlert').modal(options);
+                            $('#myModalEmailAlert').modal('show');
+                            $("#ajaxLoading").hide();
+
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                            $("#ajaxLoading").hide();
+                        }
+                    });
+                }
+                if (var_name == "SummarybyStyle") {
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_itm_num = $('#Itmdtl').val();
+                    var p_str_itm_color = $('#itm_color').val();
+                    var p_str_itm_size = $('#itm_size').val();
+                    var p_str_itm_name = "";
+                    var p_str_cont_id = $('#cont_id').val();
+                    var p_str_loc_id = $('#loc_id').val();
+                    var p_str_whs_id = $('#whs_id').val();
+                    var p_str_Status = $('#status').val();
+                    var p_str_As_Of_Date = $('#As_Of_Date').val();
+                    var type = "PDF";
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostemailBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                            "p_str_cont_id": p_str_cont_id,"p_str_loc_id": p_str_loc_id,"p_str_whs_id": p_str_whs_id,
+                            "p_str_As_Of_Date": p_str_As_Of_Date, "p_str_Status": p_str_Status, "type": type, "p_str_style_stearch": p_str_style_stearch
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            $('#myModalEmailAlertContent').html(data);
+                            $('#myModalEmailAlert').modal(options);
+                            $('#myModalEmailAlert').modal('show');
+                            $("#ajaxLoading").hide();
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                            $("#ajaxLoading").hide();
+                        }
+                    });
+                }
+            }
+            //CR2018 - 03 - 08 - 001 Added By Nithya
+            if (getFormat == 'XLS' && getMode == 'EMAIL') {
+                var options = { "backdrop": "static", keyboard: true };
+
+                var TeamDetailPostemailBackURL = '/StockAsOfDate/EmailShowReport';
+                var type = "Excel";
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var var_name = $("input[name='radio3']:checked").val();
+                if (var_name == "DetailbyStyle") {
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_itm_num = $('#Itmdtl').val();
+                    var p_str_itm_color = $('#itm_color').val();
+                    var p_str_itm_size = $('#itm_size').val();
+                    var p_str_itm_name ="";
+                    var p_str_cont_id = $('#cont_id').val();
+                    var p_str_loc_id = $('#loc_id').val();
+                    var p_str_whs_id = $('#whs_id').val();
+                    var p_str_As_Of_Date = $('#As_Of_Date').val();
+                    var p_str_Status = $('#status').val();
+                    var lblalocqty = $('#avail_qty').val();
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostemailBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                            "p_str_cont_id": p_str_cont_id, "p_str_loc_id": p_str_loc_id,"p_str_whs_id": p_str_whs_id,
+                            "p_str_As_Of_Date": p_str_As_Of_Date, "p_str_Status": p_str_Status, "type": type, "p_str_style_stearch": p_str_style_stearch
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            $('#myModalEmailAlertContent').html(data);
+                            $('#myModalEmailAlert').modal(options);
+                            $('#myModalEmailAlert').modal('show');
+                            $("#ajaxLoading").hide();
+
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                            $("#ajaxLoading").hide();
+                        }
+                    });
+                }
+                else if (var_name == "SummarybyStyle") {
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_radio = var_name;
+                    var p_str_ib_doc_id = $('#ib_doc_id').val();
+                    var p_str_itm_num = $('#Itmdtl').val();
+                    var p_str_itm_color = $('#itm_color').val();
+                    var p_str_itm_size = $('#itm_size').val();
+                    var p_str_itm_name ="";
+                    var p_str_cont_id = $('#cont_id').val();
+                    var p_str_loc_id = $('#loc_id').val();
+                    var p_str_whs_id = $('#whs_id').val();
+                    var p_str_As_Of_Date = $('#As_Of_Date').val();
+                    var p_str_Status = $('#status').val();
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostemailBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                            "p_str_cont_id": p_str_cont_id, "p_str_loc_id": p_str_loc_id, "p_str_whs_id": p_str_whs_id,
+                            "p_str_As_Of_Date": p_str_As_Of_Date, "p_str_Status": p_str_Status, "type": type, "p_str_style_stearch": p_str_style_stearch
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            $('#myModalEmailAlertContent').html(data);
+                            $('#myModalEmailAlert').modal(options);
+                            $('#myModalEmailAlert').modal('show');
+                            $("#ajaxLoading").hide();
+
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                            $("#ajaxLoading").hide();
+                        }
+                    });
+                }
+            }
+        
+    })
+    $("#btnClose").click(function () {
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseB2B").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("DashboardB2B", "DashboardB2B")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+            $(this).val("");
+        });
+    });
+
+</script>
+<script>
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    $(function () {
+        $('#cntr_id').on('keypress', function (e) {
+            if (e.which == 32)
+                return false;
+        });
+        $('#ib_doc_id').on('keypress', function (e) {
+            if (e.which == 32)
+                return false;
+        });
+        $('#req_num').on('keypress', function (e) {
+            if (e.which == 32)
+                return false;
+        });
+    });
+    $('#IBGridInq').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "pageLength": 50,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+</script>
+
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+
+

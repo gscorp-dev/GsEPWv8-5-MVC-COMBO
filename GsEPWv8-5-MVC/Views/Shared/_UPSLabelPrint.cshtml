@@ -1,0 +1,1029 @@
+﻿
+@model GsEPWv8_5_MVC.Model.UPSShipmentModel
+@{
+    string AccessLicenseNumber = Model.UPSGsSecurity.AccessLicenseNumber;
+    string Username = Model.UPSGsSecurity.Username;
+    string Password = Model.UPSGsSecurity.Password;
+    int tot_ctns = 0;
+    decimal tot_cude = 0;
+    decimal tot_wgt = 0;
+    int lintTotLines = Model.OrderDetails.Count;
+}
+
+@Html.HiddenFor(model => model.cmp_id)
+@Html.HiddenFor(model => model.so_num)
+@Html.Hidden("AccessLicenseNumber", AccessLicenseNumber)
+@Html.Hidden("Username", Username)
+@Html.Hidden("Password", Password)
+@Html.Hidden("lintTotLines", lintTotLines)
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+</style>
+<style>
+    div#ajaxLoadingUPSLabelPrint {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<div class="modal-header">
+    <center><h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">UPS Label Print</h4></center>
+</div>
+<div id="ajaxLoadingUPSLabelPrint" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+<div>
+    <table align="right" style="margin-top:0px; ">
+
+        <tr>
+
+            <td><button type="button" id="btnGenerateLabels" class="btn-Close" style="float:right;background-color: #00c0ef;">Print Label</button></td>
+            <td><button type="button" class="btn_mclose" data-dismiss="modal" aria-hidden="true" style="float:right;">Close</button></td>
+        </tr>
+
+    </table>
+
+</div>
+<br />
+<hr />
+
+<div style="border: 1px solid #ada8a8;">
+
+    <table align="center" ; style="border-collapse: separate; border-spacing: 0 1em;">
+        <tr>
+
+            <td>
+                <b style="font-size: 14px;padding:10px 25px 10px 25px;">CmpId:</b>
+            </td>
+
+            <td>
+                @Html.TextBoxFor(model => model.cmp_id, new { @id = "txtCmpId", @class = "form-control", required = "required", @maxlength = "10", @style = "Font-weight:bold; width: 100px; height:30px;" })
+            </td>
+            <td>
+                <b style="font-size: 14px;padding:10px 25px 10px 25px;"> SR#:</b>
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.so_num, new { @id = "txtSRNum", @class = "form-control", @maxlength = "10", @style = "Font-weight:bold; width: 120px; height:30px;" })
+            </td>
+
+            <td>
+                <b style="font-size: 14px;padding:10px 25px 10px 25px;"> PO#:</b>
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { @id = "txtPONum", @class = "form-control", @maxlength = "20", @style = "Font-weight:bold; width: 150px; height:30px;" })
+            </td>
+
+            <td><b style="font-size: 14px;padding:10px 25px 10px 25px;"> Invoice#:</b></td>
+            <td>
+                @Html.TextBoxFor(model => model.InvoiceNumber, new { @id = "txtInvoiceNumber", @class = "form-control txtlbl", @maxlength = "10", @style = "Font-weight:bold; width: 140px; height:30px;" })
+            </td>
+            <td><b style="font-size: 14px;padding:10px 25px 10px 25px;"> Invoice Date</b></td>
+            <td>
+                @Html.TextBoxFor(model => model.InvoiceDate, new { @id = "txtInvoiceDate", @class = "form-control", @maxlength = "10", @style = "Font-weight:bold; width: 140px; height:30px;" })
+            </td>
+
+        </tr>
+        <tr>
+
+            <td><b style="font-size: 14px;padding:10px 25px 10px 25px;">Service Type</b></td>
+            <td>
+                @Html.DropDownListFor(model => model.service_code, new SelectList(Model.UPSServiceTypeList, "service_code", "service_name"), "---Select Service Type ---", new { @class = "form-control txtlbl" })
+            </td>
+            <td><b style="font-size: 14px;padding:10px 25px 10px 25px;"> Comments</b></td>
+
+            <td colspan="9">
+                @Html.TextBoxFor(model => model.Comments, new { @id = "txtComments", @class = "form-control", @maxlength = "200", @style = "Font-weight:bold; width: 1000px; height:30px;" })
+
+            </td>
+        </tr>
+
+    </table>
+</div>
+<br />
+<hr />
+<table align="center">
+    <tr>
+        <td>
+            <label id="lblErrorMessage" style="font-size:14px;color:orangered"></label>
+        </td>
+    </tr>
+</table>
+<div class="modal-header">
+    <center><h4 class="modal-title" id="myModalOrder" style="color:white;font-weight:800;">Order Details</h4></center>
+</div>
+
+<table cellpadding="0" id="grdOrderDtl" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+    <thead class="grid_backcolor" style="display:table; width:100%;  table-layout:fixed;border-spacing: 10px;">
+        <tr>
+            <th class="grid_header_backcolor">Sel</th>
+            <th class="grid_header_backcolor">Line#</th>
+            <th class="grid_header_backcolor">Style</th>
+            <th class="grid_header_backcolor">Color</th>
+            <th class="grid_header_backcolor">Size</th>
+            <th class="grid_header_backcolor">Item Name</th>
+            <th class="grid_header_backcolor">Ctn(s)</th>
+            <th class="grid_header_backcolor">PPk</th>
+            <th class="grid_header_backcolor">Price</th>
+            <th class="grid_header_backcolor">Length</th>
+            <th class="grid_header_backcolor">Width</th>
+            <th class="grid_header_backcolor">Depth</th>
+            <th class="grid_header_backcolor">Cube</th>
+            <th class="grid_header_backcolor">Weight</th>
+        </tr>
+    </thead>
+    <tbody style="display:block; max-height:500px; overflow-y:scroll;">
+        @for (int i = 0; i < Model.OrderDetails.Count; i++)
+        {
+            int l_int_cur_row = i + 1;
+            tot_ctns = tot_ctns + @Model.OrderDetails[i].ordr_ctns;
+            tot_cude = tot_cude + (@Model.OrderDetails[i].cube * @Model.OrderDetails[i].ordr_ctns);
+            tot_wgt = tot_wgt + (@Model.OrderDetails[i].wgt * @Model.OrderDetails[i].ordr_ctns);
+
+            <tr class="row-select" style="background-color:white;display:table; width:100%; table-layout:fixed;">
+                @if (@Model.OrderDetails[i].line_num > 0)
+                {
+                    <td style="text-align:center"><input class="checkbox" id="chkOrdrLine_@i" name="chkOrdrLine" disabled="disabled" checked type="checkbox" /></td>
+                }
+                else
+                {
+                    <td style="text-align:center"><input class="checkbox" id="chkOrdrLine_@i" disabled="disabled" name="chkOrdrLine" type="checkbox" /></td>
+                }
+                <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.OrderDetails[i].line_num, new { @id = "ordr_line_num_" + i, @disabled = "true", @style = "width:100px;text-align:left;background-color:white;" })</td>
+                <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.OrderDetails[i].itm_num, new { @id = "ordr_itm_num_" + i, @disabled = "true", @style = "width:100px;text-align:left;background-color:white;" })</td>
+                <td style="font-size:12px; color:black; font-weight:bold;"> @Html.TextBoxFor(model => model.OrderDetails[i].itm_color, new { @id = "ordr_itm_color_" + i, @disabled = "true", @style = "width:80px;text-align:left;background-color:white;" })</td>
+                <td style="font-size:12px; color:black; font-weight:bold;"> @Html.TextBoxFor(model => model.OrderDetails[i].itm_size, new { @id = "ordr_itm_size_" + i, @disabled = "true", @style = "width:60px;text-align:left;background-color:white;" })</td>
+                <td style="font-size:12px; color:black; font-weight:bold;">@Html.TextBoxFor(model => model.OrderDetails[i].itm_name, new { @id = "ordr_itm_name_" + i, @disabled = "true", @style = "width:120px;text-align:left;background-color:white;" })</td>
+                <td style="font-size:12px; color:black; font-weight:bold;"> @Html.TextBoxFor(model => model.OrderDetails[i].ordr_ctns, new { @id = "ordr_ordr_ctns_" + i, @style = "width:60px;text-align:left;background-color:lightyellow;" })</td>
+
+                <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.OrderDetails[i].ctn_qty, new { @id = "ordr_ctn_qty_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:white;" })</td>
+                <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.OrderDetails[i].sell_price, new { @id = "ordr_sell_price_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.OrderDetails[i].length, new { @id = "ordr_length_" + i, @rowId = @l_int_cur_row, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.OrderDetails[i].width, new { @id = "ordr_width_" + i, @rowId = @l_int_cur_row, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+
+                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.OrderDetails[i].depth, new { @class = "AlocCtns numericOnly", @id = "ordr_depth_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @rowId = @l_int_cur_row })</td>
+                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.OrderDetails[i].cube, new { @class = "AlocQty numericOnly", @id = "ordr_cube_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @rowId = @l_int_cur_row })</td>
+                <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Html.TextBoxFor(model => model.OrderDetails[i].wgt, new { @id = "ordr_wgt_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+
+            </tr>
+        }
+
+    </tbody>
+
+    <tfoot class="grid_backcolor" style="display:table; width:100%;  table-layout:fixed;border-spacing: 10px;">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="font-size:14px; color:black; font-weight:bold;  text-align:right">Summary</td>
+            <td style="font-size:12px; color:black; font-weight:bold;  text-align:center">@tot_ctns</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="font-size:12px; color:black; font-weight:bold;  text-align:center">@tot_cude</td>
+            <td style="font-size:12px; color:black; font-weight:bold;  text-align:center">@tot_wgt</td>
+        </tr>
+    </tfoot>
+
+</table>
+
+
+
+
+
+
+
+<table align="center">
+    <tr>
+        <td style="padding:10px 25px 10px 25px;text-align:center;vertical-align:top;border: 1px solid black">
+            <table align="center" ; style="border-collapse: separate; border-spacing: 0 1em;">
+                <tr>
+                    <td colspan="2" style="padding:10px 25px 10px 25px;text-align:center;font-size: 14px; color:blue;  Font-weight:bold;background-color:#d8f3f9;"> Ship From Address </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="padding:10px 25px 10px 25px;font-size: 14px;">Ship From#:</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipFrom.ShipFromName, new { @id = "txtShipFromName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Attention</b>
+                    </td>
+
+
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipFrom.ShipFromAttentionName, new { @id = "txtShipFromAttentionName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Address1</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipFrom.ShipFromAddress.AddressLine1, new { @id = "txtShipFromAddressLine1", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Address2</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipFrom.ShipFromAddress.AddressLine2, new { @id = "txtShipFromAddressLine2", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">City</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipFrom.ShipFromAddress.City, new { @id = "txtShipFromCity", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">State</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipFrom.ShipFromAddress.StateProvinceCode, new { @id = "txtShipFromStateProvinceCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Country</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipFrom.ShipFromAddress.CountryCode, new { @id = "txtShipFromCountryCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Postal Code</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipFrom.ShipFromAddress.PostalCode, new { @id = "txtShipFromPostalCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </td>
+        <td style="padding:10px 25px 10px 25px;text-align:center;vertical-align:top;border: 1px solid black">
+            <table align="center" ; style="border-collapse: separate; border-spacing: 0 1em;">
+
+                <tr>
+                    <td colspan="2" style="padding:10px 25px 10px 25px;text-align:center;font-size: 14px;color:blue;Font-weight:bold;background-color:#d8f3f9;"> Ship To Address </td>
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="padding:10px 25px 10px 25px;font-size: 14px;">Ship To#:</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToName, new { @id = "txtShipToName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Attention</b>
+                    </td>
+
+
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToAttentionName, new { @id = "txtShipToAttentionName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Address1</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToAddress.AddressLine1, new { @id = "txtShipToAddressLine1", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Address2</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToAddress.AddressLine2, new { @id = "txtShipToAddressLine2", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">City</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToAddress.City, new { @id = "txtShipToCity", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">State</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToAddress.StateProvinceCode, new { @id = "txtShipToStateProvinceCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Country</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToAddress.CountryCode, new { @id = "txtShipToCountryCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Postal Code</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToAddress.PostalCode, new { @id = "txtShipToPostalCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Phone Number</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSShipTo.ShipToPhone, new { @id = "txtShipToPhone", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+<br />
+<table align="center">
+    <tr>
+        <td style="padding:10px 25px 10px 25px;text-align:center;vertical-align:top;border: 1px solid black">
+            <table align="center" ; style="border-collapse: separate; border-spacing: 0 1em;">
+
+                <tr>
+                    <td colspan="2" style="padding:10px 25px 10px 25px;text-align:center;font-size: 14px;color:blue;Font-weight:bold;background-color:#d8f3f9;"> Shiper Address </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Shipper Number</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShipperNumber, new { @id = "txtShipperNumber", @class = "form-control", @maxlength = "30", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b style="padding:10px 25px 10px 25px;font-size: 14px;">Shiper:</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperName, new { @id = "txtShiperName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Attention</b>
+                    </td>
+
+
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperAttentionName, new { @id = "txtShiperAttentionName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Address1</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperAddress.AddressLine1, new { @id = "txtShiperAddressLine1", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Address2</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperAddress.AddressLine2, new { @id = "txtShiperAddressLine2", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">City</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperAddress.City, new { @id = "txtShiperCity", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">State</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperAddress.StateProvinceCode, new { @id = "txtShipererStateProvinceCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Country</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperAddress.CountryCode, new { @id = "txtShiperCountryCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Postal Code</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperAddress.PostalCode, new { @id = "txtShiperPostalCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Phone Number</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Shipper.ShiperPhone, new { @id = "txtShiperPhone", @class = "form-control", @maxlength = "30", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+
+
+
+            </table>
+        </td>
+        <td style="padding:10px 25px 10px 25px;text-align:center;vertical-align:top;border: 1px solid black">
+            <table align="center" ; style="border-collapse: separate; border-spacing: 0 1em;">
+
+                <tr>
+                    <td colspan="2" style="padding:10px 25px 10px 25px;text-align:center;font-size: 14px;color:blue;Font-weight:bold;background-color:#d8f3f9;"> Sold To Address </td>
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="padding:10px 25px 10px 25px;font-size: 14px;">Sold To#:</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToName, new { @id = "txtSoldToName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Attention</b>
+                    </td>
+
+
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToAttentionName, new { @id = "txtSoldToAttentionName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Address1</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToAddress.AddressLine1, new { @id = "txtSoldToAddressLine1", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Address2</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToAddress.AddressLine2, new { @id = "txtSoldToAddressLine2", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">City</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToAddress.City, new { @id = "txtSoldToCity", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">State</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToAddress.StateProvinceCode, new { @id = "txtSoldToStateProvinceCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+
+
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Country</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToAddress.CountryCode, new { @id = "txtSoldToCountryCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Postal Code</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToAddress.PostalCode, new { @id = "txtSoldToPostalCode", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-size: 14px;">Phone Number</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.UPSSoldTo.SoldToPhone, new { @id = "txtSoldToPhone", @class = "form-control", @maxlength = "30", @style = "Font-weight:bold; width: 400px; height:30px;" })
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+
+
+
+<script type="text/javascript">
+            $('#txtInvoiceDate').datetimepicker({
+                timepicker: false,
+                step: 15, format: 'm-d-Y'
+            });
+            $('#btnGenerateLabels').click(function () {
+                debugger
+
+
+                if ($('#txtCmpId').val() == '') {
+                    $('#txtCmpId').css('border-color', 'red');
+                    sweetAlert("", "Please Select Company", "");
+                    return false;
+
+                }
+
+                if ($('#so_num').val() == '') {
+                    $('#so_num').css('border-color', 'red');
+                    sweetAlert("", "Please Enter SR#", "");
+                    return false;
+
+                }
+
+                if ($('#txtPONum').val() == '') {
+                    $('#txtPONum').css('border-color', 'red');
+                    sweetAlert("", "Please Enter PO#", "");
+                    return false;
+
+                }
+                if ($('#txtInvoiceNumber').val() == '') {
+                    $('#txtInvoiceNumber').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Invoice Number", "");
+                    return false;
+
+                }
+
+                if ($('#txtInvoiceNumber').val() == '') {
+                    $('#txtInvoiceNumber').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Invoice Number", "");
+                    return false;
+
+                }
+
+                if ($('#txtInvoiceDate').val() == '') {
+                    $('#txtInvoiceDate').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Invoice Date ", "");
+                    return false;
+
+                }
+                if ($('#txtShipFromAddressLine1').val() == '') {
+                    $('#txtShipFromAddressLine1').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Ship From Address1", "");
+                    return false;
+
+                }
+
+                if ($('#txtShipFromCountryCode').val() == '') {
+                    $('#txtShipFromCountryCode').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Ship From Country code", "");
+                    return false;
+
+                }
+
+                if ($('#txtShipFromPostalCode').val() == '') {
+                    $('#txtShipFromPostalCode').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Ship From Postal Code", "");
+                    return false;
+
+                }
+
+                if ($('#txtShipToName').val() == '') {
+                    $('#txtShipToName').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Ship To Name", "");
+                    return false;
+
+                }
+
+                if ($('#txtShipToAddressLine1').val() == '') {
+                    $('#txtShipToAddressLine1').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Ship To Address1", "");
+                    return false;
+
+                }
+
+                if ($('#txtShipToCountryCode').val() == '') {
+                    $('#txtShipToCountryCode').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Ship To Country Code", "");
+                    return false;
+
+                }
+
+                if ($('#txtShipToPostalCode').val() == '') {
+                    $('#txtShipToPostalCode').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Ship To Postal Code", "");
+                    return false;
+
+                }
+                if ($('#txtShipToPhone').val() == '') {
+                    $('#txtShipToPhone').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Ship To Phone Number", "");
+                    return false;
+
+                }
+
+
+
+                if ($('#txtShipperNumber').val() == '') {
+                    $('#txtShipperNumber').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Shipper Number", "");
+                    return false;
+
+                }
+
+                if ($('#txtShiperName').val() == '') {
+                    $('#txtShiperName').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Shipper Name ", "");
+                    return false;
+
+                }
+
+                if ($('#txtShiperAddressLine1').val() == '') {
+                    $('#txtShiperAddressLine1').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Shipper Address Line", "");
+                    return false;
+
+                }
+
+                if ($('#txtShiperCountryCode').val() == '') {
+                    $('#txtShiperCountryCode').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Shipper Country Code", "");
+                    return false;
+
+                }
+                if ($('#txtShiperPostalCode').val() == '') {
+                    $('#txtShiperPostalCode').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Shipper Postal Code", "");
+                    return false;
+
+                }
+
+                if ($('#txtShiperPhone').val() == '') {
+                    $('#txtShiperPhone').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Shipper Phone", "");
+                    return false;
+
+                }
+
+                if ($('#txtSoldToName').val() == '') {
+                    $('#txtSoldToName').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Sold To Name ", "");
+                    return false;
+
+                }
+
+                if ($('#txtSoldToAddressLine1').val() == '') {
+                    $('#txtSoldToAddressLine1').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Sold To Address Line", "");
+                    return false;
+
+                }
+
+                if ($('#txtSoldToCountryCode').val() == '') {
+                    $('#txtSoldToCountryCode').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Sold To Country Code", "");
+                    return false;
+
+                }
+
+
+                if ($('#txtSoldToPostalCode').val() == '') {
+                    $('#txtSoldToPostalCode').css('border-color', 'red');
+                    sweetAlert("", "Please Enter Sold Postal Code", "");
+                    return false;
+
+                }
+
+                if ($('#txtSoldToPhone').val() == '') {
+                    $('#txtSoldToPhone').css('border-color', 'red');
+                    sweetAlert("", "Please Enter the Sold To Phone", "");
+                    return false;
+
+                }
+
+
+                else {
+
+
+                    var lintSelectedRecs = $("input[name='chkOrdrLine']:checked").length;
+
+
+                    if (lintSelectedRecs == 0) {
+                        swal("", "No Records selected.", "");
+                        return false;
+                    }
+                    var lstshipOdrerDtl = new Array();
+                    var lintTotLines = $("#lintTotLines").val();
+                    for (var i = 0; i < lintTotLines; i++)
+                    {
+                        var l_int_ordr_ctns = $("#ordr_ordr_ctns_" + i).val();
+                        if (l_int_ordr_ctns != 0)
+                        {
+
+                            var shipOdrerDtl =
+                                {
+                                    cmp_id: $("#txtCmpId").val(),
+                                    line_num: $("#ordr_line_num_" + i).val(),
+                                    itm_code: '',
+                                    itm_num: $("#ordr_itm_num_" + i).val(),
+                                    itm_color: $("#ordr_itm_color_" + i).val(),
+                                    itm_size: $("#ordr_itm_size_" + i).val(),
+                                    itm_name: $("#ordr_itm_name_" + i).val(),
+                                    ordr_ctns: $("#ordr_ordr_ctns_" + i).val(),
+                                    ctn_qty: $("#ordr_ctn_qty_" + i).val(),
+                                    qty_uom: '',
+                                    sell_price: $("#ordr_sell_price_" + i).val(),
+                                    sell_uom:'',
+                                    length: $("#ordr_length_" + i).val(),
+                                    width: $("#ordr_width_" + i).val(),
+                                    depth: $("#ordr_depth_" + i).val(),
+                                    cube: $("#ordr_cube_" + i).val(),
+                                    wgt: $("#ordr_wgt_" + i).val(),
+
+                                }
+                            lstshipOdrerDtl.push(shipOdrerDtl);
+                        }
+                    }
+
+                    var UPSGsSecurity = {
+                        AccessLicenseNumber: $("#AccessLicenseNumber").val(),
+                        Username: $("#Username").val(),
+                        Password: $("#Password").val(),
+                    }
+
+                    var ShipFromAddress = {
+                        AddressLine1: $("#txtShipFromAddressLine1").val(),
+                        AddressLine2: $("#txtShipFromAddressLine2").val(),
+                        City: $("#txtShipFromCity").val(),
+                        StateProvinceCode: $("#txtShipFromStateProvinceCode").val(),
+                        CountryCode: $("#txtShipFromCountryCode").val(),
+                        PostalCode: $("#txtShipFromPostalCode").val(),
+
+                    }
+
+                    var UPSShipFrom = {
+                        ShipFromName: $("#txtShipFromName").val(),
+                        ShipFromAttentionName: $("#txtShipFromAttentionName").val(),
+                        ShipFromAddress: ShipFromAddress,
+                        ShipFromPhone : '',
+                    }
+
+
+                    var ShipToAddress = {
+                        AddressLine1: $("#txtShipToAddressLine1").val(),
+                        AddressLine2: $("#txtShipToAddressLine2").val(),
+                        City: $("#txtShipToCity").val(),
+                        StateProvinceCode: $("#txtShipToStateProvinceCode").val(),
+                        CountryCode: $("#txtShipToCountryCode").val(),
+                        PostalCode: $("#txtShipToPostalCode").val(),
+
+                    }
+
+                    var UPSShipTo = {
+                        ShipToName: $("#txtShipToName").val(),
+                        ShipToAttentionName: $("#txtShipToAttentionName").val(),
+                        ShipToAddress: ShipToAddress,
+                        ShipToPhone: $("#txtShipToPhone").val(),
+                    }
+
+                    var SoldToAddress = {
+                        AddressLine1: $("#txtSoldToAddressLine1").val(),
+                        AddressLine2: $("#txtSoldToAddressLine2").val(),
+                        City: $("#txtSoldToCity").val(),
+                        StateProvinceCode: $("#txtSoldToStateProvinceCode").val(),
+                        CountryCode: $("#txtSoldToCountryCode").val(),
+                        PostalCode: $("#txtSoldToPostalCode").val(),
+
+                    }
+
+                    var UPSSoldTo = {
+                        SoldToName: $("#txtSoldToName").val(),
+                        SoldToAttentionName: $("#txtSoldToAttentionName").val(),
+                        SoldToAddress: ShipToAddress,
+                        SoldToPhone: $("#txtSoldToPhone").val(),
+                    }
+
+
+                    var ShiperAddress = {
+                        AddressLine1: $("#txtShiperAddressLine1").val(),
+                        AddressLine2: $("#txtShiperAddressLine2").val(),
+                        City: $("#txtShiperCity").val(),
+                        StateProvinceCode: $("#txtShipererStateProvinceCode").val(),
+                        CountryCode: $("#txtShiperCountryCode").val(),
+                        PostalCode: $("#txtShiperPostalCode").val(),
+
+                    }
+
+                    var UPSShipper = {
+                        ShipperNumber: $("#txtShipperNumber").val(),
+                        ShiperName: $("#txtShiperName").val(),
+                        ShiperAttentionName: $("#txtShiperAttentionName").val(),
+                        ShiperAddress: ShiperAddress,
+                        ShiperPhone: $("#txtShiperPhone").val()
+                    }
+                    var SRNum = $('#txtSRNum').val();
+                    var InvoiceNumber = $('#txtInvoiceNumber').val();
+                    var InvoiceDate = $('#txtInvoiceDate').val();
+                    var PurchaseOrderNumber ='';
+                    var TermsOfShipment ='';
+                    var ReasonForExport = '';
+                    var Comments = $('#txtComments').val();
+                    var ServiceCode = $('#service_code').val();
+                    debugger;
+                    $.ajax({
+                        url: '@Url.Action("UPSGenerateLabels", "OutboundInq")',
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        dataType: "json",
+                        data: JSON.stringify({
+                            "objUPSGsSecurity": UPSGsSecurity,
+                            "objUPSShipFrom": UPSShipFrom,
+                            "objUPSShipTo": UPSShipTo,
+                            "objUPSShipper": UPSShipper,
+                            "objUPSSoldTo": UPSSoldTo,
+                            "lstshipOdrerDtl": lstshipOdrerDtl,
+                            "ServiceCode": ServiceCode,
+                            "SRNum":SRNum,
+                            "InvoiceNumber": InvoiceNumber,
+                            "InvoiceDate": InvoiceDate,
+                            "PurchaseOrderNumber": PurchaseOrderNumber,
+                            "TermsOfShipment": TermsOfShipment,
+                            "ReasonForExport": ReasonForExport,
+                            "Comments": Comments,
+
+                        }),
+                        success: function (data) {
+                            debugger;
+                            var lstrStatus = data.substring(0, 5);
+
+                            if (lstrStatus == 'ERROR') {
+                      
+                                document.getElementById('lblErrorMessage').innerHTML = data;
+                                return false;
+                            }
+                            else
+                            {
+                                var ext = data.split('.').pop();
+                                var fileNameIndex = data.lastIndexOf("/") + 1;
+                                var filename = data.substr(fileNameIndex);
+                                window.open('@Url.Action("DocumentUpload")?path=' + data + '&ext=' + ext + '&filename=' + filename, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                                $("#ajaxLoadingUPSLabelPrint").hide();
+                                sweetAlert("", "Label Printed Successfully", "");
+                                $('#myModalUPSLabelPrint').modal('hide');
+                            }
+
+
+
+                        }
+                        ,
+                        failure: function (data) {
+                            debugger;
+
+                            document.getElementById('lblErrorMessage').innerHTML = data;
+                        },
+                        error: function (data) {
+                            debugger;
+                          
+                            document.getElementById('lblErrorMessage').innerHTML = data;
+
+                        }
+                    });
+                }
+            })
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

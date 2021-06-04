@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DBF28422-06CF-4CDA-B8DB-978669690A41}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GsEPWv8_5_MVC.Business</RootNamespace>
+    <AssemblyName>GsEPWv8-5-MVC.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Reference\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GsEPWv8-5-MVC.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Reference\GsEPWv8-5-MVC.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GsEPWv8-5-MVC.Data, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Reference\GsEPWv8-5-MVC.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="GsEPWv8-5-MVC.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Reference\GsEPWv8-5-MVC.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Implementation\BillingInquiryService.cs" />
+    <Compile Include="Implementation\BinMasterService.cs" />
+    <Compile Include="Implementation\CarrierService.cs" />
+    <Compile Include="Implementation\CompanyMasterService.cs" />
+    <Compile Include="Implementation\CompanyService.cs" />
+    <Compile Include="Implementation\CustMasterService.cs" />
+    <Compile Include="Implementation\DailyFlashExceptionReportService.cs" />
+    <Compile Include="Implementation\DashBoardService.cs" />
+    <Compile Include="Implementation\DataUpdateService.cs" />
+    <Compile Include="Implementation\DocumentUploadService.cs" />
+    <Compile Include="Implementation\EcomBinScanOutService.cs" />
+    <Compile Include="Implementation\EcomLinkService.cs" />
+    <Compile Include="Implementation\eComSR940Service.cs" />
+    <Compile Include="Implementation\EmailService.cs" />
+    <Compile Include="Implementation\EmailSetupService.cs" />
+    <Compile Include="Implementation\ETAInquiryService.cs" />
+    <Compile Include="Implementation\ExceptionReportsService.cs" />
+    <Compile Include="Implementation\ForgotPasswordService.cs" />
+    <Compile Include="Implementation\IB943UploadFileService.cs" />
+    <Compile Include="Implementation\IBRcvdDataUpdateService.cs" />
+    <Compile Include="Implementation\InboundInquiryService.cs" />
+    <Compile Include="Implementation\InboundReceivingService.cs" />
+    <Compile Include="Implementation\InboundReportService.cs" />
+    <Compile Include="Implementation\InvStkAdjService.cs" />
+    <Compile Include="Implementation\ItemMasterService.cs" />
+    <Compile Include="Implementation\LabelPrintService.cs" />
+    <Compile Include="Implementation\LocationMasterService.cs" />
+    <Compile Include="Implementation\LoginService.cs" />
+    <Compile Include="Implementation\LookUpService.cs" />
+    <Compile Include="Implementation\MailConfigService.cs" />
+    <Compile Include="Implementation\OB940ChubUploadFileService.cs" />
+    <Compile Include="Implementation\OB940UploadFileService.cs" />
+    <Compile Include="Implementation\OBAllocationService.cs" />
+    <Compile Include="Implementation\OBLoadEntryUploadFileService.cs" />
+    <Compile Include="Implementation\OBSRLoadEntryService.cs" />
+    <Compile Include="Implementation\OrderSummaryService.cs" />
+    <Compile Include="Implementation\OutboundInqService.cs" />
+    <Compile Include="Implementation\OutboundShipInqService.cs" />
+    <Compile Include="Implementation\OutboundShipRptService.cs" />
+    <Compile Include="Implementation\OutboundShipSchedulingInquiryService.cs" />
+    <Compile Include="Implementation\PickService.cs" />
+    <Compile Include="Implementation\PriceuomService.cs" />
+    <Compile Include="Implementation\RateMasterService.cs" />
+    <Compile Include="Implementation\StockAsOfDateService.cs" />
+    <Compile Include="Implementation\StockChangeService.cs" />
+    <Compile Include="Implementation\StockInquiryService.cs" />
+    <Compile Include="Implementation\UPSShipmentService.cs" />
+    <Compile Include="Implementation\UserAccountService.cs" />
+    <Compile Include="Implementation\UserProfileService.cs" />
+    <Compile Include="Implementation\VasEntryService.cs" />
+    <Compile Include="Implementation\VasInquiryService.cs" />
+    <Compile Include="Implementation\WhsMasterService.cs" />
+    <Compile Include="Interface\IBillingInquiryService.cs" />
+    <Compile Include="Interface\IBinMasterService.cs" />
+    <Compile Include="Interface\ICarrierService.cs" />
+    <Compile Include="Interface\ICompanyMasterService.cs" />
+    <Compile Include="Interface\ICompanyService.cs" />
+    <Compile Include="Interface\ICustMasterService.cs" />
+    <Compile Include="Interface\IDailyFlashExceptionReportService.cs" />
+    <Compile Include="Interface\IDashBoardService.cs" />
+    <Compile Include="Interface\IDataUpdateService.cs" />
+    <Compile Include="Interface\IDocumentUploadService.cs" />
+    <Compile Include="Interface\IEcomBinScanOutService.cs" />
+    <Compile Include="Interface\IEcomLinkService.cs.cs" />
+    <Compile Include="Interface\IeComSR940Service.cs" />
+    <Compile Include="Interface\IEmailService.cs" />
+    <Compile Include="Interface\IEmailSetupService.cs" />
+    <Compile Include="Interface\IETAInquiryService.cs" />
+    <Compile Include="Interface\IExceptionReportsService.cs" />
+    <Compile Include="Interface\IForgotPasswordService.cs" />
+    <Compile Include="Interface\IIB943UploadFileService.cs" />
+    <Compile Include="Interface\IIBRcvdDataUpdateService.cs" />
+    <Compile Include="Interface\IInboundInquiryService.cs" />
+    <Compile Include="Interface\IInboundReceivingService.cs" />
+    <Compile Include="Interface\IInboundReportService.cs" />
+    <Compile Include="Interface\IInvStkAdjService.cs" />
+    <Compile Include="Interface\IItemMasterService.cs" />
+    <Compile Include="Interface\ILabelPrintService.cs" />
+    <Compile Include="Interface\ILocationMasterService.cs" />
+    <Compile Include="Interface\ILoginService.cs" />
+    <Compile Include="Interface\ILookUpService.cs" />
+    <Compile Include="Interface\IMailConfigService.cs" />
+    <Compile Include="Interface\IOB940ChubUploadFileService.cs" />
+    <Compile Include="Interface\IOB940UploadFileService.cs" />
+    <Compile Include="Interface\IOBAllocationService.cs" />
+    <Compile Include="Interface\IOBLoadEntryUploadFileService.cs" />
+    <Compile Include="Interface\IOBSRLoadEntryService.cs" />
+    <Compile Include="Interface\IOrderSummaryService.cs" />
+    <Compile Include="Interface\IOutboundInqService.cs" />
+    <Compile Include="Interface\IOutboundShipInqService.cs" />
+    <Compile Include="Interface\IOutboundShipRptService.cs" />
+    <Compile Include="Interface\IOutboundShipSchedulingInquiryService.cs" />
+    <Compile Include="Interface\IPickService.cs" />
+    <Compile Include="Interface\IPriceuomService.cs" />
+    <Compile Include="Interface\IRateMasterService.cs" />
+    <Compile Include="Interface\IStockAsOfDateService.cs" />
+    <Compile Include="Interface\IStockChangeService.cs" />
+    <Compile Include="Interface\IStockInquiryService.cs" />
+    <Compile Include="Interface\IUPSShipmentService.cs" />
+    <Compile Include="Interface\IUserAccountService.cs" />
+    <Compile Include="Interface\IUserProfileService.cs" />
+    <Compile Include="Interface\IVasEntryService.cs" />
+    <Compile Include="Interface\IVasInquiryService.cs" />
+    <Compile Include="Interface\IWhsMasterService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

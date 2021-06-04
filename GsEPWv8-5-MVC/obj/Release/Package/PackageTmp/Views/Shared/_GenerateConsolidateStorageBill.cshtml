@@ -1,0 +1,598 @@
+﻿
+
+@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+@{
+    var count = 0;
+    var totalamount = 0;
+}
+@*//CR2018-03-10-001 Added By Nithya For Scrren Not Goto Inbound inquiry*@
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+
+    .sweet-alert {
+        background-color: #8cd6f7; /*//CR20180531 Added by nithya*/
+        width: 478px;
+        padding: 17px;
+        border-radius: 5px;
+        text-align: center;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -256px;
+        margin-top: -200px;
+        overflow: hidden;
+        display: none;
+        z-index: 2000;
+    }
+
+    div#ajaxLoadingBillStrg {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+@*@Html.HiddenFor(model => model.whs_id)*@
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.js"></script>
+<div id="ajaxLoadingBillStrg" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+@Html.HiddenFor(model => model.DocumentdateFrom)
+@Html.HiddenFor(model => model.DocumentdateTo)
+@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+@Html.HiddenFor(model => model.screentitle)
+@Html.HiddenFor(model => model.bill_doc_id)
+<center>
+
+    <div class="modal-header" style="width: 100%;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Generate Storage Bill</h4>
+        <button type="button" id="btnBLStorageClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+    </div>
+
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-md-10 col-sm-10 col-xs-10">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;">
+                                <label><b class="Lblmanual">Cust of</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -2%;width:36%;">
+                                @Html.DropDownListFor(model => model.cust_of_cmpid, new SelectList(Model.ListCustofCompanyPickDtl, "cust_of_cmpid", "cust_of_cmpname"), new { @class = "form-control txtlbl" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;WIDTH: 9%;">
+                                <label><b class="Lblmanual">Cust Id</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;width:36%;">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl" })
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.ib_doc_id != "" && Model.ib_doc_id != null)
+                    {
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                                    <label><b class="Lblmanual">Inv Print Date</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -1%;">
+                                    @Html.TextBoxFor(model => model.bill_print_dt, "{0:MM/dd/yyyy}", new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                                <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
+                                    <label><b class="Lblmanual">IB Doc Id</b></label>
+                                </div>
+                                <div class="col-xs-2" style="margin-left: -1%;">
+                                    @Html.TextBoxFor(model => model.ib_doc_id, new { @id = "ibdocid", @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                                <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                                </div>
+                                <div class="col-xs-2" style="margin-left: 10px;">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width: 11%;margin-left: -3%;">
+                                <label><b class="Lblmanual">Period Fm</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;width:19%">
+                                @Html.TextBoxFor(model => model.bill_print_dt, "{0:MM/dd/yyyy}", new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width:4%;margin-left: -2%;">
+                                <label><b class="Lblmanual">To</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.bill_pd_fm, "{0:MM/dd/yyyy}", new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width:11%;">
+                                <label><b class="Lblmanual">As Of Date</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left:-19px;">
+                                @Html.TextBoxFor(model => model.bill_as_of_date, "{0:MM/dd/yyyy}", new { @class = "form-control txtlbl", @maxlength = "50", @id = "Strgbill_as_of_date" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 15%;margin-left: -6%;">
+                                <label><b class="Lblmanual">Strg BillType</b></label>
+                            </div>
+                            <div class="col-xs-2" style="width: 19%;margin-left: -2%;">
+                                @Html.TextBoxFor(model => model.RateType, new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+                            <div class="col-xs-5">
+                                <button type="button" id="btnConsolidatedStrgSearch" class="btn_search">Search </button>
+                                <button type="reset" id="btnClear" class="btn-Clear">Clear </button>
+                                <button type="button" id="btnPostStorageBill" class="btn_NewEntry" style="display:none">Generate Storage Bill </button>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2">
+                    <div class="container" >
+                        <fieldset>
+                            <legend style="text-align:center">Report Selection</legend>
+                            <table>
+                                <tr>
+                                    <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="InvoiceStrgSummary" name="radio1" checked /><b> Bill Invoice Sumary</b></td>
+                                    <td style="padding-left: 20px;font-size: 1.2em;"></td>
+                                </tr>
+                            </table>
+                            <br />
+                            <table>
+                                <tr>
+                                    <td>
+                                        <b style="color:blue;font-size: 12px;">Format</b>
+                                        <select id="Formatrcvddtlid" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right" data-toggle="dropdown">
+                                            <option>PDF</option>
+                                            <option>XLS</option>
+                                            <option>XLSDATA</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                                        <select id="Modercvddtlid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                            <option>VIEW</option>
+                                            <option>EMAIL</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button type="button" id="btnStrgBill" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</center>
+<div id="ShowStorageBillGrid" class="box-header" >
+    <div class="box-body">
+        <div>
+            <table>
+                <tr>
+                    <td style="width:25%;">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Records: @count
+                        </span>
+
+                    </td>
+                  
+                    <td>
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Invoice Amount:
+                        </span>
+                    </td>
+                    <td style="width: 64%;">
+                        <label class="totalCount" style="text-align:left">
+                            $@totalamount
+                        </label>
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table id="GrdConsolidatedStrgBillingInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        @*<th class="grid_header_backcolor" style="font-size:11px;width:3%;">Print<input class="checkbox" id="ckbCheckAll" name="tblcheckbox4" type="checkbox" /></th>*@
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Style</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Color</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Size</th>
+                        @*<th class="grid_header_backcolor" style="font-size:11px;width:17%;">Rate Type</th>*@
+                        @*<th class="grid_header_backcolor" style="font-size:11px;width:5%;">Rate ID</th>*@
+                        <th class="grid_header_backcolor" style="font-size:11px;width:12%;">PPK</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:12%;">Avail Qty</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:12%;">Loc</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:12%;">Ctns</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Cube</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Weight</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Rate</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6%;">Amount</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 1050px; height: 650px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" style="margin-top: -38px;" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="load" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script>
+
+
+    debugger
+    //$(".sweet-alert").css('background-color', '#d0cbcb');
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+
+            $(this).val("");
+        });
+    });
+    $('#Strgbill_as_of_date').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm/d/Y'
+    });
+    //$('#bill_print_dt').datetimepicker({
+    //    timepicker: false,
+    //    step: 15, format: 'm/d/Y'
+    //});
+    $('#bill_pd_fm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm/d/Y'
+    });
+    $('#bill_print_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm/d/Y'
+    });
+    $("#btnBLStorageClose").click(function () {
+        debugger
+        var screentitle = $('#screentitle').val();
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        //var p_str_Bill_doc_id = $('#ibdocid').val();
+        var p_str_Bill_doc_id = $('#bill_doc_id').val();
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+          function (isConfirm) {
+              debugger
+              if (isConfirm) {
+
+              }
+
+              else {
+                  debugger
+                  $('#myModalConsolidateStorageBill').modal('hide')
+                  $.ajax({
+
+                      type: "get",
+                      url: "/BillingInquiry/BillingInquiryDtl",
+                      data: {
+                          "p_str_cmp_id": p_str_cmp_id,
+                          "p_str_Bill_doc_id": p_str_Bill_doc_id
+                      },
+                      datatype: 'html',
+                      success: function (e) {
+                          debugger
+                          $("#ajaxloading").hide();
+
+                          $('#showgrid').html("");
+                          $('#showgrid').html(e);
+                      },
+                  })
+              }
+
+          }
+          )
+    });
+    debugger
+    $("#btnConsolidatedStrgSearch").click(function () {
+        var cmp_id = $("#new_cmp_id").val();
+        $('#btnPostStorageBill').show();//CR20180731-001 Added By Nithya
+        if (cmp_id == "") {
+            //not2("Please SELECT Cmp_id.")
+            sweetAlert("", "Please SELECT Cmp_id.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            debugger
+
+            var p_str_cmp_id = $("#new_cmp_id").val();
+            var p_dt_bill_from_dt = $('#bill_print_dt').val();
+            var p_dt_bill_to_dt = $('#bill_pd_fm').val();
+            var p_str_cust_id = $('#cust_of_cmpid').val();
+            var p_str_bill_as_of_dt = $('#Strgbill_as_of_date').val();
+            $("#ajaxLoadingBillStrg").show();
+            $.ajax({
+                type: "GET",
+                url: "/BillingInquiry/GetSearchConsolidateStorageInqDetails",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoadingBillStrg").hide();
+                    $('#ShowStorageBillGrid').html("");
+                    $('#ShowStorageBillGrid').html(e);
+                },
+            })
+
+        }
+    });
+
+    $(function () {
+        debugger
+        $('#new_cmp_id').change(function () {
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "BillingInquiry")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+
+    });
+
+</script>
+<script>
+    $(function () {
+        $('#GrdConsolidatedStrgBillingInq').DataTable({
+            "pageLength": 25,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        });
+        $('#GrdConsolidatedStrgBillingInq_paginate').hide();
+    })
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+        $("#ckbCheckAll").click(function () {
+            $(".checkbox").prop('checked', $(this).prop('checked'));
+        });
+
+        $(".checkbox").change(function () {
+            if (!$(this).prop("checked")) {
+                $("#ckbCheckAll").prop("checked", true);
+            }
+        });
+    });
+</script>
+<script>
+    $("#btnPostStorageBill").click(function (e) {
+        debugger
+
+        var p_str_cust_id = $('#new_cmp_id').val();
+        var p_str_Bill_doc_id = "";
+        var p_str_doc_dt_Fr = $('#bill_print_dt').val();
+        var p_str_doc_dt_To = $('#Strgbill_as_of_date').val();
+        var p_str_Bill_type = "STRG";
+        var type = "PDF";
+        var p_str_rpt_status = "OPEN";
+        var p_str_print_dt = $('#bill_print_dt').val();
+        var p_str_cmp_id  = $('#cust_of_cmpid').val();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/BillingInquiry/SaveStorageConsolidateBill")',
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_type": p_str_Bill_type, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_doc_dt_Fr": p_str_doc_dt_Fr,
+                "p_str_doc_dt_To": p_str_doc_dt_To, "p_str_cust_id": p_str_cust_id, "p_str_print_dt": p_str_print_dt
+            },
+            dataType: 'html',
+            success: function (e) {
+                var p_str_bill_doc_id = JSON.parse(e);
+                //var p_str_bill_doc_id = $('#bill_doc_id').val();
+                //var p_str_bill = $('#bill_doc_id').val();
+                var p_str_bill_doc_type = "STRG";
+                sweetAlert("", "Storage BillDetails are Saved", "");
+                window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cust_id + '&p_str_bill_doc_id=' + p_str_bill_doc_id + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                                         , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+
+                //window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                // , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+
+            },
+
+        })
+    })
+</script>
+<script>
+    $("#btnStrgBill").click(function () {
+        var getli = $('#Formatrcvddtlid').find(":selected").text();
+        var getli2 = $('#Modercvddtlid').find(":selected").text();
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+            var var_name = $("input[name='radio1']:checked").val();
+            var cmp_id = $("#new_cmp_id").val();
+            $('#btnPostStorageBill').show();//CR20180731-001 Added By Nithya
+            if (cmp_id == "") {
+                //not2("Please SELECT Cmp_id.")
+                sweetAlert("", "Please SELECT Cmp_id.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                debugger
+
+                var p_str_cmp_id = $("#new_cmp_id").val();
+                var p_dt_bill_from_dt = $('#bill_print_dt').val();
+                var p_dt_bill_to_dt = $('#bill_pd_fm').val();
+                var p_str_cust_id = $('#cust_of_cmpid').val();
+                var p_str_bill_as_of_dt = $('#Strgbill_as_of_date').val();
+                var Type = "PDF";
+                window.open('GenerateConsolidateStrgShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_dt_bill_from_dt=' + p_dt_bill_from_dt + '&p_dt_bill_to_dt=' + p_dt_bill_to_dt + '&p_str_cust_id=' + p_str_cust_id + '&p_str_bill_as_of_dt=' + p_str_bill_as_of_dt + '&Type=' + Type
+                                        , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+            }
+        }
+
+        if(getli == 'XLS' && getli2 == 'VIEW')
+        {
+            var cmp_id = $("#new_cmp_id").val();
+            if (cmp_id == "") {
+                //not2("Please SELECT Cmp_id.")
+                sweetAlert("", "Please SELECT Cmp_id.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                debugger
+                var p_str_cmp_id = $("#new_cmp_id").val();
+                var p_dt_bill_from_dt = $('#bill_print_dt').val();
+                var p_dt_bill_to_dt = $('#bill_pd_fm').val();
+                var p_str_cust_id = $('#cust_of_cmpid').val();
+                var p_str_bill_as_of_dt = $('#Strgbill_as_of_date').val();
+                var Type = "XLS";
+                window.location.replace('GenerateConsolidateStrgShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_dt_bill_from_dt=' + p_dt_bill_from_dt + '&p_dt_bill_to_dt=' + p_dt_bill_to_dt + '&p_str_cust_id=' + p_str_cust_id + '&p_str_bill_as_of_dt=' + p_str_bill_as_of_dt+'&Type='+Type)
+            }
+        }
+        if (getli == 'XLSDATA' && getli2 == 'VIEW') {
+            var cmp_id = $("#new_cmp_id").val();
+            if (cmp_id == "") {
+                //not2("Please SELECT Cmp_id.")
+                sweetAlert("", "Please SELECT Cmp_id.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                debugger
+                var p_str_cmp_id = $("#new_cmp_id").val();
+                var p_dt_bill_from_dt = $('#bill_print_dt').val();
+                var p_dt_bill_to_dt = $('#bill_pd_fm').val();
+                var p_str_cust_id = $('#cust_of_cmpid').val();
+                var p_str_bill_as_of_dt = $('#Strgbill_as_of_date').val();
+                var Type = "XLSDATA";
+                window.location.replace('GenerateConsolidateStrgShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_dt_bill_from_dt=' + p_dt_bill_from_dt + '&p_dt_bill_to_dt=' + p_dt_bill_to_dt + '&p_str_cust_id=' + p_str_cust_id + '&p_str_bill_as_of_dt=' + p_str_bill_as_of_dt + '&Type=' + Type)
+            }
+        }
+        if (getli == 'PDF' && getli2 == 'EMAIL') {
+            var StrgBillemailBackURL = '/BillingInquiry/BillStrgSummaryEmailRpt';
+            var options = { "backdrop": "static", keyboard: true };
+            var var_name = $("input[name='radio1']:checked").val();
+            var cmp_id = $("#new_cmp_id").val();
+            if (cmp_id == "") {
+                //not2("Please SELECT Cmp_id.")
+                sweetAlert("", "Please SELECT Cmp_id.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                debugger
+
+                var p_str_cmp_id = $("#new_cmp_id").val();
+                var p_dt_bill_from_dt = $('#bill_print_dt').val();
+                var p_dt_bill_to_dt = $('#bill_pd_fm').val();
+                var p_str_cust_id = $('#cust_of_cmpid').val();
+                var p_str_bill_as_of_dt = $('#Strgbill_as_of_date').val();
+                var Type = "PDF";
+
+                $.ajax({
+                    type: "GET",
+                    url: StrgBillemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id,
+                        "p_str_bill_as_of_dt": p_str_bill_as_of_dt, "Type": Type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        $("#ajaxLoadingInout").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+                    },
+                    error: function () {
+                        $("#ajaxLoadingInout").hide();         //CR_3PL_MVC_IB_2018_0317_002 Added By Meera 17-03-2018
+                        swal("Dynamic content load failed.");
+                        $("#ajaxLoadingInout").hide();
+                    }
+                });
+                //window.open('GenerateConsolidateStrgShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_dt_bill_from_dt=' + p_dt_bill_from_dt + '&p_dt_bill_to_dt=' + p_dt_bill_to_dt + '&p_str_cust_id=' + p_str_cust_id + '&p_str_bill_as_of_dt=' + p_str_bill_as_of_dt + '&Type=' + Type
+                //                        , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+            }
+        }
+    });
+</script>

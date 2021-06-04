@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Crystal reports in MVC 4";
+}
+<style>
+    .reportsDiv {
+        border: 1px #000 solid;
+        min-height: 900px;
+        width: 800px;
+    }
+</style>
+<h2>Crystal reports in MVC 4</h2>
+<h3>Click “Run Reports” button</h3>
+<div>
+    <div>
+        <button class="btn yellow" style="width: 253px;" id="RunReportBtn" onclick="RunReport()">
+            Run Reports
+
+        </button>
+        <br /><br />
+    </div>
+    <div>
+        <div class="reportsDiv" id="reportsDiv">
+            <button type="submit" id="btnImport" class=" btn_upload">Import </button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function RunReport() {
+        $.ajax({
+            url: '/StockInquiry/ShowReport',
+            type: 'GET',
+            success: function (response) {
+                //debugger;
+                if (response.result == "-2") {
+                    alert('Error during display of report' );
+                }
+                else {
+                    $('#reportsDiv').load('StockInquiry/RefreshReport');
+                }
+            },
+            error: function (xhr, status, error) {
+                displayErrorMessage('Error during display of report');
+            }
+        });
+    }
+
+</script>
+<script src="http://code.jquery.com/jquery.min.js"></script>

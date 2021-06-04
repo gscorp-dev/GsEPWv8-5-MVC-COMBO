@@ -1,0 +1,463 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InvStkAdjModel
+@{
+   var l_str_adj_reason = Model.objInvStkAdjAdd.adj_reason;
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+</style>
+
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inventory Stock Adjustment </h4>
+    <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+
+    <button type="button" id="btnStkAdjSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+</div>
+<div class="box-body">
+    <div class="box-header">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-1" style="width: 8%;text-align: right;">
+                    <label class="Lblmanual">Cmp Id</label>
+                </div>
+                <div class="col-xs-4">
+                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "adj_cmp_id",  @class = "form-control txtlbl", @style = "width:400px;background-color:lightyellow;" })
+                </div>
+                
+            </div>
+        </div>
+        <br />
+        <div id="divStkAdjDtl">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-2" style="text-align: right;">
+                        <label><b class="Lblmanual">Style</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.objInvStkAdjAdd.itm_num, new { @id = "adj_cur_itm_num", @class = "form-control txtlbl", @maxlength = "20", @disabled = "true", @style = "width:250px;" })
+                    </div>
+                    <div class="col-xs-2" style="text-align: right; ">
+                        <label><b class="Lblmanual">Color</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.objInvStkAdjAdd.itm_color, new { @id = "adj_cur_itm_color", @class = "form-control txtlbl", @maxlength = "20", @disabled = "true", @style = "width:250px;" })
+                    </div>
+                    <div class="col-xs-2" style="text-align: right; ">
+                        <label><b class="Lblmanual">Size</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.objInvStkAdjAdd.itm_size, new { @id = "adj_cur_itm_size", @class = "form-control txtlbl", @maxlength = "20", @disabled = "true", @style = "width:200px;" })
+                        @Html.HiddenFor(model => model.objInvStkAdjAdd.itm_code, new { @id = "adj_cur_itm_code" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-2" style="text-align: right;">
+                        <label><b class="Lblmanual">Item Name</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.objInvStkAdjAdd.itm_name, new { @id = "adj_cur_itm_name", @class = "form-control txtlbl", @maxlength = "75", @disabled = "true", @style = "width:250px;" })
+                    </div>
+                    <div class="col-xs-2" style="text-align: right; ">
+                        <label><b class="Lblmanual">Lot#</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.objInvStkAdjAdd.lot_id, new { @id = "adj_cur_lot_id", @class = "form-control txtlbl", @maxlength = "10", @disabled = "true", @style = "width:250px;" })
+                    </div>
+                    <div class="col-xs-2" style="text-align: right; ">
+                        <label><b class="Lblmanual">PO#</b></label>
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.TextBoxFor(model => model.objInvStkAdjAdd.po_num, new { @id = "adj_cur_po_num", @class = "form-control txtlbl", @maxlength = "20", @disabled = "true", @style = "width:200px;" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <table>
+            <tr>
+                <td style="width:22%;text-align:center;">
+                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                        Stock Adjustment Details
+                    </span>
+                  </td>
+
+
+            </tr>
+        </table>
+        <br />
+        <hr />
+        <br />
+        
+        <div class="row">
+            <div class="col-xs-12" >
+                <div class="col-xs-3" style="text-align: right;">
+                    <label><b class="Lblmanual" >Current Location</b></label>
+                </div>
+                <div class="col-xs-2" >
+                    @Html.TextBoxFor(model => model.objInvStkAdjAdd.cur_loc_id, new { @id = "adj_cur_loc_id", @class = "form-control txtlbl", @maxlength = "10", @style = "width:250px;" })
+                </div>
+                <div class="col-xs-3" style="text-align: right; ">
+                    <label><b class="Lblmanual">New Location</b></label>
+                </div>
+                <div class="col-xs-2" >
+                    @Html.TextBoxFor(model => model.objInvStkAdjAdd.new_loc_id, new { @id = "adj_new_loc_id", @class = "form-control txtlbl VLDTITMFILD ", @maxlength = "10", @style = "width:250px;" })
+                </div>
+                <div class="col-xs-2" style="text-align: right;">
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-xs-12" >
+                 <div class="col-xs-3" style="text-align: right;">
+                    <label><b class="Lblmanual">Current CTN(s)</b></label>
+                </div>
+                <div class="col-xs-2" >
+                    @Html.TextBoxFor(model => model.objInvStkAdjAdd.cur_avail_ctn, new { @id = "adj_cur_avail_ctn", @class = "form-control txtlbl numericOnly ", @maxlength = "10", @style = "width:250px;" })
+                </div>
+                <div class="col-xs-3" style="text-align: right; ">
+                    <label><b class="Lblmanual">New CTN(s)</b></label>
+                </div>
+                <div class="col-xs-2" >
+                    @Html.TextBoxFor(model => model.objInvStkAdjAdd.new_avail_ctn, new { @id = "adj_new_avail_ctn", @class = "form-control txtlbl numericOnly ", @maxlength = "10", @style = "width:250px;" })
+                </div>
+                <div class="col-xs-2" style="text-align: right;">
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-xs-12" >
+                <div class="col-xs-3" style="text-align: right;">
+                    <label><b class="Lblmanual">Current PPK</b></label>
+                </div>
+                <div class="col-xs-2" >
+                    @Html.TextBoxFor(model => model.objInvStkAdjAdd.cur_itm_qty, new { @id = "adj_cur_itm_qty", @class = "form-control txtlbl numericOnly ", @maxlength = "10", @style = "width:250px;" })
+                </div>
+                <div class="col-xs-3" style="text-align: right; ">
+                    <label><b class="Lblmanual">New PPK</b></label>
+                </div>
+                <div class="col-xs-2" >
+                    @Html.TextBoxFor(model => model.objInvStkAdjAdd.new_itm_qty, new { @id = "adj_new_itm_qty", @class = "form-control txtlbl numericOnly ", @maxlength = "10", @style = "width:250px;" })
+                </div>
+                <div class="col-xs-2" style="text-align: right;">
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-3" style="text-align: right;">
+                    <label><b class="Lblmanual">Note</b></label>
+                </div>
+                <div class="col-xs-8">
+                    @Html.TextBoxFor(model => model.objInvStkAdjAdd.adj_note, new { @id = "adj_note", @class = "form-control txtlbl ", @maxlength = "200", @style = "width:1000px;" })
+                </div>
+               
+                <div class="col-xs-2" style="text-align: right;">
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-3" style="text-align: right;">
+                    <label><b class="Lblmanual">Adjustment Reason</b></label>
+                </div>
+                <div class="col-xs-1">
+                    @Html.DropDownListFor(model => model.objInvStkAdjAdd.adj_reason, new SelectList(Model.ListInvAdjType, "name", "description", l_str_adj_reason), new { @id = "adj_reason", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 257px;background-color:lightyellow;" })
+                </div>
+
+                <div class="col-xs-2" style="text-align: right;">
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-4" style="text-align: right;">
+                 </div>
+                <div class="col-xs-2" style="text-align: right;">
+                    <button type="button" id="btnVerifyAdj" class="btn-Close" style="float:right;width: 100%;background-color: #e38a2f">Verify</button>
+                </div>
+                <div class="col-xs-2" style="text-align: right;">
+                      <button type="button" id="btnAdjClear" class="btn-Close" style="float:right;width: 100%;">Clear</button>
+                </div>
+                <div class="col-xs-4" style="text-align: right;">
+                </div>
+            </div>
+        </div>
+        <br />
+        <hr style="border-top: 1px solid #ccc; ">
+            <div class="row" id="divLocChange">
+                <div class="col-xs-12">
+                    <div class="col-xs-8" style="text-align: right;">
+                        <label id="lblLocChange" style="font-size:14px;color:orangered"></label>
+                    </div>
+
+                    <div class="col-xs-2" style="text-align: left;">
+                        <label for="chkLocChange" style="font-size:14px;">
+                            <input type="checkbox" id="chkLocChange"  />
+                          </label>
+                    </div>
+                </div>
+            </div>
+            <br />
+    
+        </div>
+        <br />
+    <hr style="border-top: 1px solid #ccc; ">
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        document.getElementById("btnStkAdjSave").setAttribute("hidden", "");
+        document.getElementById("divLocChange").setAttribute("hidden", "");
+        $("#divLocChange").attr('disabled', 'disabled');
+        $('#adj_new_avail_ctn').val('');
+        $('#adj_new_itm_qty').val('');
+        $("#adj_cur_loc_id").attr('disabled', 'disabled');
+        $("#adj_cur_avail_ctn").attr('disabled', 'disabled');
+        $("#adj_cur_itm_qty").attr('disabled', 'disabled');
+
+        $("#adj_cmp_id").attr('disabled', 'disabled');
+        $("#adj_cur_itm_num").attr('disabled', 'disabled');
+        $("#adj_cur_itm_color").attr('disabled', 'disabled');
+        $("#adj_cur_itm_size").attr('disabled', 'disabled');
+        $("#adj_cur_itm_name").attr('disabled', 'disabled');
+        $("#adj_cur_lot_id").attr('disabled', 'disabled');
+        $("#adj_cur_po_num").attr('disabled', 'disabled');
+
+    });
+
+    $(document).ready(function () {
+        $('.VLDTITMFILD').keyup(function () {
+            $(this).val($(this).val().toUpperCase());
+        });
+    });
+
+    $(function () {
+        $("#btnVerifyAdj").click(function ()
+        {
+            debugger;
+
+            document.getElementById("divLocChange").setAttribute("hidden", "");
+            $("#divLocChange").attr('disabled', 'disabled');
+            var p_str_cur_loc_id = $('#adj_cur_loc_id').val();
+            var p_str_new_loc_id = $('#adj_new_loc_id').val();
+
+            var p_int_adj_cur_avail_ctn = $('#adj_cur_avail_ctn').val();
+            var p_int_adj_new_avail_ctn = $('#adj_new_avail_ctn').val();
+
+            var p_int_adj_cur_itm_qty = $('#adj_cur_itm_qty').val();
+            var p_int_adj_new_itm_qty = $('#adj_new_itm_qty').val();
+            var is_changed = 'N';
+            var l_str_loc_change = '';
+            if ((p_str_cur_loc_id != p_str_new_loc_id) && (p_str_new_loc_id != ''))
+            {
+                l_str_loc_change= l_str_loc_change.concat('Location Changed from ', p_str_cur_loc_id, ' To ', p_str_new_loc_id, ' ');
+                is_changed = 'Y';
+            }
+
+            if ((p_int_adj_cur_avail_ctn != p_int_adj_new_avail_ctn) && (p_int_adj_new_avail_ctn != '') )
+            {
+                l_str_loc_change = l_str_loc_change.concat(' Number of CTN(s) Changed from ', p_int_adj_cur_avail_ctn, ' To ', p_int_adj_new_avail_ctn, ' ; ');
+                is_changed = 'Y';
+            }
+            if ((p_int_adj_cur_itm_qty != p_int_adj_new_itm_qty) && (p_int_adj_new_itm_qty != ''))
+            {
+                l_str_loc_change = l_str_loc_change.concat(' PPK Changed from ', p_int_adj_cur_itm_qty, ' To ', p_int_adj_new_itm_qty, ' ; ');
+                is_changed = 'Y';
+            }
+
+            if( is_changed == 'Y')
+            {
+
+                document.getElementById('lblLocChange').innerHTML = l_str_loc_change;
+                document.getElementById("btnStkAdjSave").removeAttribute("hidden");
+                document.getElementById("divLocChange").removeAttribute("hidden");
+                if ($('#adj_new_loc_id').val() == '')
+                {
+                    $('#adj_new_loc_id').val($('#adj_cur_loc_id').val());
+                }
+                if ($('#adj_new_avail_ctn').val() == '')
+                {
+                    $('#adj_new_avail_ctn').val($('#adj_cur_avail_ctn').val());
+                }
+                if ($('#adj_new_itm_qty').val() == '')
+                {
+                    $('#adj_new_itm_qty').val($('#adj_cur_itm_qty').val());
+                }
+            }
+            else
+            {
+                swal("", "No change in Location/PPK or Ctn(s) ", "");
+                document.getElementById("btnStkAdjSave").setAttribute("hidden", "");
+            }
+
+        })
+    });
+
+    $(function () {
+        $("#btnStkAdjSave").click(function () {
+            debugger;
+            var p_str_adj_reason = $('#adj_reason').val();
+
+            if (p_str_adj_reason == "--Select ADJ Reason--")
+            {
+                swal("", "Please select the Inventory Adjustment Reason ", "");
+                return false;
+            }
+
+            if (chkLocChange.checked)
+            {
+                document.getElementById("btnStkAdjSave").setAttribute("hidden", "");
+                var p_str_cmp_id = $('#adj_cmp_id').val();
+                var p_str_itm_num = $('#adj_cur_itm_num').val();
+                var p_str_itm_color = $('#adj_cur_itm_color').val();
+                var p_str_itm_size = $('#adj_cur_itm_size').val();
+                var p_str_itm_code = $('#adj_cur_itm_code').val();
+                var p_str_lot_id = $('#adj_cur_lot_id').val();
+                var p_str_po_num = $('#adj_cur_po_num').val();
+                var p_str_from_loc_id = $('#adj_cur_loc_id').val();
+                var p_str_to_loc_id = $('#adj_new_loc_id').val();
+
+                var p_int_cur_ctns = $('#adj_cur_avail_ctn').val();
+                var p_int_new_ctns = $('#adj_new_avail_ctn').val();
+
+                var p_int_cur_itm_qty = $('#adj_cur_itm_qty').val();
+                var p_int_new_itm_qty = $('#adj_new_itm_qty').val();
+                var p_str_adj_reason = $('#adj_reason').val();
+                var p_str_note = $('#adj_note').val();
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InvStkAdj/saveStockAdj")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id,
+                        "p_str_itm_num": p_str_itm_num,
+                        "p_str_itm_color": p_str_itm_color,
+                        "p_str_itm_size": p_str_itm_size, "p_str_itm_code": p_str_itm_code, "p_str_lot_id": p_str_lot_id, "p_str_po_num": p_str_po_num,
+                        "p_str_from_loc_id": p_str_from_loc_id, "p_str_to_loc_id": p_str_to_loc_id, "p_int_cur_ctns": p_int_cur_ctns
+                        , "p_int_new_ctns": p_int_new_ctns, "p_int_cur_itm_qty": p_int_cur_itm_qty, "p_int_new_itm_qty": p_int_new_itm_qty,
+                        "p_str_adj_reason": p_str_adj_reason, "p_str_note": p_str_note
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        if (e == 2) {
+                            swal("", "Unable to Save the Record.", "");
+                            $("#ajaxLoading").hide();
+                            $('body,html').animate({ scrollTop: 0 }, 0);
+                            document.getElementById("btnStkAdjSave").removeAttribute("hidden");
+                            return false;
+                        }
+                        if (e == 1) {
+                            swal({
+                                title: "",
+                                text: "Inventory Stock Ajdustment successfully",
+                                type: "",
+                                showCancelButton: false,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "Ok",
+                                closeOnConfirm: true
+                            },
+                        function () {
+                            setTimeout(function () {
+                                var p_str_cmp_id = $('#adj_cmp_id').val();
+
+                                $('#StockAdjModal').modal('hide');
+                                $.ajax({
+                                    type: "GET",
+                                    url: '@Url.Content("~/InvStkAdj/RefreshStockAdjGridDetails")',
+                                    data: {
+                                        "p_str_cmp_id": p_str_cmp_id
+                                    },
+                                    dataType: 'html',
+                                    success: function (e) {
+                                        $("#ajaxLoading").hide();
+                                        $('#showgrid').hide();
+                                        $('#showgridstock_inq').html("");
+                                        $('#showgridstock_inq').html(e);
+                                    },
+
+                                })
+                            });
+                        });
+
+                        }
+
+                        else {
+                            swal("", "Unable to Save the record", "");
+                            document.getElementById("btnStkAdjSave").removeAttribute("hidden");
+
+                        }
+                    },
+
+                })
+
+            }
+            else
+            {
+                sweetAlert("", "Please verify the changes and click Save", "");
+                return false;
+            }
+        })
+    });
+
+    $(function () {
+        $("#btnAdjClear").click(function () {
+            debugger;
+            $('#adj_new_loc_id').val('');
+            $('#adj_new_avail_ctn').val('');
+            $('#adj_new_itm_qty').val('');
+            document.getElementById("btnStkAdjSave").setAttribute("hidden", "");
+            document.getElementById("chkLocChange").checked = false;
+            document.getElementById("divLocChange").setAttribute("hidden", "");
+            $("#divLocChange").attr('disabled', 'disabled');
+        })
+    });
+
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+
+    
+    $("#adj_new_loc_id").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/InvStkAdj/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#adj_new_loc_id").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+
+

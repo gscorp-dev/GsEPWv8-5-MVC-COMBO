@@ -1,0 +1,2627 @@
+
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+@{
+    int Totalctn = Model.ctns;
+    int TotalQty = Model.tot_qty;
+    var l_str_cntr_type = Model.cntr_type;
+}
+
+@for (int j = 0; j < Model.ListRcvgDtl.Count(); j++)
+{
+    var qty = (Model.ListRcvgDtl[j].tot_qty);
+    if (qty > 0)
+    {
+        TotalQty = TotalQty + qty;
+    }
+    var ctn = (Model.ListRcvgDtl[j].tot_ctn);
+    if (ctn > 0)
+    {
+        Totalctn = Totalctn + ctn;
+    }
+
+}
+@Html.HiddenFor(model => model.ecom_recv_by_bin)
+
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: verdana;
+        font-size: 12px;
+    }
+
+    div#RecvajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+@Html.HiddenFor(model => model.itm_code)
+@Html.HiddenFor(model => model.dtl_line)
+@Html.HiddenFor(model => model.ctn_line)
+@Html.HiddenFor(model => model.status)
+@Html.HiddenFor(model => model.DocumentdateFrom)
+@Html.HiddenFor(model => model.DocumentdateTo)
+@Html.HiddenFor(model => model.rcvd_dtl_count)
+@Html.HiddenFor(model => model.l_bool_edit_flag)
+@Html.HiddenFor(model => model.screentitle)
+@Html.HiddenFor(model => model.l_bool_flag)
+@Html.HiddenFor(model => model.Recv_non_doc_itm)
+@Html.HiddenFor(model => model.Allow_New_item)
+
+<link href="~/plugins/select2/select2.min.css" rel="stylesheet" />
+<script src="~/plugins/select2/select2.min.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<center>
+    <div id="RecvajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        @if (Model.View_Flag == "A")
+            {
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inbound Receiving Entry - Add </h4>
+            <button type="button" id="docRecvbtnClose" class="btn-Close" style="float:right;;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnRecvSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        }
+        @if (Model.View_Flag == "M")
+            {
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inbound Receiving Entry - Modify </h4>
+            <button type="button" id="docRecvEditbtnClose" class="btn-Close" style="float:right;;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnRecvEditSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        }
+        @if (Model.View_Flag == "V")
+            {
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inbound Receiving Entry - View </h4>
+            <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;;margin-top: -18px;margin-right: 29px;">Close</button>
+        }
+        @if (Model.View_Flag == "D")
+            {
+            <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Inbound Receiving Entry - Delete </h4>
+            <button type="button" id="docRecvdelbtnClose" class="btn-Close" style="float:right;;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnReceivingqDeleteSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        }
+    </div>
+    <div id="childtabsrcv">
+        <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+            <li><a href="#childtabsrcv-1" style="font-size:12px;">Receiving Entry</a></li>
+            <li><a href="#childtabsrcv-2" style="font-size:12px;">Receiving Dim/Loc Edit</a></li>
+        </ul>
+        <div id="childtabsrcv-1">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Cmp Id</label>
+                            </div>
+                            @if (Model.View_Flag == "M")
+                            {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @disabled = "true", @style = "width: 400px;background-color:lightyellow;" })
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @disabled = "true", @style = "width: 400px;background-color:lightyellow;" })
+                                </div>
+                            }
+                            <div class="col-xs-1" style="width: 10%;text-align: right;margin-left:5%;">
+                                <label class="Lblmanual">IB Doc Id</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left;width:10%;">
+                                @Html.TextBoxFor(model => model.ibdocid, new { @class = "form-control txtlbl",   @maxlength = "10", @disabled = "true", @style = "font-size: 12px; font-family: verdana; width: 104px;background-color:lightyellow;" })
+                            </div>
+
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Doc Date</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left;width:10%;">
+                                @Html.TextBoxFor(model => model.ib_doc_dt, new { @class = "form-control txtlbl", @maxlength = "10", @disabled = "true", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                            </div>
+
+                            <div class="col-xs-1" style="width: 8%;text-align: right;margin-left:-2%;">
+                                <label class="Lblmanual">IBRcvd Fm</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.rcvd_from, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana; width: 250px;background-color:lightyellow;" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Ref No</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.refno, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana; width: 190px;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">IBRcvd Via</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.vend_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px;font-family: verdana; width: 190px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Whs Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @if (Model.whs_id == "" || Model.whs_id == null)
+                                {
+                                    @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListwhsPickDtl, "whs_id", "whs_name"), "---Select warehouse---", new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 257px;background-color:lightyellow;" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListwhsPickDtl, "whs_id", "whs_name"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 257px;background-color:lightyellow;" })
+                                }
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Cont Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.cont_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;background-color:lightyellow;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Seal#</label>
+                            </div>
+                            @if (Model.View_Flag == "M")
+                            {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.seal_num, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;" })
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.seal_num, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;" })
+                                </div>
+                            }
+
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Pallet Id</label>
+                            </div>
+                            @if (Model.View_Flag == "M")
+                            {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.palet_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;" })
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.palet_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;" })
+                                </div>
+                            }
+
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Lot Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.lot_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px; " })
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" id="ItemDtls">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Style</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.Itmdtl, new { @id = "R_Itmdtl", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Color</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.itm_color, new { @id = "R_itm_color", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Size</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.itm_size, new { @id = "R_itm_size", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;width:124px;">
+                                <label class="Lblmanual">Description</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.itm_name, new { @id = "R_itm_name", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 370px;background-color:lightyellow;" })
+                            </div>
+                            @if (Model.Recv_non_doc_itm == "Y")
+                            {
+                                <div class="col-xs-2" style="text-align:right;width: 24%;">
+                                    <label for="chkPassport" style="font-size:12px;">
+                                        <button type="button" id="btnRecvnondocItm" class="btn_NewEntry" style="font-size: 13px;width: 118%;">Recv Non Doc Itm</button>
+                                    </label>
+                                </div>
+                                <div class="col-xs-2" style="text-align:right;width: 24%;">
+                                    <input type="checkbox" value="chkRecvnondocItm" name="radioaddrs" style="display:none;" checked /><label class="Lblmanual" style="display:none;">Recv Non Doc Itm</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Length</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.doclength, new { @id = "R_doclength", @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Width</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.docwidth, new { @id = "R_docwidth", @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Height</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.docheight, new { @id = "R_docheight", @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right">
+                                <button type="button" id="btnRcvdCalCube" class="btn_search" style="font-size: 13px;">Cube</button>
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: center;width:60px;">
+                                <label class="Lblmanual">Cube</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.doccube, new { @id = "R_doccube", @class = "form-control txtlbl three-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Weight</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.docweight, new { @id = "R_docweight", @class = "form-control txtlbl two-decimals", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Strg Rate</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.DropDownListFor(model => model.strg_rate, new SelectList(Model.LstStrgIddtl, "strg_rate", "strg_rate"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Inout Rate</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.DropDownListFor(model => model.inout_rate, new SelectList(Model.LstInoutIddtl, "inout_rate", "inout_rate"), new { @class = "form-control txtlbl", })
+                            </div>
+                            @*<div class="col-xs-1" style="width: 8%;text-align: right;">
+                                    <label class="Lblmanual">Po Num</label>
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.po_num, new { @id = "rcv_po_num", @class = "form-control txtlbl", @maxlength = "30", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>*@
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Loc Id</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.loc_id, new { @id = "R_loc_id", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;background-color:lightyellow;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Factory</label>
+                            </div>
+                            <div class="col-xs-5" style="text-align:left">
+                                @Html.TextBoxFor(model => model.factory_id, new { @id = "rcv_factory_id", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Vendor PO#</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.po_num, new { @id = "rcv_po_num", @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Customer</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.cust_name, new { @id = "rcv_cust_name", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Customer PO#</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.po_num, new { @id = "rcv_cust_po_num", @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Pick List</label>
+                            </div>
+                            <div class="col-xs-5" style="text-align:left">
+                                @Html.TextBoxFor(model => model.po_num, new { @id = "rcv_pick_list", @class = "form-control txtlbl", @maxlength = "100", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual" style="width:200px">Container Type </label>
+                            </div>
+                            <div class="col-xs-3" style="text-align:left">
+                                @if (Model.View_Flag == "M")
+                                {
+                                    @Html.DropDownListFor(model => model.cntr_type, new SelectList(Model.ListContainerType, "name", "description"), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 257px;background-color:lightyellow;" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.cntr_type, new SelectList(Model.ListContainerType, "name", "description", l_str_cntr_type), new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 257px;background-color:lightyellow;" })
+                                }
+                            </div>
+
+                            <div class="col-xs-2" style="width: 7%;text-align: right;">
+                                <label class="Lblmanual">Receiving Date</label>
+                            </div>
+                            @if (Model.View_Flag == "M")
+                            {
+                                <div class="col-xs-2" style="text-align:left ">
+                                    @Html.TextBoxFor(model => model.rcvd_dt, "{0:MM/dd/yyyy}", new { @id = "ib_rcvd_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana; width: 140px;background-color:lightyellow;" })
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="col-xs-2" style="text-align:left;width:13%;">
+                                    @Html.TextBoxFor(model => model.rcvd_dt, "{0:MM/dd/yyyy}", new { @id = "ib_rcvd_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana; width: 140px;background-color:lightyellow;" })
+                                </div>
+                            }
+                            <div class="col-xs-2" style="width: 7%;text-align: right;">
+                                <label class="Lblmanual">Load Date</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left ">
+                                @Html.TextBoxFor(model => model.ib_load_dt, "{0:MM/dd/yyyy}", new { @id = "ib_load_dt", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", @style = "font-size: 12px; font-family: verdana; width: 140px;background-color:lightyellow;" })
+                            </div>
+
+                        </div>
+                    </div>
+
+                    @if (Model.dup_itm_count > 0 || Model.less_cube_count > 0)
+                            {
+                        <div class="row">
+
+                            <div class="col-xs-12" style="width:100%">
+                                @if (Model.dup_itm_count > 0)
+                                        {
+                                    <div class="col-xs-6" style="width:50%;">
+                                        <label class="Lblmanual" style="color:red; font-size:14px">ALERTS - DUPLICATE ITEMS AVAILABLE IN DOCUMENT PLEASE REMOVE</label>
+                                    </div>
+                                        }
+                                @if (Model.less_cube_count > 0)
+                                        {
+                                    <div class="col-xs-6" style="width:50%;">
+                                        <label class="Lblmanual" style="color:red; font-size:14px">CUBE MISSING! MUST GET / MEASURE CUBE and ENTER on RECEIVING! </label>
+                                    </div>
+                                        }
+
+                            </div>
+                        </div>
+                                <br />
+                            }
+
+
+
+                    <div style="display:none" class="row" id="RcvdbalanceQty">
+                        <div class="col-xs-12">
+                            <div class="col-xs-5" style="width: 14%;text-align: right;">
+                                <label class="Lblmanual" style="color:red">Receiving Balance Qty</label>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Doc Qty</label>
+                            </div>
+                            @if (Model.View_Flag == "M" || Model.View_Flag == "A")
+                                    {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.ordr_qty, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;" })
+                                </div>
+                                    }
+                                    else
+                                    {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.ordr_qty, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;" })
+                                </div>
+                                    }
+                            <div class="col-xs-1" style="width:9%;text-align: right;">
+                                <label class="Lblmanual">Receiving Qty</label>
+                            </div>
+                            @if (Model.View_Flag == "M" || Model.View_Flag == "A")
+                                    {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.recving_qty, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;background-color:lightyellow;" })
+                                </div>
+                                    }
+                                    else
+                                    {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.recving_qty, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;background-color:lightyellow;" })
+                                </div>
+                                    }
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Rcvd Qty</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.tmp_recving_qty, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">balance Qty</label>
+                            </div>
+                            <div class="col-xs-1" style="text-align:left">
+                                @Html.TextBoxFor(model => model.balance, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 130px;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+
+
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">PPK</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.ppk, new { @id = "R_ppk", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;background-color:lightyellow;" })
+                            </div>
+                            <div class="col-xs-1" style="width: 9%;text-align: right;">
+                                <label class="Lblmanual">Num Of Ctns</label>
+                            </div>
+                            @if (Model.View_Flag == "M")
+                                    {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.ctns, new { @id = "R_ctn", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;background-color:lightyellow;" })
+                                </div>
+                                    }
+                                    else
+                                    {
+                                <div class="col-xs-2" style="text-align:left">
+                                    @Html.TextBoxFor(model => model.ctns, new { @id = "R_ctn", @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px;background-color:lightyellow;" })
+                                </div>
+                                    }
+
+
+                            <div class="col-xs-1" style="width: 8%;text-align: right;">
+                                <label class="Lblmanual">Line Qty</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                @Html.TextBoxFor(model => model.tot_qty, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px; " })
+                            </div>
+                            <div class="col-xs-1" style="width: 8%;text-align: right;display:none;">
+                                <label class="Lblmanual">Rcvd Qty </label>
+                            </div>
+                            @if (Model.View_Flag == "M" || Model.View_Flag == "A")
+                                    {
+                                <div class="col-xs-2" style="text-align:left;display:none;">
+                                    @Html.TextBoxFor(model => model.rcvd_qty, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px; " })
+                                </div>
+                                    }
+                                    else
+                                    {
+                                <div class="col-xs-2" style="text-align:left;display:none;">
+                                    @Html.TextBoxFor(model => model.rcvd_qty, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 12px; font-family: verdana; width: 190px; " })
+                                </div>
+                                    }
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="col-xs-2"></div>
+                            @if (Model.View_Flag == "M" || Model.View_Flag == "A")
+                                    {
+                                <div class="col-xs-4" style="text-align: right;">
+                                    <button type="button" id="btnRecvInclude" class="btn_search" style="font-size: 13px;display:none">Include</button>
+
+                                </div>
+                                        <div class="col-xs-2" style="text-align: left">
+                                            <button type="reset" id="btnDtlClr" class="btn-Clear" style="font-size: 13px;">Clear </button>
+
+
+                                        </div>
+                                        <div class="col-xs-2" style="text-align: left">
+                                            <button type="reset" id="btnCancel" class="btn-Clear" style="font-size: 13px; display:none">Cancel </button>
+                                        </div>
+
+                                        <div class="col-xs-2" style="text-align: left">
+                                            <button type="button" id="btnDimLocEdit" class="btn_NewEntry" style="font-size: 13px;">DIM/Loc Edit</button>
+                                        </div>
+                                        <div class="col-xs-2"></div>
+                                    }
+                                    else
+                                    {
+                                <div class="col-xs-5" style="margin-left:30px;">
+                                    <table>
+                                        <tr>
+
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button class="btn-Email" type="button" style=" width:100px; text-align:right;" id="btnEmail" data-toggle="dropdown">
+                                                        Email
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="InboundReceiveDetailEMAIL('');">PDF</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button class="btn-Print" type="button" id="btnPrint" style=" width:105px;" data-toggle="dropdown">
+                                                        Print/View
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" id="btnPDF" onclick="InboundReceiveDetailPDF('');">PDF</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                    }
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div id="GridShowRecvEntry">
+                    <table id="MainRcvdEntry" style="width:100%">
+                        <tr style="display:inline-block;width:30%">
+                            <td style="width:66%;">
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                    Total Records:
+                                </span>
+                            </td>
+
+                            <td style="width:30%;">
+                                <label class="totalCount" style="text-align:left">
+                                    @Model.recvcount
+                                </label>
+                            </td>
+
+                        </tr>
+                        <tr style="display:inline-block;width:30%">
+                            <td>
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                    Total Qty:
+                                </span>
+                            </td>
+
+                            <td style="width:30%;">
+                                <label class="totalCount" style="text-align:left">
+                                    @TotalQty
+                                </label>
+                            </td>
+
+                        </tr>
+                        <tr style="display:inline-block;width:30%">
+                            <td>
+                                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                    Total Ctns:
+                                </span>
+                            </td>
+
+                            <td style="width:40%;">
+                                <label class="totalCount" style="text-align:left">
+                                    @Totalctn
+                                </label>
+                            </td>
+
+                        </tr>
+                    </table>
+                    <br />
+                    <div class="box">
+                        <div id="table-Details">
+
+                            <div style="overflow-y:auto; height:auto; width:auto;">
+                                <table id="GridDocRecvEntry" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                    <thead class="grid_backcolor">
+                                        <tr>
+                                            <th class="grid_header_backcolor">Line</th>
+                                            <th class="grid_header_backcolor">CtnLine</th>
+                                            <th class="grid_header_backcolor">Style</th>
+                                            <th class="grid_header_backcolor">Color</th>
+                                            <th class="grid_header_backcolor">Size</th>
+                                            <th class="grid_header_backcolor">Description</th>
+                                            <th class="grid_header_backcolor">L/W/H</th>
+                                            <th class="grid_header_backcolor">Cube</th>
+                                            <th class="grid_header_backcolor">Weight</th>
+                                            <th class="grid_header_backcolor">Ctn(s)</th>
+                                            <th class="grid_header_backcolor">PPk</th>
+                                            <th class="grid_header_backcolor">TotQty</th>
+                                            <th class="grid_header_backcolor">Vendor PO#</th>
+                                            <th class="grid_header_backcolor">Cust PO#</th>
+                                            <th class="grid_header_backcolor">Loc Id</th>
+                                            <th class="grid_header_backcolor">Strg</th>
+                                            <th class="grid_header_backcolor">InOut</th>
+                                            <th style="display:none;"></th>
+                                            <th style="display:none;"></th>
+
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                                        @for (int i = 0; i < Model.ListRcvgDtl.Count; i++)
+                                                {
+                                                    string lstrLWH = Model.ListRcvgDtl[i].length + "|" + Model.ListRcvgDtl[i].width + " | " + Model.ListRcvgDtl[i].depth;
+
+                                            <tr id="@Model.ListRcvgDtl[i].cmp_id ">
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListRcvgDtl[i].dtl_line</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListRcvgDtl[i].ctn_line</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].itm_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].itm_color</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].itm_size</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].itm_name</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@lstrLWH</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].cube</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListRcvgDtl[i].wgt</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].tot_ctn</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].ctn_qty</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].tot_qty</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgDtl[i].po_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left">@Model.ListRcvgDtl[i].cust_po_num</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].loc_id</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].st_rate_id</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :right">@Model.ListRcvgDtl[i].io_rate_id</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left;display:none;">@Model.ListRcvgDtl[i].lot_id</td>
+                                                <td style="font-size:12px; color:black; font-weight:bold; text-align :left;display:none;">@Model.ListRcvgDtl[i].palet_id</td>
+                                                @if (Model.View_Flag == "V")
+                                                        {
+                                                    <td></td>
+                                                        }
+                                                        else
+                                                        {
+                                                    <td>
+                                                        <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="DocRecvEntryEditDetail" data-id="@Model.ListRcvgDtl[i].cmp_id" data-id1="@Model.ListRcvgDtl[i].itm_num" data-id2="@Model.ListRcvgDtl[i].itm_color" data-id3="@Model.ListRcvgDtl[i].itm_size" data-id4="@Model.ListRcvgDtl[i].ib_doc_id" data-id5="@Model.ListRcvgDtl[i].dtl_line" data-id6="@Model.ListRcvgDtl[i].itm_code" data-id7="@Model.ListRcvgDtl[i].itm_line"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+
+                                                    </td>
+                                                        }
+                                                @if (Model.View_Flag == "V")
+                                                        {
+                                                    <td></td>
+                                                        }
+                                                        else
+                                                        {
+                                                    <td>
+                                                        <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="DocRecvEntryDelDetail" data-id="@Model.ListRcvgDtl[i].cmp_id" data-id1="@Model.ListRcvgDtl[i].itm_code" data-id2="@Model.ListRcvgDtl[i].ib_doc_id" data-id3="@Model.ListRcvgDtl[i].dtl_line" data-id4="@Model.ListRcvgDtl[i].itm_line"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                                    </td>
+                                                        }
+                                            </tr>
+
+                                                }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="childtabsrcv-2">
+            <div id="modalDimLocEdit"></div>
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="modalDimLocEditPart"></div>
+            </div>
+
+      </div>
+</center>
+
+
+<script>
+
+
+    $(function () {
+        debugger;
+        $("#R_loc_id").on('change', function () {
+            debugger;
+            var pstrBinLocId = $("#R_loc_id").val();
+            var pstrEcomRecvByBin = $("#ecom_recv_by_bin").val();
+            var pstrCmpId = $('#new_cmp_id').val();
+            var pstrItmNum = $("#R_Itmdtl").val();
+            var pstrItmColor = $("#R_itm_color").val();
+            var pstrItmSize = $("#R_itm_size").val();
+            var pstrItmCode = $("#itm_code").val();
+
+            if ((pstrItmNum != '') || (pstrLocId != "") || (pstrLocId != "FLOOR") && pstrEcomRecvByBin == "1")
+            {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InboundInquiry/CheckBinRefered")',
+                    data: {
+                        "pstrCmpId": pstrCmpId, "pstrBinLocId": pstrBinLocId, "pstrItmNum": pstrItmNum, "pstrItmColor": pstrItmColor, "pstrItmSize": pstrItmSize, "pstrItmCode": pstrItmCode
+                    },
+
+                    dataType: "json",
+                    success: function (BinLocRefered) {
+                        debugger
+                        if (BinLocRefered != "NO") {
+
+                            debugger
+                            $("#R_loc_id").val('');
+                            sweetAlert("", BinLocRefered, "");
+                            return false;
+                        }
+
+
+                    },
+
+                });
+            }
+        })
+    });
+</script>
+
+<script>
+    $("#btnDimLocEdit").click(function ()
+    {
+        var options = { "backdrop": "static", keyboard: true };
+        var urlDimEdit = '/InboundInquiry/ReceivingDimEdit';
+        var pstrCmpId = $('#new_cmp_id').val();
+        var pstrIBDocId = $('#ibdocid').val();
+        $("#RecvajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: urlDimEdit,
+            contentType: "application/json; charset=utf-8",
+            data: { "pstrCmpId": pstrCmpId, "pstrIBDocId": pstrIBDocId },
+            datatype: "html",
+
+            success: function (data) {
+                $("#RecvajaxLoading").hide();
+
+                $(document).ready(function () {
+                    
+                    var x = document.getElementById("btnDimLocEdit");
+                    x.style.display = "none";
+
+                });
+
+                $('#GridDocRecvEntry').html("");
+                $('#GridDocRecvEntry').hide();
+
+                $('#modalDimLocEditPart').show();
+                $('#modalDimLocEditPart').html("");
+                $('#modalDimLocEditPart').html(data);
+                $("#childtabsrcv").tabs("option", "active", $("#childtabsrcv").tabs('option', 'active') + 1);
+            },
+            error: function () {
+                $("#RecvajaxLoading").hide();
+                swal("Dynamic content load failed.");
+            }
+        });
+
+
+       
+    });
+</script>
+<script>
+
+ $('#R_doclength,#R_docwidth,#R_docheight,#R_docweight,#R_doccube').keyup(function () {
+        var val = $(this).val();
+        if (isNaN(val)) {
+            val = val.replace(/[^0-9\.]/g, '');
+            if (val.split('.').length > 2)
+                val = val.replace(/\.+$/, "");
+        }
+        $(this).val(val);
+ });
+        
+    $('#ib_rcvd_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+    $('#ib_load_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $("#R_Itmdtl").autocomplete({//CR20180511
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/InboundInquiry/ItemXGetitmDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+
+            $("#R_itm_color").val(ui.item.itm_color);
+            $("#R_itm_size").val(ui.item.itm_size);
+            $("#R_itm_name").val(ui.item.itm_name);
+            $("#itm_code").val(ui.item.itm_code);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+
+    $(function () {
+        $("#childtabsrcv").tabs({ active: 0 })
+    });
+
+    
+    $('#recving_qty').focusout(function () {
+        debugger
+        var a = $('#recving_qty').val();
+        var b = $('#tot_qty').val();
+        //$('#tmp_recving_qty').val(a - b);
+        $('#balance').val(a);
+        var c = $('#balance').val();
+        $('#tmp_recving_qty').val(a - c);
+        //CR20180830
+        //var c = $('#R_ctn').val();
+        //var d = $('#R_ppk').val();
+        //$('#tot_qty').val(Math.ceil(parseInt(c) * parseInt(d)));
+        $('#R_ctn').val('');
+        $('#R_ppk').val('');
+        $('#tot_qty').val('');
+        $('#R_ppk').focus();
+        return false;
+    });
+
+
+
+    $("#btnRecvSave").click(function () {
+        debugger
+        $("#btnRecvSave").attr('disabled', 'disabled');
+        $("#RecvajaxLoading").show();
+
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_ib_doc_id = $('#ibdocid').val();
+        var p_str_rcvd_dt = $('#ib_rcvd_dt').val();
+        var p_str_rcvd_from = $('#rcvd_from').val();
+        var p_str_refno = $('#refno').val();
+        var p_str_vend_id = $('#vend_id').val();
+        var p_str_whs_id = $('#whs_id').val();
+        var p_str_cont_id = $('#cont_id').val();
+        var p_str_seal_num = $('#seal_num').val();
+        var p_str_palet_id = $('#palet_id').val();
+        var p_str_lot_id = $('#lot_id').val();
+        var p_str_cntr_type = $('#cntr_type').val();
+        var p_str_ib_load_dt = $('#ib_load_dt').val();
+        
+
+        if (p_str_cntr_type == "--Select CNTR Type--") {
+            swal("", "Please select the Container Type ", "");
+            $("#btnRecvSave").removeAttr('disabled');
+            $("#RecvajaxLoading").hide();
+            return false;
+        } 
+
+        if (p_str_rcvd_dt == "") {
+            swal("", "Please Enter the Receiving Date ", "");
+            $("#btnRecvSave").removeAttr('disabled');
+            $("#RecvajaxLoading").hide();
+            return false;
+        }
+        //CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+        var p_str_Edit_flag = $('#l_bool_edit_flag').val();
+        if (p_str_Edit_flag == "true") {
+            swal("", "Item Not Included", "");
+            $("#btnRecvSave").removeAttr('disabled');
+            $("#RecvajaxLoading").hide();
+            return false;
+        }
+
+        //End CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnRecvSave").removeAttr('disabled');
+            $("#RecvajaxLoading").hide();
+            return false;
+        }
+        if (p_str_whs_id == "") {
+            swal("", "Please Select The warehouse.", "");
+            $('#whs_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            $("#btnRecvSave").removeAttr('disabled');
+            $("#RecvajaxLoading").hide();
+            return false;
+        }
+        else {
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/SaveRecvDocEntry")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_ib_doc_id": p_str_ib_doc_id,
+                    "p_str_rcvd_dt": p_str_rcvd_dt,
+                    "p_str_rcvd_from": p_str_rcvd_from, "p_str_refno": p_str_refno, "p_str_vend_id": p_str_vend_id, "p_str_whs_id": p_str_whs_id,
+                    "p_str_cont_id": p_str_cont_id, "p_str_seal_num": p_str_seal_num, "p_str_palet_id": p_str_palet_id
+                    , "p_str_lot_id": p_str_lot_id, "p_str_cntr_type": p_str_cntr_type, "p_str_ib_load_dt": p_str_ib_load_dt
+                },
+                dataType: 'html',
+                success: function (e) {
+                    if (e == 2) {
+                        swal("", "Recvd Date Should be greater than Doc Date.", "");
+                        $('#ib_rcvd_dt').focus();
+                        $("#RecvajaxLoading").hide();
+                        $('body,html').animate({ scrollTop: 0 }, 0);
+                        er = 1;
+                        $("#btnRecvSave").removeAttr('disabled');
+                    
+                        return false;
+                    }
+
+                    if (e == 3) {
+                        swal("", "IB Doc Already Received", "");
+                        $("#RecvajaxLoading").hide();
+                        $('body,html').animate({ scrollTop: 0 }, 0);
+                        er = 1;
+                        return false;
+                    }
+
+                    if (e == 1) {
+                        swal({
+                            title: "",
+                            text: "IB DocId #" + p_str_ib_doc_id + "  Received successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                    function () {
+                        setTimeout(function () {
+                            var p_str_cmp_id = $('#new_cmp_id').val();
+                            var p_str_ib_doc_id = $('#ibdocid').val();
+                            var datefrom = $('#DocumentdateFrom').val(); 
+                            var dateto = $('#DocumentdateTo').val();     
+                            var p_str_status = "1-RCVD";
+                            window.open('ShowdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_ib_doc_id=' + p_str_ib_doc_id, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+
+        $('#myModalRecvEntry').modal('hide');
+        $.ajax({
+            type: "get",
+            url: "/inboundinquiry/inboundinquirydtl",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_ibdocid": p_str_ib_doc_id,
+
+            },
+            datatype: 'html',
+            success: function (e) {
+                debugger
+                $("#RecvajaxLoading").hide();
+                $('#showgrid').html("");
+                $('#showgrid').html(e);
+            },
+        })
+    });
+    });
+
+    }
+
+    else {
+        swal("", "No Document Details Found", "");
+
+    }
+    },
+
+    })
+    }
+    });
+    $("#btnReceivingqDeleteSave").click(function () {
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_ib_doc_id = $('#ibdocid').val();
+        $("#RecvajaxLoading").show();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            sweetAlert({
+                title: "",
+                text: " Do You Want to Delete Receiving",
+                type: "",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "No",
+                cancelButtonText: "Yes",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+
+                }
+                else {
+                    debugger
+
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/ReceivingDelete")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id,
+
+                        },
+                        dataType: 'html',
+                        success: function (e) {
+
+                            if (e > 0) {
+                                swal({
+                                    title: "",
+                                    text: "IB DocId #" + p_str_ib_doc_id + "  Deleted successfully",
+                                    type: "",
+                                    showCancelButton: false,
+                                    confirmButtonClass: "btn-danger",
+                                    confirmButtonText: "Ok",
+                                    closeOnConfirm: false
+                                },
+                                function () {
+                                    setTimeout(function () {
+                                        $('#myModalEdit').modal('hide');
+                                        $.ajax({
+
+                                            type: "get",
+                                            url: "/inboundinquiry/inboundinquirydtl",
+                                            data: {
+                                                "p_str_cmp_id": p_str_cmp_id,
+                                                "p_str_ibdocid": p_str_ib_doc_id,
+
+                                            },
+                                            datatype: 'html',
+                                            success: function (e) {
+                                                debugger
+                                                $("#RecvajaxLoading").hide();
+                                                $('#showgrid').html("");
+                                                $('#showgrid').html(e);
+                                            },
+                                        })
+                                    });
+
+                                });
+
+                            }
+                        },
+
+                    })
+
+                }
+            });
+
+
+        }
+    });
+
+    $("#btnRecvEditSave").click(function () {
+        debugger
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_ib_doc_id = $('#ibdocid').val();
+        var p_str_rcvd_dt = $('#ib_rcvd_dt').val();
+        var p_str_rcvd_from = $('#rcvd_from').val();
+        var p_str_refno = $('#refno').val();
+        var p_str_vend_id = $('#vend_id').val();
+        var p_str_whs_id = $('#whs_id').val();
+        var p_str_cont_id = $('#cont_id').val();
+        var p_str_seal_num = $('#seal_num').val();
+        var p_str_palet_id = $('#palet_id').val();
+        var p_str_lot_id = $('#lot_id').val();
+        var p_str_loc_id = $('#R_loc_id').val();
+        //CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+        var p_str_Edit_flag = $('#l_bool_edit_flag').val();
+        var p_str_cntr_type = $('#cntr_type').val();
+        var p_str_ib_load_dt = $('#ib_load_dt').val();
+        if (p_str_Edit_flag == "true") {
+            swal("", "Item Not Included", "");
+            return false;
+        }
+        $("#RecvajaxLoading").show();
+        //End CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_ib_doc_id == "") {
+            swal("", "Please Enter the Doc Entry Id.", "");
+            $('#ibdocid').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_lot_id == "") {
+            swal("", "Please Enter the Doc Recv Id.", "");
+            $('#lot_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_cont_id == "") {
+            swal("", "Please Enter the Container Id.", "");
+            $('#cont_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_rcvd_dt == "") {
+            swal("", "Please Enter the Received Date.", "");
+            $('#ib_rcvd_dt').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_whs_id == "") {
+            swal("", "Please Enter the Whs Id.", "");
+            $('#whs_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        //if (p_str_loc_id == "") {
+        //    swal("", "Please Enter the Loc Id.", "");
+        //    $('#loc_id').focus();
+        //    $('body,html').animate({ scrollTop: 0 }, 0);
+        //    er = 1;
+        //    return false;
+        //}
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/ReceivingEntryEditSave")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_ib_doc_id": p_str_ib_doc_id,
+                    "p_str_rcvd_dt": p_str_rcvd_dt,
+                    "p_str_rcvd_from": p_str_rcvd_from, "p_str_refno": p_str_refno, "p_str_vend_id": p_str_vend_id, "p_str_whs_id": p_str_whs_id,
+                    "p_str_cont_id": p_str_cont_id, "p_str_seal_num": p_str_seal_num, "p_str_palet_id": p_str_palet_id
+                    , "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_cntr_type": p_str_cntr_type, "p_str_ib_load_dt": p_str_ib_load_dt
+                },
+                dataType: 'html',
+                success: function (e) {
+                    if (e == 2) {
+                        swal("", "Recvd Date Should be greater than Doc Date.", "");
+                        $('#ib_rcvd_dt').focus();
+                        $("#RecvajaxLoading").hide();
+                        $('body,html').animate({ scrollTop: 0 }, 0);
+                        er = 1;
+                        return false;
+                    }
+                    if (e == 1) {
+                        swal({
+                            title: "IB DocId #" + p_str_ib_doc_id + "  Receiving  Updated successfully",
+                            text: "",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                            function () {
+                                var p_str_cmp_id = $('#new_cmp_id').val();
+                                var p_str_ib_doc_id = $('#ibdocid').val();
+                                var p_str_datefrom = $('#DocumentdateFrom').val(); //CR 2202018_01 Added by murugan
+                                var p_str_dateto = $('#DocumentdateTo').val();     //CR 2202018_01 Added by murugan
+                                var p_str_status = "1-RCVD";
+                                window.open('ShowdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_ib_doc_id=' + p_str_ib_doc_id, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+                                @*var url = '@Url.Action("InboundInquiry", "InboundInquiry")';
+                                url += '?cmp=' + p_str_cmp_id; //CR 2202018_01 Added by murugan
+                                url += '&DateFm=' + p_str_datefrom; //CR 2202018_01 Added by murugan
+                                url += '&DateTo=' + p_str_dateto; //CR 2202018_01 Added by murugan
+                                window.location.href = url; //CR 2202018_01 Added by murugan*@
+
+                                $('#myModalRecvPost').modal('hide');
+                                $.ajax({
+                                    type: "get",
+                                    url: "/inboundinquiry/inboundinquirydtl",
+                                    data: {
+                                        "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ibdocid": p_str_ib_doc_id,
+
+                                    },
+                                    datatype: 'html',
+                                    success: function (e) {
+                                        debugger
+                                        $("#RecvajaxLoading").hide();
+                                        $('#showgrid').html("");
+                                        $('#showgrid').html(e);
+                                    },
+                                })
+                            });
+
+
+
+                    }
+
+                    else {
+                        swal("", "No Document Details Found", "");
+                        $("#RecvajaxLoading").hide();
+                    }
+                },
+
+            })
+        }
+    });
+    //$(".DocRecvEntryEditDetail").click(function () {
+    $('#GridDocRecvEntry tbody').on('click', '.DocRecvEntryEditDetail', function () {
+
+        debugger
+        var $buttonClicked = $(this);
+        var P_Str_CmpId = $buttonClicked.attr('data-id');
+        var P_Str_itmNum = $buttonClicked.attr('data-id1');
+        var P_Str_Color = $buttonClicked.attr('data-id2');
+        var P_Str_Size = $buttonClicked.attr('data-id3');
+        var P_str_ibdocId = $buttonClicked.attr('data-id4');
+        var P_str_LineNum = $buttonClicked.attr('data-id5');
+        var P_str_itmCode = $buttonClicked.attr('data-id6');
+        var P_str_ctn_line = $buttonClicked.attr('data-id7');
+        //CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+        var p_str_Edit_flag = $('#l_bool_edit_flag').val();
+        if (p_str_Edit_flag == "true") {
+            swal("", "Another Item is already selected for edit", "");
+            return false;
+        }
+        //End CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+        $(document).ready(function () {
+            var x = document.getElementById("btnCancel");
+            x.style.display = "block";
+        });
+        $(document).ready(function () {
+            var x = document.getElementById("btnDtlClr");
+            x.style.display = "none";
+
+            var x = document.getElementById("btnDimLocEdit");
+            x.style.display = "none";
+
+        });
+
+        $(this).closest('tr').remove();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/DocrecvEntryEditDisplayGridToTextbox")',
+            contentType: "application/json; charset=utf-8",
+            data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_itmNum": P_Str_itmNum, "P_Str_Color": P_Str_Color, "P_Str_Size": P_Str_Size, "P_str_ibdocId": P_str_ibdocId, "P_str_LineNum": P_str_LineNum, "P_str_itmCode": P_str_itmCode, "P_str_ctn_line": P_str_ctn_line },
+            datatype: "json",
+            success: function (e) {
+                debugger
+                $.each(e, function () {
+
+                    $("#Itmdtl").val(this.itm_num);
+                    $("#R_Itmdtl").val(this.itm_num);//CR20180511
+                    $("#ordr_qty").val(this.ordr_qty);
+                    $("#R_itm_color").val(this.itm_color);
+                    $("#R_itm_size").val(this.itm_size);
+                    $("#R_itm_name").val(this.itm_name);
+                    $("#R_doclength").val(this.length);
+                    $("#R_docwidth").val(this.width);
+                    $("#R_docheight").val(this.depth);
+                    $("#R_docweight").val(this.wgt);
+                    $("#R_doccube").val(this.cube);
+                    $("#recving_qty").val(this.recving_qty);
+                    $("#dtl_line").val(this.dtl_line);
+                    $("#ctn_line").val(this.ctn_line);
+                    //CR20180914-001
+                    //$("#tot_qty").val(this.tot_qty);
+                    //$("#R_ctn").val(this.tot_ctn);
+                    //$("#ppk").val(this.ctn_qty);
+                    //$("#R_ppk").val(this.ctn_qty);//CR20180511
+                    //END
+                    $("#rcv_po_num").val(this.po_num);
+                    $("#rcv_factory_id").val(this.factory_id);
+                    $("#rcv_cust_name").val(this.cust_name);
+                    $("#rcv_cust_po_num").val(this.cust_po_num);
+                    $("#rcv_pick_list").val(this.pick_list);
+
+                    $("#R_loc_id").val(this.loc_id);
+                    $("#inout_rate").val(this.io_rate_id);
+                    $("#strg_rate").val(this.st_rate_id);
+                    $("#itm_code").val(this.itm_code);
+                    $("#ibdocid").val(this.ib_doc_id);
+                    $("#status").val(this.status);
+                    $('#ordr_qty').val(this.ordr_qty);
+                    $('#rcvd_qty').val(this.rcvd_qty);
+                    $('#balance').val(this.balance);
+                    //$('#tot_qty').val(this.tot_qty);
+                    $('#recving_qty').val(this.recving_qty);
+                    //    $('#tmp_recving_qty').val(this.recving_qty);
+                    $('#l_bool_edit_flag').val('true'); // CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                    // CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                    $("#Itmdtl").attr('disabled', 'disabled');//CR20180511
+                    $("#R_itm_color").attr('disabled', 'disabled');
+                    $("#R_itm_size").attr('disabled', 'disabled');
+                    $("#R_itm_name").attr('disabled', 'disabled');
+                    $("#btnRecvnondocItm").attr('disabled', 'disabled');
+                    $(document).ready(function () {
+                        var x = document.getElementById("btnRecvInclude");
+                        x.style.display = "block";
+                    });
+                    $("#recving_qty").focus();
+                    return false;
+                    // End CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                });
+            },
+        });
+    });
+
+    //$(".DocRecvEntryDelDetail").click(function () {
+    $('#GridDocRecvEntry tbody').on('click', '.DocRecvEntryDelDetail', function () {
+
+        debugger
+        var $buttonClicked = $(this);
+        var P_Str_CmpId = $buttonClicked.attr('data-id');
+        var P_Str_ItmCode = $buttonClicked.attr('data-id1');
+        var P_Str_LineNum = $buttonClicked.attr('data-id3');
+        var P_Str_IbdocId = $buttonClicked.attr('data-id2');
+        var P_Str_ctnLine = $buttonClicked.attr('data-id4');
+        //CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+        var p_str_Edit_flag = $('#l_bool_edit_flag').val();
+        if (p_str_Edit_flag == "true") {
+            swal("", "Another Item is already selected for edit", "");
+            return false;
+        }
+        //End CR_3PL_MVC_IB_DOC_RECV_2018_0324_005
+        $("#RecvajaxLoading").show();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/DocRecvEntryDeleteGridData")',
+            data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId, "P_Str_LineNum": P_Str_LineNum, "P_Str_ItmCode": P_Str_ItmCode, "P_Str_ctnLine": P_Str_ctnLine },
+
+            datatype: "html",
+            success: function (e) {
+                $("#RecvajaxLoading").hide();
+                //$('#GridDocRecvEntry').html("");
+                //$('#GridDocRecvEntry').html(e);
+                document.getElementById('MainRcvdEntry').style.display = 'none';
+                $('#GridDocRecvEntry').html("");
+                $('#GridDocRecvEntry').html(e);
+                debugger
+
+                sweetAlert("", "Item Deleted Successfully", "");
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InboundInquiry/DocRecvEntryCount")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId },
+                    datatype: "json",
+                    success: function (e) {
+                        debugger
+                        var rowCount = e;
+                        $('#dtl_line').val((rowCount * 1) + 1);
+                        $('#ctn_line').val((rowCount * 1) + 1);
+                    },
+                });
+
+            },
+            error: function () {
+                sweetAlert("", "Dynamic content load failed.", "");
+            }
+        });
+    });
+    $("#btnRecvInclude").click(function () {
+        debugger
+        var p_str_ordr_qty = $('#ordr_qty').val();
+        var p_str_bol = $('#recving_qty').val();
+        var p_str_tot_qty = $('#tot_qty').val();
+        var p_str_rcving_qty = $('#recving_qty').val();
+        var p_str_tmp_rcving_qty = $('#tmp_recving_qty').val();
+        var p_str_balance = $('#balance').val();
+        var p_str_rcvd_qty = $('#rcvd_qty').val();
+        var p_str_ordr_qty;
+        var p_str_dtl_line;
+        var p_str_ctn_line;
+        var Recv_non_doc_itm;
+        var l_str_tmp_rcvg_balance = $('#balance').val();
+        var Itmdtl = $('#R_Itmdtl').val();
+        var itm_color = $('#R_itm_color').val();
+        var ppk = $('#R_ppk').val();
+        var itm_size = $('#R_itm_size').val();
+        var loc_id = $('#R_loc_id').val();
+        var ctns = $('#R_ctn').val();
+        var strg_rate = $('#strg_rate').val();
+        var inout_rate = $('#inout_rate').val();
+        var cmp_id = $('#cmp_id').val();
+        var chkRecvnondocItm = $("input[name='radioaddrs']:checked").val();
+        if ($('#recving_qty').val() == 0) {
+            $('#recving_qty').css('border-color', 'red');
+            return false;
+        }
+
+        else {
+            $('#recving_qty').css('border-color', '');
+
+        }
+        if ($('#R_ppk').val() == 0) {//CR20180511
+            $('#R_ppk').css('border-color', 'red');
+            return false;
+        }
+
+        else {
+            $('#R_ppk').css('border-color', '');
+
+        }
+        if ($('#R_ppk').val() == '') {//CR20180511
+            $('#R_ppk').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#R_ppk').css('border-color', '');//CR20180511
+        }
+ 
+        if ($('#R_ctn').val() == 0) {
+            $('#R_ctn').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#R_ctn').css('border-color', '');
+        }
+        if ($('#tot_qty').val() == '') {
+            $('#tot_qty').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#tot_qty').css('border-color', '');
+        }
+        if ($('#tot_qty').val() == 0) {
+            $('#tot_qty').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#tot_qty').css('border-color', '');
+        }
+        if ($('#tot_qty').val() == '') {
+            $('#tot_qty').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#tot_qty').css('border-color', '');
+        }
+
+        if ($('#R_Itmdtl').val() == '') {
+            $('#R_Itmdtl').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#R_Itmdtl').css('border-color', '');
+        }
+        if ($('#R_itm_color').val() == '') {
+            $('#R_itm_color').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#R_itm_color').css('border-color', '');
+        }
+
+
+        if ($('#R_itm_size').val() == '') {
+            $('#R_itm_size').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#R_itm_size').css('border-color', '');
+        }
+        if ($('#R_itm_name').val() == '') {
+            $('#R_itm_name').css('border-color', 'red');
+            return false;
+
+        }
+
+        else {
+            $('#R_itm_name').css('border-color', '');
+        }
+
+
+        if ($('#R_doccube').val() == 0) {
+            $('#R_doccube').css('border-color', 'red');
+            return false;
+        }
+        else {
+            $('#R_doccube').css('border-color', '');
+        }
+
+        if (cmp_id == "") {
+            sweetAlert("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (ppk == "") {
+            sweetAlert("", "Please Enter Ppk.", "");
+            $('#R_ppk').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (Itmdtl == "") {
+            sweetAlert("", "Please Enter the Style.", "");
+            $('#R_Itmdtl').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (itm_color == "") {
+            sweetAlert("", "Please Enter the  Color.", "");
+            $('#R_itm_color').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (itm_size == "") {
+            sweetAlert("", "Please Enter the Size.", "");
+            $('#R_itm_size').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (ctns == "") {
+            sweetAlert("", "Please Enter the No. of Ctn(s)#.", "");
+            $('#R_ctn').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (loc_id == "") {
+            sweetAlert("", "Please Enter the loc id.", "");
+            $('#R_loc_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (strg_rate == "") {
+            sweetAlert("", "Please Enter the Strg rate.", "");
+            $('#strg_rate').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (inout_rate == "") {
+            sweetAlert("", "Please Enter the Inout rate.", "");
+            $('#inout_rate').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+         
+
+        else {
+            debugger
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_ibdocid = $('#ibdocid').val();
+            var p_str_line_num = $('#dtl_line').val();
+            var p_str_ctn_line = $('#ctn_line').val();
+            var p_str_style = $('#R_Itmdtl').val();
+            var Itmdtl = $('#R_Itmdtl').val();
+            var p_str_color = $('#R_itm_color').val();
+            var p_str_size = $('#R_itm_size').val();
+            var p_str_desc = $('#R_itm_name').val();
+            var p_str_ord_qty = $('#ordr_qty').val();
+            if (p_str_ord_qty == "") {
+                p_str_ord_qty = 0;
+            }
+            var p_str_ppk = $('#R_ppk').val();//CR20180511R_ppk
+            var ppk = $('#R_ppk').val();//CR20180511R_ppk
+            var p_str_ctns = $('#R_ctn').val();
+            var p_str_po_num = $('#rcv_po_num').val();
+            var p_str_factory_id = $('#rcv_factory_id').val();
+            var p_str_cust_name = $('#rcv_cust_name').val();
+            var p_str_cust_po_num = $('#rcv_cust_po_num').val();
+            var p_str_pick_list = $('#rcv_pick_list').val();
+
+            var p_str_loc_id = $('#R_loc_id').val();
+            var p_str_lot_id = $('#R_lot_id').val();
+            var p_str_length = $('#R_doclength').val();
+            var p_str_width = $('#R_docwidth').val();
+            var p_str_height = $('#R_docheight').val();
+            var p_str_weight = $('#R_docweight').val();
+            var p_str_cube = $('#R_doccube').val();
+            var p_str_tot_qty = $('#tot_qty').val();
+            var p_str_strg_rate = $('#strg_rate').val();
+            var p_str_inout_rate = $('#inout_rate').val();
+           
+           
+            var p_str_palet_id = $('#palet_id').val();
+            var p_str_Itmcode = $('#itm_code').val();
+            p_str_ordr_qty = $('#ordr_qty').val();
+            var RcvdQty = $('#tmp_recving_qty').val();
+            if (RcvdQty == "") {
+                RcvdQty = 0;
+            }
+            $('#MainRcvdEntry').hide();
+            var p_int_recdqty = $('#balance').val();
+            $(document).ready(function () {
+                var x = document.getElementById("btnCancel");
+                x.style.display = "block";
+            });
+            $(document).ready(function () {
+                var x = document.getElementById("RcvdbalanceQty");
+                x.style.display = "none";
+            });
+            $(document).ready(function () {
+                var x = document.getElementById("btnRecvInclude");
+                x.style.display = "block";
+            });
+            debugger
+
+            if (((parseInt(ppk)) * (parseInt(p_str_ctns))) < parseInt(p_str_balance)) {
+                debugger
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InboundInquiry/IncludeRecvDetails")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_ibdocid": p_str_ibdocid, "p_str_line_num": p_str_line_num, "p_str_ctn_line": p_str_ctn_line, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size,
+                        "p_str_desc": p_str_desc, "p_str_Itmcode": p_str_Itmcode, "p_str_ord_qty": p_str_ord_qty, "p_str_ppk": p_str_ppk, "p_str_ctns": p_str_ctns, "p_str_po_num": p_str_po_num, "p_str_length": p_str_length,
+                        "p_str_width": p_str_width, "p_str_height": p_str_height, "p_str_weight": p_str_weight, "p_str_cube": p_str_cube,
+                        "p_str_tot_qty": p_str_tot_qty, "p_str_strg_rate": p_str_strg_rate, "p_str_inout_rate": p_str_inout_rate, "p_str_loc_id": p_str_loc_id,
+                        "p_str_lot_id": p_str_lot_id, "p_str_palet_id": p_str_palet_id, "p_int_recdqty": p_int_recdqty, "RcvdQty": RcvdQty,
+                        "p_str_factory_id": p_str_factory_id, "p_str_cust_name": p_str_cust_name, "p_str_cust_po_num": p_str_cust_po_num, "p_str_pick_list": p_str_pick_list
+                    },
+
+                    dataType: 'html',
+                    success: function (e) {
+                        if (e == 0) {
+                            sweetAlert("", "Style Not Found.", "");
+                        }
+                        else {
+                            debugger
+                            $("#RecvajaxLoading").hide();
+                            $('#GridDocRecvEntry').html("");
+                            $('#GridDocRecvEntry').html(e);
+
+                            $.ajax({
+                                type: "GET",
+                                url: '@Url.Content("~/InboundInquiry/DocRecvEntrydtlCount")',
+                                contentType: "application/json; charset=utf-8",
+                                data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                                datatype: "json",
+                                success: function (e) {
+                                    debugger
+                                    $('#recvcount').val(e);
+
+                                },
+                            });
+                            $.ajax({
+                                type: "GET",
+                                url: '@Url.Content("~/InboundInquiry/GetTempPassingData")',
+                                contentType: "application/json; charset=utf-8",
+                                data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                                datatype: "json",
+                                success: function (data) {
+                                    debugger
+                                    $('#balance').val(data.balance);
+                                    $('#tmp_recving_qty').val(data.rcvd_qty);
+                                    $('#ordr_qty').val(data.ordr_qty);
+                                    $('#ctn_line').val(data.ctn_line);
+                                    $('#dtl_line').val(data.dtl_line);
+                                    $('#Recv_non_doc_itm').val(data.Recv_non_doc_itm);
+                                    p_str_balance = $('#balance').val();
+                                    p_str_rcvd_qty = $('#tmp_recving_qty').val();
+                                    p_str_ordr_qty = $('#ordr_qty').val();
+                                    p_str_dtl_line = $('#dtl_line').val();
+                                    p_str_ctn_line = $('#ctn_line').val();
+                                    Recv_non_doc_itm = $('#Recv_non_doc_itm').val();
+                                    l_str_tmp_rcvg_balance = $('#balance').val();
+                                    if (parseInt(p_str_rcvd_qty) == 0) {
+                                        $("#RecvajaxLoading").hide();
+                                        $('#GridDocRecvEntry').html("");
+                                        $('#GridDocRecvEntry').html(e);
+                                        $('#R_itm_name').val('');
+                                        $('#ord_qty').val('');
+                                        $('#ctn_qty').val('');
+                                        $('#R_doclength').val('');
+                                        $('#R_docwidth').val('');
+                                        $('#R_docheight').val('');
+                                        $('#R_docweight').val('');
+                                        $('#R_doccube').val('');
+                                        $('#cube').val('');
+                                        $('#R_ppk').val('');
+                                        $('#ord_qty').val('');
+                                        $('#rcv_po_num').val('');
+
+
+                                        $('#rcv_factory_id').val('');
+                                        $('#rcv_cust_name').val('');
+                                        $('#rcv_cust_po_num').val('');
+                                        $('#rcv_pick_list').val('');
+
+                                        $('#R_loc_id').val('');
+                                        $('#R_ctn').val('');
+                                        $('#R_Itmdtl').val('');
+                                        $('#R_itm_color').val('');
+                                        $('#R_itm_size').val('');
+                                        $('#R_itm_name').val('');
+                                        $('#tot_qty').val('');
+                                        $('#dtl_line').val('');
+                                        $('#ctn_line').val('');
+                                        $('#itm_code').val('');
+                                        $('#ordr_qty').val('');
+                                        $('#rcvd_qty').val('');
+                                        $('#balance').val('');
+                                        $('#tot_qty').val('');
+                                        $('#recving_qty').val('');
+                                        $('#l_bool_edit_flag').val('false'); // CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                                        // CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                                        $("#R_Itmdtl").attr('disabled', false);
+                                        $("#R_itm_color").attr('disabled', false);
+                                        $("#R_itm_size").attr('disabled', false);
+                                        $("#R_itm_name").attr('disabled', false);
+                                        $("#btnDtlClr").attr('disabled', false);
+                                        $("#btnDimLocEdit").attr('disabled', false);
+                                        $("#recving_qty").attr('disabled', false);
+                                        $("#btnRecvnondocItm").attr('disabled', false);
+                                        $(document).ready(function () {
+                                            var x = document.getElementById("btnDtlClr");
+                                            x.style.display = "block";
+
+                                            var x = document.getElementById("btnDimLocEdit");
+                                            x.style.display = "block";
+
+                                        }); $(this).closest('tr').remove();
+                                        // End CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                                        $.ajax({
+                                            type: "GET",
+                                            url: '@Url.Content("~/InboundInquiry/DocRecvEntryCount")',
+                                            contentType: "application/json; charset=utf-8",
+                                            data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                                            datatype: "json",
+                                            success: function (e) {
+                                                debugger
+                                                var rowCount = e;
+                                                $('#dtl_line').val((rowCount * 1) + 1);
+                                            },
+                                        });
+                                    }
+                                    else {
+                                        debugger
+                                        $('#balance').val(parseInt(l_str_tmp_rcvg_balance));
+                                        $('#R_ppk').val(parseInt(l_str_tmp_rcvg_balance));
+                                        $('#R_ctn').val(1);
+                                        $('#rcvd_qty').val(parseInt(p_str_ordr_qty) - parseInt(p_str_balance));
+                                        $('#ordr_qty').val(parseInt(p_str_ordr_qty));
+                                        $('#tot_qty').val(1 * parseInt(l_str_tmp_rcvg_balance));
+                                        $('#dtl_line').val(parseInt(p_str_dtl_line));
+                                        $('#ctn_line').val(parseInt(p_str_ctn_line));
+                                        $('#tmp_recving_qty').val(parseInt(p_str_rcvd_qty));
+                                        $('#l_bool_edit_flag').val('false');
+                                        $("#recving_qty").attr('disabled', 'disabled');
+                                        $("#btnRecvnondocItm").attr('disabled', 'disabled');
+                                        $(document).ready(function () {
+                                            var x = document.getElementById("RcvdbalanceQty");
+                                            x.style.display = "block";
+                                        });
+                                    }
+                                },
+                            });
+                        }
+                    },
+                })
+            }
+            if (((parseInt(ppk)) * (parseInt(p_str_ctns))) > parseInt(p_str_balance)) {
+                sweetAlert("", "Total Qty is Greater than Balance Qty.", "");
+                return false;
+                $('#R_ppk').focus();
+            }
+            if (((parseInt(ppk)) * (parseInt(p_str_ctns))) == parseInt(p_str_balance)) {
+                debugger
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/InboundInquiry/IncludeRecvDetails")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_ibdocid": p_str_ibdocid, "p_str_line_num": p_str_line_num, "p_str_ctn_line": p_str_ctn_line, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size,
+                        "p_str_desc": p_str_desc, "p_str_Itmcode": p_str_Itmcode, "p_str_ord_qty": p_str_ord_qty, "p_str_ppk": p_str_ppk, "p_str_ctns": p_str_ctns, "p_str_po_num": p_str_po_num, "p_str_length": p_str_length,
+                        "p_str_width": p_str_width, "p_str_height": p_str_height, "p_str_weight": p_str_weight, "p_str_cube": p_str_cube,
+                        "p_str_tot_qty": p_str_tot_qty, "p_str_strg_rate": p_str_strg_rate, "p_str_inout_rate": p_str_inout_rate, "p_str_loc_id": p_str_loc_id, "p_str_lot_id": p_str_lot_id, "p_str_palet_id": p_str_palet_id,
+                        "p_int_recdqty": p_int_recdqty, "RcvdQty": RcvdQty,
+                        "p_str_factory_id": p_str_factory_id, "p_str_cust_name": p_str_cust_name, "p_str_cust_po_num": p_str_cust_po_num, "p_str_pick_list": p_str_pick_list
+                    },
+
+                    dataType: 'html',
+                    success: function (e) {
+                        if (e == 0) {
+                            sweetAlert("", "Style Not Found.", "");
+                        }
+                        else {
+                            debugger
+                            $("#RecvajaxLoading").hide();
+                            $('#GridDocRecvEntry').html("");
+                            $('#GridDocRecvEntry').html(e);
+                            $.ajax({
+                                type: "GET",
+                                url: '@Url.Content("~/InboundInquiry/DocRecvEntrydtlCount")',
+                                contentType: "application/json; charset=utf-8",
+                                data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                                datatype: "json",
+                                success: function (e) {
+                                    debugger
+                                    $('#recvcount').val(e);
+
+                                },
+                            });
+                            $('#R_itm_name').val('');
+                            $('#ord_qty').val('');
+                            $('#ctn_qty').val('');
+                            $('#R_doclength').val('');
+                            $('#R_docwidth').val('');
+                            $('#R_docheight').val('');
+                            $('#R_docweight').val('');
+                            $('#R_doccube').val('');
+                            $('#cube').val('');
+                            $('#ppk').val('');
+                            $('#R_ppk').val('');//CR20180511
+                            $('#ord_qty').val('');
+                            $('#rcv_po_num').val('');
+
+                            $('#rcv_factory_id').val('');
+                            $('#rcv_cust_name').val('');
+                            $('#rcv_cust_po_num').val('');
+                            $('#rcv_pick_list').val('');
+
+                            $('#R_loc_id').val('');
+                            $('#R_ctn').val('');
+                            $('#R_Itmdtl').val('');
+                            $('#R_itm_color').val('');
+                            $('#R_itm_size').val('');
+                            $('#R_itm_name').val('');
+                            $('#tot_qty').val('');
+                            $('#dtl_line').val('');
+                            $('#ctn_line').val('');
+                            $('#itm_code').val('');
+                            $('#ordr_qty').val('');
+                            $('#rcvd_qty').val('');
+                            $('#balance').val('');
+                            $('#tot_qty').val('');
+                            $('#recving_qty').val('');
+                            $('#tmp_recving_qty').val('');
+                            $('#l_bool_edit_flag').val('false'); // CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+  
+                            $("#R_Itmdtl").attr('disabled', 'disabled');
+                            $("#R_itm_color").attr('disabled', 'disabled');
+                            $("#R_itm_size").attr('disabled', 'disabled');
+                            $("#R_itm_name").attr('disabled', 'disabled');
+                            $("#recving_qty").attr('disabled', false);
+                            $("#btnRecvnondocItm").attr('disabled', false);
+                            $("#btnRecvInclude").attr('disabled', false);
+
+                            $(document).ready(function () {
+                                var x = document.getElementById("btnRecvnondocItm");
+                                x.style.display = "block";
+                            });
+                            $(document).ready(function () {
+                                var x = document.getElementById("btnDtlClr");
+                                x.style.display = "block";
+
+                                var x = document.getElementById("btnDimLocEdit");
+                                x.style.display = "block";
+
+                            }); $(this).closest('tr').remove();
+                            // End CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                            $.ajax({
+                                type: "GET",
+                                url: '@Url.Content("~/InboundInquiry/DocRecvEntryCount")',
+                                contentType: "application/json; charset=utf-8",
+                                data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                                datatype: "json",
+                                success: function (e) {
+                                    debugger
+                                    var rowCount = e;
+                                    $('#dtl_line').val((rowCount * 1) + 1);
+                                    $('#ctn_line').val(1);
+                                },
+                            });
+
+                        }
+                    },
+                })
+            }
+                   }
+
+    });
+
+    $("#R_Itmdtl").autocomplete({
+
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+
+        source: "/InboundInquiry/ItemXGetitmDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+
+            $("#R_itm_color").val(ui.item.itm_color);
+            $("#R_itm_size").val(ui.item.itm_size);
+            $("#R_itm_name").val(ui.item.itm_name);
+            $("#itm_code").val(ui.item.itm_code);
+
+            closeOnSelect: true
+        }
+
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+    function InboundReceiveDetailPDF() {
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_ib_doc_id = $('#ibdocid').val();
+        var p_str_status = "1-RCVD";
+        window.open('ShowdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_ib_doc_id=' + p_str_ib_doc_id, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+    }
+    $("#btnCancel").click(function () {
+        debugger
+        var cmp_id = $("#new_cmp_id").val();
+        var p_str_ibdocid = $('#ibdocid').val();
+        var p_str_cmp_id = $("#new_cmp_id").val();
+        var p_str_ib_doc_id = $('#ibdocid').val();
+        var p_str_dtl_line = $("#dtl_line").val();
+        var p_str_ctn_line = $('#ctn_line').val();
+        var p_str_itm_code = $("#itm_code").val();
+        var p_str_balQty = $("#balance").val();
+        if (p_str_balQty == "") {
+            p_str_balQty = 0;
+        }
+        $("#RecvajaxLoading").show();
+        $('#MainRcvdEntry').hide();
+        $(document).ready(function () {
+            var x = document.getElementById("btnCancel");
+            x.style.display = "none";
+        });
+        if (p_str_balQty > 0) {
+            sweetAlert("", "Balance Qty Existing Cannot Cancel.", "");
+            $("#RecvajaxLoading").hide();
+            return false;
+        }
+        else {
+            debugger
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/DocReceivingEditCancel")',
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_dtl_line": p_str_dtl_line, "p_str_ctn_line": p_str_ctn_line, "p_str_itm_code": p_str_itm_code
+                },
+                datatype: "json",
+                success: function (e) {
+                    debugger
+                    $("#RecvajaxLoading").hide();
+                    $('#GridDocRecvEntry').html("");
+                    $('#GridDocRecvEntry').html(e);
+                    $('#R_itm_name').val('');
+                    $('#ord_qty').val('');
+                    $('#ctn_qty').val('');
+                    $('#R_doclength').val('');
+                    $('#R_docwidth').val('');
+                    $('#R_docheight').val('');
+                    $('#R_docweight').val('');
+                    $('#R_doccube').val('');
+                    $('#cube').val('');
+                    $('#ppk').val('');
+                    $('#R_ppk').val('');
+                    $('#ord_qty').val('');
+                    $('#rcv_po_num').val('');
+                    $('#rcv_factory_id').val('');
+                    $('#rcv_cust_name').val('');
+                    $('#rcv_cust_po_num').val('');
+                    $('#rcv_pick_list').val('');
+
+                    $('#R_loc_id').val('');
+                    $('#R_ctn').val('');
+                    $('#R_Itmdtl').val('');
+                    $('#R_itm_color').val('');
+                    $('#R_itm_size').val('');
+                    $('#R_itm_name').val('');
+                    $('#tot_qty').val('');
+                    $('#dtl_line').val('');
+                    $('#ctn_line').val('');
+                    $('#itm_code').val('');
+                    $('#ordr_qty').val('');
+                    $('#rcvd_qty').val('');
+                    $('#balance').val('');
+                    $('#tot_qty').val('');
+                    $('#recving_qty').val('');
+                    $('#l_bool_edit_flag').val('false'); // CR_3PL_MVC_IB_DOC_RECV_2018_0324_001
+                    $(document).ready(function () {
+                        var x = document.getElementById("RcvdbalanceQty");
+                        x.style.display = "none";
+                    });
+
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/DocRecvEntryCount")',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+                        datatype: "json",
+                        success: function (e) {
+                            debugger
+                            var rowCount = e;
+                            $('#dtl_line').val((rowCount * 1) + 1);
+
+                        },
+                    });
+
+                },
+            })
+        }
+        //}
+    });
+    $("#docRecvbtnClose").click(function () {
+        var p_str_cmp_id = $("#new_cmp_id").val();
+        //var p_str_doc_id = $("#new_ib_doc_id").val();
+        var p_str_doc_id = $("#ibdocid").val();
+
+        var p_str_screentitle = $('#screentitle').val();
+        debugger
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+                       debugger
+                       $('#myModalRecvEntry').modal('hide');
+                       $.ajax({
+                           type: "get",
+                           url: "/inboundinquiry/inboundinquirydtl",
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_ibdocid": p_str_doc_id,
+
+                           },
+                           datatype: 'html',
+                           success: function (e) {
+                               debugger
+                               $('#l_bool_edit_flag').val('false');
+                               $("#RecvajaxLoading").hide();
+                               $('#showgrid').html("");
+                               $('#showgrid').html(e);
+                           },
+                       })
+
+
+                   }
+               });
+    });
+    $("#docRecvEditbtnClose").click(function () {
+        var p_str_cmp_id = $("#new_cmp_id").val();
+        var p_str_doc_id = $("#ibdocid").val();
+        var p_str_screentitle = $('#screentitle').val();
+        $("#RecvajaxLoading").show();
+        debugger
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+                       debugger
+                       $('#myModalRecvPost').modal('hide');
+                       $.ajax({
+                           type: "get",
+                           url: "/inboundinquiry/inboundinquirydtl",
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_ibdocid": p_str_doc_id,
+
+                           },
+                           datatype: 'html',
+                           success: function (e) {
+                               debugger
+                               $('#l_bool_edit_flag').val('false');
+                               $("#RecvajaxLoading").hide();
+                               $('#showgrid').html("");
+                               $('#showgrid').html(e);
+                           },
+                       })
+
+
+                   }
+               });
+    });
+    $("#docRecvdelbtnClose").click(function () {
+        var p_str_cmp_id = $("#new_cmp_id").val();
+        var p_str_doc_id = $("#ibdocid").val();
+        var p_str_screentitle = $('#screentitle').val();
+        $("#RecvajaxLoading").show();
+        debugger
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+                       debugger
+                       $('#myModalEdit').modal('hide');
+                       $.ajax({
+                           type: "get",
+                           url: "/inboundinquiry/inboundinquirydtl",
+                           data: {
+                               "p_str_cmp_id": p_str_cmp_id,
+                               "p_str_ibdocid": p_str_doc_id,
+
+                           },
+                           datatype: 'html',
+                           success: function (e) {
+                               debugger
+                               $('#l_bool_edit_flag').val('false');
+                               $("#RecvajaxLoading").hide();
+                               $('#showgrid').html("");
+                               $('#showgrid').html(e);
+                           },
+                       })
+
+
+                   }
+               });
+    });
+
+    function InboundReceiveDetailEMAIL() {
+        debugger
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var p_str_cmpid = $('#new_cmp_id').val();
+        var SelectdID = $('#ibdocid').val();
+        var p_str_status = "1-RCVD";
+        var type = 'PDF';
+        var p_str_radio = 'TallySheet';
+        var TeamDetailPostSelectedemailBackURL = '/InboundInquiry/ShowEmailReport';
+        var options = { "backdrop": "static", keyboard: true };
+        $("#RecvajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostSelectedemailBackURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "SelectdID": SelectdID, "p_str_radio": p_str_radio, "p_str_cmpid": p_str_cmpid, "type": type },
+            datatype: "json",
+            success: function (data) {
+                $("#RecvajaxLoading").hide();
+                $('#myModalRecvPost').modal('hide');
+
+                $('#myModalEmailContent').html(data);
+                $('#myModalEmail').modal(options);
+                $('#myModalEmail').modal('show');
+            },
+            error: function () {
+                $("#RecvajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                swal("Dynamic content load failed.");
+            }
+        });
+    }
+
+</script>
+@*<script type="text/javascript">
+        $('#GridDocRecvEntry').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridDocRecvEntry_paginate').hide();
+    </script>*@
+<script>
+    $('#R_ppk').focusout(function () {
+        var a = $('#recving_qty').val();
+        var b = $('#R_ppk').val();
+        debugger
+        //var c = (a / b)
+        //$('#R_ctn').val(Math.floor(c));
+        //if (a > 0 && b == 0) {
+        //    $('#R_ctn').val(0);
+        //}
+        $('#R_ctn').focus();
+        return false;
+    });
+    $('#recving_qty').keyup(function () {
+
+        var a = $('#recving_qty').val();
+        var b = $('#tot_qty').val();
+        $('#balance').val(a);
+        var c = $('#balance').val();
+        $('#tmp_recving_qty').val(a - c);
+        $('#R_ctn').val('');
+        $('#R_ppk').val('');
+        $('#tot_qty').val('');
+        return false;
+    });
+    //$("R_ppk").keydown(function (e) {
+    //    var a = $('#recving_qty').val();
+    //    var b = $('#R_ppk').val();
+    //    if (b == 0) {
+    //        $('#R_ctn').val('');
+    //    }
+    //    else {
+    //        var c = (a / b)
+    //        $('#R_ctn').val(Math.floor(c));
+    //    }
+    //});
+    //$('#R_ppk').keyup(function () {
+    //    var a = $('#recving_qty').val();
+    //    var b = $('#R_ppk').val();
+    //    if (b == 0) {
+    //        $('#R_ctn').val('');
+    //    }
+    //    else {
+    //        //$('#R_ctn').val((a / b));
+    //        var c = (a / b)
+    //        $('#R_ctn').val(Math.floor(c));
+    //    }
+    //    return false;
+    //});
+    $('#R_ctn').focusout(function () {
+        debugger
+        var l_str_ordr_qty = $('#ordr_qty').val();
+        var a = $('#R_ctn').val();
+        var b = $('#R_ppk').val();//CR20180511
+        $('#tot_qty').val(Math.ceil(parseInt(a) * parseInt(b)));
+        return false;
+    });
+</script>
+<script type="text/javascript">
+    $("#R_loc_id").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/inboundinquiry/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#R_loc_id").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+
+    $("#btnRecvnondocItm").click(function () {
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_ibdocid = $('#ibdocid').val();
+        $("#R_Itmdtl").attr('disabled', false);
+        $("#R_itm_color").attr('disabled', false);
+        $("#R_itm_size").attr('disabled', false);
+        $("#R_itm_name").attr('disabled', false);
+        $("#ctn_line").val(1);
+        $(document).ready(function () {
+            var x = document.getElementById("btnRecvInclude");
+            x.style.display = "block";
+        });
+        $(document).ready(function () {
+            var x = document.getElementById("btnRecvnondocItm");
+            x.style.display = "none";
+        });
+        $(document).ready(function () {
+            var x = document.getElementById("btnCancel");
+            x.style.display = "block";
+        });
+        debugger
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/DocRecvEntryCount")',
+            contentType: "application/json; charset=utf-8",
+            data: { "P_Str_CmpId": p_str_cmp_id, "P_Str_IbdocId": p_str_ibdocid },
+            datatype: "json",
+            success: function (e) {
+                debugger
+                var rowCount = e;
+                $('#dtl_line').val((rowCount * 1) + 1);
+
+            },
+        });
+        $("#R_Itmdtl").focus();
+        return false;
+    });
+
+    $("#R_itm_size").blur(function () {
+        debugger
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_style = $('#R_Itmdtl').val();
+        var p_str_color = $('#R_itm_color').val();
+        var p_str_size = $('#R_itm_size').val();
+        var p_str_Itmcode = $('#itm_code').val();
+        var p_str_Allowitm = $('#Allow_New_item').val();
+        if (p_str_Allowitm == "Y") {
+            $("#ctn_line").val(1);
+        }
+        else {
+            $("#ctn_line").val(1);
+        }
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/LoadAvailQty")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size, "p_str_Itmcode": p_str_Itmcode
+            },
+
+            dataType: "json",
+            success: function (e) {
+                debugger
+                if (e == "Y") {
+                    debugger
+                    $("#R_doclength").val(0);
+                    $("#R_docwidth").val(0);
+                    $("#R_docheight").val(0);
+                    $("#R_docweight").val(0);
+                    $("#R_doccube").val(0);
+                    $("#R_ppk").val(0);
+                    $('#itm_code').val("");
+                    //});
+                }
+                else {
+                    debugger
+                    $.each(e, function () {
+                        $("#R_doclength").val(this.length);
+                        $("#R_docwidth").val(this.width);
+                        $("#R_docheight").val(this.depth);
+                        $("#R_docweight").val(this.wgt);
+                        $("#R_doccube").val(this.cube);
+                        $("#R_ppk").val(this.ctn_qty);
+                    });
+                }
+
+            },
+
+        });
+    });
+    $("#R_itm_color").blur(function () {
+        debugger
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_style = $('#R_Itmdtl').val();
+        var p_str_color = $('#R_itm_color').val();
+        var p_str_size = $('#R_itm_size').val();
+        var p_str_Itmcode = $('#itm_code').val();
+        var p_str_Allowitm = $('#Allow_New_item').val();
+        if (p_str_Allowitm == "Y") {
+            $("#ctn_line").val(1);
+        }
+        else {
+            $("#ctn_line").val(1);
+        }
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/LoadAvailQty")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size, "p_str_Itmcode": p_str_Itmcode
+            },
+
+            dataType: "json",
+            success: function (e) {
+                debugger
+                if (e == "Y") {
+                    debugger
+                    $("#R_doclength").val(0);
+                    $("#R_docwidth").val(0);
+                    $("#R_docheight").val(0);
+                    $("#R_docweight").val(0);
+                    $("#R_doccube").val(0);
+                    $("#R_ppk").val(0);
+                    $('#itm_code').val("");
+                    //});
+                }
+                else {
+                    debugger
+                    $.each(e, function () {
+                        $("#R_doclength").val(this.length);
+                        $("#R_docwidth").val(this.width);
+                        $("#R_docheight").val(this.depth);
+                        $("#R_docweight").val(this.wgt);
+                        $("#R_doccube").val(this.cube);
+                        $("#R_ppk").val(this.ctn_qty);
+                    });
+                }
+
+            },
+
+        });
+    });
+    $("#R_Itmdtl").blur(function () {
+        debugger
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_style = $('#R_Itmdtl').val();
+        var p_str_color = $('#R_itm_color').val();
+        var p_str_size = $('#R_itm_size').val();
+        var p_str_Itmcode = $('#itm_code').val();
+        var p_str_Allowitm = $('#Allow_New_item').val();
+        if (p_str_Allowitm == "Y") {
+            $("#ctn_line").val(1);
+        }
+        else {
+            $("#ctn_line").val(1);
+        }
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/LoadAvailQty")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size, "p_str_Itmcode": p_str_Itmcode
+            },
+
+            dataType: "json",
+            success: function (e) {
+                debugger
+                if (e == "Y") {
+
+
+                    debugger
+                    $("#R_doclength").val(0);
+                    $("#R_docwidth").val(0);
+                    $("#R_docheight").val(0);
+                    $("#R_docweight").val(0);
+                    $("#R_doccube").val(0);
+                    $("#R_ppk").val(0);
+                    $('#itm_code').val("");
+                    //});
+                }
+                else {
+                    debugger
+                    $.each(e, function () {
+                        $("#R_doclength").val(this.length);
+                        $("#R_docwidth").val(this.width);
+                        $("#R_docheight").val(this.depth);
+                        $("#R_docweight").val(this.wgt);
+                        $("#R_doccube").val(this.cube);
+                        $("#R_ppk").val(this.ctn_qty);
+                    });
+                }
+
+            },
+
+        });
+    });
+</script>
+
+<script>
+    //CR-3PL_MVC_IB_2019-11-23-001
+
+    $(".two-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(2);
+        if (this.value == 'NaN') {
+            $('#ctn_qty').val(0);
+        }
+    });
+    $(".three-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(3);
+        if (this.value == 'NaN') {
+            $("#doccube").val(0);
+            return false;
+        }
+    });
+
+    $("#btnRcvdCalCube").click(function () {
+        debugger
+        var l_dec_length = $("#R_doclength").val();
+        var l_dec_width = $("#R_docwidth").val();
+        var l_dec_height = $("#R_docheight").val();
+
+        if (l_dec_length == 0) {
+            sweetAlert("", "Please enter the Length", "");
+            return false;
+        }
+        if (l_dec_width == 0) {
+            sweetAlert("", "Please enter the Width", "");
+            return false;
+        }
+        if (l_dec_height == 0) {
+            sweetAlert("", "Please enter the Height", "");
+            return false;
+        }
+        if ((l_dec_length < 2) || (l_dec_width < 2) || (l_dec_height < 2)) {
+            sweetAlert("", "Dimension L/W/H should be greater than 2.0 ", "");
+            return false;
+        }
+        else {
+            if ($('#R_doclength').val() > 0 && $('#R_docwidth').val() > 0 && $('#R_docheight').val() > 0) {
+                $('#R_doccube').val(($('#R_doclength').val() * $('#R_docwidth').val() * $('#R_docheight').val()) / 1728);
+                $('#R_doccube').val(parseFloat($('#R_doccube').val()).toFixed(3));
+            }
+        }
+    });
+
+    //CR-3PL_MVC_IB_2019-11-23-001 - END
+</script>
+

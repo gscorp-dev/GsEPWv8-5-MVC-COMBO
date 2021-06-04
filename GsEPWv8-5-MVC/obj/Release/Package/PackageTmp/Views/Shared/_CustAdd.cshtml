@@ -1,0 +1,1473 @@
+﻿
+@model GsEPWv8_5_MVC.Model.CustMasterModel
+@{
+    var lstrLogoFileName = "";
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+
+    .ui-state-active,
+    .ui-widget-content .ui-state-active,
+    .ui-widget-header .ui-state-active,
+    a.ui-button:active,
+    .ui-button:active,
+    .ui-button.ui-state-active:hover {
+        border: 1px solid #f39c12;
+        background: #f39c12;
+        font-weight: normal;
+        color: #ffffff;
+    }
+
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    fieldset {
+        /* margin: 8px; */
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+        width: 100%;
+    }
+</style>
+<div>
+    <center>
+        <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <center><h3 class="modal-title" id="myModalLabel" style="color: white;">New Customer</h3></center>
+            <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+            <button type="button" id="btnSaveCust" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        </div>
+        <div id="childtabsopen">
+            <ul>
+                <li><a href="#childtabsopen-1" style="font-size:12px;">Header</a></li>
+                <li><a href="#childtabsopen-2" style="font-size:12px;">Credit & Detail</a></li>
+                <li><a href="#childtabsopen-3" style="font-size:12px;" id="hob">Config</a></li>
+                <li><a href="#childtabsopen-4" style="font-size:12px;" id="hob">Users List</a></li>
+            </ul>
+            <div id="childtabsopen-1">
+                <div class="box-body">
+                    <div class="box-header">
+                        <br />
+                        <fieldset>
+                            <legend style="text-align: left;">Copy Data From Existing Customer</legend>
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -20px;">
+                                    <div class="col-xs-1" style="text-align:left; width: 95px;">
+                                        <label><b class="Lblmanual">Select Customer</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -16px;">
+                                        @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select---", new { @class = "form-control", @style = "margin-bottom: 5px;width:685px;" })
+                                    </div>
+                                    <div class="col-xs-3" style="text-align:right; width: 40%;">
+
+                                    </div>
+                                    <div class="col-xs-1" style="margin-left: -15px;">
+
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right;margin-left:15px; width: 16.67%;">
+                                    </div>
+                                    <div class="col-xs-1" style="margin-left: -10px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        </fieldset>
+                        <br />
+
+                        <div class="box-body">
+                            <div class="box-header">
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: 5px;">
+                                        <div class="col-xs-1" style="text-align: right;  margin-top: 4px;font-size:12px;width: 120px;">
+                                            <label><b class="Lblmanual">Cust Id:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -22px;">
+                                            @Html.TextBoxFor(model => model.comp_id, new { @id = "v_add_cmp_id", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "10", @style = "width:100px;background-color:lightyellow;" })
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left:-4px;">
+                                            @Html.TextBoxFor(model => model.cmp_name, new { @id = "v_add_cmp_name", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:520px;background-color:lightyellow;" })
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: 25px;">
+                                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                                            <label><b class="Lblmanual">Logo File Name:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left:-22px;">
+                                            <input type="file" name="FileUpload" id="img1" onchange="updateFileName()" style="display:none" title="" />
+                                            @Html.TextBoxFor(x => x.file_name, new { @class = "form-control txtlbl", @name = "file_name", @id = "a_file_name" })
+                                        </div>
+                                        <div class="col-xs-6" style="margin-left:7%;">
+                                            <table>
+                                                <tr>
+
+                                                    <td>
+                                                        <button type="button" style="background-color:#1a45bf" id="btnBrowse" class="btn_browse" onclick="document.getElementById('img1').click();">Browse</button>
+                                                    </td>
+
+                                                    <td>
+                                                        <button type="submit" id="btnImport" class="btn_upload" style="display:none;">Import</button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-3" style="margin-left:650px;margin-top: -100px;">
+                                            <img id="profile-img-tag" src="" style="width:100px;height:100px" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: 4px;">
+                                        <div class="col-xs-1" style="text-align: right; margin-top: 4px; font-size:12px;width: 120px;">
+                                            <label><b class="Lblmanual">Cust Of:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -22px;">
+                                            @Html.DropDownListFor(model => model.cust_of_cmpid, new SelectList(Model.ListCustofCompanyPickDtl, "cust_of_cmpid", "cust_of_cmpname"), new { @id = "v_add_cust_of_cmpid", @class = "form-control txtlbl", @disabled = "true", @maxlength = "50", @style = "width:460px;background-color:lightyellow;" })
+                                        </div>
+                                        <div class="col-xs-5" style="margin-left:21%;margin-top: -2%;">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br />
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: -8px;">
+                                        <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                            <label><b class="Lblmanual">Cust Group Id:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -28px;">
+                                            @Html.TextBoxFor(model => model.cust_grp_id, new { @id = "v_add_cust_grp_id", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:125px;background-color:lightyellow;" })
+                                        </div>
+                                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                                            <label><b class="Lblmanual">Status:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.DropDownListFor(model => model.status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @id = "v_add_status", @class = "form-control txtlbl", @style = "width:138px;background-color:lightyellow;" })
+                                        </div>
+                                        <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                            <label><b class="Lblmanual">Source:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.source, new { @id = "v_add_source", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:175px;" })
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: -8px;">
+                                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                            <label><b class="Lblmanual">Date Of Entry:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -28px;">
+                                            @Html.TextBoxFor(model => model.dt_of_entry, new { @id = "v_add_date_of_entrys", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "80", @style = "width:125px;background-color:lightyellow;" })
+                                        </div>
+                                        <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                                            <label><b class="Lblmanual">Last Chg Dt:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.last_chg_dt, new { @id = "v_add_last_of_entrys", @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", @style = "width:138px;background-color:lightyellow;" })
+
+                                        </div>
+                                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                            <label><b class="Lblmanual">Region:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.region, new { @id = "v_add_region", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:175px;" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: -8px;">
+                                        <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                            <label><b class="Lblmanual">Territory:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -28px;">
+                                            @Html.TextBoxFor(model => model.territory, new { @id = "v_add_territory", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:125px;" })
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <label for="chkPassport">
+                                                <input type="checkbox" value="NewWhsId" name="radioeditrs" /><b class="Lblmanual">New WhsId</b>
+                                            </label>
+                                        </div>
+                                        <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                                            <label><b class="Lblmanual">Dflt Whs Id:</b></label>
+                                        </div><div class="col-xs-2" style="margin-left: -23px;" id="CustWhsList">
+                                            @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListPick, "whs_id", "whs_id"), new { @id = "v_add_whs_id", @class = "form-control txtlbl", @maxlength = "50", @style = "width:138px;background-color:lightyellow;" })
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;display:none;" id="CustWhs">
+                                            @Html.TextBoxFor(model => model.whs_id, new { @id = "v_add_new_whs_id", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:138px;background-color:lightyellow;" })
+                                        </div>
+
+                                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                            <label><b class="Lblmanual">Contact:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.contact, new { @id = "v_add_contact", @class = "form-control txtlbl", @maxlength = "20", @style = "width:175px;" })
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: -8px;">
+                                        <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                            <label><b class="Lblmanual">Tel:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.Tel, new { @id = "v_add_Tel", @class = "form-control txtlbl numericOnly", @maxlength = "15", @style = "width:200px;" })
+                                        </div>
+                                        <div class=" col-xs-1" style="text-align:right;font-size:20px;width: 120px;margin-left: 38px;">
+                                            <label><b class="Lblmanual">Cell:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.cell, new { @id = "v_add_cell", @class = "form-control txtlbl numericOnly", @maxlength = "15", @style = "width:200px;" })
+                                        </div>
+                                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                            <label><b class="Lblmanual">Fax:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.fax, new { @id = "v_add_fax", @class = "form-control txtlbl numericOnly", @maxlength = "15", @style = "width:175px;" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: -11px;">
+                                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                                            <label><b class="Lblmanual">Email:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.email, new { @id = "v_add_email", @class = "form-control txtlbl", @maxlength = "50", @style = "width:400px;" })
+
+                                        </div>
+                                        <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 280px;margin-left:28px;">
+                                            <label><b class="Lblmanual">Web:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.TextBoxFor(model => model.web, new { @id = "v_add_web", @class = "form-control txtlbl", @maxlength = "50", @style = "width:420px;" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: 1px;">
+                                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                                            <label><b class="Lblmanual">Cust Catg:</b></label>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                            @Html.DropDownListFor(model => model.catg, new SelectList(Model.ListCustCatg, "name", "description"), new { @class = "form-control txtlbl", @style = "width:175px;" })
+                                        </div>
+                                        <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 280px;margin-left:28px;">
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -23px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="childtabsopen-2">
+                <fieldset>
+                    <legend style="text-align:left;color:orange;margin-bottom:10px;">Other detail</legend><hr style="margin-bottom:0px;margin-top:0px;" />
+                    <div class="box-body">
+                        <div class="box-header">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                                        <label><b class="Lblmanual">Mail Name:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.TextBoxFor(model => model.mail_name, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:385px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;margin-left:185px;">
+                                        <label><b class="Lblmanual">Attn:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.TextBoxFor(model => model.attn, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:425px;" })
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -7px;">
+                                    <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                                        <label><b class="Lblmanual">Addr1:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.TextBoxFor(model => model.addr1, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:385px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;margin-left:185px;">
+                                        <label><b class="Lblmanual">Addr2:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.TextBoxFor(model => model.addr2, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:425px;" })
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="col-xs-1" style="text-align:right;font-size:20px;width: 120px;margin-left: 2px;">
+                                        <label><b class="Lblmanual">City</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.city, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:180px;" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                                        <label class="Lblmanual">Country</label>
+                                    </div>
+                                    <div class="col-xs-1" style="width: 12%;padding-bottom: 1%;">
+                                        @Html.DropDownListFor(model => model.country, new SelectList(Model.ListCntryPick, "Cntry_Id", "Countrydtl"), new { @class = "form-control txtlbl", @style = "font-weight: bold;font - size: 12px; font-family: verdana; width: 150px;background-color:lightyellow;" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:12px;width: 90px;">
+                                        <label><b class="Lblmanual">Zip:</b></label>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(model => model.zip, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:175px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right;font-size:20px;width: 120px;margin-left: 2px;">
+                                        <label class="Lblmanual">State</label>
+                                    </div>
+                                    <div class="col-xs-2" style="width: 12%;padding-bottom: 1%;">
+                                        @Html.DropDownListFor(model => model.state, new SelectList(Model.ListStatePick, "State_ID", "statedtl"), new { @class = "form-control txtlbl", @style = "font-weight: bold;font-size: 12px; font-family: verdana; width: 180px;background-color:lightyellow;", @id = "ListStatePick" })
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -8px;">
+                                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                        <label><b class="Lblmanual">Frieght Id:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -28px;">
+                                        @Html.TextBoxFor(model => model.frieght_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+                                    </div>
+                                    <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -32px;">
+                                        <label><b class="Lblmanual">Ship Via Id:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.ship_via_id, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "width:125px;" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <br />
+                <fieldset>
+                    <legend style="text-align:left;color:orange;margin-bottom:10px;">Credit</legend><hr style="margin-bottom:0px;margin-top:0px;" />
+                    <div class="box-body">
+                        <div class="box-header">
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -8px;">
+                                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                        <label><b class="Lblmanual">Credit Code:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -28px;">
+                                        @Html.TextBoxFor(model => model.code, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left: -13px;">
+                                        <label><b class="Lblmanual">Credit Type:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.DropDownListFor(model => model.type, new SelectList(Model.ListCreditType, "name", "description"), new { @class = "form-control txtlbl", @style = "width:125px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:-10px;">
+                                        <label><b class="Lblmanual">Credit Limit:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.credit_lt, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:175px;text-align:right;" })
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -8px;">
+                                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                                        <label><b class="Lblmanual">Credit Msg:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.msg, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:378px;" })
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -6px;">
+                                    <div class="col-xs-1" style="text-align:right;font-size:20px;width: 120px;margin-left: 2px;">
+                                        <label><b class="Lblmanual">Discount:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.disc, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:180px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:66px;">
+                                        <label><b class="Lblmanual">Terms Code:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.term_code, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:180px;" })
+
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:28px;">
+                                        <label><b class="Lblmanual">Order Value:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.ord_val, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:180px;" })
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -11px;">
+                                    <div class="col-xs-1" style="text-align:right;font-size:20px;width: 120px;margin-left: 2px;">
+                                        <label><b class="Lblmanual">Tax Code:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.tax_code, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:180px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:66px;">
+                                        <label><b class="Lblmanual">Tax Exempt:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.DropDownListFor(model => model.tax_exempt, new SelectList(Model.ListTaxExempt, "name", "description"), new { @class = "form-control txtlbl", @style = "width:180px;" })
+
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:28px;">
+                                        <label><b class="Lblmanual">GL Number:</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.TextBoxFor(model => model.gl_num, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:180px;" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="childtabsopen-3">
+                <fieldset>
+                    <legend style="text-align:left;color:orange;margin-bottom:10px;">Billing Settings</legend><hr style="margin-bottom:0px;margin-top:0px;" />
+                    <div style="width:100%">
+                        <center>
+                            <div class="row">
+                                <div class="col-xs-12">
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">Bill Free Days</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.TextBoxFor(model => model.bl_free_days, new { @id = "v_add_bl_free_days", @class = "form-control txtlbl numericOnly", @maxlength = "4", @style = "width:150px;" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">Bill Cycle:</b></label>
+
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.DropDownListFor(model => model.bl_cycle, new SelectList(Model.ListBillCycle, "name", "description"), new { @class = "form-control txtlbl", @style = "width:160px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">Payment Terms</b></label>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        @Html.TextBoxFor(model => model.pmt_term, new { @id = "v_add_pmt_term", @class = "form-control txtlbl", @maxlength = "100", @style = "width:300px;" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-xs-12" style="margin-top: 10px;">
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">IO RateId</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.TextBoxFor(model => model.io_rate_id, new { @id = "v_add_io_rate_id", @class = "form-control txtlbl", @maxlength = "20", @style = "width:150px;" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">I/O Rate Desc</b></label>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        @Html.TextBoxFor(model => model.io_rate_name, new { @id = "v_add_io_rate_name", @class = "form-control txtlbl", @maxlength = "75", @style = "width:480px;" })
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12" style="margin-top: 10px;">
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">I/O Billing By</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.DropDownListFor(model => model.inout_bill, new SelectList(Model.ListInout, "name", "description"), new { @id = "v_add_inout_bill", @class = "form-control txtlbl", @maxlength = "50", @style = "font-weight: bold;font - size: 12px; width:160px;" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual"> I/O Rate Price </b></label>
+                                    </div>
+                                    
+                                    <div class="col-xs-2" style="margin-left:4px;">
+                                        @Html.TextBoxFor(model => model.io_rate_price, new { @id = "    ", @class = "form-control three-decimals", @maxlength = "10", @style = "font-weight: bold;font - size: 12px; width:160px;" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-xs-12" style="margin-top: 10px;">
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">STRG Rate Id</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.TextBoxFor(model => model.strg_rate_id, new { @id = "v_add_strg_rate_id", @class = "form-control txtlbl", @maxlength = "20", @style = "width:150px;" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">STRG Rate Desc</b></label>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        @Html.TextBoxFor(model => model.strg_rate_name, new { @id = "v_add_strg_rate_name", @class = "form-control txtlbl", @maxlength = "75", @style = "width:480px;" })
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12" style="margin-top: 10px;">
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">STRG Billing By</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.DropDownListFor(model => model.strg_bill, new SelectList(Model.ListSrtg, "name", "description"), new { @id = "v_add_strg_bill", @class = "form-control txtlbl", @maxlength = "50", @style = "width:150px;" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">STRG Rate Price</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left:4px;">
+                             
+                                        @Html.TextBoxFor(model => model.strg_rate_price, new { @id = "    ", @class = "form-control three-decimals", @maxlength = "10", @style = "font-weight: bold;font - size: 12px; width:160px;" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: 10px;">
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">Cube Rounded</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.DropDownListFor(model => model.is_bill_by_cube_rounded, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "v_is_bill_by_cube_rounded", @class = "form-control txtlbl", @maxlength = "50", @style = "width:150px;" })
+                                    </div>
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual"> Min Inout Cube</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left:4px;">
+                                        @Html.TextBoxFor(model => model.min_inout_cube, new { @id = "v_min_inout_cube", @class = "form-control txtlbl numericOnly", @maxlength = "6", @style = "text-align:right;width:160px;" })
+                                    </div>
+                                    <div class="col-xs-1" style="text-align:right; margin-top:1px;font-size:12px;width: 150px;margin-left:28px;">
+                                        <label><b class="Lblmanual"> Min Stroage Cube</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -10px;">
+                                        @Html.TextBoxFor(model => model.min_strg_cube, new { @id = "v_min_strg_cube", @class = "form-control txtlbl numericOnly", @maxlength = "6", @style = "text-align:right;width:160px;" })
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: 10px;">
+
+                                    <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 140px;">
+                                        <label><b class="Lblmanual">Include Initial Storage</b></label>
+                                    </div>
+                                    <div class="col-xs-2" style="margin-left: -22px;">
+                                        @Html.DropDownListFor(model => model.initstrg, new SelectList(Model.ListIncludeInitStrg, "name", "description"), new { @id = "new_initstrg", @class = "form-control txtlbl", @maxlength = "50", @style = "text-align:right;width:160px;" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </center>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend style="text-align: left;">IB Receiving Entry</legend>
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: -22px;">
+
+                            <div class="col-xs-1" style="text-align:left;margin-top:6px;font-size:12px;width: 140px;">
+                                <label><b class="Lblmanual">Allow IB New Item</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left:4px;">
+                                @Html.DropDownListFor(model => model.allow_new_item, new SelectList(Model.ListDocAllowNewItm, "name", "description"), new { @id = "v_add_allow_new_item", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:28px;">
+                                <label><b class="Lblmanual">Item List by</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -15px;">
+                                @Html.DropDownListFor(model => model.itemlistby, new SelectList(Model.ListItmListBy, "name", "description"), new { @id = "v_add_itemlistby", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:12px;width: 135px;margin-left:28px;">
+                                <label><b class="Lblmanual">Cube Auto Calc</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -10px;">
+                                @Html.DropDownListFor(model => model.cube_auto_calc, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "v_add_cube_autocalc", @class = "form-control txtlbl", @maxlength = "50", @style = "width:100px;" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: 10px;">
+
+                            <div class="col-xs-2" style="text-align:left; width: 16.67%;">
+                                <label><b class="Lblmanual">Document AutoIncrement</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left:-17px;">
+                                @Html.DropDownListFor(model => model.autoincre, new SelectList(Model.ListAutoIncrement, "name", "description"), new { @id = "v_add_autoincre", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:right; margin-top:6px;font-size:12px;width: 131px;margin-left:28px;">
+                                <label><b class="Lblmanual">Receive Lot By</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -15px;">
+                                @Html.DropDownListFor(model => model.recv_lot_by, new SelectList(Model.ListRcvLot, "name", "description"), new { @id = "new_recv_lot_by", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:1px;font-size:12px;width: 125px;margin-left:28px;">
+                                <label><b class="Lblmanual">Receive Non document Item</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: 5px;">
+                                @Html.DropDownListFor(model => model.Recv_non_doc_itm, new SelectList(Model.ListIncludeInitStrg, "name", "description"), new { @id = "new_Rcev_non_doc_itm", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <br />
+                </fieldset>
+                <fieldset>
+                    <legend style="text-align: left;">Outbound Settings</legend>
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: -20px;">
+                            <div class="col-xs-1" style="text-align:left; width: 16.67%;">
+                                <label><b class="Lblmanual">Allow SR Qty more than Stock qty</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -16px;">
+                                @Html.DropDownListFor(model => model.Stk_Chk_Reqt, new SelectList(Model.ListIncludeInitStrg, "name", "description"), new { @id = "new_Stk_Chk_Reqt", @class = "form-control txtlbl", @maxlength = "50", @style = "width:160px;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; width: 16.67%;">
+                                <label><b class="Lblmanual">Allocation By</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -15px;">
+                                @Html.DropDownListFor(model => model.aloc_by, new SelectList(Model.ListAlocBy, "name", "description"), new { @id = "new_aloc_by", @class = "form-control txtlbl", @maxlength = "50", @style = "width:200px;" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right;margin-left:15px; width: 16.67%;">
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -10px;">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend style="text-align: left;">First Time Settings</legend>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align:left; width: 16.67%;">
+                                <label><b class="Lblmanual">Customer Initials</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -16px;">
+                                @Html.TextBoxFor(model => model.con_string, new { @id = "v_add_custin_id", @class = "form-control txtlbl VLDTITMFILD", @maxlength = "3", @style = "width:160px;background-color:lightyellow;" })
+                            </div>
+
+                            <div class="col-xs-2">
+                                <label><b class="Lblmanual"> Ecom Reciving by Bin </b></label>
+                                @Html.CheckBoxFor(model => model.ecom_recv_by_bin)
+                            </div>
+                            <div class="col-xs-2">
+                                <label><b class="Lblmanual"> 940-Allow New item  </b></label>
+                                @Html.CheckBoxFor(model => model.allow_940_new_item, new { @id = "v_add_allow_940_new_item" })
+                            </div>
+
+                            <div class="col-xs-1" style="text-align:left; ">
+                                <label><b class="Lblmanual">Cust.Type</b></label>
+                            </div>
+                            <div class="col-xs-2">
+                                @Html.DropDownListFor(model => model.cust_type, new SelectList(Model.ListCustType, "name", "description"), new { @id = "a_add_cust_type", @class = "form-control txtlbl", @maxlength = "10", @style = "width:160px;" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+
+
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+            <div id="childtabsopen-4">
+                <div class="box-body">
+                    <div class="box-header">
+                        <div style="height:475px; width:1016px; overflow-x:scroll ; overflow-y: scroll; padding-bottom:10px;">
+                            <table id="grdAddUser" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">Sel</th>
+                                        <th class="grid_header_backcolor">User Id</th>
+                                        <th class="grid_header_backcolor">User Type</th>
+                                        <th class="grid_header_backcolor">First Name</th>
+                                        <th class="grid_header_backcolor">Last Name</th>
+                                        <th class="grid_header_backcolor">Email ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int j = 0; j < Model.ListAppUsers.Count; j++)
+                                    {
+                                        var a_user_id = @Model.ListAppUsers[j].user_id;
+                                        var ColCheck = @Model.ListAppUsers[j].user_perm;
+                                        <tr id="@Model.ListAppUsers[j].user_id ">
+                                            <td id="chkboxclickAdd" id1="@a_user_id" id2="@ColCheck" style="text-align:center">
+                                                <input id="test" name="selUserId" class="attribute" type="checkbox" value="@Model.ListAppUsers[j].user_id" />
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListAppUsers[j].user_id</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListAppUsers[j].user_type</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListAppUsers[j].user_fst_name</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListAppUsers[j].user_lst_name</td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListAppUsers[j].email</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+</div>
+
+<script type="text/javascript">
+
+    $('#v_add_io_rate_price,#v_add_strg_rate_price').keyup(function () {
+        var val = $(this).val();
+        if (isNaN(val)) {
+            val = val.replace(/[^0-9\.]/g, '');
+            if (val.split('.').length > 2)
+                val = val.replace(/\.+$/, "");
+        }
+        $(this).val(val);
+
+    });
+
+    $('#v_add_io_rate_price').focusout(function () {
+        debugger
+        var a = $('#v_add_io_rate_price').val();
+
+        if (a == 'NaN') {
+            $('#v_add_io_rate_price').val(0);
+            return false;
+        }
+    });
+
+    $('#v_add_strg_rate_price').focusout(function () {
+        debugger
+        var a = $('#v_add_strg_rate_price').val();
+
+        if (a == 'NaN') {
+            $('#v_add_strg_rate_price').val(0);
+            return false;
+        }
+    });
+
+
+
+    $('#v_add_last_of_entrys').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#v_add_date_of_entrys').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+    $(function () {
+        $("#tabs").tabs();
+    });
+    $(function () {
+        $("#childtabsopen").tabs();
+    });
+
+
+
+    $(document).ready(function () {
+        $('.VLDTITMFILD').keyup(function () {
+            $(this).val($(this).val().toUpperCase());
+        });
+
+        $("#v_add_io_rate_id").attr('disabled', 'disabled');
+        $("#v_add_strg_rate_id").attr('disabled', 'disabled');
+    }
+
+
+    );
+
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+
+
+
+</script>
+
+<script>
+    $('#country').on('change', function () {
+        debugger
+        var countryid = $(this).find(":selected").val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/OutboundInq/CountryChange")',
+            data: '{countryid: "' + countryid + '" }',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+
+            success: function (r) {
+                var Cntryid = $('#ListStatePick');
+                Cntryid.empty();
+                $.each(r.ListStatePick, function (key, value) {
+                    Cntryid.append('<option value=' + value.State_ID + '>' + value.statedtl + '</option>');
+                });
+
+            },
+            failure: function (response) {
+                alert(response.responseText);
+
+            },
+            error: function (response) {
+                alert(response.responseText);
+
+            }
+        });
+
+
+    });
+</script>
+
+<script type="text/javascript">
+    var list = [];
+    function updateFileName() {
+        debugger
+        var img1 = document.getElementById('img1');
+        var file_name = document.getElementById('a_file_name');
+        var fileNameIndex = img1.value.lastIndexOf("\\");
+        file_name.value = img1.value.substring(fileNameIndex + 1);
+
+        var output = document.getElementById('img1');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        $("#profile-img-tag").attr("src", output.src);
+        $('#btnImport').show();
+    }
+    $('#btnImport').click(function () {
+        debugger
+        var l_str_new_cmp_id = $('#v_add_cmp_id').val();
+        var l_str_file_name = $('#a_file_name').val();
+        if (l_str_new_cmp_id == "") {
+            swal("", "please select the company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrolltop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (l_str_file_name == "") {
+            swal("", "please select the File.", "");
+            $('#a_file_name').focus();
+            $('body,html').animate({ scrolltop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        debugger
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#img1").get(0);
+            var files = fileUpload.files;
+            // Create FormData object
+            var fileData = new FormData();
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+            // Adding one more key to FormData object
+            fileData.append('username', 'Manas');
+            if (l_str_file_name != "") {
+                $.ajax({
+                    url: '/CustMaster/UploadFiles?l_str_cmp_id=' + l_str_new_cmp_id,
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    datatype: "json",
+                    success: function (result) {
+                        if (result == 1) {
+                            sweetAlert("", "File upload Successfully", "");
+                        }
+                    },
+                });
+            }
+        }
+        else {
+            alert("FormData is not supported.");
+        }
+    });
+    $("#btnSaveCust").click(function () {
+        debugger
+        var p_str_cmp_id = $('#v_add_cust_of_cmpid').val();
+        var p_str_cust_id = $('#v_add_cmp_id').val();
+        var p_str_cmp_name = $('#v_add_cmp_name').val();
+        var p_str_radio = $("input[name='radioaddrs']:checked").val();
+        if (p_str_radio == "NewWhsId") {
+            var p_str_whs_id = $('#v_add_new_whs_id').val();
+        }
+        else {
+            var p_str_whs_id = $('#v_add_whs_id').val();
+        }
+        var p_str_source = $('#v_add_source').val();
+        var p_str_region = $('#v_add_region').val();
+        var p_str_territory = $('#v_add_territory').val();
+        var p_str_cust_grp_id = $('#v_add_cust_grp_id').val();
+        var p_str_status = $('#v_add_status').val();
+        var p_str_contact = $('#v_add_contact').val();
+        var p_str_dt_of_entry = $('#v_add_date_of_entrys').val();
+        var p_str_last_chg_dt = $('#v_add_last_of_entrys').val();
+        var p_str_tel = $('#v_add_Tel').val();
+        var p_str_fax = $('#v_add_fax').val();
+        var p_str_email = $('#v_add_email').val();
+        var p_str_web = $('#v_add_web').val();
+        var p_str_cell = $('#v_add_cell').val();
+        var p_str_bl_free_days = $('#v_add_bl_free_days').val();
+        var p_str_strg_bill = $('#v_add_strg_bill').val();
+        var p_str_inout_bill = $('#v_add_inout_bill').val();
+        var p_str_allow_new_item = $('#v_add_allow_new_item').val();
+        var p_str_itm_listby = $('#v_add_itemlistby').val();
+        var p_str_auto_inc = $('#v_add_autoincre').val();
+        var p_str_rcv_lot_by = $('#new_recv_lot_by').val();
+        var p_str_initstrg = $('#new_initstrg').val();
+        var p_str_aloc_by = $('#new_aloc_by').val();
+        var p_str_mail_name = $('#mail_name').val();
+        var p_str_attn = $('#attn').val();
+        var p_str_addr1 = $('#addr1').val();
+        var p_str_addr2 = $('#addr2').val();
+        var p_str_city = $('#city').val();
+        var p_str_state = $('#ListStatePick').val();
+        var p_str_zip = $('#zip').val();
+        var p_str_country = $('#country').val();
+        var p_str_frieght_id = $('#frieght_id').val();
+        var p_str_ship_via_id = $('#ship_via_id').val();
+        var p_str_catg = $('#catg').val();
+        var p_str_bill_cycle = $('#bl_cycle').val();
+        var p_str_credit_code = $('#code').val();
+        var p_str_credit_type = $('#type').val();
+        var p_str_credit_msg = $('#msg').val();
+        var p_str_credit_limit = $('#credit_lt').val();
+        var p_str_discount = $('#disc').val();
+        var p_str_terms_code = $('#term_code').val();
+        var p_str_order_value = $('#ord_val').val();
+        var p_str_tax_code = $('#tax_code').val();
+        var p_str_tax_exempt = $('#tax_exempt').val();
+        var p_str_gl_num = $('#gl_num').val();
+        var p_str_file_name = $('#a_file_name').val();
+        var p_str_recv_doc_itm = $('#new_Rcev_non_doc_itm').val();
+        var p_str_stk_chk_reqt = $('#new_Stk_Chk_Reqt').val();
+        var p_str_pmt_term = $('#v_add_pmt_term').val();
+        var p_str_cube_auto_cacl = $('#v_add_cube_autocalc').val();
+        var p_str_is_bill_by_cube_rounded = $('#v_is_bill_by_cube_rounded').val();
+        var p_str_min_inout_cube = $('#v_min_inout_cube').val();
+        var p_str_min_strg_cube = $('#v_min_strg_cube').val();
+        var p_str_Cust_initial = $('#v_add_custin_id').val();
+        var pstrIORateId = $('#v_add_io_rate_id').val();
+        var pstrIORateName = $('#v_add_io_rate_name').val();
+        var pdecIORatePrice = $('#v_add_io_rate_price').val();
+        var pstrStrgRateId = $('#v_add_strg_rate_id').val();
+        var pstrStrgRateName = $('#v_add_strg_rate_name').val();
+        var pdecStrgRatePrice = $('#v_add_strg_rate_price').val();
+        var p_str_ecom_recv_by_bin = $('#ecom_recv_by_bin').is(':checked');
+        var p_str_allow_940_new_item = $('#v_add_allow_940_new_item').is(':checked');
+        var p_str_cust_type = $('#a_add_cust_type').val();
+
+
+        debugger
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#v_add_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_cust_id == "") {
+            swal("", "Please Select The Cust ID.", "");
+            $('#v_add_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_Cust_initial == "") {
+            swal("", "Please Select The Customer Initials.", "");
+            $('#v_add_custin_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (pstrIORateName == "") {
+            swal("", "Please Enter I/O Rate Description", "");
+            $('#v_add_io_rate_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (pdecIORatePrice == "") {
+            swal("", "Please Enter I/O Rate Price", "");
+            $('#v_add_io_rate_price').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (parseFloat(pdecIORatePrice) <= 0) {
+            swal("", "Please Enter I/O Rate Price", "");
+            $('#v_add_io_rate_price').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (pstrStrgRateName == "") {
+            swal("", "Please Enter Storage Rate Description", "");
+            $('#v_add_strg_rate_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (pdecStrgRatePrice == "") {
+            swal("", "Please Enter Storage Rate Price", "");
+            $('#v_add_strg_rate_price').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (parseFloat(pdecStrgRatePrice) <= 0) {
+            swal("", "Please Enter Storage Rate Price", "");
+            $('#v_add_strg_rate_price').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+
+        var lintUsers = $("input[name='selUserId']:checked").length;
+        var arySelUsers = [];
+        var lstrUserList = '';
+
+        if (lintUsers > 0) {
+            $("input[name='selUserId']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    arySelUsers.push(check.val());
+                }
+            });
+
+            $.each(arySelUsers, function (i, v) {
+
+                if (lstrUserList == '')
+                    lstrUserList = v;
+                else
+                    lstrUserList = lstrUserList + '|' + v;
+            });
+        }
+
+        if (p_str_cmp_name == "") {
+            swal("", "Please Select The Company Name.", "");
+            $('#new_cmp_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+
+        else {
+
+            if (p_str_whs_id == "") {
+                sweetAlert({
+                    title: "",
+                    text: "Default Warehouse is Blank. Do you want Save(Yes/No)",
+                    type: "",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "No",
+                    cancelButtonText: "Yes",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+function (isConfirm) {
+    if (isConfirm) {
+        if ($('#chkPassport').is(":checked")) {
+            $('#v_add_whs_id').val('');
+            $('#v_add_whs_id').focus();
+        }
+        else {
+            $('#v_add_new_whs_id').val('');
+            $('#v_add_new_whs_id').focus();
+        }
+        swal.close();
+        return false;
+    }
+    else {
+        debugger
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/CustMaster/SaveCustdtls")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_cust_id": p_str_cust_id,
+                "p_str_cmp_name": p_str_cmp_name, "p_str_whs_id": p_str_whs_id, "p_str_source": p_str_source,
+                "p_str_region": p_str_region, "p_str_territory": p_str_territory,
+                "p_str_cust_grp_id": p_str_cust_grp_id, "p_str_status": p_str_status, "p_str_contact": p_str_contact, "p_str_dt_of_entry": p_str_dt_of_entry,
+                "p_str_last_chg_dt": p_str_last_chg_dt, "p_str_tel": p_str_tel, "p_str_fax": p_str_fax, "p_str_email": p_str_email, "p_str_web": p_str_web, "p_str_cell": p_str_cell,
+                "p_str_bl_free_days": p_str_bl_free_days, "p_str_strg_bill": p_str_strg_bill, "p_str_inout_bill": p_str_inout_bill, "p_str_allow_new_item": p_str_allow_new_item, "p_str_itm_listby": p_str_itm_listby, "p_str_auto_inc": p_str_auto_inc,
+                "p_str_rcv_lot_by": p_str_rcv_lot_by, "p_str_initstrg": p_str_initstrg, "p_str_aloc_by": p_str_aloc_by,
+                "p_str_mail_name": p_str_mail_name, "p_str_attn": p_str_attn, "p_str_addr1": p_str_addr1, "p_str_addr2": p_str_addr2, "p_str_city": p_str_city, "p_str_state": p_str_state,
+                "p_str_zip": p_str_zip, "p_str_country": p_str_country, "p_str_frieght_id": p_str_frieght_id, "p_str_ship_via_id": p_str_ship_via_id,
+                "p_str_catg": p_str_catg, "p_str_bill_cycle": p_str_bill_cycle,
+                "p_str_credit_code": p_str_credit_code, "p_str_credit_type": p_str_credit_type, "p_str_credit_msg": p_str_credit_msg,
+                "p_str_credit_limit": p_str_credit_limit, "p_str_discount": p_str_discount, "p_str_terms_code": p_str_terms_code, "p_str_order_value": p_str_order_value,
+                "p_str_tax_code": p_str_tax_code, "p_str_tax_exempt": p_str_tax_exempt,
+                "p_str_gl_num": p_str_gl_num, "p_str_file_name": p_str_file_name, "p_str_recv_doc_itm": p_str_recv_doc_itm, "p_str_stk_chk_reqt": p_str_stk_chk_reqt, "p_str_pmt_term": p_str_pmt_term,
+                "p_str_cube_auto_cacl": p_str_cube_auto_cacl, "p_str_is_bill_by_cube_rounded": p_str_is_bill_by_cube_rounded,
+                "p_str_min_inout_cube": p_str_min_inout_cube, "p_str_min_strg_cube": p_str_min_strg_cube, "p_str_Cust_initial": p_str_Cust_initial,
+                "lstrUserList": lstrUserList, "pstrIORateId": pstrIORateId, "pstrIORateName": pstrIORateName, "pdecIORatePrice": pdecIORatePrice,
+                "pstrStrgRateId": pstrStrgRateId, "pstrStrgRateName": pstrStrgRateName, "pdecStrgRatePrice": pdecStrgRatePrice,
+                "p_str_ecom_recv_by_bin": p_str_ecom_recv_by_bin, "p_str_allow_940_new_item": p_str_allow_940_new_item, "p_str_cust_type": p_str_cust_type
+            },
+            dataType: 'html',
+            success: function (e) {
+                if (e == '1') {
+                    swal({
+                        title: "",
+                        text: "CustomerId " + p_str_cust_id + " Alreadry Exist.",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                    function () {
+                        debugger
+                        setTimeout(function () {
+                            debugger
+                            var url = '@Url.Action("CustMaster", "CustMaster")';
+                            window.location.href = url;
+                        });
+                    });
+                }
+                else if (e == '2') {
+                    //sweetAlert("", "UserId" + p_str_user_id + "Alreadry Exist.", "");
+                    swal({
+                        title: "",
+                        text: "Pls Import Image File  Before Save.",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                    function () {
+                        debugger
+                        setTimeout(function () {
+                            debugger
+                            var url = '@Url.Action("CustMaster", "CustMaster")';
+                            window.location.href = url;
+                        });
+                    });
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: "CustomerId " + p_str_cust_id + " Added successfully.",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                     function () {
+
+                         setTimeout(function () {
+                             var p_str_cmp_id = $('#v_add_cust_of_cmpid').val();
+
+                             $.ajax({
+                                 type: "get",
+                                 url: "/CustMaster/CustMasterDtl",
+                                 data: {
+                                     "p_str_cmp_id": p_str_cmp_id,
+                                     "p_str_cust_id": p_str_cust_id,
+
+
+                                 },
+                                 datatype: 'html',
+                                 success: function (e) {
+                                     debugger
+                                     $('#CustomerAdd').modal('hide');
+                                     $("#ajaxloading").hide();
+                                     $('#CustomerGrid').html("");
+                                     $('#CustomerGrid').html(e);
+                                 },
+                             })
+
+                         });
+
+                     });
+
+                }
+            },
+
+        })
+
+    }
+});
+            }
+            else {
+
+                sweetAlert({
+                    title: "",
+                    text: "" + p_str_whs_id + " set as Default Warehouse for this customer(Yes/No)",
+                    type: "",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "No",
+                    cancelButtonText: "Yes",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+    function (isConfirm) {
+        if (isConfirm) {
+
+            $('#v_add_whs_id').val('');
+            $('#v_add_whs_id').focus();
+            swal.close();
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/CustMaster/SaveCustdtls")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_cust_id": p_str_cust_id,
+                    "p_str_cmp_name": p_str_cmp_name, "p_str_whs_id": p_str_whs_id, "p_str_source": p_str_source,
+                    "p_str_region": p_str_region, "p_str_territory": p_str_territory,
+                    "p_str_cust_grp_id": p_str_cust_grp_id, "p_str_status": p_str_status, "p_str_contact": p_str_contact, "p_str_dt_of_entry": p_str_dt_of_entry,
+                    "p_str_last_chg_dt": p_str_last_chg_dt, "p_str_tel": p_str_tel, "p_str_fax": p_str_fax, "p_str_email": p_str_email, "p_str_web": p_str_web, "p_str_cell": p_str_cell,
+                    "p_str_bl_free_days": p_str_bl_free_days, "p_str_strg_bill": p_str_strg_bill, "p_str_inout_bill": p_str_inout_bill, "p_str_allow_new_item": p_str_allow_new_item, "p_str_itm_listby": p_str_itm_listby, "p_str_auto_inc": p_str_auto_inc,
+                    "p_str_rcv_lot_by": p_str_rcv_lot_by, "p_str_initstrg": p_str_initstrg, "p_str_aloc_by": p_str_aloc_by,
+                    "p_str_mail_name": p_str_mail_name, "p_str_attn": p_str_attn, "p_str_addr1": p_str_addr1, "p_str_addr2": p_str_addr2, "p_str_city": p_str_city, "p_str_state": p_str_state,
+                    "p_str_zip": p_str_zip, "p_str_country": p_str_country, "p_str_frieght_id": p_str_frieght_id, "p_str_ship_via_id": p_str_ship_via_id,
+                    "p_str_catg": p_str_catg, "p_str_bill_cycle": p_str_bill_cycle,
+                    "p_str_credit_code": p_str_credit_code, "p_str_credit_type": p_str_credit_type, "p_str_credit_msg": p_str_credit_msg,
+                    "p_str_credit_limit": p_str_credit_limit, "p_str_discount": p_str_discount, "p_str_terms_code": p_str_terms_code, "p_str_order_value": p_str_order_value,
+                    "p_str_tax_code": p_str_tax_code, "p_str_tax_exempt": p_str_tax_exempt,
+                    "p_str_gl_num": p_str_gl_num, "p_str_file_name": p_str_file_name, "p_str_recv_doc_itm": p_str_recv_doc_itm, "p_str_stk_chk_reqt": p_str_stk_chk_reqt, "p_str_pmt_term": p_str_pmt_term,
+                    "p_str_cube_auto_cacl": p_str_cube_auto_cacl, "p_str_is_bill_by_cube_rounded": p_str_is_bill_by_cube_rounded,
+                    "p_str_min_inout_cube": p_str_min_inout_cube, "p_str_min_strg_cube": p_str_min_strg_cube,
+                    "p_str_Cust_initial": p_str_Cust_initial, "lstrUserList": lstrUserList, "pstrIORateId": pstrIORateId, "pstrIORateName": pstrIORateName, "pdecIORatePrice": pdecIORatePrice,
+                    "pstrStrgRateId": pstrStrgRateId, "pstrStrgRateName": pstrStrgRateName, "pdecStrgRatePrice": pdecStrgRatePrice,
+                    "p_str_ecom_recv_by_bin": p_str_ecom_recv_by_bin, "p_str_allow_940_new_item": p_str_allow_940_new_item, "p_str_cust_type": p_str_cust_type
+                },
+                dataType: 'json',
+                success: function (e) {
+                    if (e == '1') {
+                        //sweetAlert("", "UserId" + p_str_user_id + "Alreadry Exist.", "");
+                        swal({
+                            title: "",
+                            text: "CustomerId " + p_str_cust_id + " Alreadry Exist.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                        function () {
+                            debugger
+                            setTimeout(function () {
+                                debugger
+                                var url = '@Url.Action("CustMaster", "CustMaster")';
+                                window.location.href = url;
+                            });
+                        });
+                    }
+                    else if (e == '2') {
+                        sweetAlert("", "Pls Import Image File  Before Save.", "");
+                        return false;
+                    }
+                    else if (e == '3') {
+                        sweetAlert("", "Customer Initials Already Exists ! ", "");
+                        return false;
+                    }
+                    else {
+                        swal({
+                            title: "",
+                            text: "CustomerId " + p_str_cust_id + " Added successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                        //swal("", "Your record Added successfully.", "");
+                         function () {
+
+                             setTimeout(function () {
+                                 var p_str_cmp_id = $('#v_add_cust_of_cmpid').val();
+                                 var p_str_cust_id = $('#v_add_cmp_id').val();
+                                 $('#CustomerAdd').modal('hide');
+                                 $.ajax({
+                                     type: "get",
+                                     url: "/CustMaster/CustMasterDtl",
+                                     data: {
+                                         "p_str_cmp_id": p_str_cmp_id,
+                                         "p_str_cust_id": p_str_cust_id,
+
+
+                                     },
+                                     datatype: 'html',
+                                     success: function (e) {
+                                         debugger
+                                         $("#ajaxloading").hide();
+                                         $('#CustomerGrid').html("");
+                                         $('#CustomerGrid').html(e);
+                                     },
+                                 })
+
+                             });
+
+                         });
+
+                    }
+                },
+
+            })
+
+        }
+    });
+            }
+        }
+
+    });
+    $(document).ready(function () {
+        $('input[type="checkbox"]').click(function () {
+            if ($(this).prop("checked") == true) {
+                $("#CustWhsList").hide();
+                $("#CustWhs").show();
+                $('#v_add_new_whs_id').val('');
+                $('#v_add_new_whs_id').focus();
+            }
+            else if ($(this).prop("checked") == false) {
+                $("#CustWhsList").show();
+                $("#CustWhs").hide();
+            }
+        });
+    });
+    $(function () {
+        $('#cmp_id').change(function () {
+            debugger;
+            var id = $(this).find(":selected").val();
+            var p_str_cmp_id = $('#v_add_cust_of_cmpid').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("CustomerCopy", "CustMaster")',
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "cmp_id": id
+                },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    $("#ajaxLoading").hide();
+                    $('#ContentCustomerAdd').html(data);
+                    $('#CustomerAdd').modal(options);
+                    $('#CustomerAdd').modal('show');
+                },
+                error: function () {
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+
+    });
+    $(function () {
+        $('#v_add_cmp_id').change(function () {
+            debugger;
+            var p_str_Cust_initial = $('#v_add_cmp_id').val();
+            $('#v_add_custin_id').val(p_str_Cust_initial.substring(0, 2));
+        });
+    });
+
+
+</script>
+
+
+
+
+

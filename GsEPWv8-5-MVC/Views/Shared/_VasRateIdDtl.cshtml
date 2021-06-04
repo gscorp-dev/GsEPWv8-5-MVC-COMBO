@@ -1,0 +1,15 @@
+﻿@model GsEPWv8_5_MVC.Model.VasInquiryModel
+<div id="divRateSec">
+    <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100%;padding-top:5px;">
+        <tr>
+            <td style="text-align: right;width:8%;">
+                <label><b class="Lblmanual">RateId </b></label>
+            </td>
+            <td style="width: 22%; padding-left: 1%;">
+                @Html.DropDownListFor(model => model.vasRateId, new SelectList(Model.ListVasRateIdDetails, "rate_id", "rate_desc"), "---Select All---", new { @class = "form-control txtlbl" })
+            </td>
+            <td style="text-align: right;width:70%;"></td>
+        </tr>
+
+    </table>
+</div>

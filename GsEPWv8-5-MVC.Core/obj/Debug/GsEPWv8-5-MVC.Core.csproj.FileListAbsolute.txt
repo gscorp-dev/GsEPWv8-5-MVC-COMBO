@@ -1,0 +1,16 @@
+D:\PROD-SOURCE\GsEPWv8-5-MVC\Reference\GsEPWv8-5-MVC.Core.dll
+D:\PROD-SOURCE\GsEPWv8-5-MVC\Reference\GsEPWv8-5-MVC.Core.pdb
+D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.csprojResolveAssemblyReference.cache
+D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.dll
+D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.pdb
+D:\PROD-SOURCE\GsEPWv8-5-MVC-SVR9\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.dll
+D:\PROD-SOURCE\GsEPWv8-5-MVC-SVR9\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.pdb
+D:\PROD-SOURCE\GsEPWv8-5-MVC-SVR9\Reference\GsEPWv8-5-MVC.Core.dll
+D:\PROD-SOURCE\GsEPWv8-5-MVC-SVR9\Reference\GsEPWv8-5-MVC.Core.pdb
+D:\PROD-SOURCE\GsEPWv8-5-MVC-COMBO\Reference\GsEPWv8-5-MVC.Core.dll
+D:\PROD-SOURCE\GsEPWv8-5-MVC-COMBO\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.dll
+D:\PROD-SOURCE\GsEPWv8-5-MVC-COMBO\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.pdb
+D:\PROD-SOURCE\GsEPWv8-5-MVC-COMBO\Reference\GsEPWv8-5-MVC.Core.pdb
+D:\PROD-SOURCE\GsEPWv8-5-MVC-COMBO\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.csprojAssemblyReference.cache
+D:\PROD-SOURCE\GsEPWv8-5-MVC-COMBO\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.csproj.CoreCompileInputs.cache
+D:\PROD-SOURCE\GsEPWv8-5-MVC-COMBO\GsEPWv8-5-MVC.Core\obj\Debug\GsEPWv8-5-MVC.Core.csproj.CopyComplete

@@ -1,0 +1,3129 @@
+﻿@model GsEPWv8_5_MVC.Model.StockInquiryDtlModel
+@{
+    ViewBag.Title = "StockInquiry";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var hdrcount = Model.ListStockInquiry.Count;
+    var dtlcount = Model.ListStockInquiryaudit.Count;
+    var Dtlstockcount = Model.LstStockInquirystock.Count;
+    int AlocQty = 0;
+    //CR2018-03-08-001 Added By Nithya
+    //int AlocQty = 0;
+}
+@Html.HiddenFor(model => model.AlocQty)
+@for (int j = 0; j < Model.LstStockInquirystock.Count(); j++)
+{
+    AlocQty = AlocQty + Model.LstStockInquirystock[j].AlocQty;
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+
+
+<style > fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+        /*border-bottom: 1px solid #e5e5e5;*/
+    }
+
+    .btn-danger {
+        background-color: red;
+        border-color: red;
+    }
+
+        .btn-danger:hover {
+            background-color: red;
+            border-color: red;
+        }
+
+    .sweet-alert {
+        background-color: #8cd6f7; /*//CR20180531 Added by nithya*//*#f1e9e9;*/
+        width: 545px;
+        padding: 17px;
+        border-radius: 5px;
+        text-align: center;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -256px;
+        margin-top: -200px;
+        overflow: hidden;
+        display: none;
+        z-index: 2000;
+    }
+
+    .btn-default {
+        background-color: #009685;
+        color: white;
+        border-color: #009685;
+    }
+
+        .btn-default:hover {
+            background-color: #009685;
+            color: white;
+            border-color: #009685;
+        }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+        
+    }
+   
+    .ui-autocomplete li {
+    font-size: 12px;
+    line-height:30px;
+    color:darkblue;
+    font-family:Verdana;
+    font-weight: bold;
+    background-color:lightcyan;
+}
+  
+    
+
+</style>
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+
+
+@using (Html.BeginForm("StockInquiry", "StockInquiry", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+{
+
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                        <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <a href="/DashBoardB2B/DashBoardB2B" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+                <td style="width: 60%" class="ScreenTitle">
+                    @*<h3>Doc Entry & Visibility</h3>*@
+                    Stock Inquiry And Analysis
+
+                </td>
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                    <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+            </div>
+        </div>
+        <div id="childtabs">
+            <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+            <ul>
+                <li><a href="#childtabs-1" style="font-size:12px;">Stock Inquiry</a></li>
+                <li><a href="#childtabs-2" style="font-size:12px;" id="hob">Audit Trail</a></li>
+            </ul>
+
+            <div id="childtabs-1">
+                <div class="box box-default">
+                    <div class="box-header">
+                        @*<div class="container">*@
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-8 col-sm-8 col-xs-8">
+                                    <table style="border-collapse: separate;border-spacing: 0px 0.5em;    ">
+                                        <tr>
+                                            <td style="text-align: right;width: 6%;">
+                                                <label><b class="Lblmanual">Cmp Id </b></label>
+                                            </td>
+
+                                            @Html.HiddenFor(model => model.p_str_company)
+
+
+                                            @Html.HiddenFor(model => model.p_str_cmpid)
+                                            <td colspan="5" style="width: 50%; padding-left: 1%;">
+                                                @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                                {
+                                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                                }
+
+                                            </td>
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">WhsId</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.whs_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">IB Doc Id</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.ib_doc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">PO No</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.po_num, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right;    width: 5%;">
+                                                <label><b class="Lblmanual">Ref No</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%; ">
+                                                @Html.TextBoxFor(model => model.grn_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                            <td colspan="2" style="width: 11%;"></td>
+
+                                        </tr>
+                                        <tr style="padding-bottom:2%">
+                                            <td style="text-align: right;width: 6%;">
+                                                <label><b class="Lblmanual">Cont ID</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.cont_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Lot ID</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.lot_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">Loc ID</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.loc_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align: right;width: 6%;">
+                                                <label><b class="Lblmanual">Style</b></label>
+                                            </td>
+                                            <td style="width: 15%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Itmdtl, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Color</b></label>
+                                            </td>
+                                            <td style="width: 8%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">Size</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 5%;">
+                                                <label><b class="Lblmanual">Desc</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+
+                                            <td style="width: 11%; padding-left: 1%;">
+                                                @Html.DropDownListFor(model => model.status, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @class = "form-control txtlbl" })
+                                            </td>                                         
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right;width: 5.4%;">
+                                                <label><b class="Lblmanual">Fm Dt</b></label>
+                                            </td>
+                                            <td style="width:15%; padding-left:1%;">
+                                                @Html.TextBoxFor(model => model.Date_fm, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 6.2%;">
+                                                <label><b class="Lblmanual"> To</b></label>
+                                            </td>
+                                            <td style="width: 9%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Date_to, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                                            </td>
+                                            <td colspan="9" style="width: 71%;">
+                                                <button type="button" id="btnSearch" class="btn_search" style="margin-left: 20px;">Search </button>
+                                                <button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                            </td>
+
+                                        </tr>
+
+
+                                    </table>
+
+
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1">
+
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <table>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <fieldset>
+                                                    <legend>Report Selection</legend>
+
+
+                                                    <table style="margin-top:0px;">
+                                                        <tr>
+                                                            <td style="padding-left: 10px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="DetailbyStyle" name="radio3" checked /><b> Stock Report Detail by Style</b></td>
+                                                            <td style="padding-left: 5px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="DetailbyLoc" name="radio3" /><b> Stock Report Detail by Loc</b></td>
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td style="padding-left: 10px; padding-bottom:0px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="SummarybyStyle" name="radio3" /><b> Stock Report Summary by Style</b></td>
+                                                            <td style="padding-left: 5px;padding-bottom:0px; font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="SummarybyLoc" name="radio3" /><b> Stock Report Summary by Loc</b></td>
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td style="padding-left: 10px; padding-bottom:0px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="OpnToSellStkSryRpt" name="radio3" /><b> Open To Sell Stock Report Summary by Style</b></td>
+                                                        </tr>
+
+                                                    </table>
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <b style="color:blue;font-size: 12px;font-family: verdana; margin-left:5px;">Format</b>
+                                                            </td>
+                                                            <td>
+
+                                                                <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right " data-toggle="dropdown">
+                                                                    <option>XLS</option>
+                                                                    <option>PDF</option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td>
+                                                                <b style="color:blue;font-size: 12px;font-family: verdana; margin-left:20px;">Mode</b>
+                                                            </td>
+                                                            <td>
+
+                                                                <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:65px; text-align:right " data-toggle="dropdown">
+                                                                    <option>VIEW</option>
+                                                                    <option>EMAIL</option>
+
+                                                                </select>
+
+
+                                                            </td>
+                                                            <td>
+
+                                                                <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                            </td>
+
+                                                        </tr>
+                                                    </table>
+
+                                                </fieldset>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="showgrid" class="box-header" style="padding:5px;">
+                    <div class="box-body">
+                        <br />
+                        <table>
+                            <tr>
+                                <td style="width:22%;text-align:center;">
+                                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                        Total Records:
+                                    </span>
+                                    <label class="totalCount" style="text-align:left">
+                                        @hdrcount
+                                    </label>
+                                </td>
+                                @*<td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                                    Avl Ctn:
+                                </td>
+                                <td>
+                                    <input type="text" value="0" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red; " />
+                                  
+                                </td>*@
+                                <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left;padding-left:30px;padding-right: 10px;font-family:Verdana;font-weight:200; ">
+                                    Avl Qty:
+                                </td>
+                                <td>
+                                    <input type="text" value="0" class="form-control" style="font-size:16px;font-weight: 900;font-family: verdana;color: red; " />
+
+                                    @*@Html.TextBoxFor(model => model.AvlQty, new { @class = "form-control", @maxlength = "50" })*@
+
+                                </td>
+                                <td style="font-size:1.5em;color:black;font-weight: bold;text-align:left; padding-left:36px;padding-right: 10px;font-family:Verdana;font-weight:200;">
+                                    Aloc Qty:
+                                </td>
+                                <td>
+                                    @*<input type="text" value="0" class="form-control" style="font-size:14px;"/>*@
+                                    <input id="txtAlocQty" type="text" name="AlocQty" class="form-control" value="@AlocQty" style="font-size:16px;font-weight: 900;font-family: verdana;color: red; ">
+                                    @*@Html.TextBoxFor(model => model.AlocQty, new { @class = "form-control", @maxlength = "50" })*@
+                                </td>
+                            </tr>
+                        </table>
+
+                        <br />
+
+                        <table id="Grid_Iv_Stk_inq" class="table table-bordered table-striped">
+
+                            <thead class="grid_backcolor">
+                                <tr>
+                                    <th class="grid_header_backcolor">Style</th>
+                                    <th class="grid_header_backcolor">Color</th>
+                                    <th class="grid_header_backcolor">Size</th>
+                                    <th class="grid_header_backcolor">Desc</th>
+                                    <th class="grid_header_backcolor">Rcvd Dt</th>
+                                    <th class="grid_header_backcolor">IBDocID</th>
+                                    <th class="grid_header_backcolor">ContID</th>
+                                    <th class="grid_header_backcolor">LotID</th>
+                                    <th class="grid_header_backcolor">PoNum</th>
+                                    <th class="grid_header_backcolor">LocID</th>
+                                    <th class="grid_header_backcolor">AvlCtn</th>
+                                    <th class="grid_header_backcolor">PPK</th>
+                                    <th class="grid_header_backcolor">AvlQty</th>
+                                    <th class="grid_header_backcolor">PaletID</th>
+                                    <th class="grid_header_backcolor">Whs</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div id="showgridstock_inq" class="box-header" style="padding:0px; ">
+                </div>
+
+            </div>
+            <div id="childtabs-2">
+                <div class="box box-default">
+                    <div class="box-header">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-8 col-sm-8 col-xs-8">
+                                    <table style="border-collapse: separate;border-spacing: 0px 0.5em;    ">
+                                        <tr>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">Cmp Id </b></label>
+                                            </td>
+                                            <td colspan="5" style="width: 50%; padding-left: 1%;">
+
+                                                @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                                {
+                                                    @Html.DropDownListFor(model => model.Audcmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @id = "Audit_cmpid", @class = "form-control txtlbl" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownListFor(model => model.Audcmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "Audit_cmpid", @class = "form-control txtlbl" })
+                                                }
+                                            </td>
+                                            <td style="text-align: right; width: 6%; margin-top: 6px;">
+                                                <label><b class="Lblmanual">WhsId</b></label>
+
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Audwhs_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                            </tr>
+                                        <tr>
+                                            <td style="text-align: right;  margin-top: 6px;">
+                                                <label><b class="Lblmanual">IB Doc Id</b></label>
+
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Audib_doc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+
+                                            <td style="text-align: right; width: 6%; margin-top: 8px;padding-left: 1%;">
+                                                <label><b class="Lblmanual">PONum</b></label>
+
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Audpo_num, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <label><b class="Lblmanual">Ref Num</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Audgrn_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">Cont ID</b></label>
+                                            </td>
+                                            <td style="width: 15%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Audcont_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right;  margin-top: 6px;">
+                                                <label><b class="Lblmanual">Lot ID</b></label>
+
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Audlot_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+
+                                            </td>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">Loc ID</b></label>
+
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Audloc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">Style</b></label>
+                                            </td>
+                                            <td style="width: 15%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Auditm_num, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">Color</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Auditm_color, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">Size</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Auditm_size, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+                                            <td style="text-align: right; width: 6%;">
+                                                <label><b class="Lblmanual">Desc</b></label>
+                                            </td>
+                                            <td style="width: 10%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Auditm_name, new { @class = "form-control txtlbl", @maxlength = "50", @style = "background-color:lightyellow;" })
+                                            </td>
+
+                                            @*<td style="width: 10%; padding-left: 1%;">
+                                                    @Html.DropDownListFor(model => model.Audstatus, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @class = "form-control txtlbl", @disabled = "true" })
+
+                                                </td>*@
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="6"></td>
+                                            <td colspan="3">
+
+                                                <table>
+                                                    <tr>
+                                                        <td style="padding-left: 25px;text-align: right;">
+                                                            <button type="button" id="btnSearchAudit" class="btn_search">Search </button>
+                                                        </td>
+                                                        <td style="padding-left: 5px;">
+                                                            <button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1">
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <table>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <fieldset>
+                                                    <legend>Report Selection</legend>
+
+
+                                                    <table style="margin-top:0px;">
+                                                        <tr>
+                                                            <td style="padding-left: 10px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="DetailWithoutISM" name="radio1" checked /><b> Detail Without ISM</b></td>
+                                                            <td style="padding-left: 5px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="DetailWithISM" name="radio1" /><b> Detail With ISM</b></td>
+                                                            <td style="padding-left: 9px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="DetailOnlyISM" name="radio1" /><b> Detail Only ISM</b></td>
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td style="padding-left: 10px; font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="SummaryWithoutISM" name="radio1" /><b>Summary Without ISM</b></td>
+                                                            <td style="padding-left: 5px; font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="SummaryWithISM" name="radio1" /><b>Summary With ISM</b></td>
+                                                            <td style="padding-left: 10px; padding-bottom:0px;font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="SummaryonlyISM" name="radio1" /><b>Summary Only ISM</b></td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="padding-left: 10px; font-size: 1.2em;padding-bottom:8px;font-family: verdana;"><input type="radio" value="AuditItemDtl" name="radio1" /><b>Audit Detail Excel Report</b></td>
+
+                                                                
+                                                                <td></td>
+                                                            </tr>
+
+                                                    </table>
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <b style="color:blue;font-size: 12px; margin-left:5px;font-family: verdana;">Format</b>
+                                                            </td>
+                                                            <td>
+
+                                                                <select id="id_formatAudit" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right " data-toggle="dropdown">
+                                                                    <option>PDF</option>
+                                                                    <option>XLS</option>
+                                                                </select>
+
+                                                            </td>
+                                                            <td>
+                                                                <b style="color:blue;font-size: 12px;font-family: verdana; margin-left:20px;">Mode</b>
+                                                            </td>
+                                                            <td>
+
+                                                                <select id="id_modeAudit" class="btn-Format" type="button" style="margin-left:6px; width:65px; text-align:right " data-toggle="dropdown">
+                                                                    <option>VIEW</option>
+                                                                    <option>EMAIL</option>
+
+                                                                </select>
+
+
+                                                            </td>
+                                                            <td>
+
+                                                                <button type="button" id="btnprocesssAudit" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                                            </td>
+
+                                                        </tr>
+                                                    </table>
+
+                                                </fieldset>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="showgrid1" class="box-header" style="padding: 5px; ">
+                    <br />
+                    <div class="gridSummary" style="height:100%;">
+                        <table>
+                            <tr>
+                                <td style="width:20%;text-align:center;">
+                                    <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                                        Total Records:
+                                    </span>
+                                    <label class="totalCount" style="text-align:left">
+                                        @dtlcount
+                                    </label>
+                                </td>
+
+                                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Rcvd Qty</b></label>
+                                    @Html.TextBoxFor(model => model.Rcvd_Qty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>
+
+                                @*<td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Rcvd Ctns</b></label>
+                                    @Html.TextBoxFor(model => model.Rcvd_Ctns, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>*@
+                                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Aloc Qty</b></label>
+                                    @Html.TextBoxFor(model => model.Alocqty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>
+
+                                @*<td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Aloc Ctns</b></label>
+                                    @Html.TextBoxFor(model => model.AlocCtn, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>*@
+                                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Ship Qty</b></label>
+                                    @Html.TextBoxFor(model => model.Ship_Qty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>
+
+                                @*<td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Ship Ctns</b></label>
+                                    @Html.TextBoxFor(model => model.Ship_Ctns, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>*@
+
+
+                                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Adj Qty</b></label>
+                                    @Html.TextBoxFor(model => model.Adj_Qty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>
+
+                                @*<td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Adj Ctns</b></label>
+                                    @Html.TextBoxFor(model => model.Adj_Ctns, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>*@
+
+                                <td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Avl Qty</b></label>
+                                    @Html.TextBoxFor(model => model.AvlQty, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>
+                                @*<td style="width: 140px;font-size: 1.5em;color: black;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    <label><b style="font-family: verdana;font-weight:200;">Avl Ctns</b></label>
+                                    @Html.TextBoxFor(model => model.AvlCtn, new { @class = "form-control", @maxlength = "50", @style = "font-size:16px;font-weight: 900;font-family: verdana;color: red; " })
+                                </td>*@
+                            </tr>
+                        </table>
+                        <table>
+                            <tr style="height:25px"></tr>
+                            <tr style="width:100%">
+                                <td style="width: 20%;font-size:12px;color:blue;font-weight: bold;text-align: right;padding-right: 10px;"></td>
+                                <td style="width: 25%;font-size:12px;color:blue;font-weight: bold;text-align:right;padding-right: 50px;">
+                                    Note:
+                                </td>
+                                <td style="width: 25%;font-size:12px;color:blue;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    Avail Qty(s) = Rcved Qty - ( Aloc Qty + Ship Qty + Adj Qty)
+                                </td>
+                                <td style="width: 5%;font-size:12px;color:blue;font-weight: bold;text-align: right;padding-right: 10px;"></td>
+                                <td style="width: 25%;font-size:12px;color:blue;font-weight: bold;text-align: center;padding-right: 10px;">
+                                    Avail Ctn(s) = Rcved Ctn - ( Aloc Ctn + Ship Ctn + Adj Ctn)
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+
+                    <table id="Grid_Iv_Aud_inq" class="table table-bordered table-striped">
+
+                        <thead class="grid_backcolor">
+                            <tr>
+                                <th class="grid_header_backcolor">Style</th>
+                                <th class="grid_header_backcolor">Color</th>
+                                <th class="grid_header_backcolor">Size</th>
+                                <th class="grid_header_backcolor">IBDocID</th>
+                                <th class="grid_header_backcolor">ContID</th>
+                                <th class="grid_header_backcolor">TranType</th>
+                                <th class="grid_header_backcolor">DocDt</th>
+                                <th class="grid_header_backcolor">SR#</th>
+                                <th class="grid_header_backcolor">OB Doc Id</th>
+                                <th class="grid_header_backcolor">LotID</th>
+                                <th class="grid_header_backcolor">PoNum</th>
+                                <th class="grid_header_backcolor">Whs</th>
+                                <th class="grid_header_backcolor">Palet ID</th>
+                                <th class="grid_header_backcolor">Ctns</th>
+                                <th class="grid_header_backcolor">Qty</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+                <div id="showgridAudit_trail" class="box-header" style="padding: 0px; ">
+                </div>
+            </div>
+        </div>
+        <div id='myModalEmail' class='modal'>
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 198%; left:-160px;">
+                    <div id='myModalEmailContent' style="width: 100%; height: 700px;"></div>
+                </div>
+            </div>
+
+        </div>
+        <div id='myModalINdocupld' class='modal'>
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 220%; left:-365px;">
+                    <div id='myModalINdocupldContent' style="width: 100%; height: 650px;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+    @*$("#btnDashboard").click(function () {
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })*@
+
+    $(function () {
+
+
+
+        $("#Itmdtl").autocomplete({
+            source: function (request, response) {
+                $.getJSON("/StockInquiry/ItemXGetitmDtl", {
+                    term: request.term,
+                    cmp_id: $('#p_str_company').val(),
+                },
+                          response);
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                $("#itm_size").val(ui.item.itm_size);
+                $("#itm_color").val(ui.item.itm_color);    //action
+                $("#itm_name").val(ui.item.itm_name);
+            }
+        });
+        $("#Auditm_num").autocomplete({
+            source: function (request, response) {
+                $.getJSON("/StockInquiry/ItemXGetitmDtl", {
+                    term: request.term,
+                    cmp_id: $('#p_str_company').val(),
+                },
+                          response);
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                $("#Auditm_color").val(ui.item.itm_color);
+                $("#Auditm_size").val(ui.item.itm_size);
+                $("#Auditm_name").val(ui.item.itm_name);
+            }
+        });
+
+    });
+
+    $('#Date_fm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#Date_to').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    function GetRes() {
+
+    }
+    function GetResult() {
+
+        //else {
+        //    sweetAlert("", "Pleae select Reportselection", "");
+        //}
+    }
+
+    $("#btnSearch").click(function () {
+        debugger
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please Select The Company", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        else {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_itm_num = $('#Itmdtl').val();
+            var p_str_itm_color = $('#itm_color').val();
+            var p_str_itm_size = $('#itm_size').val();
+            var p_str_itm_name = $('#itm_name').val();
+            var p_str_Status = $('#status').val();
+            var p_str_ib_doc_id = $('#ib_doc_id').val();
+            var p_str_cont_id = $('#cont_id').val();
+            var p_str_lot_id = $('#lot_id').val();
+            var p_str_loc_id = $('#loc_id').val();
+            var p_str_grn_id = $('#grn_id').val();
+            var p_str_whs_id = $('#whs_id').val();
+            var p_str_Date_fm = $('#Date_fm').val();
+            var p_str_Date_to = $('#Date_to').val();
+            var p_str_po_num = $('#po_num').val();
+
+            if (p_str_cmp_id != "" && p_str_itm_num == "" && p_str_itm_color == "" && p_str_itm_size == "" && p_str_itm_name == "" && p_str_ib_doc_id == "" && p_str_cont_id == "" &&
+                p_str_lot_id == "" && p_str_loc_id == "" && p_str_grn_id == "" && p_str_whs_id == "" && p_str_Date_fm == "" && p_str_Date_to == "" && p_str_po_num == "") {
+
+
+                sweetAlert({
+                    title: "",
+                    text: " Please note NO FILTERS Selected. RUNNING STOCK INQ for the ENTIRE Company ******WILL TAKE LONG PROCESSING TIME ****** Unless required click NO",
+                    type: "",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "No",
+                    cancelButtonText: "Yes",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+           function (isConfirm) {
+               if (isConfirm) {
+                   swal("", "please select any other fields", "");
+                   var table = $("#example3").DataTable();
+                   table.clear().draw();
+                   $("#AvlCtn").val('');
+                   $("#AvlQty").val('');
+                   //$("#AlocQty").val('');
+                   $('input[name="AlocQty"]').val("");
+                   $('label[id*=lblhdrcount]').text('');
+
+                   //swal("Deleted!", "Your imaginary file has been deleted.", "success");
+               }
+
+               else {
+
+                   $("#ajaxLoading").show();
+                   $.ajax({
+                       type: "GET",
+                       url: '@Url.Content("~/StockInquiry/GetStockGridDetails")',
+                       data: {
+                           "p_str_cmp_id": p_str_cmp_id,
+                           "p_str_itm_num": p_str_itm_num,
+                           "p_str_itm_color": p_str_itm_color,
+                           "p_str_itm_size": p_str_itm_size,
+                           "p_str_itm_name": p_str_itm_name,
+                           "p_str_Status": p_str_Status,
+                           "p_str_ib_doc_id": p_str_ib_doc_id,
+                           "p_str_cont_id": p_str_cont_id,
+                           "p_str_lot_id": p_str_lot_id,
+                           "p_str_loc_id": p_str_loc_id,
+                           "p_str_grn_id": p_str_grn_id,
+                           "p_str_whs_id": p_str_whs_id,
+                           "p_str_Date_fm": p_str_Date_fm,
+                           "p_str_Date_to": p_str_Date_to,
+                           "p_str_po_num": p_str_po_num
+                       },
+                       dataType: 'html',
+                       success: function (e) {
+                           $("#ajaxLoading").hide();
+                           $('#showgrid').hide();
+                           $('#showgridstock_inq').html("");
+                           $('#showgridstock_inq').html(e);
+                       },
+
+                   })
+               }
+           });
+
+
+
+            }
+            else {
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/StockInquiry/GetStockGridDetails")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id,
+                        "p_str_itm_num": p_str_itm_num,
+                        "p_str_itm_color": p_str_itm_color,
+                        "p_str_itm_size": p_str_itm_size,
+                        "p_str_itm_name": "",
+                        "p_str_Status": p_str_Status,
+                        "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_cont_id": p_str_cont_id,
+                        "p_str_lot_id": p_str_lot_id,
+                        "p_str_loc_id": p_str_loc_id,
+                        "p_str_grn_id": p_str_grn_id,
+                        "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm,
+                        "p_str_Date_to": p_str_Date_to,
+                        "p_str_po_num": p_str_po_num
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        $("#ajaxLoading").hide();
+                        $('#showgrid').hide();
+                        $('#showgridstock_inq').html("");
+                        $('#showgridstock_inq').html(e);
+                    },
+
+                })
+            }
+
+
+        }
+    });
+    $("#btnSearchAudit").click(function () {
+
+        var cmp_id = $("#Audit_cmpid").val();
+        var Auditm_num = $("#Auditm_num").val();
+        if (cmp_id == "") {
+            //not2("Please Select The Company.")
+            swal("", "Please Select The Company.", "");
+            $('#Audit_cmpid').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (Auditm_num == "") {
+            //not2("Please Select the Style.")
+            swal("", "Please Select the Style", "");
+            $('#Audit_cmpid').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        else {
+            var p_str_cmp_id = $('#Audit_cmpid').val();
+            var p_str_ib_doc_id = $('#Audib_doc_id').val();
+            var p_str_itm_num = $('#Auditm_num').val();
+            var p_str_itm_color = $('#Auditm_color').val();
+            var p_str_itm_size = $('#Auditm_size').val();
+            var p_str_itm_name = "";
+            var p_str_cont_id = $('#Audcont_id').val();
+            var p_str_lot_id = $('#Audlot_id').val();
+            var p_str_loc_id = $('#Audloc_id').val();
+            var p_str_grn_id = $('#Audgrn_id').val();
+            var p_str_whs_id = $('#Audwhs_id').val();
+            var p_str_po_num = $('#Audpo_num').val();
+            //var p_str_Status = $('#Audstatus').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/StockInquiry/GetAuditGridDetails")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_itm_num": p_str_itm_num,
+                    "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size,
+                    "p_str_itm_name": p_str_itm_name,
+                    //"p_str_Status": p_str_Status,
+                    "p_str_ib_doc_id": p_str_ib_doc_id,
+                    "p_str_cont_id": p_str_cont_id,
+                    "p_str_lot_id": p_str_lot_id,
+                    "p_str_loc_id": p_str_loc_id,
+                    "p_str_grn_id": p_str_grn_id,
+                    "p_str_whs_id": p_str_whs_id,
+                    "p_str_po_num": p_str_po_num
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#showgrid1').hide();
+                    $('#showgridAudit_trail').html("");
+                    $('#showgridAudit_trail').html(e);
+                },
+
+            })
+        }
+    });
+    $('#example1').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true
+    });
+    $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true
+    });
+
+
+
+
+
+
+
+
+</script>
+<script type="text/javascript">
+    $('#hob').click(function () {
+        var getc = $('#cmp_id').val()
+        $('#Audit_cmpid').val(getc);
+        $('#Audib_doc_id').val($('#ib_doc_id').val());
+        $('#Audpo_num').val($('#po_num').val());
+        $('#Audstatus').val($('#status').val());
+        $('#Auditm_num').val($('#Itmdtl').val());
+        $('#Auditm_color').val($('#itm_color').val());
+        $('#Auditm_size').val($('#itm_size').val());
+        $('#Auditm_name').val($('#itm_name').val());
+        $('#Audcont_id').val($('#cont_id').val());
+        $('#Audlot_id').val($('#lot_id').val());
+        $('#Audloc_id').val($('#loc_id').val());
+        $('#Audwhs_id').val($('#whs_id').val());
+        $('#Audgrn_id').val($('#grn_id').val());
+    });
+    $(function () {
+        $("#tabs").tabs();
+    });
+    $(function () {
+        $("#childtabs").tabs();
+    });
+</script>
+
+
+<script>
+
+</script>
+<script>
+
+    $("#btnprocesss").click(function () {
+        debugger
+        var getFormat = $('#id_format').find(":selected").text();
+        var getMode = $('#id_mode').find(":selected").text();
+        var l_str_ParView_rowcount = $('#StockInq tr').length;
+
+        var l_str_MainView_rowcount = $('#Grid_Iv_Stk_inq tr').length;
+        var p_str_style_stearch = $('#status').val();
+        //if (l_str_ParView_rowcount > 1 || l_str_MainView_rowcount > 1) {
+        if (getFormat == 'XLS' && getMode == 'VIEW') {
+            var type = "Excel";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio3']:checked").val();
+           
+            //var var_name1 = $("input[name='radio4']:checked").val();
+            if ((var_name == "DetailbyStyle") ||  (var_name == "DetailbyLoc")) {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+
+                var lblalocqty = $('#AlocQty').val();
+                $("#ajaxLoading").show();
+
+                $.ajax({
+                    url: "/StockInquiry/ShowReport",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    }),
+                    type: "POST",
+                    success: function (p_str_file_name) {
+                        window.location.replace("/StockInquiry/ShowExcelReport?p_str_file_name=" + p_str_file_name + '&p_str_cmp_id=' + p_str_cmp_id)
+                    }
+                });
+
+                     $("#ajaxLoading").hide();
+
+            }
+          
+
+
+            if ((var_name == "SummarybyStyle")  || (var_name == "SummarybyLoc") || (var_name == "OpnToSellStkSryRpt")) {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                debugger
+                $("#ajaxLoading").show();
+
+                $.ajax({
+                    url: "/StockInquiry/XlsIvStkSmryRpt",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    }),
+                    type: "POST",
+                    success: function (p_str_file_name) {
+                        window.location.replace("/StockInquiry/ShowExcelReport?p_str_file_name=" + p_str_file_name + '&p_str_cmp_id=' + p_str_cmp_id)
+                    }
+                });
+
+
+                $("#ajaxLoading").hide();
+            }
+
+
+
+        }
+        if (getFormat == 'PDF' && getMode == 'VIEW') {
+            var type = "PDF";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio3']:checked").val();
+            //var var_name1 = $("input[name='radio4']:checked").val();
+            if ((var_name == "DetailbyStyle")  ) {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                var p_str_Status = $('#Status').val();
+                var lblalocqty = $('#AlocQty').val();
+               
+                $("#ajaxLoading").show();
+
+
+                $.ajax({
+                    url: "/StockInquiry/ShowReport",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    }),
+                    type: "POST",
+                    success: function (p_str_file_name) {
+
+                        window.open('ShowPDFReport?p_str_file_name=' + p_str_file_name + '&p_str_cmp_id=' + p_str_cmp_id , 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowStockInquiry' + p_str_ib_doc_id)
+                        $("#ajaxLoading").hide();
+                    }
+                });
+           }
+
+
+            else if (var_name == "OpnToSellStkSryRpt") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                debugger
+                $("#ajaxLoading").show();
+
+                $.ajax({
+                    url: "/StockInquiry/XlsIvStkSmryRpt",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    }),
+                    type: "POST",
+                    success: function (p_str_file_name) {
+                        window.location.replace("/StockInquiry/ShowExcelReport?p_str_file_name=" + p_str_file_name + '&p_str_cmp_id=' + p_str_cmp_id)
+                    }
+                });
+
+
+                $("#ajaxLoading").hide();
+            }
+
+            else if (var_name == "AuditItemDtl") {
+                var p_str_cmp_id = $('#Audit_cmpid').val();
+                var p_str_itm_num = $('#Auditm_num').val();
+                var p_str_itm_color = $('#Auditm_color').val();
+                var p_str_itm_size = $('#Auditm_size').val();
+
+                $.ajax({
+                    url: "/StockInquiry/GenerateAuditItemDtl",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size
+                    }),
+                    type: "POST",
+                    success: function (p_str_grid_name) {
+                        window.location.replace("/StockInquiry/ShowGridExcelReport?p_str_grid_name=" + p_str_grid_name + '&p_str_cmp_id=' + p_str_cmp_id)
+                    },
+                    error: function () {
+                        alert(p_str_file_name);
+                    }
+
+
+                });
+
+            }
+
+            if (var_name == "SummarybyStyle") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                var p_str_style_stearch1 = p_str_style_stearch;
+                $("#ajaxLoading").show();
+               
+
+                $.ajax({
+                    url: "/StockInquiry/ShowReport",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    }),
+                    type: "POST",
+                    success: function (p_str_file_name) {
+
+                        window.open('ShowPDFReport?p_str_file_name=' + p_str_file_name + '&p_str_cmp_id=' + p_str_cmp_id, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowStockInquiry' + p_str_ib_doc_id)
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+
+            }
+            if (var_name == "DetailbyLoc") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num,  "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $("#ajaxLoading").hide();
+                            window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_Date_fm=' + p_str_Date_fm + '&p_str_Date_to='
+                    + p_str_Date_to + '&p_str_po_num=' + p_str_po_num + '&lblalocqty=' + lblalocqty + '&type=' + type + '&p_str_style_stearch=' + p_str_style_stearch, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+            }
+            else if (var_name == "SummarybyLoc") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num,  "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $("#ajaxLoading").hide();
+                            window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_Date_fm=' + p_str_Date_fm + '&p_str_Date_to=' + p_str_Date_to
+                    + '&p_str_po_num=' + p_str_po_num + '&lblalocqty=' + lblalocqty + '&type=' + type + '&p_str_style_stearch=' + p_str_style_stearch, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+            }
+
+        }
+
+        if (getFormat == 'PDF' && getMode == 'EMAIL') {
+            var options = { "backdrop": "static", keyboard: true };
+
+            var TeamDetailPostemailBackURL = '/StockInquiry/EmailShowReport';
+            var type = "PDF";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio3']:checked").val();
+            //var var_name1 = $("input[name='radio4']:checked").val();
+            if (var_name == "DetailbyStyle") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                var p_str_Status = $('#Status').val();
+                var lblalocqty = $('#AlocQty').val();
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostemailBackURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                                    "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                                    "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "p_str_Status": p_str_Status, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    $("#ajaxLoading").hide();
+                                    $('#myModalEmailContent').html(data);
+                                    $('#myModalEmail').modal(options);
+                                    $('#myModalEmail').modal('show');
+
+                                },
+                                error: function () {
+                                    alert("Dynamic content load failed.");
+                                    $("#ajaxLoading").hide();
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+            }
+            if (var_name == "SummarybyStyle") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                $("#ajaxLoading").show();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num,  "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostemailBackURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                                    "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                                    "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "p_str_Status": p_str_Status, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    $("#ajaxLoading").hide();
+                                    $('#myModalEmailContent').html(data);
+                                    $('#myModalEmail').modal(options);
+                                    $('#myModalEmail').modal('show');
+
+
+                                },
+                                error: function () {
+                                    alert("Dynamic content load failed.");
+                                    $("#ajaxLoading").hide();
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+            }
+            if (var_name == "DetailbyLoc") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                $("#ajaxLoading").show();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num,  "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostemailBackURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                                    "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                                    "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "p_str_Status": p_str_Status, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    $("#ajaxLoading").hide();
+                                    $('#myModalEmailContent').html(data);
+                                    $('#myModalEmail').modal(options);
+                                    $('#myModalEmail').modal('show');
+
+                                },
+                                error: function () {
+                                    alert("Dynamic content load failed.");
+                                    $("#ajaxLoading").hide();
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+
+            }
+            else if (var_name == "SummarybyLoc") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                $("#ajaxLoading").show();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num,  "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostemailBackURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                                    "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                                    "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "p_str_Status": p_str_Status, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    $("#ajaxLoading").hide();
+                                    $('#myModalEmailContent').html(data);
+                                    $('#myModalEmail').modal(options);
+                                    $('#myModalEmail').modal('show');
+
+                                },
+                                error: function () {
+                                    alert("Dynamic content load failed.");
+                                    $("#ajaxLoading").hide();
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+                //window.open('ShowReport?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                //   + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                //   + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_Date_fm=' + p_str_Date_fm + '&p_str_Date_to=' + p_str_Date_to + '&p_str_po_num=' + p_str_po_num + '&lblalocqty=' + lblalocqty + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+
+            }
+        }
+        //CR2018 - 03 - 08 - 001 Added By Nithya
+        if (getFormat == 'XLS' && getMode == 'EMAIL') {
+            var options = { "backdrop": "static", keyboard: true };
+
+            var TeamDetailPostemailBackURL = '/StockInquiry/EmailShowReport';
+            var type = "XLS";
+            var SelectedRow = [];
+            var checkboxIDArray = [];
+            var var_name = $("input[name='radio3']:checked").val();
+            //var var_name1 = $("input[name='radio4']:checked").val();
+            if (var_name == "DetailbyStyle") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                var p_str_Status = $('#Status').val();
+                var lblalocqty = $('#AlocQty').val();
+                $("#ajaxLoading").show();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num,  "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostemailBackURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                                    "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                                    "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "p_str_Status": p_str_Status, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    $("#ajaxLoading").hide();
+                                    $('#myModalEmailContent').html(data);
+                                    $('#myModalEmail').modal(options);
+                                    $('#myModalEmail').modal('show');
+
+                                },
+                                error: function () {
+                                    alert("Dynamic content load failed.");
+                                    $("#ajaxLoading").hide();
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+            }
+            if (var_name == "SummarybyStyle") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num,  "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostemailBackURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                                    "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                                    "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "p_str_Status": p_str_Status, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    $("#ajaxLoading").hide();
+                                    $('#myModalEmailContent').html(data);
+                                    $('#myModalEmail').modal(options);
+                                    $('#myModalEmail').modal('show');
+
+                                },
+                                error: function () {
+                                    alert("Dynamic content load failed.");
+                                    $("#ajaxLoading").hide();
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+
+            }
+            if (var_name == "DetailbyLoc") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostemailBackURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                                    "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                                    "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "p_str_Status": p_str_Status, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    $("#ajaxLoading").hide();
+                                    $('#myModalEmailContent').html(data);
+                                    $('#myModalEmail').modal(options);
+                                    $('#myModalEmail').modal('show');
+
+                                },
+                                error: function () {
+                                    alert("Dynamic content load failed.");
+                                    $("#ajaxLoading").hide();
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+
+
+            }
+            else if (var_name == "SummarybyLoc") {
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_radio = var_name;
+                var p_str_ib_doc_id = $('#ib_doc_id').val();
+                var p_str_itm_num = $('#Itmdtl').val();
+                var p_str_itm_color = $('#itm_color').val();
+                var p_str_itm_size = $('#itm_size').val();
+                var p_str_itm_name = $('#itm_name').val();
+                var p_str_cont_id = $('#cont_id').val();
+                var p_str_lot_id = $('#lot_id').val();
+                var p_str_loc_id = $('#loc_id').val();
+                var p_str_grn_id = $('#grn_id').val();
+                var p_str_whs_id = $('#whs_id').val();
+                var p_str_Date_fm = $('#Date_fm').val();
+                var p_str_Date_to = $('#Date_to').val();
+                var p_str_po_num = $('#po_num').val();
+                $("#ajaxLoading").show();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/StockInquiry/ShowReportResult",
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                        "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                        "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                        "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num,  "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger
+                        if (data == 1) {
+                            sweetAlert("", "No Records Found.", "");
+                            $("#ajaxLoading").hide();
+                        }
+                        else {
+                            $.ajax({
+                                type: "GET",
+                                url: TeamDetailPostemailBackURL,
+                                contentType: "application/json; charset=utf-8",
+                                data: {
+                                    "var_name": var_name, "p_str_cmp_id": p_str_cmp_id, "p_str_ib_doc_id": p_str_ib_doc_id,
+                                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size, "p_str_itm_name": p_str_itm_name,
+                                    "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id, "p_str_whs_id": p_str_whs_id,
+                                    "p_str_Date_fm": p_str_Date_fm, "p_str_Date_to": p_str_Date_to, "p_str_po_num": p_str_po_num, "p_str_Status": p_str_Status, "lblalocqty": lblalocqty, "type": type, "p_str_style_stearch": p_str_style_stearch
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    $("#ajaxLoading").hide();
+                                    $('#myModalEmailContent').html(data);
+                                    $('#myModalEmail').modal(options);
+                                    $('#myModalEmail').modal('show');
+
+                                },
+                                error: function () {
+                                    alert("Dynamic content load failed.");
+                                    $("#ajaxLoading").hide();
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoading").hide();
+                    }
+                });
+
+        
+            }
+        }
+
+
+
+    })
+</script>
+<script>
+    $("#btnprocesssAudit").click(function () {
+
+        debugger;
+        var getFormat = $('#id_formatAudit').find(":selected").text();
+        var getMode = $('#id_modeAudit').find(":selected").text();
+        var l_str_Aud_ParView_rowcount = $('#example4 tr').length;
+
+        var l_str_Aud_MainView_rowcount = $('#Grid_Iv_Aud_inq tr').length;
+
+        if (l_str_Aud_ParView_rowcount > 1 || l_str_Aud_MainView_rowcount > 1) {
+            if (getFormat == 'XLS' && getMode == 'VIEW') {
+                var type = "Excel";
+                debugger;
+                var var_name = $("input[name='radio1']:checked").val();
+                if ((var_name == "DetailWithoutISM") || (var_name == "DetailWithISM") || (var_name == "DetailOnlyISM") || (var_name == "SummaryWithoutISM") || (var_name == "SummaryWithISM") || (var_name == "SummaryWithISM") || (var_name == "SummaryonlyISM")) {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    
+
+                    $.ajax({
+                        url: "/StockInquiry/showreportAudit",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        }),
+                        type: "POST",
+                        success: function (p_str_grid_name) {
+                            window.location.replace("/StockInquiry/ShowGridExcelReport?p_str_grid_name=" + p_str_grid_name + '&p_str_cmp_id=' + p_str_cmp_id)
+                        }
+                    });
+
+                }
+
+
+
+                else if (var_name == "AuditItemDtl")
+                {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    //var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+
+                    $.ajax({
+                        url: "/StockInquiry/GenerateAuditItemDtl",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size
+                        }),
+                        type: "POST",
+                        success: function (p_str_grid_name) {
+                            window.location.replace("/StockInquiry/ShowGridExcelReport?p_str_grid_name=" + p_str_grid_name + '&p_str_cmp_id=' + p_str_cmp_id)
+                        }         ,
+                        error: function () {
+                            alert(p_str_file_name);
+                        }
+
+                        
+                    });
+
+                    
+                }
+            }
+            if (getFormat == 'PDF' && getMode == 'VIEW') {
+                var type = "PDF";
+                var var_name = $("input[name='radio1']:checked").val();
+                //var var_name1 = $("input[name='radio2']:checked").val();
+                if ((var_name == "DetailWithoutISM") || (var_name == "DetailWithISM") || (var_name == "DetailOnlyISM") || (var_name == "SummaryonlyISM") || (var_name == "SummaryWithoutISM") || (var_name == "SummaryWithISM")) {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+
+
+                    $.ajax({
+                        url: "/StockInquiry/showreportAudit",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        }),
+                        type: "POST",
+                        success: function (p_str_file_name) {
+                            window.open('ShowPDFReport?p_str_file_name=' + p_str_file_name + '&p_str_cmp_id=' + p_str_cmp_id, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowStockInquiry' + p_str_ib_doc_id)
+
+                        }
+                    });
+
+                }
+                 
+         
+            }
+
+            if (getFormat == 'PDF' && getMode == 'EMAIL') {
+                var options = { "backdrop": "static", keyboard: true };
+                //CR2018-03-08-001 Added By Nithya
+                var TeamDetailPostemailAUDITBackURL = '/StockInquiry/EmailshowreportAudit';
+                var type = "PDF";
+                var var_name = $("input[name='radio1']:checked").val();
+                //var var_name1 = $("input[name='radio2']:checked").val();
+                if (var_name == "DetailWithoutISM") {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //+ '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //+ '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                if (var_name == "DetailWithISM") {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                if (var_name == "DetailOnlyISM") {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                if (var_name == "SummaryWithoutISM") {
+
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                if (var_name == "SummaryWithISM") {
+
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                else if (var_name == "SummaryonlyISM") {
+
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+            }
+            if (getFormat == 'XLS' && getMode == 'EMAIL') {
+                var options = { "backdrop": "static", keyboard: true };
+                //CR2018-03-08-001 Added By Nithya
+                var TeamDetailPostemailAUDITBackURL = '/StockInquiry/EmailshowreportAudit';
+                var type = "XLS";
+                var var_name = $("input[name='radio1']:checked").val();
+                //var var_name1 = $("input[name='radio2']:checked").val();
+                if (var_name == "DetailWithoutISM") {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //+ '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //+ '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+
+                }
+                if (var_name == "DetailWithISM") {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                if (var_name == "DetailOnlyISM") {
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                if (var_name == "SummaryWithoutISM") {
+
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                if (var_name == "SummaryWithISM") {
+
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+                else if (var_name == "SummaryonlyISM") {
+
+                    var p_str_cmp_id = $('#Audit_cmpid').val();
+                    var p_str_ib_doc_id = $('#Audib_doc_id').val();
+                    var p_str_itm_num = $('#Auditm_num').val();
+                    var p_str_itm_color = $('#Auditm_color').val();
+                    var p_str_itm_size = $('#Auditm_size').val();
+                    var p_str_itm_name = $('#Auditm_name').val();
+                    var p_str_cont_id = $('#Audcont_id').val();
+                    var p_str_lot_id = $('#Audlot_id').val();
+                    var p_str_loc_id = $('#Audloc_id').val();
+                    var p_str_grn_id = $('#Audgrn_id').val();
+                    var p_str_whs_id = $('#Audwhs_id').val();
+                    var p_str_po_num = $('#Audpo_num').val();
+                    //window.open('showreportAudit?var_name=' + var_name + '&var_name1=' + var_name1 + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_ib_doc_id=' + p_str_ib_doc_id + '&p_str_itm_num=' + p_str_itm_num
+                    //  + '&p_str_itm_color=' + p_str_itm_color + '&p_str_itm_size=' + p_str_itm_size + '&p_str_itm_name=' + p_str_itm_name + '&p_str_cont_id=' + p_str_cont_id + '&p_str_lot_id=' + p_str_lot_id + '&p_str_loc_id=' + p_str_loc_id
+                    //  + '&p_str_grn_id=' + p_str_grn_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_po_num=' + p_str_po_num + '&type=' + type, 'StockInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'showreportAudit?var_name=' + var_name)
+                    $.ajax({
+                        type: "GET",
+                        url: "/StockInquiry/showreportAuditResult",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                            "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                            "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                            , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            debugger
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found.", "");
+                            }
+                            else {
+                                $.ajax({
+                                    type: "GET",
+                                    url: TeamDetailPostemailAUDITBackURL,
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "var_name": var_name, "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color, "p_str_itm_size": p_str_itm_size,
+                                        "p_str_itm_name": p_str_itm_name, "p_str_cont_id": p_str_cont_id, "p_str_lot_id": p_str_lot_id, "p_str_loc_id": p_str_loc_id, "p_str_grn_id": p_str_grn_id
+                                        , "p_str_whs_id": p_str_whs_id, "p_str_po_num": p_str_po_num, "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        $('#myModalEmailContent').html(data);
+                                        $('#myModalEmail').modal(options);
+                                        $('#myModalEmail').modal('show');
+
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+
+                }
+            }
+        }
+        else {
+            swal("", "Data Not Found", "");
+        }
+
+    })
+
+</script>
+
+<script type="text/javascript">
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnCloseB2B").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("DashboardB2B", "DashboardB2B")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+    $(function () {
+        //$("#cmp_id").change(function () {
+        //    var l_str_comp = this.value;
+        //    debugger
+        //    $("#p_str_company").val(l_str_comp);
+        //});
+        $('#cmp_id').change(function () {
+            debugger;
+            var l_str_comp = this.value;
+            debugger
+            $("#p_str_company").val(l_str_comp);
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "StockInquiry")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+
+    });
+    $(function () {
+        $('#Audit_cmpid').change(function () {
+            debugger;
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "StockInquiry")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+    });
+
+</script>
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+<script type="text/javascript">
+    $("#loc_id").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/StockInquiry/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#loc_id").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+<script>
+    $(function () {
+        $('#Grid_Iv_Stk_inq').DataTable({
+            "paging": true,
+            "pageLength": 50,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            "sScrollY": "460px",
+            "sScrollX": "100%",
+        })
+    })
+</script>
+<script>
+    $(function () {
+        $('#cmp_id').change(function () {
+            debugger;
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "StockInquiry")',
+
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+
+                },
+            });
+        });
+
+    });
+</script>

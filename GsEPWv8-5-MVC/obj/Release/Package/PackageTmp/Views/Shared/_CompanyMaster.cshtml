@@ -1,0 +1,229 @@
+﻿
+@model GsEPWv8_5_MVC.Model.CompanyMasterModel
+@{
+    var Ordercount = Model.ListCmpDetails.Count;
+}
+<style>
+     .ItemGridSummary {
+        height: 49px;
+        background: #d2d6de;
+        padding-top: 10px;
+    }
+</style>
+<div class="box-body">
+    <div class="row">
+        <div class="ItemGridSummary">
+            <table>
+                <tr>
+                    <td style="width: 5%;"></td>
+                    <td style="width:22%;">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            Total Records:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @Ordercount
+                        </label>
+                    </td>
+
+                </tr>
+            </table>
+            </div>
+        </div>
+    <br />
+    <div style="overflow-x:auto; height:auto; width:auto;">
+        <table id="GridCmpInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="width:15%">Comp Name</th>
+                    <th class="grid_header_backcolor" style="width:10%">Action</th>
+                    <th class="grid_header_backcolor" style="width:15%">Attn</th>
+                    <th class="grid_header_backcolor" style="width:5%">City</th>
+                    <th class="grid_header_backcolor" style="width:5%">State</th>
+                    <th class="grid_header_backcolor" style="width:10%">Email</th>
+                    <th class="grid_header_backcolor" style="width:20%">Remit_Attn</th>
+                    <th class="grid_header_backcolor" style="width:10%">Remit_City</th>
+                    <th class="grid_header_backcolor" style="width:5%">Remit_StateID</th>
+                    <th class="grid_header_backcolor" style="width:5%">Remit_CntryID</th>     
+                </tr>
+            </thead>
+            <tbody style="background-color:white">
+                @for (int i = 0; i < Model.ListCmpDetails.Count; i++)
+            {
+                    <tr id="@Model.ListCmpDetails[i].cust_of_cmp_id ">
+                      
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].cmp_name</td>
+                        @if (Model.is_company_user == "Y")
+                        {
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="lnk_Cmp_View" V_str_cust_of_cmp_id="@Model.ListCmpDetails[i].cust_of_cmp_id"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+                                <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="lnk_Cmp_Edit" E_str_cust_of_cmp_id="@Model.ListCmpDetails[i].cust_of_cmp_id"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                <a href="javascript:void(0);" style="text-decoration:underline;color: red;" class="lnk_Cmp_Delete" D_str_cust_of_cmp_id="@Model.ListCmpDetails[i].cust_of_cmp_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                            </td>
+                      
+               
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].attn</td>
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].city</td>
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].state_id</td>
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].email</td>
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].remit_attn</td>
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].Remit_City</td>
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].remit_state_id</td>                  
+                        <td style="font-size:11px; color:black; font-weight:bold;">@Model.ListCmpDetails[i].remit_cntry_id</td>
+                       
+                      
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+    </div>
+
+
+
+<script type="text/javascript">
+    $('#GridCmpInq').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true
+    });
+    $(".lnk_Cmp_Edit").click(function () {
+        var $EditbuttonClicked = $(this);
+        var p_str_cust_of_cmp_id = $EditbuttonClicked.attr('E_str_cust_of_cmp_id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#cust_of_cmpid').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/CompanyMaster/Company_MASTER_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id
+            },
+
+            dataType: "json",
+            success: function (e) {
+           
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: '/CompanyMaster/CompanyEdit',
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cust_of_cmp_id": p_str_cust_of_cmp_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#CompanyContentEdit').html(data);
+                $('#CompanyEdit').modal(options);
+                $('#CompanyEdit').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+
+    $(".lnk_Cmp_View").click(function () {
+        debugger
+        var $ViewbuttonClicked = $(this);
+        var p_str_cust_of_cmp_id = $ViewbuttonClicked.attr('V_str_cust_of_cmp_id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+       
+        $.ajax({
+            type: "GET",
+            url: '/CompanyMaster/CompanyView',
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cust_of_cmp_id": p_str_cust_of_cmp_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#CompanyContentDelete').html(data);
+                $('#CompanyDelete').modal(options);
+                $('#CompanyDelete').modal('show');
+                $(document).ready(function () {
+                    $("#tab:input").attr("disabled", true);
+
+                });
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+
+    $(".lnk_Cmp_Delete").click(function () {
+        debugger;
+        var $DeletebuttonClicked = $(this);
+        var p_str_cust_of_cmp_id = $DeletebuttonClicked.attr('D_str_cust_of_cmp_id');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#cust_of_cmpid').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/CompanyMaster/Company_MASTER_INQ_HDR_DATA")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id
+            },
+            dataType: "json",
+            success: function (e) {
+            },
+
+        });
+        $.ajax({
+            type: "GET",
+            url: '/CompanyMaster/CompanyDelete',
+            contentType: "application/json; charset=utf-8",
+            data: { "p_str_cust_of_cmp_id": p_str_cust_of_cmp_id },
+            datatype: "json",
+            success: function (data) {
+                debugger;
+                $("#ajaxLoading").hide();
+                $('#CompanyContentDelete').html(data);
+                $('#CompanyDelete').modal(options);
+                $('#CompanyDelete').modal('show');
+                $(document).ready(function () {
+                    $("#tab:input").attr("disabled", true);
+                   
+                });
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+  
+   
+</script>

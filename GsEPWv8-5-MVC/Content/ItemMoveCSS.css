@@ -1,0 +1,312 @@
+﻿@media only screen and (max-width: 1000px) {
+    body {
+        width: 100%;
+        height: 100%;
+    }
+
+.ButtonBlock{
+    display:block;
+    position:center;
+    margin-right:40%;
+    margin-left:40%;
+}
+
+.Togglenavigation {
+    background-color: aliceblue;
+    color: #e06d27;
+    font-size: 24px;
+}
+
+.WelcomeText {
+    color: #4343bf;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: Verdana;
+}
+
+.CompanyLogo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 10vw;
+    height: 5vw;
+    text-align: center;
+    position: relative;
+}
+
+.LogoutText {
+    font-size: 15px;
+    color: blue;
+    text-align: right;
+    cursor: auto;
+    color: #4343bf;
+    position: relative;
+}
+
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+    background-color: #134861;
+}
+
+.ItemMoveFooter {
+    background-color: white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.btn_search {
+    background-color: #0094ff;
+    height: 30px;
+    width: 70px;
+    border-radius: 7px;
+    font-size: 16px;
+    font-family: bold;
+    color: white;
+    position:relative;
+}
+
+    .btn_search:hover {
+        color: #fff;
+        background: #fff;
+        background-color: rgb(255, 255, 255);
+        background-color: rgb(17, 88, 233);
+        -moz-box-shadow: 0px 0px 15px 0px #ff0000;
+        -webkit-box-shadow: 0px 0px 15px 0px #0fcff8;
+        box-shadow: 0px 0px 15px 0px #0054ff;
+    }
+
+.btn-Clear {
+    background-color: #ffac00;
+    height: 30px;
+    width: 70px;
+    border-radius: 7px;
+    font-size: 16px;
+    font-family: bold;
+    color: white;
+}
+
+    .btn-Clear:hover {
+        color: #fff;
+        background: #fff;
+        background-color: rgb(255, 255, 255);
+        background-color: rgb(17, 88, 233);
+        -moz-box-shadow: 0px 0px 15px 0px #ff0000;
+        -webkit-box-shadow: 0px 0px 15px 0px #0fcff8;
+        box-shadow: 0px 0px 15px 0px #0054ff;
+        position:relative
+    }
+
+.btn-Close {
+    background-color: #ff6767;
+    height: 30px;
+    width: 70px;
+    border-radius: 7px;
+    font-size: 16px;
+    font-family: bold;
+    color: white;
+}
+
+    .btn-Close:hover {
+        color: #fff;
+        background: #fff;
+        background-color: rgb(255, 255, 255);
+        background-color: rgb(17, 88, 233);
+        -moz-box-shadow: 0px 0px 15px 0px #ff0000;
+        -webkit-box-shadow: 0px 0px 15px 0px #0fcff8;
+        box-shadow: 0px 0px 15px 0px #0054ff;
+    }
+.LblForTextbox
+{
+    color: #0d8cb5; 
+    font-family: verdana;
+    font-size: 12px;
+    text-align:right;
+    font-weight:bold;
+    width:50px;
+    height:25px;
+}
+
+
+.TotalRecords{
+    text-align:right;
+    font-size: 1.5em;
+    color:#116b42;
+    font-weight: bold;
+}
+
+.ItemMoveSave{
+    background-color: #00c0ef;
+}
+
+.GridItemMoveTable{
+    border:1px solid #121213; 
+    position:center;
+}
+
+.TableTextBox{
+    width:100%;
+    height:25px;
+    margin:0;
+    padding:0;
+    background-color:lightyellow;
+    text-align:left;
+}
+
+
+}
+
+
+.Togglenavigation {
+    background-color: aliceblue;
+    color: #e06d27;
+    font-size: 24px;
+}
+
+.WelcomeText {
+    color: #4343bf;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: Verdana;
+}
+
+.CompanyLogo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 10vw;
+    height: 5vw;
+    text-align: center;
+    position: relative;
+}
+
+.LogoutText {
+    font-size: 15px;
+    color: blue;
+    text-align: right;
+    cursor: auto;
+    color: #4343bf;
+    position: relative;
+}
+
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+    background-color: #134861;
+}
+
+.ItemMoveFooter {
+    background-color: white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.btn_search {
+    background-color: #0094ff;
+    height: 30px;
+    width: 70px;
+    border-radius: 7px;
+    font-size: 16px;
+    font-family: bold;
+    color: white;
+    position:relative;
+}
+
+    .btn_search:hover {
+        color: #fff;
+        background: #fff;
+        background-color: rgb(255, 255, 255);
+        background-color: rgb(17, 88, 233);
+        -moz-box-shadow: 0px 0px 15px 0px #ff0000;
+        -webkit-box-shadow: 0px 0px 15px 0px #0fcff8;
+        box-shadow: 0px 0px 15px 0px #0054ff;
+    }
+
+.btn-Clear {
+    background-color: #ffac00;
+    height: 30px;
+    width: 70px;
+    border-radius: 7px;
+    font-size: 16px;
+    font-family: bold;
+    color: white;
+}
+
+    .btn-Clear:hover {
+        color: #fff;
+        background: #fff;
+        background-color: rgb(255, 255, 255);
+        background-color: rgb(17, 88, 233);
+        -moz-box-shadow: 0px 0px 15px 0px #ff0000;
+        -webkit-box-shadow: 0px 0px 15px 0px #0fcff8;
+        box-shadow: 0px 0px 15px 0px #0054ff;
+        position:relative
+    }
+
+.btn-Close {
+    background-color: #ff6767;
+    height: 30px;
+    width: 70px;
+    border-radius: 7px;
+    font-size: 16px;
+    font-family: bold;
+    color: white;
+}
+
+    .btn-Close:hover {
+        color: #fff;
+        background: #fff;
+        background-color: rgb(255, 255, 255);
+        background-color: rgb(17, 88, 233);
+        -moz-box-shadow: 0px 0px 15px 0px #ff0000;
+        -webkit-box-shadow: 0px 0px 15px 0px #0fcff8;
+        box-shadow: 0px 0px 15px 0px #0054ff;
+    }
+.LblForTextbox
+{
+    color: #0d8cb5; 
+    font-family: verdana;
+    font-size: 12px;
+    text-align:right;
+    font-weight:bold;
+    width:100px;
+    height:25px;
+    padding-top:1%;
+}
+
+.ButtonBlock{
+    display:block;
+    position:center;
+}
+
+.TotalRecords{
+    text-align:right;
+    font-size: 1.5em;
+    color:#116b42;
+    font-weight: bold;
+}
+
+.ItemMoveSave{
+    background-color: #00c0ef;
+}
+
+.GridItemMoveTable{
+    border:1px solid #121213; 
+    position:center;
+}
+
+.TableTextBox{
+    width:100%;
+    height:25px;
+    margin:0;
+    padding:0;
+    background-color:lightyellow;
+    text-align:left;
+}
+.BottomMargin{
+    margin-bottom:2%;
+}

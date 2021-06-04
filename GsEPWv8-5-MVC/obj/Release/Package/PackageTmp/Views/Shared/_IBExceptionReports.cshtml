@@ -1,0 +1,91 @@
+﻿@model GsEPWv8_5_MVC.Model.ExceptionReportsModel
+
+@{
+    var Ordercount = Model.LstIBExceptionRpt.Count;
+}
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style="width:105px;"></td>
+            <td style="width:105px;"></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box box-primary">
+    <br />
+    <table id="ParIbGrdExceptionRpt" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">CMP_ID</th>
+                <th class="grid_header_backcolor">IB DOC#</th>
+                <th class="grid_header_backcolor">LOT STATUS</th>
+                <th class="grid_header_backcolor">LOT ID</th>
+                <th class="grid_header_backcolor">RCVD DT</th>
+                <th class="grid_header_backcolor">STYLE</th>
+                <th class="grid_header_backcolor">COLOR</th>
+                <th class="grid_header_backcolor">SIZE</th>
+                <th class="grid_header_backcolor">LOT QTY</th>
+                <th class="grid_header_backcolor">RCVD QTY</th>
+                <th class="grid_header_backcolor">IN QTY</th>
+                <th class="grid_header_backcolor">OUT QTY</th>
+                <th class="grid_header_backcolor">HST QTY</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.LstIBExceptionRpt.Count; i++)
+            {
+                <tr class="row-select">
+                    <td style="font-size:12px; color:black;font-weight:bold; text-align:right;">@Model.LstIBExceptionRpt[i].CMP_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBExceptionRpt[i].IB_DOC_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBExceptionRpt[i].LOT_STATUS</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBExceptionRpt[i].LOT_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBExceptionRpt[i].RCVD_DT.ToString("MM/dd/yyyy")</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBExceptionRpt[i].ITM_NUM</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBExceptionRpt[i].ITM_COLOR</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstIBExceptionRpt[i].ITM_SIZE</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBExceptionRpt[i].LOT_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBExceptionRpt[i].RCVD_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBExceptionRpt[i].IN_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBExceptionRpt[i].OUT_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstIBExceptionRpt[i].HST_QTY</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+
+    $('#ParIbGrdExceptionRpt').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+</script>
+
+
+
+
+
+
+

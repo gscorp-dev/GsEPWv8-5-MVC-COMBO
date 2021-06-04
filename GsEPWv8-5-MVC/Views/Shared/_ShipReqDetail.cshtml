@@ -1,0 +1,639 @@
+﻿
+@model GsEPWv8_5_MVC.Model.OutboundInqModel
+@{
+    var Ordercount = Model.LstOutboundInqpickstyleRpt.Count;
+}
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+     fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+       
+    }
+      div#ajaxLoadingshipreq {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+
+<center>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+       <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: 10px;margin-right: 15px;">Close</button>
+             
+    </div>
+    <label style="font-size:20px;"><b>Ship Request Detail</b></label>
+    <div id="ajaxLoadingshipreq" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    @*// CR_3PL_MVC_OB_2018_0326_001 Modified by Soniya*@
+    <div>
+        @*<table>
+            <center>
+          
+            </center>
+            <tr>
+                
+                <td style="padding-left: 719px;">
+                    <div class="dropdown">
+                        <button class="btn-Email" type="button" style=" width:100px; text-align:right;" id="btnEmail" data-toggle="dropdown">
+                            Email
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" id="btnEmailPDF" onclick="OutboundShipDetailEmailPDF('');">PDF</a></li>
+                            @*<li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                        </ul>
+                    </div>
+                </td>
+                <td style="padding-left: 1%;">
+                    <div class="dropdown">
+                        <button class="btn-Print" type="button" id="btnPrint" style=" width:105px;" data-toggle="dropdown">
+                            Print/View
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" id="btnPDF" onclick="OutboundShipDetailPDF('');">PDF</a></li>
+
+                            <li role="presentation"><a role="menuitem" tabindex="-1"id="btnEXCEL" onclick="OutboundShipDetailExcel('');">EXCEL</a></li>
+                        </ul>
+                    </div>
+                </td>
+                <td style="padding-left: 12%;">
+                    <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;">Close</button>
+
+                </td>
+            </tr>
+        </table>*@
+        <div class="col-md-3 col-sm-3 col-xs-3" style="width:410px">
+            <div class="container" style="margin-left:895px; width:100%; margin-top:-41px">
+                <fieldset>
+                    <legend style="text-align:center">Report Selection</legend>
+                    <table>
+                        <tr>
+                            <td>
+                                <b style="color:blue;font-size: 12px;">Format</b>
+                                <select id="Formatshipreqdtlid" class="btn-Format" type="button" style="margin-left:6px;width:60px; text-align:right" data-toggle="dropdown">
+                                    <option>PDF</option>
+                                    <option>XLS</option>
+                                </select>
+
+                            </td>
+                            <td>
+                                <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                                <select id="Modeshipreqdtlid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                    <option>VIEW</option>
+                                    <option>EMAIL</option>
+
+                                </select>
+
+
+                            </td>
+                            <td>
+
+                                <button type="button" id="btnshipreqrpt" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                            </td>
+
+                        </tr>
+
+
+                    </table>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+    @*// CR_3PL_MVC_OB_2018_0326_001 End*@
+    <hr />
+    <div id="childtabs">
+        <ul>
+            <li>
+                <a href="#childtabs-1" style="font-size:12px;">Ship Request Header</a>
+            </li>
+            <li><a href="#childtabs-2" style="font-size:12px;">Ship Request Detail</a></li>
+            <li><a href="#childtabs-3" style="font-size:12px;" id="btnid3">Tracking Details</a></li>
+        </ul>
+        <div id="childtabs-1">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Cmp Id</label>
+                                @Html.TextBoxFor(model => model.CompID, new { @class = "form-control txtlbl", placeholder = "Comp ID", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2"style="text-align:left">
+                                <label class="Lblmanual">Batch Id</label>
+                                @Html.TextBoxFor(model => model.QuoteNum, new { @class = "form-control txtlbl", placeholder = "Batch Id", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Ship Req Id</label>
+                                @Html.TextBoxFor(model => model.ShipReqID, new { @class = "form-control txtlbl", placeholder = "Ship ReqId", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">S.R Date</label>
+                                @Html.TextBoxFor(model => model.ShipReqDt, new { @class = "form-control txtlbl", placeholder = "S.R Date", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Order Type</label>
+                                @Html.TextBoxFor(model => model.OrdType, new { @class = "form-control txtlbl", placeholder = "Order Type", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Status</label>
+                                @Html.TextBoxFor(model => model.Status, new { @class = "form-control txtlbl", placeholder = "Status", @maxlength = "50", @style = "font-size: 12px;font-family: verdana;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Reference#</label>
+                                @Html.TextBoxFor(model => model.OrdNum, new { @class = "form-control txtlbl", placeholder = "Order No", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Pick#</label>
+                                @Html.TextBoxFor(model => model.pick_no, new { @class = "form-control txtlbl",  @maxlength = "25", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Step</label>
+                                @Html.TextBoxFor(model => model.Step, new { @class = "form-control txtlbl", placeholder = "Step", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Customer</label>
+                                @Html.TextBoxFor(model => model.cust_id, new { @class = "form-control txtlbl", placeholder = "Customer", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Cust PO</label>
+                                @Html.TextBoxFor(model => model.CustPO, new { @class = "form-control txtlbl", placeholder = "Cust Po", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Dept Id</label>
+                                @Html.TextBoxFor(model => model.DeptID, new { @class = "form-control txtlbl", placeholder = "Dept Id", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Store</label>
+                                @Html.TextBoxFor(model => model.store_id, new { @class = "form-control txtlbl", placeholder = "Store", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Ship Via</label>
+                                @Html.TextBoxFor(model => model.ShipVia, new { @class = "form-control txtlbl", placeholder = "Ship Via", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual"> Freight Id</label>
+                                @Html.TextBoxFor(model => model.FreightID, new { @class = "form-control txtlbl", placeholder = "FreightId", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Ship Date</label>
+                                @Html.TextBoxFor(model => model.ShipDt, new { @class = "form-control txtlbl", placeholder = "Ship Date", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">Cancel Date</label>
+                                @Html.TextBoxFor(model => model.CancelDt, new { @class = "form-control txtlbl", placeholder = "Cancel Date", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+                            <div class="col-xs-2" style="text-align:left">
+                                <label class="Lblmanual">FOB</label>
+                                @Html.TextBoxFor(model => model.FOB, new { @class = "form-control txtlbl", placeholder = "FOB", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <fieldset>
+                        <legend style="margin-left: -94%;">Ship To</legend>
+                        <div class="row">      
+                            <div class="col-xs-8">
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual">Ship To</label>
+                                    @Html.TextBoxFor(model => model.ShipToID, new { @class = "form-control txtlbl", placeholder = "Ship To", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual">DC No</label>
+                                    @Html.TextBoxFor(model => model.DCID, new { @class = "form-control txtlbl", placeholder = "DC No", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual">Attention</label>
+                                    @Html.TextBoxFor(model => model.ShipToAttn, new { @class = "form-control txtlbl", placeholder = "Attention", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual">Mail Name</label>
+                                    @Html.TextBoxFor(model => model.ShipToEmail, new { @class = "form-control txtlbl", placeholder = "Mail Name", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual">Address1</label>
+                                    @Html.TextBoxFor(model => model.ShipToAddr1, new { @class = "form-control txtlbl", placeholder = "Address1", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual"> Address2</label>
+                                    @Html.TextBoxFor(model => model.ShipToAddr2, new { @class = "form-control txtlbl", placeholder = "Address2", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual"> City</label>
+                                    @Html.TextBoxFor(model => model.ShipToCity, new { @class = "form-control txtlbl", placeholder = "City", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual"> State</label>
+                                    @Html.TextBoxFor(model => model.ShipToState, new { @class = "form-control txtlbl", placeholder = "State", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual"> Zip Code</label>
+                                    @Html.TextBoxFor(model => model.ShipToZipCode, new { @class = "form-control txtlbl", placeholder = " Zip Code", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual"> Country</label>
+                                    @Html.TextBoxFor(model => model.ShipToCountry, new { @class = "form-control txtlbl", placeholder = "Country", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                                <div class="col-xs-2" style="text-align:left">
+                                    <label class="Lblmanual"> Note</label>
+                                    @Html.TextBoxFor(model => model.note, new { @class = "form-control txtlbl", placeholder = "Note", @maxlength = "50", @style = "font-size: 12px; font-family: verdana;" })
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-7"></div>
+                        <div class="col-xs-5">
+                           
+                        </div>                   
+                    </div>                  
+                </div>                  
+                </div>
+        </div>
+        <br />
+        
+     
+        <br />
+        <div id="childtabs-2">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-4">
+                        <table>
+                            <tr>
+                                <td>
+                                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                                        Total Records:
+                                    </span>
+                                </td>
+                                <td style="width: 58%;">
+                                    <label class="totalCount" style="text-align:left">
+                                        @Ordercount
+                                    </label>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xs-8"></div>                 
+                </div>
+            </div>                     
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="box">
+                        <div id="table-Details">
+                            @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+                            <table id="GridShipReq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor">Ln</th>
+                                        <th class="grid_header_backcolor">Status</th>
+                                        <th class="grid_header_backcolor">Step</th>
+                                        <th class="grid_header_backcolor">Style</th>
+                                        <th class="grid_header_backcolor">Color</th>
+                                        <th class="grid_header_backcolor">Size</th>
+                                        <th class="grid_header_backcolor">PO#</th>
+                                        <th class="grid_header_backcolor">L/W/H</th>
+                                        <th class="grid_header_backcolor">UOM</th>
+                                        <th class="grid_header_backcolor">Order Qty</th>
+                                        <th class="grid_header_backcolor">PPK</th>
+                                        <th class="grid_header_backcolor">Ctns</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                                    @for (int i = 0; i < Model.LstOutboundInqpickstyleRpt.Count; i++)
+                                    {
+                                        var Length = (Model.LstOutboundInqpickstyleRpt[i].Length);
+                                        var Width = (Model.LstOutboundInqpickstyleRpt[i].Width);
+                                        var Height = (Model.LstOutboundInqpickstyleRpt[i].Height);
+                                        var l_dec_Length = Length.ToString("F2");
+                                        var l_dec_Width = Width.ToString("F2");
+                                        var l_dec_Height = Height.ToString("F2");
+                                        var l_str_LWH = l_dec_Length + "/" + l_dec_Width + "/" + l_dec_Height;
+                                        <tr style="background-color:white;">
+                                            <td style="font-size:10px; color:black; font-weight:bold; text-align:left;">@Model.LstOutboundInqpickstyleRpt[i].LineNum</td>
+                                            @if (@Model.LstOutboundInqpickstyleRpt[i].status.Trim() == "O")
+                                            {
+                                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">OPEN</td>
+                                            }
+                                            else if (@Model.LstOutboundInqpickstyleRpt[i].status.Trim() == "P")
+                                            {
+                                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">POST</td>
+                                            }
+                                            else if (@Model.LstOutboundInqpickstyleRpt[i].status.Trim() == "A")
+                                            {
+                                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">ALOC</td>
+                                            }
+                                            else if (@Model.LstOutboundInqpickstyleRpt[i].status.Trim() == "S")
+                                            {
+                                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">SHIP</td>
+                                            }
+                                            else if (@Model.LstOutboundInqpickstyleRpt[i].status.Trim() == "B")
+                                            {
+                                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">B/O</td>
+                                            }
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstOutboundInqpickstyleRpt[i].STEP</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstOutboundInqpickstyleRpt[i].Style</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstOutboundInqpickstyleRpt[i].Color</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstOutboundInqpickstyleRpt[i].Size</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstOutboundInqpickstyleRpt[i].po_num</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@l_str_LWH</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstOutboundInqpickstyleRpt[i].QtyUOM</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstOutboundInqpickstyleRpt[i].OrdQty</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstOutboundInqpickstyleRpt[i].ppk</td>
+                                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstOutboundInqpickstyleRpt[i].OrdCtns</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @*</div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div id="childtabs-3" style="background:#edebeb">
+            <div class="box-body">
+                <div class="box-header">
+                    <div id="divTracking" class="box-header" style="padding:4px;margin-top: -1%; width:auto">
+                        <div>
+                            <fieldset>
+                                <legend>Tracking Detail</legend>
+
+                                <table style="border-collapse: separate;border-spacing: 0px 0.5em; " id="TrackingDtlSection">
+                                    <tr>
+                                        <td style="text-align: right;">
+                                            <label class="Lblmanual">Tracking Number</label>
+                                        </td>
+
+                                        <td colspan="1" style="padding-left: 5px;">
+                                            @Html.TextBoxFor(model => model.objSOTracking.track_num, new { @id = "v_track_num", @class = "form-control txtlbl", @maxlength = "30", @style = "font-weight: bold;font-size: 12px; font-family: verdana; width: 250px;height: 28px;" })
+                                        </td>
+                                        <td style="padding-left: 1%; width:300px;">
+
+                                            <label><b class="Lblmanual">Is Master Tracking Number </b></label>
+                                            @Html.CheckBoxFor(model => model.objSOTracking.track_num_type, new { id = "v_track_num_type" })
+                                        </td>
+
+                                        <td style="text-align: right;">
+                                            <button type="button" id="btnTrackIncludeView" class="btn_search" style="font-size: 13px;">Include</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <hr size="10">
+                                <div id="showTrackingEntryGrid" class="box-header Shipentrygrid " style="padding: 5px; ">
+
+                                    <table id="grdTrackingList" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                                        <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+                                            <tr>
+                                                <th class="grid_header_backcolor" style="width:10%;">SO Number</th>
+                                                <th class="grid_header_backcolor" style="width:10%;">Master Tracking#</th>
+                                                <th class="grid_header_backcolor" style="width:10%;">Tracking#</th>
+                                                <th class="grid_header_backcolor" style="width:10%;">Status</th>
+                                                <th class="grid_header_backcolor" style="width:10%;"> Date</th>
+                                                <th class="grid_header_backcolor" style="width:10%;"> Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="background-color:rgba(0, 0, 0, 0.12); display:table; width:100%; max-height:600px; overflow-y:scroll;">
+                                            @for (int i = 0; i < Model.ListSOTracking.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td style="width:10%; color:black; font-weight:bold;text-align:right;">@Model.ListSOTracking[i].so_num</td>
+                                                    <td style="width:10%; color:black; font-weight:bold;text-align:right;">@Model.ListSOTracking[i].track_num_type</td>
+                                                    <td style="width:10%; color:black; font-weight:bold;text-align:left;">@Model.ListSOTracking[i].track_num</td>
+                                                    <td style="width:10%; color:black; font-weight:bold;text-align:left;">@Model.ListSOTracking[i].track_status</td>
+                                                    <td style="width:10%; color:black; font-weight:bold;text-align:left;">@Model.ListSOTracking[i].track_date</td>
+                                                    <td style="width:10%; color:black; font-weight:bold;text-align:left;"><a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="SRTrackDeleteDetail" data-id="@Model.ListSOTracking[i].track_num" data-id1="@Model.ListSOTracking[i].cmp_id" data-id2="@Model.ListSOTracking[i].so_num"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a></td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            </div>
+
+</center>
+
+<script>
+    $("#btnTrackIncludeView").click(function () {
+        debugger;
+        var pstrCmpId = $("#cmp_id").val();
+        var pstrTrackNum = $("#v_track_num").val();
+        var pstrSoNum = $("#ShipReqID").val();
+        var pstrTrackNumType = $('#v_track_num_type').is(':checked');
+        if (pstrTrackNum == "") {
+            swal("", "Please enter the Tracking Number", "");
+            return false;
+        }
+
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/SaveSoTracking")',
+            data: {
+                "pstrCmpId": pstrCmpId, "pstrSoNum": pstrSoNum, "pstrTrackNum": pstrTrackNum, "pstrTrackNumType": pstrTrackNumType, "pstrMode": "A", "pstrTrackStatus": "OPEN"
+            },
+            dataType: 'html',
+            success: function (e) {
+                debugger
+                if (e == '1') {
+                    sweetAlert("", "Tracking Number Already exists", "");
+                    return false;
+                }
+                else {
+                    $("#ajaxLoading").hide();
+                    $('#showTrackingEntryGrid').html("");
+                    $('#showTrackingEntryGrid').html(e);
+
+                }
+            },
+        })
+    });
+
+</script>
+<script>
+    $(function () {
+        $("#tabs").tabs();
+    });
+    $(function () {
+        $("#childtabs").tabs();
+    });
+
+     $('#GridShipReq').DataTable({
+         "pageLength": 10,
+         'paging': true,
+         'lengthChange': false,
+         'searching': false,
+         'ordering': false,
+         'info': false,
+         'autoWidth': false,
+     });
+     $('#GridShipReq_paginate').hide();
+
+
+</script>
+
+<script>
+    $("#btnshipreqrpt").click(function () {
+
+           debugger
+           var getli = $('#Formatshipreqdtlid').find(":selected").text();
+           var getli2 = $('#Modeshipreqdtlid').find(":selected").text();
+           if (getli == 'PDF' && getli2 == 'VIEW') {
+               $("#ajaxLoadingbillrcvdDtl").show();
+               var p_str_cmp_id = $('#CompID').val();
+               var p_str_ShipReq_id = $('#ShipReqID').val();
+               $("#ajaxLoadingshipreq").show();
+               window.open('ShowdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_ShipReq_id=' + p_str_ShipReq_id, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport')
+               $("#ajaxLoadingshipreq").hide();
+           }
+            if (getli == 'PDF' && getli2 == 'EMAIL')
+            {
+                debugger
+                var TeamDetailPostemailBackURL = '/OutboundInq/ShowEmailReport';
+
+                var options = { "backdrop": "static", keyboard: true };
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var p_str_cmpid = $('#CompID').val();
+                var p_str_ShipReq_id = $('#ShipReqID').val();
+                var SelectdID = p_str_ShipReq_id;
+                var p_str_batch_id = $('#QuoteNum').val();
+                var type = "PDF";
+                var var_name = "GridShipAck";
+                var p_str_radio = var_name;
+                var p_str_so_num_frm = $('#so_numFm').val();
+                var p_str_so_num_To = $('#so_numTo').val();
+                var p_str_so_dt_frm = $('#so_dtFm').val();
+                var p_str_so_dt_to = $('#so_dtTo').val();
+                var p_str_CustPO = $('#cust_ordr_num').val();
+                var p_str_AlocId = $('#aloc_doc_id').val();
+                var p_str_Store = $('#store_id').val();
+                var p_str_status = $('#status').val();
+                var p_str_shipdtFm = $('#ShipdtFm').val();
+                var p_str_shipdtTo = $('#ShipdtTo').val();
+                $("#ajaxLoadingshipreq").show();
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostemailBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "var_name": var_name, "SelectedID": SelectdID, "p_str_cmpid": p_str_cmpid, "p_str_so_num_frm": p_str_so_num_frm, "p_str_so_num_To": p_str_so_num_To
+                        , "p_str_so_dt_frm": p_str_so_dt_frm, "p_str_so_dt_to": p_str_so_dt_to, "p_str_CustPO": p_str_CustPO, "p_str_AlocId": p_str_AlocId, "p_str_Store": p_str_Store
+                        , "p_str_batch_id": p_str_batch_id, "p_str_status": p_str_status, "p_str_shipdtFm": p_str_shipdtFm, "p_str_shipdtTo": p_str_shipdtTo, "type": type
+                    },
+                    datatype: "json",
+                    success: function (data) {
+
+                        debugger;
+                        $("#ajaxLoadingshipreq").hide();
+                        $('#myModalEmailContent').html(data);
+                        $('#myModalEmail').modal(options);
+                        $('#myModalEmail').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        $("#ajaxLoadingshipreq").hide();
+                    }
+                });
+            }
+            if (getli == 'XLS' && getli2 == 'VIEW')
+            {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var p_str_cmp_id = $('#CompID').val();
+                var SelectdID = $('#ShipReqID').val();
+
+                var var_name = "GridShipAck";
+                var p_str_cmpid = $('#CompID').val();
+                var p_str_radio = var_name;
+                var p_str_so_num_frm = $('#ShipReqID').val();
+                var p_str_so_num_To = "";
+                var p_str_batch_id = "";
+                var p_str_so_dt_frm = "";
+                var p_str_so_dt_to = "";
+                var p_str_CustPO = "";
+                var p_str_AlocId = "";
+                var p_str_Store = "";
+                var p_str_batch_id = "";
+                var p_str_status = "";
+                var p_str_shipdtFm = "";
+                var p_str_shipdtTo = "";
+                var type = "Excel";
+                $("#ajaxLoadingshipreq").show();
+                window.location.replace("/OutboundInq/ShowReport?var_name=" + var_name + '&SelectedID=' + SelectdID + '&p_str_cmpid=' + p_str_cmpid + '&p_str_so_num_frm=' + p_str_so_num_frm + '&p_str_so_num_To=' + p_str_so_num_To
+        + '&p_str_so_dt_frm=' + p_str_so_dt_frm + '&p_str_so_dt_to=' + p_str_so_dt_to + '&p_str_CustPO=' + p_str_CustPO + '&p_str_AlocId=' + p_str_AlocId + '&p_str_Store=' + p_str_Store + '&p_str_batch_id=' + p_str_batch_id
+        + '&p_str_status=' + p_str_status + '&p_str_shipdtFm=' + p_str_shipdtFm + '&p_str_shipdtTo=' + p_str_shipdtTo + '&type=' + type)
+                $("#ajaxLoadingshipreq").hide();
+
+            }
+
+      })
+
+</script>

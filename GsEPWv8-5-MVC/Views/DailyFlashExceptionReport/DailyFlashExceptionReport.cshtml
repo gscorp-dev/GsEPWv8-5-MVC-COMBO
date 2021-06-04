@@ -1,0 +1,587 @@
+﻿@model  GsEPWv8_5_MVC.Model.DailyFlashExceptionReportModel
+
+@{
+    ViewBag.Title = "DailyFlashExceptionReport";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+ 
+
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+        /*border-bottom: 1px solid #e5e5e5;*/
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+</style>
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width" />
+<meta charset="utf-8" />
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+    <div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding-top: 13px;width:10%;">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <a href="/DashBoard/DashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                            <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    }
+                </td>
+            
+                    <td style="width: 60%" class="ScreenTitle">
+                         DailyFlashReports Config
+                        <input type="hidden" id="screenTitle" value="ExceptionInquiry" />
+                    </td>
+                
+                <td style="padding-top: 11px;width:30%;text-align:right">
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnClose" class="btn-Close">Close</button>
+                    }
+                    @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                    {
+                        <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+        <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+            <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+            <div class="box-tools">
+                <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-9 col-sm-9 col-xs-9">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-3 Lblmanual" for="first-name" style="left:10px;padding-top:6px">
+                                    Comp ID
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-135px">
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"),"ALL",new { @class = "form-control txtlbl", @style = "width:322px" })
+                                </div>
+                                
+                                <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="padding-top:5px;left:-28px;">
+                                    ReportName
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-144px">
+                                    @Html.DropDownListFor(model => model.rpt_name, new SelectList(Model.ListReportName, "rpt_id", "rpt_description"), "ALL ", new { @class = "form-control txtlbl", @style = "width:303px"})
+                                </div>
+                                <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="padding-top:5px;left:-28px;">
+                                    Status
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-144px">
+                                    <div class="col-xs-2" style="margin-left: -23px;">
+                                        @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                                            {
+                                            new SelectListItem() {Text = "Active", Value="Active"},
+                                            new SelectListItem() {Text = "InActive", Value="InActive"},
+                                            }, new { @class = "form-control txtlbl", @style = "width:110px" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="padding-top:30px">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="padding-top:6px">
+                                    EMAIL To
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-134px">
+                                    @Html.TextBoxFor(model => model.email_to, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:441px" })
+                                </div>
+                                <label class="control-label col-md-1 col-sm-1 col-xs-1 Lblmanual" for="first-name" style="padding-top:6px;left:108px">
+                                    EMAIL CC
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:85px;">
+                                    @Html.TextBoxFor(model => model.email_cc, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:510px" })
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding-top:30px">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-2 Lblmanual" for="first-name" style="left:04px;padding-top:6px">
+                                    Message
+                                </label>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:-134px">
+                                    @Html.TextBoxFor(model => model.email_msg, new { @class = "form-control txtlbl", @maxlength = "10000", @style = "width:441px" })
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-2" style="left:123px">
+                                    <button class="btn_search" id="DFbtnSearch" type="button" align="center">Search</button>
+                                    <button type="reset" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-2" style="left:-106px">
+                            <fieldset style="width:200px">
+                                <legend>Form Action</legend>
+
+                                <table style="margin-top:0px;">
+                                    <tr>
+                                        <td>
+                                            <button class="btn-Clear" id="btnNewExceptionEntry" type="button" style="background-color:red;width:132px" align="center">New Entry</button>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div id="showgrid" class="box-header" style="padding: 5px; ">
+                <div class="gridSummary">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:20%;text-align:right">
+                                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                                    Total Records:
+                                </span>
+                                <label class="totalCount" style="text-align:left">
+                                    
+                                </label>
+                            </td>
+                            <td style="width:105px;"></td>
+                            <td style="width:105px;"></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+                <hr class="break" />
+                <div class="box-body">
+                    <div>
+                        <table id="IBGrdExceptionRpt" class="table table-bordered table-striped">
+                            <thead class="grid_backcolor">
+                                <tr>
+                                    <th class="grid_header_backcolor">REPORT ID</th>
+                                    <th class="grid_header_backcolor">COMP ID</th>
+                                    <th class="grid_header_backcolor">REPORT RUN</th>
+                                    <th class="grid_header_backcolor">ACTION</th>
+                                    <th class="grid_header_backcolor">DAY</th>
+                                    <th class="grid_header_backcolor">TIME</th>
+                                    <th class="grid_header_backcolor">EMAIL TO</th>
+                                    <th class="grid_header_backcolor">EMAILCC</th>
+                                    <th class="grid_header_backcolor">FORMAT</th>
+                                    <th class="grid_header_backcolor">STATUS</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.ListExceptionRptDetails.Count; i++)
+            {
+                                    <tr class="row-select">
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].rpt_id</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].cmp_id</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">
+                                            <a class="btn btn-danger btnEmail" align="center" id="btnEmailss" data-cmp_id="@Model.ListExceptionRptDetails[i].cmp_id" data-rpt_id="@Model.ListExceptionRptDetails[i].rpt_id"><span class="glyphicon glyphicon-envelope"></span></a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0);" style="text-decoration:underline;color:#59822c;" class="ExpRptViewDetail" data-cmp_id="@Model.ListExceptionRptDetails[i].cmp_id" data-rpt_id="@Model.ListExceptionRptDetails[i].rpt_id" data-days="@Model.ListExceptionRptDetails[i].rpt_run_days" data-time="@Model.ListExceptionRptDetails[i].rpt_run_time"
+                                               data-emailto="@Model.ListExceptionRptDetails[i].email_to" data-emailcc="@Model.ListExceptionRptDetails[i].email_cc"
+                                               data-status="@Model.ListExceptionRptDetails[i].rpt_status" data-emailmsg="@Model.ListExceptionRptDetails[i].email_msg"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+
+                                            <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="ExpRptEditDetail" data-cmp_id="@Model.ListExceptionRptDetails[i].cmp_id" data-rpt_id="@Model.ListExceptionRptDetails[i].rpt_id" data-days="@Model.ListExceptionRptDetails[i].rpt_run_days" data-time="@Model.ListExceptionRptDetails[i].rpt_run_time"
+                                               data-emailto="@Model.ListExceptionRptDetails[i].email_to" data-emailcc="@Model.ListExceptionRptDetails[i].email_cc"
+                                               data-status="@Model.ListExceptionRptDetails[i].rpt_status" data-emailmsg="@Model.ListExceptionRptDetails[i].email_msg"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+
+                                            <a href="javascript:void(0);" style="text-decoration:underline;color: red;" class="ExpRptDeleteDetail" data-cmp_id="@Model.ListExceptionRptDetails[i].cmp_id" data-rpt_id="@Model.ListExceptionRptDetails[i].rpt_id" data-days="@Model.ListExceptionRptDetails[i].rpt_run_days" data-time="@Model.ListExceptionRptDetails[i].rpt_run_time"
+                                               data-emailto="@Model.ListExceptionRptDetails[i].email_to" data-emailcc="@Model.ListExceptionRptDetails[i].email_cc"
+                                               data-status="@Model.ListExceptionRptDetails[i].rpt_status" data-emailmsg="@Model.ListExceptionRptDetails[i].email_msg"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+
+                                        </td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].rpt_run_days</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].rpt_run_time</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].email_to</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].email_cc</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].dflt_frmt</td>
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListExceptionRptDetails[i].rpt_status</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="showgridDetail" class="box-header" style="padding: 0px; ">
+            </div>
+        </div>
+   
+}
+<div id='myModalAddExpRpt' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalContentAddExpRpt' style="width: 100%; height: 700px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalEditExpRpt' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalContentEditExpRpt' style="width: 100%; height: 700px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalDeleteExpRpt' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalContentDeleteExpRpt' style="width: 100%; height: 700px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalViewExpRpt' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalContentViewExpRpt'  style="width: 100%; height: 700px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<div id='myModalNewEmailList' class='modal' style="padding-left:1222px;padding-top:199px">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 100%;">
+            <div id='myModalNewContentEmailList' style="width: 100%; height:330px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalCompanyList' class='modal' style="padding-left:1222px;padding-top:199px">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 100%;">
+            <div id='myModalContentCompanyList' style="width: 100%; height: 330px;"></div>
+        </div>
+    </div>
+
+</div>
+<div id='myModalEmail' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 198%; left:-160px;">
+            <div id='myModalEmailContent' style="width: 100%; height: 700px;"></div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/Scripts/AutoComplete/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<script type="text/javascript">
+    $("#DFbtnSearch").click(function () {
+            debugger
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_rpt_id = $('#rpt_name').val();
+            var p_str_email_to = $('#email_to').val();
+            var p_str_email_cc = $('#email_cc').val();
+            var p_str_status = $('#Status').val();
+            var p_str_email_msg = $('#email_msg').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: "/DailyFlashExceptionReport/GetDailyFlashExceptionReportInquiryDetails",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_email_to": p_str_email_to, "p_str_email_cc": p_str_email_cc, "p_str_status": p_str_status, "p_str_email_msg": p_str_email_msg
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#showgrid').hide();
+                    $('#showgridDetail').html("");
+                    $('#showgridDetail').html(e);
+                },
+            })
+
+    });
+    $("#btnClear").click(function () {
+        $("#EmailTo").val('');
+        $("#EmailCC").val('');
+        $("#Status").val('');
+        $("#EmailMsg").val('');
+    });
+
+
+
+    var TeamDetailPostBackExceptionReportAddURL = '/DailyFlashExceptionReport/NewExceptionReportConfig';
+
+    $("#btnNewExceptionEntry").click(function () {
+        var p_str_cmp_id = $("#cmp_id").val();
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackExceptionReportAddURL,
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id
+            },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#myModalContentAddExpRpt').html(data);
+                $('#myModalAddExpRpt').modal(options);
+                $('#myModalAddExpRpt').modal('show');
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+
+    function change(el) {
+        if (el.value === "(Click to hide...)")
+            el.value = "(Click to show...)";
+        else
+            el.value = "(Click to hide...)";
+    }
+   
+   
+</script>
+<script type="text/javascript">
+    $("#btnClose").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+
+    $("#btnCloseecom").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+
+    $("#btnDashboard").click(function () {
+        var p_str_cmpid = $('#ibcmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+</script>
+
+<script>
+    $(".ExpRptEditDetail").click(function () {
+     var TeamDetailPostBackLocEditRptURL = '/DailyFlashExceptionReport/DailyFlashExceptionReportDetailEditView';
+
+        var $buttonClicked = $(this);
+        debugger
+        var p_str_cmp_id = $buttonClicked.attr('data-cmp_id');
+        var p_str_rpt_id = $buttonClicked.attr('data-rpt_id');
+        var p_str_mail_to = $buttonClicked.attr('data-emailto');
+        var p_str_mail_cc = $buttonClicked.attr('data-emailcc');
+        var p_str_content = $buttonClicked.attr('data-emailmsg');
+        var p_str_status = $buttonClicked.attr('data-status');
+        var p_str_action= "2";
+        var p_str_RunningDays = $buttonClicked.attr('data-days');
+        var p_str_Time = $buttonClicked.attr('data-time');
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackLocEditRptURL,
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_mail_to": p_str_mail_to, "p_str_mail_cc": p_str_mail_cc, "p_str_content": p_str_content,
+                "p_str_status": p_str_status, "p_str_action": p_str_action, "p_str_RunningDays": p_str_RunningDays, "p_str_Time": p_str_Time
+            },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#myModalContentEditExpRpt').html(data);
+                $('#myModalEditExpRpt').modal(options);
+                $('#myModalEditExpRpt').modal('show');
+            },
+            error: function () {
+                swal("", "Dynamic content load failed.", "");
+                $("#ajaxLoading").hide();
+            }
+        });
+ });
+    $(".ExpRptViewDetail").click(function () {
+     var TeamDetailPostBackLocViewRptURL = '/DailyFlashExceptionReport/DailyFlashExceptionReportDetailEditView';
+
+     var $buttonClicked = $(this);
+     debugger
+     var p_str_cmp_id = $buttonClicked.attr('data-cmp_id');
+     var p_str_rpt_id = $buttonClicked.attr('data-rpt_id');
+     var p_str_mail_to = $buttonClicked.attr('data-emailto');
+     var p_str_mail_cc = $buttonClicked.attr('data-emailcc');
+     var p_str_content = $buttonClicked.attr('data-emailmsg');
+     var p_str_status = $buttonClicked.attr('data-status');
+     var p_str_action = "3";
+     var p_str_RunningDays = $buttonClicked.attr('data-days');
+     var p_str_Time = $buttonClicked.attr('data-time');
+     var options = { "backdrop": "static", keyboard: true };
+     $("#ajaxLoading").show();
+     $.ajax({
+         type: "GET",
+         url: TeamDetailPostBackLocViewRptURL,
+         contentType: "application/json; charset=utf-8",
+         data: {
+             "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_mail_to": p_str_mail_to, "p_str_mail_cc": p_str_mail_cc, "p_str_content": p_str_content,
+             "p_str_status": p_str_status, "p_str_action": p_str_action, "p_str_RunningDays": p_str_RunningDays, "p_str_Time": p_str_Time
+         },
+         datatype: "json",
+         success: function (data) {
+             $("#ajaxLoading").hide();
+             $('#myModalContentViewExpRpt').html(data);
+             $('#myModalViewExpRpt').modal(options);
+             $('#myModalViewExpRpt').modal('show');
+         },
+         error: function () {
+             swal("", "Dynamic content load failed.", "");
+             $("#ajaxLoading").hide();
+         }
+     });
+ });
+    $(".ExpRptDeleteDetail").click(function () {
+     var TeamDetailPostBackLocsDeleteRptURL = '/DailyFlashExceptionReport/DailyFlashExceptionReportDetailEditView';
+
+     var $buttonClicked = $(this);
+     debugger
+     var p_str_cmp_id = $buttonClicked.attr('data-cmp_id');
+     var p_str_rpt_id = $buttonClicked.attr('data-rpt_id');
+     var p_str_mail_to = $buttonClicked.attr('data-emailto');
+     var p_str_mail_cc = $buttonClicked.attr('data-emailcc');
+     var p_str_content = $buttonClicked.attr('data-emailmsg');
+     var p_str_status = $buttonClicked.attr('data-status');
+     var p_str_action = "4";
+     var p_str_RunningDays = $buttonClicked.attr('data-days');
+     var p_str_Time = $buttonClicked.attr('data-time');
+     var options = { "backdrop": "static", keyboard: true };
+     $("#ajaxLoading").show();
+     $.ajax({
+         type: "GET",
+         url: TeamDetailPostBackLocsDeleteRptURL,
+         contentType: "application/json; charset=utf-8",
+         data: {
+             "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_mail_to": p_str_mail_to, "p_str_mail_cc": p_str_mail_cc, "p_str_content": p_str_content,
+             "p_str_status": p_str_status, "p_str_action": p_str_action, "p_str_RunningDays": p_str_RunningDays, "p_str_Time": p_str_Time
+         },
+         datatype: "json",
+         success: function (data) {
+             $("#ajaxLoading").hide();
+             $('#myModalContentDeleteExpRpt').html(data);
+             $('#myModalDeleteExpRpt').modal(options);
+             $('#myModalDeleteExpRpt').modal('show');
+         },
+         error: function () {
+             swal("", "Dynamic content load failed.", "");
+             $("#ajaxLoading").hide();
+         }
+     });
+    });
+
+
+    $(".btnEmail").click(function () {
+        var TeamDetailPostBackEmailRptURL = '/DailyFlashExceptionReport/EmailShowReport';
+
+        var $buttonClicked = $(this);
+        debugger
+        var p_str_cmp_id = $buttonClicked.attr('data-cmp_id');
+        var p_str_rpt_id = $buttonClicked.attr('data-rpt_id');
+        var p_str_SR_dtFm = "";
+        var p_str_SR_dtTo = "";
+        var p_str_itm_code = "";
+        var p_str_type = "PDF";
+        var options = { "backdrop": "static", keyboard: true };
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackEmailRptURL,
+            contentType: "application/json; charset=utf-8",
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "p_str_rpt_id": p_str_rpt_id, "p_str_SR_dtFm": p_str_SR_dtFm, "p_str_SR_dtTo": p_str_SR_dtTo, "p_str_itm_code": p_str_itm_code,
+                "p_str_type": p_str_type
+            },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#myModalEmailContent').html(data);
+                $('#myModalEmail').modal(options);
+                $('#myModalEmail').modal('show');
+            },
+            error: function () {
+                swal("", "Dynamic content load failed.", "");
+                $("#ajaxLoading").hide();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,89 @@
+﻿@model GsEPWv8_5_MVC.Model.MailConfigModel
+
+@{
+   var TotalRecords= Model.LstMail.Count;
+}
+
+<style>
+    .ItemGridSummary {
+        height: 49px;
+        background: #d2d6de;
+        padding-top: 10px;
+    }
+</style>
+<div class="box-body">
+    <div class="row">
+        <div class="ItemGridSummary">
+            <table>
+                <tr>
+                    <td style="width: 5%;"></td>
+                    <td style="width:22%;">
+                        <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                            Total Records:
+                        </span>
+                        <label class="totalCount" style="text-align:left">
+                            @TotalRecords
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br />
+    <table id="GridMailConfigPartial" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="font-size:11px;">CompID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;">ScreenID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;">ReportID</th>
+                <th class="grid_header_backcolor" style="font-size:11px;">Format</th>
+                <th class="grid_header_backcolor" style="font-size:11px;">EmailTo</th>
+                <th class="grid_header_backcolor" style="font-size:11px;">EmailCC</th>
+                <th class="grid_header_backcolor" style="font-size:11px;">EmailMessage</th>
+                <th class="grid_header_backcolor" style="font-size:11px;">Status</th>
+
+            </tr>
+        </thead>
+        <tbody style="background-color:white">
+            @for (int i = 0; i < Model.LstMail.Count; i++)
+            {
+                <tr>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstMail[i].cmp_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstMail[i].scn_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstMail[i].rpt_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstMail[i].EmailTo</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstMail[i].EmailCC</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstMail[i].emailmessage</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstMail[i].Status</td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script>
+    $('#GridMailConfigPartial').DataTable({
+        "paging": true,
+        "pageLength": 50,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+</script>
+
+
+
+
+
+
+

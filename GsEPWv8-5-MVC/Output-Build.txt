@@ -1,0 +1,132 @@
+﻿1>------ Rebuild All started: Project: GsEPWv8-5-MVC.Core, Configuration: Debug Any CPU ------
+1>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Core\Entity\xls_IB_Recv_By_Container_Excel.cs(142,22,142,24): warning CS0168: The variable 'dt' is declared but never used
+1>  GsEPWv8-5-MVC.Core -> D:\PROD-SOURCE\GsEPWv8-5-MVC\Reference\GsEPWv8-5-MVC.Core.dll
+2>------ Rebuild All started: Project: GsEPWv8-5-MVC.Model, Configuration: Debug Any CPU ------
+2>  GsEPWv8-5-MVC.Model -> D:\PROD-SOURCE\GsEPWv8-5-MVC\Reference\GsEPWv8-5-MVC.Model.dll
+3>------ Rebuild All started: Project: GsEPWv8-5-MVC.Data, Configuration: Debug Any CPU ------
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\DailyFlashExceptionReportRepository.cs(189,30,189,32): warning CS0168: The variable 'Ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\MailConfigRepository.cs(36,30,36,32): warning CS0168: The variable 'Ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\MailConfigRepository.cs(69,30,69,32): warning CS0168: The variable 'Ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\LoginRepository.cs(97,30,97,32): warning CS0168: The variable 'ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\MailConfigRepository.cs(109,30,109,32): warning CS0168: The variable 'Ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\MailConfigRepository.cs(144,30,144,32): warning CS0168: The variable 'Ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\MailConfigRepository.cs(179,30,179,32): warning CS0168: The variable 'Ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\MailConfigRepository.cs(207,30,207,32): warning CS0168: The variable 'Ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\OBSRLoadEntryRepository.cs(226,30,226,32): warning CS0168: The variable 'ex' is declared but never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\BillingInquiryRepository.cs(2383,21,2383,40): warning CS0219: The variable 'l_int_cntr_id_count' is assigned but its value is never used
+3>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC.Data\Implementation\OutboundInqRepository.cs(5204,30,5204,32): warning CS0168: The variable 'ex' is declared but never used
+3>  GsEPWv8-5-MVC.Data -> D:\PROD-SOURCE\GsEPWv8-5-MVC\Reference\GsEPWv8-5-MVC.Data.dll
+4>------ Rebuild All started: Project: GsEPWv8-5-MVC.Business, Configuration: Debug Any CPU ------
+4>  GsEPWv8-5-MVC.Business -> D:\PROD-SOURCE\GsEPWv8-5-MVC\Reference\GsEPWv8-5-MVC.Business.dll
+5>------ Rebuild All started: Project: GsEPWv8-5-MVC, Configuration: Debug Any CPU ------
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\InboundInquiryController.cs(25,7,25,16): warning CS0105: The using directive for 'System.IO' appeared previously in this namespace
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(1411,18,1411,25): warning CS0219: The variable 'isValid' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\VasInquiryController.cs(1442,18,1442,28): warning CS0219: The variable 'l_str_flag' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\VasInquiryController.cs(1444,17,1444,26): warning CS0219: The variable 'l_int_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\CustMasterController.cs(1690,46,1690,48): warning CS0168: The variable 'ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\CustMasterController.cs(1710,34,1710,36): warning CS0168: The variable 'ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\VasInquiryController.cs(1863,18,1863,25): warning CS0219: The variable 'isValid' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\DocumentUploadController.cs(132,30,132,32): warning CS0168: The variable 'ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(4702,34,4702,36): warning CS0168: The variable 'ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(195,45,195,54): warning CS0219: The variable 'linecount' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(460,45,460,54): warning CS0219: The variable 'linecount' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(788,48,788,62): warning CS0219: The variable 'l_dou_StyleQty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(1036,30,1036,32): warning CS0168: The variable 'Ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(1044,20,1044,26): warning CS0219: The variable 'New_SO' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(1045,20,1045,33): warning CS0219: The variable 'l_str_reqdate' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(1373,24,1373,36): warning CS0219: The variable 'selformfinal' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(1355,18,1355,25): warning CS0219: The variable 'isValid' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(1356,20,1356,33): warning CS0219: The variable 'jsonErrorCode' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(6275,21,6275,35): warning CS0219: The variable 'l_dec_tot_amnt' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(6276,21,6276,37): warning CS0219: The variable 'l_dec_list_price' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(6277,17,6277,30): warning CS0219: The variable 'l_int_tot_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(6278,21,6278,39): warning CS0219: The variable 'l_int_tot_ship_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\InboundInquiryController.cs(513,24,513,37): warning CS0168: The variable 'P_str_itmCode' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\InboundReportController.cs(676,17,676,33): warning CS0219: The variable 'l_int_cntr_count' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\LoginController.cs(277,37,277,39): warning CS0168: The variable 'Ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(8458,21,8458,35): warning CS0219: The variable 'l_dec_tot_amnt' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(8459,21,8459,37): warning CS0219: The variable 'l_dec_list_price' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(8460,17,8460,30): warning CS0219: The variable 'l_int_tot_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(8461,21,8461,39): warning CS0219: The variable 'l_int_tot_ship_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(8764,21,8764,35): warning CS0219: The variable 'l_dec_tot_amnt' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(8765,21,8765,37): warning CS0219: The variable 'l_dec_list_price' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(8766,17,8766,30): warning CS0219: The variable 'l_int_tot_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\BillingInquiryController.cs(8767,21,8767,39): warning CS0219: The variable 'l_int_tot_ship_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\IB943UploadFileController.cs(1149,38,1149,40): warning CS0168: The variable 'ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OB940UploadFileController.cs(1482,30,1482,32): warning CS0168: The variable 'ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OB940UploadFileController.cs(1498,30,1498,32): warning CS0168: The variable 'Ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(1040,46,1040,48): warning CS0168: The variable 'ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\InboundInquiryController.cs(3680,54,3680,55): warning CS0162: Unreachable code detected
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(4795,54,4795,55): warning CS0162: Unreachable code detected
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\InboundInquiryController.cs(5729,17,5729,36): warning CS0219: The variable 'l_int_temp_rcvd_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6594,17,6594,30): warning CS0219: The variable 'l_int_linenum' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6859,17,6859,32): warning CS0219: The variable 'SdtRec_Aloc_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6860,17,6860,25): warning CS0219: The variable 'Aloc_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6862,17,6862,25): warning CS0219: The variable 'PrevLine' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6863,17,6863,26): warning CS0219: The variable 'NewCtnQty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6866,17,6866,20): warning CS0168: The variable 'Alo' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6866,22,6866,25): warning CS0219: The variable 'CTN' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6867,20,6867,25): warning CS0168: The variable 'Whsid' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6870,17,6870,20): warning CS0219: The variable 'Ppk' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6871,17,6871,24): warning CS0219: The variable 'UpdtPkg' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6873,17,6873,23): warning CS0219: The variable 'NewQty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6874,17,6874,25): warning CS0219: The variable 'ctn_line' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6878,20,6878,27): warning CS0168: The variable 'ItmCode' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6878,29,6878,35): warning CS0168: The variable 'ItmNum' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6878,37,6878,45): warning CS0168: The variable 'ItmColor' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6878,47,6878,54): warning CS0168: The variable 'ItmSize' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6878,56,6878,63): warning CS0168: The variable 'ItmName' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6878,65,6878,71): warning CS0168: The variable 'tmp_po' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6879,17,6879,24): warning CS0168: The variable 'AlocQty' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(6881,17,6881,18): warning CS0219: The variable 'N' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7022,17,7022,30): warning CS0219: The variable 'l_int_linenum' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\InboundInquiryController.cs(8428,33,8428,35): warning CS0168: The variable 'Ex' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7561,17,7561,28): warning CS0219: The variable 'totAloc_Qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7594,17,7594,26): warning CS0219: The variable 'lintCount' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7714,17,7714,28): warning CS0219: The variable 'totAloc_Qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7744,17,7744,26): warning CS0219: The variable 'lintCount' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7822,17,7822,28): warning CS0219: The variable 'totAloc_Qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7852,17,7852,26): warning CS0219: The variable 'lintCount' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7932,20,7932,28): warning CS0168: The variable 'Ctn_Qty1' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7932,30,7932,40): warning CS0168: The variable 'Aloc_Ctns1' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7932,42,7932,51): warning CS0168: The variable 'Aloc_Qty1' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7932,53,7932,64): warning CS0168: The variable 'ItmCtn_Qty2' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7932,66,7932,76): warning CS0168: The variable 'Aloc_Ctns2' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7942,17,7942,24): warning CS0219: The variable 'Pkg_cnt' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7943,20,7943,25): warning CS0168: The variable 'WhsId' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(7947,17,7947,20): warning CS0219: The variable 'Pos' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8468,40,8468,45): warning CS0219: The variable 'query' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8469,40,8469,50): warning CS0219: The variable 'connString' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8698,20,8698,28): warning CS0168: The variable 'Itm_Code' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8698,30,8698,36): warning CS0168: The variable 'Lot_Id' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8698,38,8698,45): warning CS0168: The variable 'Rcvd_Dt' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8698,47,8698,53): warning CS0168: The variable 'Loc_Id' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8710,17,8710,24): warning CS0168: The variable 'AlocQty' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8760,17,8760,18): warning CS0219: The variable 'I' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8810,17,8810,25): warning CS0219: The variable 'Line_Num' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8922,17,8922,25): warning CS0219: The variable 'Line_Num' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8928,56,8928,63): warning CS0168: The variable 'ItmName' is declared but never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8929,26,8929,32): warning CS0219: The variable 'dueqty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8930,17,8930,24): warning CS0219: The variable 'LineNum' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8931,17,8931,18): warning CS0219: The variable 'N' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8932,21,8932,29): warning CS0219: The variable 'Availqty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(8947,17,8947,18): warning CS0219: The variable 'J' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(11356,17,11356,26): warning CS0219: The variable 'Avail_Qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(11630,18,11630,25): warning CS0219: The variable 'isValid' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(12854,18,12854,25): warning CS0219: The variable 'isValid' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\StockChangeController.cs(27,19,27,29): warning CS0169: The field 'StockChangeController.dtItemMove' is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\VasInquiryController.cs(28,13,28,17): warning CS0169: The field 'VasInquiryController.Rate' is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\VasInquiryController.cs(29,13,29,16): warning CS0169: The field 'VasInquiryController.Amt' is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(52,13,52,19): warning CS0169: The field 'OutboundInqController.PkgQty' is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(50,13,50,22): warning CS0169: The field 'OutboundInqController.Alloc_pkg' is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(63,13,63,22): warning CS0169: The field 'OutboundInqController.SelCtnCnt' is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(63,51,63,57): warning CS0414: The field 'OutboundInqController.ReqQty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(38,13,38,24): warning CS0414: The field 'eComSR940Controller.resultCount' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(53,13,53,26): warning CS0414: The field 'OutboundInqController.BackOrder_Pkg' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(57,13,57,25): warning CS0414: The field 'OutboundInqController.Aloc_ctn_qty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\OutboundInqController.cs(52,21,52,33): warning CS0414: The field 'OutboundInqController.AllocatedQty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\StockInquiryController.cs(26,13,26,25): warning CS0414: The field 'StockInquiryController.TranTotalCtn' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\StockInquiryController.cs(25,13,25,25): warning CS0414: The field 'StockInquiryController.TranTotalQty' is assigned but its value is never used
+5>D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\Controllers\eComSR940Controller.cs(37,13,37,29): warning CS0414: The field 'eComSR940Controller.resultbatchCount' is assigned but its value is never used
+5>  GsEPWv8-5-MVC -> D:\PROD-SOURCE\GsEPWv8-5-MVC\GsEPWv8-5-MVC\bin\GsEPWv8-4-MVC.dll
+========== Rebuild All: 5 succeeded, 0 failed, 0 skipped ==========

@@ -1,0 +1,379 @@
+﻿@model GsEPWv8_4_MVC.Model.VasInquiryModel
+@{
+    var TotalNumberoflst = Model.ListVasEntryGridDtl.Count();
+    var Ordercount = Model.ListVasEntryGridDtl.Count;
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+    
+</style>
+@Html.HiddenFor(model => model.whs_id)
+
+<center>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" onclick="closeModal();" aria-hidden="true">×</button>
+        <center><h3 class="modal-title" id="myModalLabel" style="color: white;">New Vas Entry</h3></center>
+        <button type="button" id="btnClose" data-dismiss="modal" onclick="closeModal();" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+        <button type="button" id="btnSaveVas" class="btn-Close" style="float:right;margin-top: -18px;background-color: #00c0ef;">Save</button>
+    </div>
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-9" style="width:70%;">
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Cmp Id:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl", @style = "width: 125px;" })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Vas Id:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.vas_id, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "width:125px;" })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;width: 120px;margin-left:6px;">
+                            <label><b class="Lblmanual">Vas Date:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="width: 13.666667%;">
+                            @Html.TextBoxFor(model => model.ship_dt, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;margin-left:-16px;" })
+                        </div>
+                    </div>
+                    @*<div class="col-xs-3" style="width:30%;" id="mydiv">
+                        <table>
+                            <tr>
+                            <td rowspan=2>
+                                <fieldset>
+                                    <legend>Report Selection</legend>
+
+                                    <table>
+
+                                        <tr>
+                                            <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Inquiry Report" name="radio1" /><b>VAS Report</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Post Report" name="radio1" /><b>VAS Supplies Usage(Detail)</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Detail Report" name="radio1" /><b>VAS Supplies Usage(Summary)</b></td>
+                                         </tr>
+                                    </table>
+                                </fieldset>
+
+                            </td>
+                            </tr>
+                        </table>
+                    </div>*@
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-9">
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Status:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.Status, new { @class = "form-control txtlbl", @maxlength = "50" ,@style="width:125px;"})
+
+                        </div>
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;width: 120px;margin-left:-10px;">
+                            <label><b class="Lblmanual">SR#:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.so_num, new { @id = "Vassonum", @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;margin-left:1px;">
+                            <label><b class="Lblmanual">FOB:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-2%;">
+                            @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListPick, "whs_id", "whs_id"), new { @class = "form-control txtlbl", @style = "width: 122px;" })
+                            @*@Html.TextBoxFor(model => model.whs_id, new { @id = "ps_itm_name", @class = "form-control txtlbl", @maxlength = "80", @style = "width:125px;margin-left:-18px;" })*@
+                        </div>
+                    </div>
+                    <div class="col-xs-9"></div>
+            </div>
+                </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-9">
+                        <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Ship To Id:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.ship_to_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;margin-left:-10px;">
+                            <label><b class="Lblmanual">Cust Po#:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.cust_po_num, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width: 120px;margin-left:1px;">
+                            <label><b class="Lblmanual">Cust PO Dt:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.cust_po_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", @style = "width:125px;margin-left:-18px;" })
+                        </div>
+                    </div>
+                    <div class="col-xs-3"></div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-9">
+                        <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Header Note:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.Note, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:462px" })
+                        </div>
+                    </div>
+                    <div class="col-xs-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <table>
+        <tr>
+            <td style="width:13%;padding-left:76px;">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+            </td>
+            <td style="width: 62%;">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+           
+        </tr>
+    </table>
+    <br />
+</center>
+        <div class="box" style="padding: 2px;">
+            <div id="table-Details">
+                @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+                <table id="GridVasEntryDtl" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                    <thead class="grid_backcolor">
+                        <tr>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Ln#</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">ServiceId</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:20%;">Description</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Qty</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Rate</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Amount</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Status</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:8%;">UoM</th>
+                            <th class="grid_header_backcolor" style="font-size:11px;width:33%;">Note</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                        @for (int i = 0; i < Model.ListVasEntryTempGridDtl.Count; i++)
+                        {
+                            int line = i + 1;
+                            var Amt = (Model.ListVasEntryTempGridDtl[i].amt);
+                            var Rate = (Model.ListVasEntryTempGridDtl[i].list_price);
+                            var l_dec_Amt = Amt.ToString("F2");
+                            var l_dec_rate = Rate.ToString("F2");
+                            <tr id="@Model.ListVasEntryGridDtl[i].cmp_id" style="background-color:white;">
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@line</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.ListVasEntryTempGridDtl[i].itm_num, new { @class = "Amt", @id = "itmnum_" + i, @style = "width:60px;text-align:right;" })@Model.ListVasEntryTempGridDtl[i].itm_num</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryTempGridDtl[i].itm_name</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListVasEntryTempGridDtl[i].qty, new { @class = "Amt", @id = "qty_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_rate, new { @class = "itmrate", @id = "price_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_Amt, new { @id = "amt_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">O</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryTempGridDtl[i].price_uom</td>
+                                <td style="font-size:10px; color:black; font-weight:bold;"><input type="text" style="width:347px;background-color:lightyellow;" value="@Model.ListVasEntryTempGridDtl[i].Note" /></td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @Html.Hidden("Count_Values", TotalNumberoflst)
+                @*</div>*@
+            </div>
+        </div>
+   
+
+
+<script type="text/javascript">
+
+    $(".itmrate").focusout(function () {
+
+        var ImagesNewRowNumber = $("#Count_Values").val();
+        var _imagesCount = 0;
+        for (var i = 0; i < ImagesNewRowNumber; i++) {
+            var sum_i = $("#qty_" + i).val() * $("#price_" + i).val();
+            $("#amt_" + i).val(sum_i)
+            var qty = $("#qty_" + i).val();           
+            var itmnum = $("#itmnum_" + i).val();           
+            var price = $("#price_" + i).val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/VasInquiry/UpdRateTempDetails")',
+                data: {
+                    "p_str_qty": qty,
+                    "p_str_rate": price,
+                    "p_str_amt": sum_i,
+                    "p_str_itmnum": itmnum,
+                },
+                dataType: 'html',
+                success: function (e) {
+
+
+                },
+
+            })
+        }
+    });
+    $('#ship_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#cust_po_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $("#Note").focusout(function () {
+        $(".Amt").focus();
+    });
+    $(".Amt").focusout(function () {
+        //alert('hit')
+        var ImagesNewRowNumber = $("#Count_Values").val();
+        var _imagesCount = 0;
+        for (var i = 0; i < ImagesNewRowNumber; i++) {
+            var sum_i = $("#qty_" + i).val() * $("#price_" + i).val();
+            //alert(sum_i)
+            $("#amt_" + i).val(sum_i)
+            var newamount = $("#amt_" + i).val(sum_i);            
+        }
+    });
+
+    function closeModal() {
+        $.ajax({
+            //url: AppVirtualPath + '/Users/DeleteUsers',
+            url: '@Url.Action("TruncateVasEntry", "VasInquiry")',
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                if (data > 0) {
+                    //alert('d')
+                }
+            }
+        });
+    }
+    $("#Vassonum").focusout(function () {
+
+        var p_str_sonum = $('#Vassonum').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/VasInquiry/LoadSRDetails")',
+            data: {
+                "p_str_sonum": p_str_sonum
+            },
+
+            dataType: "json",
+            success: function (e) {
+                //alert(e)
+                debugger
+                $.each(e, function () {
+                   
+                    $("#ps_itm_name").val(this.fob);
+                    $("#ship_to_id").val(this.shipto_id);
+                    $("#cust_po_num").val(this.cust_ordr_num);
+                    //$("#cust_po_dt").val(this.cust_ordr_dt);
+                });
+            },
+
+        });
+    });
+
+    $("#btnSaveVas").click(function () {
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_vas_id = $('#vas_id').val();
+        var p_str_vas_dt = $('#ship_dt').val();
+        var p_str_so_num = $('#Vassonum').val();
+        var p_str_whs_id = $('#whs_id').val();
+        var p_str_ship_to_id = $('#ship_to_id').val();
+        var p_str_cust_po_num = $('#cust_po_num').val();
+        var p_str_cust_po_dt = $('#cust_po_dt').val();
+        var p_str_note = $('#Note').val();
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/VasInquiry/SaveVasEntry")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id,
+                    "p_str_vas_id": p_str_vas_id,
+                    "p_str_vas_dt": p_str_vas_dt,
+
+                    "p_str_so_num": p_str_so_num, "p_str_whs_id": p_str_whs_id, "p_str_ship_to_id": p_str_ship_to_id, "p_str_cust_po_num": p_str_cust_po_num,
+                    "p_str_cust_po_dt": p_str_cust_po_dt, "p_str_note": p_str_note
+                },
+                dataType: 'html',               
+                success: function (e) {
+                    debugger
+                    if (e != null) {
+                        swal("", "Your record Added successfully.", "");
+
+                     
+                        var p_str_cmp_id = $('#cmp_id').val();
+                        var p_str_vasid = $('#vas_id').val();
+                        //var type = "PDF";
+                        //var p_str_radio = "Vas Post Report";
+                        
+//                        window.open('ShowReport?p_str_cmp_id=' + p_str_cmpid + '&p_str_radio=' + p_str_radio + '&p_str_vas_id_fm=' + p_str_vas_id_fm
+//+ '&p_str_vas_id_to=' + p_str_vas_id_to + '&p_str_vas_date_fm=' + p_str_vas_date_fm + '&p_str_vas_date_to=' + p_str_vas_date_to + '&p_str_so_num=' + p_str_so_num
+//+ '&p_str_Status=' + p_str_Status + '&SelectedID=' + SelectdID + '&type=' + type, 'VasInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+                       
+                        window.open('ShowVasReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_vasid=' + p_str_vasid, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowVasReport')
+
+                    }
+                    @*setTimeout(
+                        function RoleCreateMove() {
+                            window.location.href = '@Url.Action("VasInquiry", "VasInquiry")';
+                        });*@
+
+
+                },
+
+            })
+        }
+        });
+   
+    $('#GridVasEntryDtl').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true
+    });
+    $('#last_so_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'Y-m-d'
+    });
+</script>
+
+

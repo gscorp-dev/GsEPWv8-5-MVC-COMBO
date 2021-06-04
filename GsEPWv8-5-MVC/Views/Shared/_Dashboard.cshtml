@@ -1,0 +1,717 @@
+﻿@model GsEPWv8_5_MVC.Model.DashBoardModel
+
+@Html.HiddenFor(model => model.cmp_id, new { id = "FieldId" })
+
+<div class="box-body">
+
+    <table style="width:100%">
+        <tr>
+            <td style="width: 10%"></td>
+            <td colspan="3">
+                <center>
+                    <table style="width:100%">
+                        <tr>
+
+                            <td style="width:395px;">
+                                <div>
+                                    <!-- small box -->
+                                    <div class="small-box " style="height: 230px;border: 1px solid #3a7fe6;">
+                                        <div class="inner" style="padding:10px 10px 0px 10px;background-color: #6A0888;border-bottom: 1px solid #3a7fe6;">
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 333px;">
+                                                        <p class="dashboardhdr" style="color:white;">Inbound Analysis</p>
+                                                    </td>
+                                                    <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                        <i class="fa fa-car" aria-hidden="true"></i>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <table id="exampl" class="table  table-striped">
+                                            <tbody>
+
+                                                @for (int i = 0; i < Model.LstDashBoard.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstDashBoard[i].InboundDesc">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">
+                                                            IB Inquiry & Analysis
+                                                            <a href="/InboundInquiry/InboundInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=IBInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+
+
+
+                                                        </td>
+
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstDashBoard[i].Total</td>
+                                                        <td>
+                                                            <a href="/InboundInquiry/InboundInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=IBInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px ;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+
+                                                    </tr>
+
+                                                }
+                                                @if( (Session["IsCompanyUser"].ToString().Trim() == "Y") || (Session["UserType"].ToString().Trim() == "4PL-USER"))
+                                                {
+                                                    <tr>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            IB RECEIVER Data UPDATE
+                                                            <a href="/IBRcvdDataUpdate/IBRcvdDataUpdate?cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&screentitle=IBDataUpdate" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;"></td>
+                                                        <td>
+                                                            <a href="/IBRcvdDataUpdate/IBRcvdDataUpdate?cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&screentitle=IBDataUpdate" class="small-box-footer actionlink" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+
+                                                        </td>
+
+                                                    </tr>
+
+                                                }
+                                            @if(Session["IsCompanyUser"].ToString().Trim() == "Y")
+                                            { 
+                                                for (int i = 0; i < Model.LstInboundOpenData.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstInboundOpenData[i].InboundOpenDesc">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">
+                                                            IB Visibility & Analysis
+                                                            <a href="/InboundInquiry/InboundInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=OPEN&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=IBVisibility" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstInboundOpenData[i].IBOpenTotal</td>
+                                                        <td>
+                                                            <a href="/InboundInquiry/InboundInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=OPEN&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=IBVisibility" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px ;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+
+                                                    </tr>
+
+                                                }
+                                              }
+                                                @for (int i = 0; i < Model.LstInboundPostData.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstInboundPostData[i].InboundPostDesc" style="display:none;">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+
+                                                            @Model.LstInboundPostData[i].InboundPostDesc
+                                                            <a href="/InboundInquiry/InboundInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=POST&DateFm=@Model.frm_dt&DateTo=@Model.to_dt" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+
+
+
+                                                        </td>
+
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstInboundPostData[i].IBOPostTotal</td>
+                                                        <td>
+                                                            <a href="/InboundInquiry/InboundInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=POST&DateFm=@Model.frm_dt&DateTo=@Model.to_dt" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px ;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+
+                                                    </tr>
+
+                                                }
+
+                                                @for (int i = 0; i < Model.LstInboundRcvdData.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstInboundRcvdData[i].InboundRcvdDesc" style="display:none;">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;    padding-left: 30px; ">
+                                                            @Model.LstInboundRcvdData[i].InboundRcvdDesc
+                                                            <a href="/InboundInquiry/InboundInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=1-RCVD" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstInboundRcvdData[i].RcvdTotal</td>
+                                                        <td>
+                                                            <a href="/InboundInquiry/InboundInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=1-RCVD" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+
+                                                <tr>
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                        Receiving Reports
+                                                        <a href="/InboundReport/InboundReport?" class="small-box-footer" style="color:#072c9a;">
+                                                            <i class="fa fa-arrow-circle-right"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold;"></td>
+                                                    <td>
+                                                        <a href="/InboundReport/InboundReport?" class="small-box-footer" style="color:#072c9a;">
+                                                            <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                        Inbound ETA Inquiry
+                                                        <a href="/ETAInquiry/ETAInquiry?" class="small-box-footer" style="color:#072c9a;">
+                                                            <i class="fa fa-arrow-circle-right"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold;"></td>
+                                                    <td>
+                                                        <a href="/ETAInquiry/ETAInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=POST&DateFm=@Model.frm_dt&DateTo=@Model.to_dt" class="small-box-footer actionlink" style="color:#072c9a;">
+                                                            <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                        </a>
+
+                                                    </td>
+
+                                                </tr>
+                                               
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding-left: 10px;width:405px;">
+                                <div>
+                                    <div class="small-box " style="height: 230px;border: 1px solid #3a7fe6;">
+                                        <div class="inner" style="padding:10px 10px 0px 10px;background-color: #8A0868;border-bottom: 1px solid #3a7fe6;">
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 333px;">
+                                                        <p class="dashboardhdr" style="color:white;">Outbound Analysis</p>
+                                                    </td>
+                                                    <td style="text-align:right;font-size:30px;color:#3644ec;">
+                                                        <i class="fa fa-truck" aria-hidden="true"></i>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+
+                                        <table id="exampl" class="table table-striped">
+                                            <tbody>
+
+                                                @for (int i = 0; i < Model.LstOutBound.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstOutBound[i].OBShipRequestEntry">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            Outbound Inquiry & Analysis
+                                                            <a href="/OutboundInq/OutboundInq?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=OBInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstOutBound[i].OBShipRequestTotal</td>
+                                                        <td>
+                                                            <a href="/OutboundInq/OutboundInq?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=OBInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+                                                @for (int i = 0; i < Model.LstOutBoundShipREq.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstOutBoundShipREq[i].ShipRequestEntry">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">
+                                                              Outbound Visibility & Analysis
+                                                            <a href="/OutboundInq/OutboundInq?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=OBVisibility" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstOutBoundShipREq[i].ShipRequestTotal</td>
+                                                        <td>
+                                                            <a href="/OutboundInq/OutboundInq?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=OBVisibility" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+
+                                                <tr>
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                        Shipping Reports
+                                                        <a href="/OutboundShipRpt/OutboundShipRpt?FullFillType=ALL&cmp=@Model.cmp_id&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=OBShippingRpt" class="small-box-footer" style="color:#072c9a;">
+                                                            <i class="fa fa-arrow-circle-right"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold;"></td>
+                                                    <td>
+                                                        <a href="/OutboundShipRpt/OutboundShipRpt?FullFillType=ALL&cmp=@Model.cmp_id&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=OBShippingRpt" class="small-box-footer" style="color:#072c9a;">
+                                                            <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                @for (int i = 0; i < Model.LstOutBoundShipPost.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstOutBoundShipPost[i].ShipEntry">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;  ">
+
+                                                            @Model.LstOutBoundShipPost[i].ShipEntry
+                                                            <a href="/OutboundShipInq/OutboundShipInq?FullFillType=ALL&cmp=@Model.cmp_id&status=POST&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=OBShipEntry" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstOutBoundShipPost[i].ShipTotal</td>
+                                                        <td>
+                                                            <a href="/OutboundShipInq/OutboundShipInq?FullFillType=ALL&cmp=@Model.cmp_id&status=POST&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=OBShipEntry" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td style="padding-left: 10px;width:405px;">
+                                <div>
+                                    <div>
+                                        <div class="small-box " style="height: 230px;border: 1px solid #3a7fe6;">
+                                            <div class="inner" style="padding:10px 10px 0px 10px;background-color: #8A0829;border-bottom: 1px solid #3a7fe6;">
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 333px;">
+                                                            <p class="dashboardhdr" style="color:white;">Inventory Analysis</p>
+                                                        </td>
+                                                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                            <img src="~/Images/inventorlogo.png" width="40" height="40" style="margin-top: -17px;" />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+
+                                            <table id="exampl" class="table table-striped">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            Stock Inquiry and Analysis
+                                                            <a href="/StockInquiry/StockInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=StockInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/StockInquiry/StockInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=StockInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    @if ((Session["IsCompanyUser"].ToString() == "Y") || (Session["UserType"].ToString().Trim() == "4PL-USER"))
+                                                    {
+                                                        <tr>
+                                                            <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                                Inventory Stock As Of Date
+                                                                <a href="/StockAsOfDate/StockAsOfDate?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=StockInquiryAsofDate" class="small-box-footer" style="color:#072c9a;">
+                                                                    <i class="fa fa-arrow-circle-right"></i>
+                                                                </a>
+                                                            </td>
+                                                            
+                                                            <td>
+                                                                <a href="/StockAsOfDate/StockAsOfDate?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&screentitle=StockInquiryAsofDate" class="small-box-footer" style="color:#072c9a;">
+                                                                    <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    <tr>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            Inventory - Stock Move By Style
+                                                            <a href="/StockChange/StockChange?FullFillType=ALL&cmp=@Model.cmp_id&screentitle=StockChange" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/StockChange/StockChange?FullFillType=ALL&cmp=@Model.cmp_id&screentitle=StockChange" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            Inventory - Stock Move By Container/IBDocId
+                                                            <a href="/StockMove/StockMove?FullFillType=ALL&cmp=@Model.cmp_id&screentitle=StockChange" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/StockMove/StockMove?FullFillType=ALL&cmp=@Model.cmp_id&screentitle=StockChange" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                    @if (Session["IsCompanyUser"].ToString() == "Y")
+                                                    {
+                                                        <tr>
+                                                            <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                                Inventory - Stock Adjustment/Merge
+                                                                <a href="/InvStkAdj/InvStkAdj?p_str_cmp_id=@Model.cmp_id" class="small-box-footer" style="color:#072c9a;">
+                                                                    <i class="fa fa-arrow-circle-right"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <a href="/InvStkAdj/InvStkAdj?p_str_cmp_id=@Model.cmp_id" class="small-box-footer" style="color:#072c9a;">
+                                                                    <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+
+                        </tr>
+                     @if ((Session["IsCompanyUser"].ToString() == "Y") )
+                     {
+                            <tr>
+
+                                <td style="width:395px;">
+
+                                    <div class="small-box " style="height: 200px;border: 1px solid #3a7fe6;">
+                                        <div class="inner" style="padding:10px 10px 0px 10px;background-color: #DF7401;border-bottom: 1px solid #3a7fe6;">
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 333px;">
+                                                        <p class="dashboardhdr" style="color:white;">VAS Analysis</p>
+                                                    </td>
+                                                    <td style="text-align:right;font-size:30px;color:#f39706;">
+                                                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+
+                                        <table id="exampl" class="table  table-striped">
+                                            <tbody>
+
+                                                @for (int i = 0; i < Model.LstVas.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstVas[i].VAS ">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;    width: 64%;">
+                                                            VAS Inquiry & Analysis
+                                                            <a href="/VasInquiry/VasInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&p_str_scn_id=VasInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstVas[i].Total</td>
+                                                        <td>
+                                                            <a href="/VasInquiry/VasInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=OPEN&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&p_str_scn_id=VasInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size:15px;"><b>View</b></span>
+                                                            </a>
+
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                @for (int i = 0; i < Model.LstVasOpen.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstVasOpen[i].VAS ">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;    width: 64%;">
+                                                            VAS Visibility & Analysis
+                                                            <a href="/VasInquiry/VasInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=OPEN&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&p_str_scn_id=VasVisibility" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstVasOpen[i].VAS_OPEN_TOTAL</td>
+                                                        <td>
+                                                            <a href="/VasInquiry/VasInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=OPEN&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&p_str_scn_id=VasVisibility" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size:15px;"><b>View</b></span>
+                                                            </a>
+
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </td>
+                            @if (Session["UserType"].ToString().Trim() != "4PL-USER")
+                            {
+                                <td style="padding-left: 10px;width:405px;">
+                                    <div class="small-box " style="height: 200px;border: 1px solid #3a7fe6;">
+                                        <div class="inner" style="padding:10px 10px 0px 10px;background-color: #088A08;border-bottom: 1px solid #3a7fe6;">
+
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 333px;">
+                                                        <p class="dashboardhdr" style="color:white;">Billing Analysis</p>
+                                                    </td>
+                                                    <td style="text-align:right;font-size:30px;color:#05a059;">
+                                                        <i class="fa fa-dollar" aria-hidden="true"></i>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+
+                                        <table id="exampl" class="table  table-striped">
+                                            <tbody>
+                                                @for (int i = 0; i < Model.LstBill.Count; i++)
+                                                {
+                                                    <tr id="@Model.LstBill[i].Bill ">
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;    width: 66%;">
+                                                            Billing Inquiry & Analysis
+                                                            <a href="/BillingInquiry/BillingInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=OPEN&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&p_str_scn_id=BLInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+
+                                                        </td>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold;">@Model.LstBill[i].Total</td>
+                                                        <td>
+                                                            <a href="/BillingInquiry/BillingInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=OPEN&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&p_str_scn_id=BLInquiry" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+
+
+                                </td>
+}
+                                <td style="padding-left: 10px;width:405px;">
+                                    <div>
+                                        <div class="small-box " style="height: 200px;border: 1px solid #3a7fe6;">
+                                            <div class="inner" style="padding:10px 10px 0px 10px;background-color: #001a66;border-bottom: 1px solid #3a7fe6;">
+                                                <table>
+                                                    <tr>
+                                                        <td style="width: 333px;">
+                                                            <p class="dashboardhdr" style="color:white;">ECom Analysis</p>
+                                                        </td>
+                                                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div>
+
+                                            <table id="exampl" class="table table-striped">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            943 – IB - INBOUND DOC ENTRY UPLOAD (CSV)
+                                                            <a href="/IB943UploadFile/IB943UploadFile?cmp_id=@Model.cmp_id&p_str_scn_id=943IBUpload" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/IB943UploadFile/IB943UploadFile?cmp_id=@Model.cmp_id&p_str_scn_id=943IBUpload" class="small-box-footer actionlink" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            944 – IB – SEND RECEIVING CONFIRMATION (CSV)
+                                                            <a href="/InboundReceiving/GetInboundReceiving?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/InboundReceiving/GetInboundReceiving?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&p_str_scn_id=944-IB Rcvg" class="small-box-footer" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            940 - OB - SHIPPER SLF PICK ORDER UPLOAD (CSV)
+                                                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SRUpload" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+
+
+                                                        <td>
+                                                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SRUpload" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                            940 - OB - SPS-TARGET UPLOAD (CSV)
+                                                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" class="small-box-footer" style="color:#072c9a;">
+                                                                <i class="fa fa-arrow-circle-right"></i>
+                                                            </a>
+                                                        </td>
+
+
+                                                        <td>
+                                                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" style="color:#072c9a;">
+                                                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                     }
+
+                     else
+                     {
+                        <tr>
+
+
+                            <td style="padding-left: 10px;width:405px;">
+                                <div>
+                                    <div class="small-box " style="height: 200px;border: 1px solid #3a7fe6;">
+                                        <div class="inner" style="padding:10px 10px 0px 10px;background-color: #001a66;border-bottom: 1px solid #3a7fe6;">
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 333px;">
+                                                        <p class="dashboardhdr" style="color:white;">ECom Analysis</p>
+                                                    </td>
+                                                    <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                                                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+
+                                        <table id="exampl" class="table table-striped">
+                                            <tbody>
+                                                 <tr>
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                        943 – IB - INBOUND DOC ENTRY UPLOAD (CSV)
+                                                        <a href="/IB943UploadFile/IB943UploadFile?cmp_id=@Model.cmp_id&p_str_scn_id=943IBUpload" class="small-box-footer" style="color:#072c9a;">
+                                                            <i class="fa fa-arrow-circle-right"></i>
+                                                        </a>
+                                                    </td>
+
+                                                    <td>
+                                                        <a href="/IB943UploadFile/IB943UploadFile?cmp_id=@Model.cmp_id&p_str_scn_id=943IBUpload" class="small-box-footer actionlink" style="color:#072c9a;">
+                                                            <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+
+                                                <tr>
+
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                        940 - OB - SHIPPER SLF PICK ORDER UPLOAD (CSV)
+                                                        <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SRUpload" class="small-box-footer" style="color:#072c9a;">
+                                                            <i class="fa fa-arrow-circle-right"></i>
+                                                        </a>
+                                                    </td>
+
+
+                                                    <td>
+                                                        <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SRUpload" style="color:#072c9a;">
+                                                            <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                                        940 - OB - SPS-TARGET UPLOAD (CSV)
+                                                        <a href="/OB940UploadFile/OB940SPSUploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" class="small-box-footer" style="color:#072c9a;">
+                                                            <i class="fa fa-arrow-circle-right"></i>
+                                                        </a>
+                                                    </td>
+
+
+                                                    <td>
+                                                        <a href="/OB940UploadFile/OB940SPSUploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" style="color:#072c9a;">
+                                                            <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                     }
+
+
+                    </table>
+
+                </center>
+
+
+            </td>
+            <td style="width: 10%"></td>
+
+        </tr>
+
+    </table>
+
+</div>
+<script type="text/javascript">
+    var id = $('#FieldId').val();
+    $("#dialog-confirm").dialog({
+        autoOpen: false,
+        resizable: false,
+        width: 500,
+        modal: true,
+        buttons: {
+            "Delete this item": function () {
+                $(this).dialog("close");
+            },
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("[data-dialog-confirm]").click(function (e) {
+        e.preventDefault();
+        var theHREF = $(this).attr("href");
+        $("#dialog-confirm").dialog('option', 'buttons', {
+            "Yes":
+            function () {
+                $.get(theHREF, null, function () { refreshList() });
+                $(this).dialog("close");
+            }, "No":
+          function () { $(this).dialog("close"); }
+        });
+        $("#dialog-confirm").dialog("open");
+    });
+</script>

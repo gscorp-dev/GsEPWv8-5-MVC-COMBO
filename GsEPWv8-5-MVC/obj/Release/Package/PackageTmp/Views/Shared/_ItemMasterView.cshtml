@@ -1,0 +1,764 @@
+﻿
+
+@model GsEPWv8_5_MVC.Model.ItemMasterModel
+@{
+    var lstrImageFileName = Model.image_name;
+        }
+
+@Html.HiddenFor(model => model.itm_code, new { @id = "view_itm_code" })
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: verdana;
+        font-size: 12px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+</style>
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+
+<center>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">View Item</h4>
+        <button type="button" id="btnViewClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+      
+        <div id="ajaxLoadingView" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    </div>
+    <div id="docchildtabsView">
+        <ul style="border: 1px solid #e78f08;background: #f6a828 50% 50% repeat-x;color: #fff;font-weight: bold;">
+            <li><a href="#docchildtabsView-1" style="font-size:12px;">Header</a></li>
+            <li><a href="#docchildtabsEdit-2" style="font-size:12px;">Bin Details</a></li>
+            <li><a href="#docchildtabsView-3" style="font-size:12px;">Item Details</a></li>
+        </ul>
+        <div id="docchildtabsView-1">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-8 col-sm-8 col-xs-8">
+
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Cmp Id </b></label>
+                                        </td>
+                                        <td style="width: 30%; padding-left: 1%;">
+                                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl", @id = "edit_cmp_id", @style = "background-color:lightyellow;" })
+                                        </td>
+
+                                        <td style="width: 8%;text-align: right;margin-left:10%;">
+                                            <label><b class="Lblmanual">Kit Item </b></label>
+                                            @Html.CheckBoxFor(model => model.KitItem)
+                                        </td>
+                                        <td style="text-align: right; width: 10%;">
+                                            <label><b class="Lblmanual">Non Inventory Item </b></label>
+                                            @Html.CheckBoxFor(model => model.NonInventorysItem)
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Style </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 3%;">
+                                            @Html.TextBoxFor(model => model.itm_num, new { @class = "form-control txtlbl", @id = "view_itm_num", disabled = "disabled", @maxlength = "20" })
+
+
+                                        </td>
+
+                                        <td style="text-align: right; width: 9%;">
+                                            <label><b class="Lblmanual">Color </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.itm_color, new { @class = "form-control txtlbl",@id= "view_itm_color", disabled = "disabled", @maxlength = "20" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            <label><b class="Lblmanual">Size </b></label>
+                                        </td>
+                                        <td style="width: 22%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.itm_size, new { @class = "form-control txtlbl",  @id = "view_itm_size", disabled = "disabled", @maxlength = "20" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            @*<label><b class="Lblmanual">Extract </b></label>*@
+                                        </td>
+                                        <td style="width: 22%; padding-left: 1%;"></td>
+                                    </tr>
+
+                                </table>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Desc </b></label>
+                                        </td>
+                                        <td style="width: 45%; padding-left: 3%;">
+                                            @Html.TextBoxFor(model => model.itm_name, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                        </td>
+                                        <td style="width: 8%;text-align: center;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Status </b></label>
+                                        </td>
+                                        <td style="width: 50%; padding-left: 3%;">
+                                            @Html.DropDownListFor(model => model.status, new SelectList(Model.ListLookUpStatusDtl, "name", "description"), new { @class = "form-control txtlbl", disabled = "disabled", @style = "width:125px;" })
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Item Group# </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 3%;">
+                                            @Html.TextBoxFor(model => model.group_id, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+
+
+                                        </td>
+
+                                        <td style="text-align: right; width: 9%;">
+                                            <label><b class="Lblmanual">Class </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.Class, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            <label><b class="Lblmanual">Category Id </b></label>
+                                        </td>
+                                        <td style="width: 22%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.catg_id, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                        </td>
+                                        <td style="text-align: right; width: 7%;">
+                                            @*<label><b class="Lblmanual">Extract </b></label>*@
+                                        </td>
+                                        <td style="width: 22%; padding-left: 1%;"></td>
+                                    </tr>
+
+                                </table>
+                                <br />
+                                <fieldset>
+                                    <legend style="text-align:left;">Measurement</legend>
+                                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                                <label><b class="Lblmanual">Length(IN)</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.TextBoxFor(model => model.Length, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 9%;">
+                                                <label><b class="Lblmanual">Width(IN) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Width, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Depth(IN)</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Depth, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Cube(CI) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Cube, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Weight(LB) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.Weight, new { @class = "form-control txtlbl", disabled = "disabled", @maxlength = "50" })
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <br />
+                                    <legend style="text-align:left;">Inner Pack Dimension Details </legend>
+                                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                                <label><b class="Lblmanual">Length(IN)</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.TextBoxFor(model => model.inner_pack_length, new { @class = "form-control txtlbl", @maxlength = "10" })
+                                            </td>
+                                            <td style="text-align: right; width: 9%;">
+                                                <label><b class="Lblmanual">Width(IN) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.inner_pack_width, new { @class = "form-control txtlbl", @maxlength = "10" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Depth(IN)</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.inner_pack_depth, new { @class = "form-control txtlbl", @maxlength = "10" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Cube(CI) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.inner_pack_cube, new { @class = "form-control txtlbl", @maxlength = "10" })
+                                            </td>
+                                            <td style="text-align: right; width: 7%;">
+                                                <label><b class="Lblmanual">Weight(LB) </b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 1%;">
+                                                @Html.TextBoxFor(model => model.inner_pack_wgt, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <br />
+                     
+                                        <legend style="text-align:left;">Per Piece Dimension Details </legend>
+
+                                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                            <tr>
+                                                <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                                    <label><b class="Lblmanual">Length(IN)</b></label>
+                                                </td>
+                                                <td style="width: 12%; padding-left: 3%;">
+                                                    @Html.TextBoxFor(model => model.pce_length, new { @class = "form-control txtlbl two-decimals ", @maxlength = "10", @id = "a_pce_length" })
+                                                </td>
+                                                <td style="text-align: right; width: 9%;">
+                                                    <label><b class="Lblmanual">Width(IN) </b></label>
+                                                </td>
+                                                <td style="width: 12%; padding-left: 1%;">
+                                                    @Html.TextBoxFor(model => model.pce_width, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "a_pce_width" })
+                                                </td>
+                                                <td style="text-align: right; width: 7%;">
+                                                    <label><b class="Lblmanual">Depth(IN)</b></label>
+                                                </td>
+                                                <td style="width: 12%; padding-left: 1%;">
+                                                    @Html.TextBoxFor(model => model.pce_depth, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "a_pce_depth" })
+                                                </td>
+                                                <td style="text-align: right; width: 7%;">
+                                                    <label><b class="Lblmanual">Cube(CI) </b></label>
+                                                </td>
+                                                <td style="width: 12%; padding-left: 1%;">
+                                                    @Html.TextBoxFor(model => model.pce_cube, new { @class = "form-control txtlbl two-decimals", @maxlength = "10", @id = "a_pce_cube" })
+                                                </td>
+                                                <td style="text-align: right; width: 7%;">
+                                                    <label><b class="Lblmanual">Weight(LB) </b></label>
+                                                </td>
+                                                <td style="width: 12%; padding-left: 1%;">
+                                                    @Html.TextBoxFor(model => model.pce_wgt, new { @class = "form-control txtlbl three-decimals", @maxlength = "10", @id = "a_pce_wgt" })
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                    
+                                </fieldset>
+                                <br />
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="text-align: right; width: 9%;">
+                                            <label><b class="Lblmanual">Stock Keeping Unit (SKU) </b></label>
+                                        </td>
+                                        <td style="width: 20%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.sku_id, new { @class = "form-control txtlbl", @maxlength = "20" })
+                                        </td>
+                                        <td style="text-align: right; width: 9%;">
+                                            <label><b class="Lblmanual">List Price </b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.list_price, new { @class = "form-control txtlbl", @maxlength = "10" })
+                                        </td>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">PPK</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 3%;">
+                                            @Html.TextBoxFor(model => model.ctn_qty, new { @class = "form-control txtlbl", @maxlength = "4" })
+                                        </td>
+
+                                        <td style="padding-left: 1%; width:100px;">
+                                            <label><b class="Lblmanual">Inner Pack </b></label>
+                                            @Html.CheckBoxFor(model => model.is_inner_pack)
+                                        </td>
+                                        <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                            <label><b class="Lblmanual">Inner PPK</b></label>
+                                        </td>
+                                        <td style="width: 12%; padding-left: 3%;">
+                                            @Html.TextBoxFor(model => model.inner_pack_ctn_qty, new { @class = "form-control txtlbl", @maxlength = "4" })
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                              
+
+                                <fieldset>
+                                    <legend style="text-align:left;"> Pack Details </legend>
+                                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                        <tr>
+                                            <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                                <label><b class="Lblmanual">Package Type</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.DropDownListFor(model => model.pkg_type, new SelectList(Model.ListPkgType, "config_name", "config_desc"), new { @id = "v_pkg_type", @class = "form-control txtlbl", @style = "width:150px;" })
+                                            </td>
+                                            <td style="text-align: right; width: 9%;">
+                                                <label><b class="Lblmanual">Poly Size </b></label>
+                                            </td>
+
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.DropDownListFor(model => model.pkg_size, new SelectList(Model.ListPkgPoly, "config_name", "config_desc"), new { @id = "v_poly_pkg_size", @class = "form-control txtlbl", @style = "width:150px;" })
+                                            </td>
+
+                                            <td style="width: 8%;text-align: right;margin-left:-25%;">
+                                                <label><b class="Lblmanual">Box Size</b></label>
+                                            </td>
+                                            <td style="width: 12%; padding-left: 3%;">
+                                                @Html.DropDownListFor(model => model.pkg_size, new SelectList(Model.ListPkgBox, "config_name", "config_desc"), new { @id = "v_box_pkg_size", @class = "form-control txtlbl", @style = "width:150px;" })
+                                            </td>
+
+                                        </tr>
+
+                                    </table>
+                                    <label><b class="Lblmanual">Package Size </b></label>
+                                    <table id="grdPkgService" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                                        <thead class="grid_backcolor">
+                                            <tr>
+                                                <th class="grid_header_backcolor">Sel</th>
+                                                <th class="grid_header_backcolor">Package Service</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int j = 0; j < Model.ListPkgSrvc.Count; j++)
+                                            {
+                                                var v_pkg_service = @Model.ListPkgSrvc[j].pkg_service;
+                                                var v_pkg_service_exists = @Model.ListPkgSrvc[j].pkg_service_exists;
+
+
+                                                <tr id="@Model.ListPkgSrvc[j].pkg_service">
+                                                    @if (@Model.ListPkgSrvc[j].pkg_service_exists == true)
+                                                    {
+
+
+                                                        <td id="chkboxPkgService" id1="@v_pkg_service" id2="@v_pkg_service_exists" style="text-align:center">
+                                                            <input id="test" name="selPkgService" class="attribute" type="checkbox" checked value="@Model.ListPkgSrvc[j].pkg_service" />
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td id="chkboxPkgService" id1="@v_pkg_service" id2="@v_pkg_service_exists" style="text-align:center">
+                                                            <input id="test" name="selPkgService" class="attribute" type="checkbox" value="@Model.ListPkgSrvc[j].pkg_service" />
+                                                        </td>
+                                                    }
+
+
+                                                    <td style="font-size:12px; color:black; font-weight:bold; ">@Model.ListPkgSrvc[j].pkg_service</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+
+
+                            </div>
+                            <br />
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                                <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="width:5%; padding-left: 0%;">
+                                            <img id="profile-img-tag" src=@lstrImageFileName style="width:500px;height:500px" />
+                                        </td>
+                                    </tr>
+                                  
+                                    
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="docchildtabsEdit-2">
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div style="padding-top:33px"></div>
+
+
+
+                            <div class="box-body">
+                                <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                    <tr>
+                                        <td style="text-align: right;width:9%">
+                                            <label class="Lblmanual">Bin Id</label>
+                                        </td>
+
+                                        <td style="padding-left: 5px;width:10%">
+                                            @if (Model.objBinMater.bin_id == null || Model.objBinMater.bin_id == string.Empty)
+                                            {
+                                                @Html.TextBoxFor(model => model.objBinMater.bin_id, new { @class = "form-control txtlbl VLDTITMFILD ", @maxlength = "10", @style = "font-size: 12px; font-weight: bold;font-family: verdana; width: 180px;background-color:lightyellow;", @id = "a_bin_id" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(model => model.objBinMater.bin_id, new { @class = "form-control txtlbl VLDTITMFILD ", @maxlength = "10", @style = "font-size: 12px; font-weight: bold;font-family: verdana; width: 180px;background-color:lightyellow;", @id = "a_bin_id", @disabled = "true" })
+                                            }
+
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Whs</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:5%">
+                                            @Html.TextBoxFor(model => model.objBinMater.whs_id, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "10", @style = "font-size: 10px; font-family: verdana; width: 100px;background-color:lightyellow;", @id = "a_whs_id" })
+                                        </td>
+
+
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Type</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:15%">
+                                            @Html.DropDownListFor(model => model.objBinMater.bin_type, new SelectList(Model.ListLookUpBinType, "name", "description"), new { @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-family: verdana;width: 100px; ", @id = "a_bin_type" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Desc</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:20%">
+                                            @Html.TextBoxFor(model => model.objBinMater.bin_desc, new { @class = "form-control txtlbl ", @maxlength = "100", @style = "font-size: 12px;font-weight: bold; font-family: verdana; width: 300px;background-color:lightyellow;", @id = "a_bin_desc" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Location</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.bin_loc, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "10", @style = "font-size: 12px; font-weight: bold;font-family: verdana; width: 200px;background-color:lightyellow;", @id = "a_bin_loc", @disabled = "true" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Status</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.DropDownListFor(model => model.objBinMater.status, new SelectList(Model.ListBintatus, "name", "description"), new { @class = "form-control txtlbl", @maxlength = "10", @style = "font-weight: bold;width:180px;background-color:lightyellow;", @id = "a_status" })
+
+                                        </td>
+                                        <td style="padding-left: 5px;width:6%"> </td>
+                                    </tr>
+                                </table>
+                                <br />
+
+
+                                <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                    <tr>
+
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">B.Length</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.bin_length, new { @class = "form-control two-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_length" })
+
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">B.Width</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.bin_width, new { @class = "form-control two-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_width" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">B.Height</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.bin_height, new { @class = "form-control two-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_height" })
+                                        </td>
+
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">B.Cube</label>
+                                        </td>
+
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.bin_cube, new { @class = "form-control two-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_cube" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">B.Weight</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.bin_wgt, new { @class = "form-control three-decimals", @maxlength = "10", @style = "text-align: right;font-weight: bold;", @id = "a_bin_wgt" })
+
+                                        </td>
+                                        <td style="padding-left: 5px;width:25%"> </td>
+                                    </tr>
+
+                                </table>
+
+
+                                <br />
+                                <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                    <tr>
+
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">MinQty</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+
+                                            @Html.TextBoxFor(model => model.objBinMater.min_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_min_qty" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Max Qty</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.max_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_max_qty" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Order Qty </label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.ordr_qty, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_ordr_qty" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Qty UoM</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.DropDownListFor(model => model.objBinMater.qty_uom, new SelectList(Model.ListQtyUoM, "qty_uom", "uom_desc"), new { @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 12px; font-weight: bold;font-family: verdana; ", @id = "a_qty_uom" })
+                                        </td>
+                                        <td style="padding-left: 5px;width:40%"> </td>
+                                    </tr>
+
+                                </table>
+
+
+                                <br />
+                                <table style="border-collapse: separate;border-spacing: 0px 0.5em;width:100% ">
+                                    <tr>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">B.PPK</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.bin_ppk, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_bin_ppk" })
+
+                                        </td>
+
+
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Price</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+
+                                            @Html.TextBoxFor(model => model.objBinMater.price, new { @class = "form-control txtlbl two-decimals", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_price" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">QPM</label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.qpm, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_qpm" })
+                                        </td>
+                                        <td style="text-align: right;width:5%">
+                                            <label class="Lblmanual">Lead Time </label>
+                                        </td>
+                                        <td style="padding-left: 5px;width:10%">
+                                            @Html.TextBoxFor(model => model.objBinMater.lead_time, new { @class = "form-control txtlbl numericOnly", @maxlength = "12", @style = "font-size: 12px; font-family: verdana;    text-align: right;font-weight: bold;", @id = "a_lead_time" })
+                                        </td>
+                                        <td style="padding-left: 5px;width:40%"> </td>
+
+                                    </tr>
+                                </table>
+                              
+                            </div>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docchildtabsView-3">
+            <div class="box-body">
+                <div class="box-header">
+
+                            <fieldset>
+                                <legend style="text-align:left;"> Item Stock Details</legend>
+
+                                <div class="box box-primary">
+                                    <table id="InvMergeInq" class="table table-bordered table-striped" style="border:1px solid #121213 ;table-layout:fixed">
+                                        <thead class="grid_backcolor">
+                                            <tr>
+
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Select All <input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" /></th>
+                                                <th style="display:none;"></th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">IBDocId</th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Rcvd Date</th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:13%;">Container</th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Lot#</th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:10%;">PO#</th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:8%;">LocID</th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Ctn</th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">PPK</th>
+                                                <th class="grid_header_backcolor" style="font-size:11px;width:7%;">Avl Qty</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody style="background-color:white">
+                                            @for (int i = 0; i < Model.ListItemStock.Count; i++)
+                                            {
+                                                int l_int_cur_row = i + 1;
+                                                <tr>
+                                                    <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckboxUpdateDim" type="checkbox" value="@Model.ListItemStock[i].ib_doc_id" /></td>
+                                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => model.ListItemStock[i].whs_id, new { @id = "ivm_whs_id_" + i, @rowId = @l_int_cur_row })</td>
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].ib_doc_id</td>
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].rcvd_dt</td>
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].cont_id</td>
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].lot_id</td>
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].po_num</td>
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:left ">@Model.ListItemStock[i].loc_id</td>
+
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].avail_ctn</td>
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].itm_qty</td>
+                                                    <td style="font-size:12px;color:black; font-weight:bold;font-family: verdana;text-align:right ">@Model.ListItemStock[i].avail_qty</td>
+
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+    
+              
+
+</center>
+<script type="text/javascript">
+    $("#docchildtabsView").tabs({ active: 0 })
+    $(function () {
+        $("#docchildtabsView").tabs();
+    });
+</script>
+<script type="text/javascript">
+    $("#btnViewClose").click(function () {
+        $('#myModalView').modal('hide');
+    });
+</script>
+
+<script>
+
+        $('#chkSelectAll').click(function (event) {
+            if ($(this).is(":checked")) {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+
+
+        $("input[name=chkAll").click(function () {
+            if ($(this).prop("checked") == true) {
+
+                $("input[name='tblcheckboxUpdateDim']").prop("checked", true);
+            }
+            else if ($(this).prop("checked") == false) {
+
+                $("input[name='tblcheckboxUpdateDim']").prop("checked", false);
+            }
+
+        });
+
+
+
+        $("input[name='tblcheckboxUpdateDim']").click(function () {
+
+            if ($("input[name='tblcheckboxUpdateDim']").length == $("input[name='tblcheckboxUpdateDim']:checked").length) {
+                $("#chkAll").prop("checked", true);
+            }
+            else {
+                $("#chkAll").prop("checked", false);
+            }
+
+        });
+        $("input[name='tblcheckbox']").on('change', function () {
+            $("input[name='tblcheckboxUpdateDim']").not(this).prop('checked', false);
+        });
+
+
+</script>
+
+
+
+<script type="text/javascript">
+    $("#cmdUpdateDocDim").click(function () {
+       
+        var lintSelectedRecs = $("input[name='tblcheckboxUpdateDim']:checked").length;
+        if (lintSelectedRecs == 0) {
+            swal("", "No Records selected.", "");
+            return false;
+        }
+
+        var pstrCmpId = $("#view_cmp_id").val();
+        var pstrItmCode = $("#view_itm_code").val();
+        var pstrItmNum = $("#view_itm_num").val();
+        var pstrItmColor = $("#view_itm_color").val();
+        var pstrItmSize = $("#view_itm_size").val();
+
+        $("#ajaxLoadingView").show();
+        $('#cmdUpdateDocDim').attr('disabled', 'disabled');
+
+        var lstItmDimUpdtList = new Array();
+        debugger;
+      
+
+        for (var i = 0; i < lintTotLines; i++)
+        {
+            
+        }
+
+    });
+</script>

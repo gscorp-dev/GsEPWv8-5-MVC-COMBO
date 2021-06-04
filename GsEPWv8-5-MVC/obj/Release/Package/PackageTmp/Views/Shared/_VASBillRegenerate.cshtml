@@ -1,0 +1,1201 @@
+﻿
+
+@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+@{
+    var count = 0;
+    var totalamount = 0;
+    var Ordercount = Model.lstBillVASList.Count;
+
+}
+
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+
+    .sweet-alert {
+        background-color: #8cd6f7; 
+        width: 478px;
+        padding: 17px;
+        border-radius: 5px;
+        text-align: center;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -256px;
+        margin-top: -200px;
+        overflow: hidden;
+        display: none;
+        z-index: 2000;
+    }
+
+    div#ajaxLoadingVas {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+
+    .text-muted {
+        color: black;
+    }
+</style>
+
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.js"></script>
+
+<center>
+    @Html.HiddenFor(model => model.bill_doc_id, new { })
+
+    <div class="modal-header" style="width: 1800px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Re-Generate VAS Bill</h4>
+        <button type="button" id="btnvasClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+    </div>
+    <div id="ajaxLoadingVas" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+
+                <div class="col-md-10 col-sm-10 col-xs-10">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;margin-left: -3%;">
+                                <label><b class="Lblmanual">Cust of</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -2%;width:36%;">
+                                @Html.DropDownListFor(model => model.cust_of_cmpid, new SelectList(Model.ListCustofCompanyPickDtl, "cust_of_cmpid", "cust_of_cmpname"), new { @class = "form-control txtlbl" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;WIDTH: 9%;">
+                                <label><b class="Lblmanual">Cust Id</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;width:36%;">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl" })
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width: 11%;margin-left: -3%;">
+                                <label><b class="Lblmanual">Period Fm</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;width:19%">
+                                @Html.TextBoxFor(model => model.objBillVASReBill.bill_from_dt, "{0:MM/dd/yyyy}", new { @id = "re_bill_from_dt",  @class = "form-control txtlbl", @maxlength = "10" })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width:4%;margin-left: -2%;">
+                                <label><b class="Lblmanual">To</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.objBillVASReBill.bill_to_dt, "{0:MM/dd/yyyy}", new { @id = "re_bill_to_dt" , @class = "form-control txtlbl", @maxlength = "10" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
+                                <label><b class="Lblmanual">Bill Doc Id</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.objBillVASReBill.re_bill_doc_id, new { @id = "re_bill_doc_id", @disabled = "true", @class = "form-control txtlbl", @maxlength = "10" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-4"></div>
+                            <div class="col-xs-5">
+                                <button type="button" id="btnConsolidatedVasSearch" class="btn_search">Search </button>
+                                <button type="reset" id="btnClear" class="btn-Clear">Clear </button>
+                                <button type="button" id="btnGenerateVASBill" class="btn_NewEntry">Generate Vas Bill </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2" style="width:405px">
+                    <div class="container" style="margin-left:1350px; width:100%; margin-top:-100px">
+                        <fieldset>
+                            <legend style="text-align:center">Report Selection</legend>
+                            <table>
+                                <tr>
+                                    <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="VasInvoiceSummary" name="radio1" checked /><b>Billing Summary Worksheet</b></td>
+                                    <td style="padding-left: 20px;font-size: 1.2em;"><input type="radio" value="VasInvoicedtl" name="radio1" /><b>Billing Detail Worksheet</b></td>
+                                </tr>
+                            </table>
+                            <br />
+                            <table>
+                                <tr>
+                                    <td>
+                                        <b style="color:blue;font-size: 12px;">Format</b>
+                                        <select id="Formatrcvddtlid" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right" data-toggle="dropdown">
+                                            <option>PDF</option>
+                                            <option>XLS</option>
+                                            <option>XLSDATA</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <b style="color:blue;font-size: 12px;padding-left:20px;">Mode</b>
+                                        <select id="Modercvddtlid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                            <option>VIEW</option>
+                                            <option>EMAIL</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button type="button" id="btnvasdtl" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+        </div>
+    </div>
+
+</center>
+<div id="ShowVASBillGrid" class="box-header" style="padding: 5px; ">
+    <div class="box-body">
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%;">
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Records:
+                        </span>
+                    </td>
+                    <td style="width: 10%;">
+                        <label class="totalCount" style="text-align:left">
+                            @count
+                        </label>
+                    </td>
+                    <td>
+                        <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                            Total Invoice Amount:
+                        </span>
+                    </td>
+                    <td style="width: 64%;">
+                        <label class="totalCount" style="text-align:left">
+                            $@totalamount
+                        </label>
+                    </td>
+                  
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table id="GrdConsolePartialVasBillingInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Select All<input class="checkbox" id="tblCheckAll" name="tblcheckboxselect" type="checkbox" /></th>     @*CR_3PL_MVC_BL_2018_0226_001 – Add Starage Bill By Pallet Report*@
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;display:none">CmpId</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;display:none">CustId</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">VASID</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">VAS Date</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%;display:none">Status</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;">WareHouseID</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Customer</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;">PONo</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:11%;">SONo</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6%;">TotalActivities</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">TotalPrice</th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.lstBillVASList.Count; i++)
+                    {
+                        var bill_amt = (Model.lstBillVASList[i].total_price);
+                        decimal l_dec_bill_amnt = bill_amt;
+                        var tot_amnt = l_dec_bill_amnt.ToString("F2");
+
+                        <tr style="background-color:white;">
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox3" type="checkbox" value="@Model.lstBillVASList[i].ship_doc_id" /></td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none">@Model.lstBillVASList[i].cmp_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none">@Model.lstBillVASList[i].cust_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" class="VasDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.lstBillVASList[i].ship_doc_id">@Model.lstBillVASList[i].ship_doc_id</a></td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left">@Model.lstBillVASList[i].ship_dt</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;display:none">@Model.lstBillVASList[i].vas_status</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.lstBillVASList[i].whs_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.lstBillVASList[i].ship_to</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.lstBillVASList[i].po_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.lstBillVASList[i].so_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@Model.lstBillVASList[i].total_activities</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:Right;width:60px;">@tot_amnt</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 1050px; height: 650px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" style="margin-top: -38px;" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="load" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script>
+
+
+    debugger
+  
+    $(document).ready(function () {
+        $("btnClear").each(function () {
+
+            $(this).val("");
+        });
+    });
+
+   
+    $('#re_bill_from_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm/d/Y'
+    });
+    $('#re_bill_to_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm/d/Y'
+    });
+    $("#btnvasClose").click(function () {
+        debugger
+        var screentitle = $('#screentitle').val();
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_bill_doc_id = $('#re_bill_doc_id').val();
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+          function (isConfirm) {
+              debugger
+              if (isConfirm) {
+
+              }
+
+              else {
+                  debugger
+                  $('#myModalVASBillRegGen').modal('hide')
+                  $.ajax({
+
+                      type: "get",
+                      url: "/BillingInquiry/BillingInquiryDtl",
+                      data: {
+                          "p_str_cmp_id": p_str_cmp_id,
+                          "p_str_bill_doc_id": p_str_bill_doc_id
+                      },
+                      datatype: 'html',
+                      success: function (e) {
+                          debugger
+                          $("#ajaxloading").hide();
+
+                          $('#showgrid').html("");
+                          $('#showgrid').html(e);
+                      },
+                  })
+              }
+
+          }
+          )
+    });
+    debugger
+    $("#btnConsolidatedVasSearch").click(function () {
+        var cmp_id = $("#new_cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please SELECT Cmp_id.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            debugger
+
+            var p_str_cmp_id = $("#new_cmp_id").val();
+            var p_str_bill_doc_id = $("#re_bill_doc_id").val();
+            var p_str_bill_from_dt = $('#re_bill_from_dt').val();
+            var p_str_bill_to_dt = $('#re_bill_to_dt').val();
+
+            p_str_cust_id = $('#cust_of_cmpid').val();
+            $("#ajaxLoadingVas").show();
+            $.ajax({
+                type: "GET",
+                url: "/BillingInquiry/getVASBillRegenerateDetails",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_bill_doc_id": p_str_bill_doc_id, "p_str_bill_from_dt": p_str_bill_from_dt, "p_str_bill_to_dt": p_str_bill_to_dt
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoadingVas").hide();
+                    $('#ShowVASBillGrid').html("");
+                    $('#ShowVASBillGrid').html(e);
+                },
+            })
+
+        }
+    });
+
+    $(function () {
+        debugger
+        $('#new_cmp_id').change(function () {
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "BillingInquiry")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+
+    });
+
+</script>
+@*<script>
+    $(function () {
+        $('#GrdConsoleVasBillingInq').DataTable({
+            'paging': false,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': true,
+            'info': false,
+            'autoWidth': false,
+        });
+    })
+</script>*@
+
+
+<script>
+    $("#btnGenerateVASBill").click(function (e) {
+        debugger
+        $("#btnGenerateVASBill").hide();
+        var p_str_cmp_id = $("#new_cmp_id").val();
+        var p_dt_bill_from_dt = $('#re_bill_from_dt').val();
+        var p_dt_bill_to_dt = $('#re_bill_to_dt').val();
+        var p_str_bill_as_of_dt = $('#re_bill_to_dt').val();
+        var p_str_bill_cmp_id = $('#cust_of_cmpid').val();
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var rowCount = $("#GrdConsolePartialVasBillingInq td").closest("tr").length;
+        if (rowCount > 0) {
+            var numberOfCheckboxes = $("input[name='tblcheckbox3']:checked").length;
+            if (numberOfCheckboxes == 0) {
+                $("#btnGenerateVASBill").show();
+                sweetAlert("", "No Records Found For Generate VasBill.", "");
+                return false;
+            }
+            @*if (numberOfCheckboxes == 0) {
+                sweetAlert({
+                    title: "",
+                    text: "No Record Selected , Do you want to Generate By Filter(Yes/No)",
+                    type: "",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "No",
+                    cancelButtonText: "Yes",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $("#btnGenerateVASBill").show();
+                        swal.close();
+                    }
+                    else {
+                        var p_str_cmp_id = $('#new_cmp_id').val();
+                        var p_str_ship_doc_id = SelectdID;
+                        var p_str_bill_doc_id = $('#re_bill_doc_id').val();
+                        var p_str_bill_as_of_dt = $('#re_bill_to_dt').val();
+                        var p_str_doc_dt_Fr = $('#re_bill_from_dt').val();
+                        var p_str_doc_dt_To = $('#re_bill_to_dt').val();
+                        var p_str_bill_type = "NORM";
+                        var type = "PDF";
+                        var p_str_rpt_status = "OPEN";
+                        var p_str_print_dt = $('#re_bill_from_dt').val();
+                        var p_str_cust_id = $('#cust_of_cmpid').val();
+
+                        $("#ajaxLoadingVas").show();
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Content("~/BillingInquiry/SaveVASConsolidateBillRegenerate")',
+                            contentType: "application/json; charset=utf-8",
+                            data: {
+                                "p_str_cmp_id": p_str_cmp_id, "p_str_ship_doc_id": p_str_ship_doc_id, "p_str_bill_type": p_str_bill_type,
+                                "p_str_bill_doc_id": p_str_bill_doc_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt,
+                                "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "p_str_bill_cmp_id": p_str_bill_cmp_id, "p_str_print_dt": p_str_print_dt
+                            },
+                            dataType: 'html',
+                            success: function (data) {
+                                if (data == 1) {
+                                    sweetAlert("", "No Records Found For Generate VasBill.", "");
+                                    $("#ajaxLoadingVas").hide();
+                                    $("#btnGenerateVASBill").show();
+                                    return false;
+                                }
+                                else {
+                                    var p_str_bill_doc_id = JSON.parse(data);
+                                    p_str_bill_doc_type = "NORM";
+                                    sweetAlert("", "VAS Bill Re-Generated Successfully", "");
+                                    $("#ajaxLoadingVas").hide();
+                                    $("#ShowVASBillGrid").hide();
+                                    $("#btnGenerateVASBill").show();
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/BillingInquiry/GetSearchConsolidateVASInqDetails",
+                                        data: {
+                                            "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt
+                                        },
+                                        dataType: 'html',
+                                        success: function (e) {
+                                            $('#ShowVASBillGrid').html("");
+                                            $('#ShowVASBillGrid').html(e);
+                                            $('#myModalConsolidateVASBill').modal('hide');
+                                        },
+                                    })
+                                    window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill_doc_id + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                         , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+
+                                }
+                            },
+
+                        })
+                    }
+                });
+            }
+            else {*@
+                $("input[name='tblcheckbox3']:checked").each(function () {
+                    var check = $(this);
+                    if (check.is(':checked')) {
+                        checkboxIDArray.push(check.attr('id'));
+                        SelectedRow.push(check.val());
+                    }
+                });
+                var Count = $("input[name='tblcheckbox3']:checked").length;
+                if (Count > 0) {
+                    var SelectdID = '';
+                    $.each(SelectedRow, function (i, v) {
+
+                        if (SelectdID == '')
+                            SelectdID = v;
+                        else
+                            SelectdID = SelectdID + ',' + v;
+                    });
+                    var p_str_cmp_id = $('#new_cmp_id').val();
+                    var p_str_ship_doc_id = SelectdID;
+                    var p_str_bill_doc_id = $('#re_bill_doc_id').val();
+                    var p_str_bill_as_of_dt = $('#re_bill_to_dt').val();
+                    var p_str_doc_dt_Fr = $('#re_bill_from_dt').val();
+                    var p_str_doc_dt_To = $('#re_bill_to_dt').val();
+                    var p_str_bill_type = "NORM";
+                    var type = "PDF";
+                    var p_str_rpt_status = "OPEN";
+                    var p_str_print_dt = $('#re_bill_from_dt').val();
+                    var p_str_cust_id = $('#cust_of_cmpid').val();
+
+
+                    $("#ajaxLoadingVas").show();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/BillingInquiry/SaveVASConsolidateBillRegenerate")',
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_str_ship_doc_id": p_str_ship_doc_id, "p_str_bill_type": p_str_bill_type, "p_str_bill_doc_id": p_str_bill_doc_id,
+                            "p_str_bill_as_of_dt": p_str_bill_as_of_dt, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "p_str_bill_cmp_id": p_str_bill_cmp_id,
+                            "p_str_print_dt": p_str_print_dt
+                        },
+                        dataType: 'html',
+                        success: function (data) {
+                            if (data == 1) {
+                                sweetAlert("", "No Records Found For Generate VasBill.", "");
+                                $("#ajaxLoadingVas").hide();
+                                $("#btnGenerateVASBill").show();
+                                return false;
+                            }
+                            else {
+                                var p_str_bill_doc_id = JSON.parse(data);
+                                p_str_bill_doc_type = "NORM";
+                                sweetAlert("", "VAS Bill Re-Generated Successfully", "");
+                                $("#btnGenerateVASBill").show();
+                                $("#ajaxLoadingVas").hide();
+                                $('#myModalConsolidateVASBill').modal('hide');
+                                $('#myModal').modal('hide');
+
+                                $('#myModalVASBillRegGen').modal('hide')
+                                $.ajax({
+
+                                    type: "get",
+                                    url: "/BillingInquiry/BillingInquiryDtl",
+                                    data: {
+                                        "p_str_cmp_id": p_str_cmp_id,
+                                        "p_str_bill_doc_id": p_str_bill_doc_id
+                                    },
+                                    datatype: 'html',
+                                    success: function (e) {
+                                        debugger
+                                        $("#ajaxloading").hide();
+
+                                        $('#showgrid').html("");
+                                        $('#showgrid').html(e);
+                                    },
+                                })
+
+                                //$.ajax({
+                                //    type: "GET",
+                                //    url: "/BillingInquiry/GetSearchConsolidateVASInqDetails",
+                                //    data: {
+                                //        "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt
+                                //    },
+                                //    dataType: 'html',
+                                //    success: function (e) {
+                                //        $('#ShowVASBillGrid').html("");
+                                //        $('#ShowVASBillGrid').html(e);
+                                //        $('#myModalConsolidateVASBill').modal('hide');
+                                //    },
+                                //})
+                                window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill_doc_id + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                     , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+                            }
+                        },
+                    })
+                }
+                else {
+                    var p_str_cmp_id = $('#new_cmp_id').val();
+                    var p_str_ship_doc_id = SelectdID;
+                    var p_str_bill_doc_id = $('#re_bill_doc_id').val();
+                    var p_str_bill_as_of_dt = $('#re_bill_to_dt').val();
+                    var p_str_doc_dt_Fr = $('#re_bill_from_dt').val();
+                    var p_str_doc_dt_To = $('#re_bill_to_dt').val();
+                    var p_str_bill_type = "NORM";
+                    var type = "PDF";
+                    var p_str_rpt_status = "OPEN";
+                    var p_str_print_dt = $('#re_bill_from_dt').val();
+                    var p_str_bill_cmp_id = $('#cust_of_cmpid').val();
+
+
+
+
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/BillingInquiry/CkBillDocAlreadyExists")',
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "p_str_cust_id": p_str_cmp_id, "p_str_bill_type": p_str_bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                        },
+                        dataType: 'html',
+                        success: function (data) {
+                            if (data == 1) {
+                                sweetAlert({
+                                    title: "",
+                                    text: "Bill Doc Already exists , Do you want to Do you like to use it(Yes/No)",
+                                    type: "",
+                                    showCancelButton: true,
+                                    confirmButtonClass: "btn-danger",
+                                    confirmButtonText: "No",
+                                    cancelButtonText: "Yes",
+                                    closeOnConfirm: false,
+                                    closeOnCancel: true
+                                },
+                             function (isConfirm) {
+                                 if (isConfirm)
+                                 {
+                                     $("#ajaxLoadingInout").hide();
+                                     $("#btnGenerateVASBill").show();
+                                     swal.close();
+                                     return false;
+
+                                    }
+
+                                 else {
+                                     alert("Test6");
+                                     debugger;
+                                     $("#ajaxLoadingVas").show();
+                                     $.ajax({
+                                         type: "GET",
+                                         url: '@Url.Content("~/BillingInquiry/SaveVASConsolidateBillRegenerate")',
+                                         contentType: "application/json; charset=utf-8",
+                                         data: {
+                                             "p_str_cmp_id": p_str_cmp_id, "p_str_ship_doc_id": p_str_ship_doc_id, "p_str_bill_type": p_str_bill_type, "p_str_bill_doc_id": p_str_bill_doc_id,
+                                             "p_str_bill_as_of_dt": p_str_bill_as_of_dt, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "p_str_bill_cmp_id": p_str_bill_cmp_id,
+                                             "p_str_print_dt": p_str_print_dt
+                                         },
+                                         dataType: 'html',
+                                         success: function (data) {
+                                             if (data == 1) {
+                                                 sweetAlert("", "No Records Found For Generate VasBill.", "");
+                                                 $("#ajaxLoadingVas").hide();
+                                                 $("#btnGenerateVASBill").show();
+
+                                                 return false;
+                                             }
+                                             else {
+                                                 var p_str_bill_doc_id = JSON.parse(data);
+                                                 p_str_bill_doc_type = "NORM";
+                                                 sweetAlert("", "VAS Bill  Generated Successfully", "");
+                                                 $("#btnGenerateVASBill").show();
+                                                 $("#ajaxLoadingVas").hide();
+                                                 $.ajax({
+                                                     type: "GET",
+                                                     url: "/BillingInquiry/GetSearchConsolidateVASInqDetails",
+                                                     data: {
+                                                         "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt
+                                                     },
+                                                     dataType: 'html',
+                                                     success: function (e) {
+                                                         $('#ShowVASBillGrid').html("");
+                                                         $('#ShowVASBillGrid').html(e);
+                                                         $('#myModalConsolidateVASBill').modal('hide');
+                                                     },
+                                                 })
+                                                 window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill_doc_id + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                                      , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+                                             }
+                                         },
+
+                                     })
+                                 }
+                             })
+                            }
+                        }
+                    })
+
+
+                }
+           
+        }
+        else {
+            $("input[name='tblcheckbox3']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    SelectedRow.push(check.val());
+                }
+            });
+            var Count = $("input[name='tblcheckbox3']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == '')
+                        SelectdID = v;
+                    else
+                        SelectdID = SelectdID + ',' + v;
+                });
+                var p_str_cmp_id = $('#new_cmp_id').val();
+                var p_str_ship_doc_id = SelectdID;
+                var p_str_bill_doc_id = "";
+                var p_str_bill_as_of_dt = $('#Vasbill_as_of_date').val();
+                var p_str_doc_dt_Fr = $('#re_bill_from_dt').val();
+                var p_str_doc_dt_To = $('#re_bill_to_dt').val();
+                var p_str_bill_type = "NORM";
+                var type = "PDF";
+                var p_str_rpt_status = "OPEN";
+                var p_str_print_dt = $('#re_bill_from_dt').val();
+                var p_str_bill_cmp_id = $('#cust_of_cmpid').val();
+
+
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/BillingInquiry/CkBillDocAlreadyExists")',
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_cust_id": p_str_cmp_id, "p_str_bill_type": p_str_bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                    },
+                    dataType: 'html',
+                    success: function (data) {
+                        if (data == 1) {
+                            sweetAlert({
+                                title: "",
+                                text: "Bill Doc Already exists , Do you want to Do you like to use it(Yes/No)",
+                                type: "",
+                                showCancelButton: true,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "No",
+                                cancelButtonText: "Yes",
+                                closeOnConfirm: false,
+                                closeOnCancel: true
+                            },
+                         function (isConfirm) {
+                             if (isConfirm) {
+                                 $("#btnGenerateVASBill").show();
+                                 swal.close();
+                                 return false;
+
+                             }
+
+                             else {
+                                 alert("Test7");
+                                 debugger;
+                                 $("#ajaxLoadingVas").show();
+                                 $.ajax({
+                                     type: "GET",
+                                     url: '@Url.Content("~/BillingInquiry/SaveVASConsolidateBillRegenerate")',
+                                     contentType: "application/json; charset=utf-8",
+                                     data: {
+                                         "p_str_cmp_id": p_str_cmp_id, "p_str_ship_doc_id": p_str_ship_doc_id, "p_str_bill_type": p_str_bill_type, "p_str_bill_doc_id": p_str_bill_doc_id,
+                                         "p_str_bill_as_of_dt": p_str_bill_as_of_dt, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To,
+                                         "p_str_bill_cmp_id": p_str_bill_cmp_id, "p_str_print_dt": p_str_print_dt
+                                     },
+                                     dataType: 'html',
+                                     success: function (data) {
+                                         if (data == 1) {
+                                             sweetAlert("", "No Records Found For Generate VasBill.", "");
+                                             $("#ajaxLoadingVas").hide();
+                                             $("#btnGenerateVASBill").show();
+                                             return false;
+                                         }
+                                         else {
+                                             var p_str_bill_doc_id = JSON.parse(data);
+                                             p_str_bill_doc_type = "NORM";
+                                             sweetAlert("", "VAS Bill Re-Generated Successfully", "");
+                                             $("#btnGenerateVASBill").show();
+                                             $("#ajaxLoadingVas").hide();
+                                             $.ajax({
+                                                 type: "GET",
+                                                 url: "/BillingInquiry/GetSearchConsolidateVASInqDetails",
+                                                 data: {
+                                                     "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt
+                                                 },
+                                                 dataType: 'html',
+                                                 success: function (e) {
+                                                     $('#ShowVASBillGrid').html("");
+                                                     $('#ShowVASBillGrid').html(e);
+                                                     $('#myModalConsolidateVASBill').modal('hide');
+                                                 },
+                                             })
+                                             window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill_doc_id + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                                  , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+                                         }
+                                     },
+                                 })
+                             }
+                         })
+                        }
+                    }
+                })
+
+
+
+
+            }
+            else {
+                var p_str_cmp_id = $('#new_cmp_id').val();
+                var p_str_ship_doc_id = SelectdID;
+                var p_str_bill_doc_id = "";
+                var p_str_bill_as_of_dt = $('#Vasbill_as_of_date').val();
+                var p_str_doc_dt_Fr = $('#re_bill_from_dt').val();
+                var p_str_doc_dt_To = $('#re_bill_to_dt').val();
+                var p_str_bill_type = "NORM";
+                var type = "PDF";
+                var p_str_rpt_status = "OPEN";
+                var p_str_print_dt = $('#re_bill_from_dt').val();
+                var p_str_bill_cmp_id = $('#cust_of_cmpid').val();
+
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/BillingInquiry/CkBillDocAlreadyExists")',
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        "p_str_cust_id": p_str_cmp_id, "p_str_bill_type": p_str_bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                    },
+                    dataType: 'html',
+                    success: function (data) {
+                        if (data == 1) {
+                            sweetAlert({
+                                title: "",
+                                text: "Bill Doc Already exists , Do you want to Do you like to use it(Yes/No)",
+                                type: "",
+                                showCancelButton: true,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "No",
+                                cancelButtonText: "Yes",
+                                closeOnConfirm: false,
+                                closeOnCancel: true
+                            },
+                         function (isConfirm) {
+                             if (isConfirm) {
+                                 $("#btnGenerateVASBill").show();
+                                 swal.close();
+                                 return false;
+                             }
+
+                             else {
+
+                                 $("#ajaxLoadingVas").show();
+                                 $.ajax({
+                                     type: "GET",
+                                     url: '@Url.Content("~/BillingInquiry/SaveVASConsolidateBillRegenerate")',
+                                     contentType: "application/json; charset=utf-8",
+                                     data: {
+                                         "p_str_cmp_id": p_str_cmp_id, "p_str_ship_doc_id": p_str_ship_doc_id, "p_str_bill_type": p_str_bill_type, "p_str_bill_doc_id": p_str_bill_doc_id,
+                                         "p_str_bill_as_of_dt": p_str_bill_as_of_dt, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To,
+                                         "p_str_bill_cmp_id": p_str_bill_cmp_id, "p_str_print_dt": p_str_print_dt
+                                     },
+                                     dataType: 'html',
+                                     success: function (data) {
+                                         if (data == 1) {
+                                             sweetAlert("", "No Records Found For Generate Vas Bill.", "");
+                                             $("#ajaxLoadingVas").hide();
+                                             $("#btnGenerateVASBill").show();
+                                             return false;
+                                         }
+                                         else {
+                                             var p_str_bill_doc_id = JSON.parse(data);
+                                             p_str_bill_doc_type = "NORM";
+                                             sweetAlert("", "VAS Bill Generated Successfully", "");
+                                             $("#btnGenerateVASBill").show();
+                                             $("#ajaxLoadingVas").hide();
+                                             $.ajax({
+                                                 type: "GET",
+                                                 url: "/BillingInquiry/GetSearchConsolidateVASInqDetails",
+                                                 data: {
+                                                     "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id, "p_str_bill_as_of_dt": p_str_bill_as_of_dt
+                                                 },
+                                                 dataType: 'html',
+                                                 success: function (e) {
+                                                     $('#ShowVASBillGrid').html("");
+                                                     $('#ShowVASBillGrid').html(e);
+                                                     $('#myModalConsolidateVASBill').modal('hide');
+                                                 },
+                                             })
+                                             window.open('GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + p_str_bill_doc_id + '&p_str_bill_doc_type=' + p_str_bill_doc_type + '&p_str_rpt_status=' + p_str_rpt_status
+                                                  , 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+                                         }
+                                     },
+
+                                 })
+                             }
+                         })
+                        }
+                    }
+                })
+            }
+
+
+        }
+    })
+</script>
+<script>
+    $("#btnvasdtl").click(function () {
+        var getli = $('#Formatrcvddtlid').find(":selected").text();
+        var getli2 = $('#Modercvddtlid').find(":selected").text();
+        if (getli == 'PDF' && getli2 == 'VIEW') {
+            var var_name = $("input[name='radio1']:checked").val();
+            if (var_name == "VasInvoiceSummary") {
+                var cmp_id = $("#new_cmp_id").val();
+                if (cmp_id == "") {
+                    sweetAlert("", "Please SELECT Cmp_id.", "");
+                    $('#cmp_id').focus();
+                    $('body,html').animate({ scrollTop: 0 }, 0);
+                    er = 1;
+                    return false;
+                }
+                else {
+                    debugger
+
+                    var p_str_cmp_id = $("#new_cmp_id").val();
+                    var p_dt_bill_from_dt = $('#re_bill_from_dt').val();
+                    var p_dt_bill_to_dt = $('#re_bill_to_dt').val();
+                    var p_str_bill_as_of_dt = $('#Vasbill_as_of_date').val();
+                    var p_str_cust_id = $('#cust_of_cmpid').val();
+                    var p_str_ship_doc_id = "";
+                    var Type = "PDF";
+                    $("#ajaxLoadingVas").show();
+                    window.open('GenerateConsolidateVasShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_dt_bill_from_dt=' + p_dt_bill_from_dt + '&p_dt_bill_to_dt=' + p_dt_bill_to_dt + '&p_str_cust_id=' + p_str_cust_id + '&p_str_bill_as_of_dt=' + p_str_bill_as_of_dt
+                        + '&p_str_ship_doc_id=' + p_str_ship_doc_id + '&var_name=' + var_name + '&Type=' + Type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+                    $("#ajaxLoadingVas").hide();
+                }
+            }
+            else {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var numberOfCheckboxes = $("input[name='tblcheckbox3']:checked").length;
+                if (numberOfCheckboxes == 0) {
+
+                    sweetAlert("", "Please select the Record to Print.", "");
+                }
+                else {
+                    $("input[name='tblcheckbox3']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+
+
+                        }
+                    });
+                    var Count = $("input[name='tblcheckbox3']:checked").length;
+                    if (Count > 0) {
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+                        });
+                        var p_str_cmp_id = $('#new_cmp_id').val();
+                        var p_str_ship_doc_id = SelectdID;
+                        var p_dt_bill_from_dt = $('#re_bill_from_dt').val();
+                        var p_dt_bill_to_dt = $('#re_bill_to_dt').val();
+                        var p_str_bill_as_of_dt = $('#Vasbill_as_of_date').val();
+                        var p_str_cust_id = $('#cust_of_cmpid').val();
+                        var Type = "PDF";
+                        $("#ajaxLoadingVas").show();
+                        window.open('GenerateConsolidateVasShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_dt_bill_from_dt=' + p_dt_bill_from_dt + '&p_dt_bill_to_dt=' + p_dt_bill_to_dt + '&p_str_cust_id=' + p_str_cust_id + '&p_str_bill_as_of_dt=' + p_str_bill_as_of_dt
+                            + '&p_str_ship_doc_id=' + p_str_ship_doc_id + '&var_name=' + var_name + '&Type=' + Type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateShowReport?p_str_cmp_id=' + p_str_cmp_id)
+                        $("#ajaxLoadingVas").hide();
+                    }
+                }
+            }
+        }
+        if (getli == 'XLS' && getli2 == 'VIEW') {
+            var var_name = $("input[name='radio1']:checked").val();
+            if (var_name == "VasInvoiceSummary") {
+                var cmp_id = $("#new_cmp_id").val();
+                if (cmp_id == "") {
+                    sweetAlert("", "Please SELECT Cmp_id.", "");
+                    $('#cmp_id').focus();
+                    $('body,html').animate({ scrollTop: 0 }, 0);
+                    er = 1;
+                    return false;
+                }
+                else {
+                    debugger
+
+                    var p_str_cmp_id = $("#new_cmp_id").val();
+                    var p_dt_bill_from_dt = $('#re_bill_from_dt').val();
+                    var p_dt_bill_to_dt = $('#re_bill_to_dt').val();
+                    var p_str_bill_as_of_dt = $('#Vasbill_as_of_date').val();
+                    var p_str_cust_id = $('#cust_of_cmpid').val();
+                    var p_str_ship_doc_id = "";
+                    var Type = "XLS";
+                    $("#ajaxLoadingVas").show();
+                    window.location.replace('GenerateConsolidateVasShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_dt_bill_from_dt=' + p_dt_bill_from_dt + '&p_dt_bill_to_dt=' + p_dt_bill_to_dt + '&p_str_cust_id=' + p_str_cust_id + '&p_str_bill_as_of_dt=' + p_str_bill_as_of_dt
+                        + '&p_str_ship_doc_id=' + p_str_ship_doc_id + '&var_name=' + var_name + '&Type=' + Type)
+                    $("#ajaxLoadingVas").hide();
+                }
+            }
+            else {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var numberOfCheckboxes = $("input[name='tblcheckbox3']:checked").length;
+                if (numberOfCheckboxes == 0) {
+
+                    sweetAlert("", "Please select the Record to Print.", "");
+                }
+                else {
+                    $("input[name='tblcheckbox3']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+                        }
+                    });
+                    var Count = $("input[name='tblcheckbox3']:checked").length;
+                    if (Count > 0) {
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+                        });
+                        var p_str_cmp_id = $('#new_cmp_id').val();
+                        var p_str_ship_doc_id = SelectdID;
+                        var p_dt_bill_from_dt = $('#re_bill_from_dt').val();
+                        var p_dt_bill_to_dt = $('#re_bill_to_dt').val();
+                        var p_str_bill_as_of_dt = $('#Vasbill_as_of_date').val();
+                        var p_str_cust_id = $('#cust_of_cmpid').val();
+                        var Type = "XLS";
+                        $("#ajaxLoadingVas").show();
+                        window.location.replace('GenerateConsolidateVasShowReport?p_str_cmp_id=' + p_str_cmp_id + '&p_dt_bill_from_dt=' + p_dt_bill_from_dt + '&p_dt_bill_to_dt=' + p_dt_bill_to_dt + '&p_str_cust_id=' + p_str_cust_id + '&p_str_bill_as_of_dt=' + p_str_bill_as_of_dt
+                            + '&p_str_ship_doc_id=' + p_str_ship_doc_id + '&var_name=' + var_name + '&Type=' + Type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'GenerateConsolidateVasShowReport?p_str_cmp_id=' + p_str_cmp_id)
+                        $("#ajaxLoadingVas").hide();
+                    }
+                }
+            }
+        }
+        if (getli == 'PDF' && getli2 == 'EMAIL' || getli == 'XLS' && getli2 == 'EMAIL') {
+            var VASBillemailBackURL = '/BillingInquiry/BillVASSummaryEmailRpt';
+            var var_name = $("input[name='radio1']:checked").val();
+            var options = { "backdrop": "static", keyboard: true };
+            if (var_name == "VasInvoiceSummary") {
+                var cmp_id = $("#new_cmp_id").val();
+                if (cmp_id == "") {
+                    sweetAlert("", "Please SELECT Cmp_id.", "");
+                    $('#cmp_id').focus();
+                    $('body,html').animate({ scrollTop: 0 }, 0);
+                    er = 1;
+                    return false;
+                }
+                else {
+                    debugger
+
+                    var p_str_cmp_id = $("#new_cmp_id").val();
+                    var p_dt_bill_from_dt = $('#re_bill_from_dt').val();
+                    var p_dt_bill_to_dt = $('#re_bill_to_dt').val();
+                    var p_str_bill_as_of_dt = $('#Vasbill_as_of_date').val();
+                    var p_str_cust_id = $('#cust_of_cmpid').val();
+                    var p_str_ship_doc_id = "";
+                    if (getli == 'PDF') {
+                        var Type = "PDF";
+                    }
+                    else
+                    {
+                        var Type = "XLS";
+                    }
+                    $("#ajaxLoadingVas").show();
+                    $.ajax({
+                        type: "GET",
+                        url: VASBillemailBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id,
+                            "p_str_bill_as_of_dt": p_str_bill_as_of_dt, "p_str_ship_doc_id": p_str_ship_doc_id, "var_name": var_name, "Type": Type
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            $("#ajaxLoadingInout").hide();
+                            $('#myModalEmailContent').html(data);
+                            $('#myModalEmail').modal(options);
+                            $('#myModalEmail').modal('show');
+                        },
+                        error: function () {
+                            $("#ajaxLoadingInout").hide();
+                            swal("Dynamic content load failed.");
+                            $("#ajaxLoadingInout").hide();
+                        }
+                    });
+
+                    $("#ajaxLoadingVas").hide();
+                }
+            }
+            else {
+                var SelectedRow = [];
+                var checkboxIDArray = [];
+                var numberOfCheckboxes = $("input[name='tblcheckbox3']:checked").length;
+                var options = { "backdrop": "static", keyboard: true };
+                if (numberOfCheckboxes == 0) {
+
+                    sweetAlert("", "Please select the Record to Print.", "");
+                }
+                else {
+                    $("input[name='tblcheckbox3']:checked").each(function () {
+                        var check = $(this);
+                        if (check.is(':checked')) {
+                            checkboxIDArray.push(check.attr('id'));
+                            SelectedRow.push(check.val());
+
+
+                        }
+                    });
+                    var Count = $("input[name='tblcheckbox3']:checked").length;
+                    if (Count > 0) {
+                        var SelectdID = '';
+                        $.each(SelectedRow, function (i, v) {
+
+                            if (SelectdID == '')
+                                SelectdID = v;
+                            else
+                                SelectdID = SelectdID + ',' + v;
+                        });
+                        var p_str_cmp_id = $('#new_cmp_id').val();
+                        var p_str_ship_doc_id = SelectdID;
+                        var p_dt_bill_from_dt = $('#re_bill_from_dt').val();
+                        var p_dt_bill_to_dt = $('#re_bill_to_dt').val();
+                        var p_str_bill_as_of_dt = $('#Vasbill_as_of_date').val();
+                        var p_str_cust_id = $('#cust_of_cmpid').val();
+                        if (getli == 'PDF') {
+                            var Type = "PDF";
+                        }
+                        else
+                        {
+                            var Type = "XLS";
+                        }
+                        $("#ajaxLoadingVas").show();
+                        $.ajax({
+                            type: "GET",
+                            url: VASBillemailBackURL,
+                            contentType: "application/json; charset=utf-8",
+                            data: {
+                                "p_str_cmp_id": p_str_cmp_id, "p_dt_bill_from_dt": p_dt_bill_from_dt, "p_dt_bill_to_dt": p_dt_bill_to_dt, "p_str_cust_id": p_str_cust_id,
+                                "p_str_bill_as_of_dt": p_str_bill_as_of_dt, "p_str_ship_doc_id": p_str_ship_doc_id, "var_name": var_name, "Type": Type
+                            },
+                            datatype: "json",
+                            success: function (data) {
+                                $("#ajaxLoadingInout").hide();
+                                $('#myModalEmailContent').html(data);
+                                $('#myModalEmail').modal(options);
+                                $('#myModalEmail').modal('show');
+                            },
+                            error: function () {
+                                $("#ajaxLoadingInout").hide();
+                                swal("Dynamic content load failed.");
+                                $("#ajaxLoadingInout").hide();
+                            }
+                        });
+
+                        $("#ajaxLoadingVas").hide();
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    $('#tblCheckAll').click(function (event) {
+            if ($(this).is(":checked")) {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+</script>

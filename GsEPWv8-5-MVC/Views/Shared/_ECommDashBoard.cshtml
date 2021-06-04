@@ -1,0 +1,337 @@
+﻿@model GsEPWv8_5_MVC.Model.OrderSummaryModel
+@Html.HiddenFor(model => model.cmp_id, new { id = "FieldId" })
+
+<div class="box-body">
+    <div class="row">
+        <div class="col-lg-3 col-xs-3" style="margin-left:250px">
+            <!-- small box -->
+            <div class="small-box bg-aqua-active" style="height: 300px;">
+                <div class="inner">
+                    @*<p class="dashboardhdr">  </p>*@
+                    <table>
+                        <tr>
+                            <td style="width: 235px;">
+                                <p class="dashboardhdr" style="color:white;padding-bottom:0px;">ECom Gateway Link Download </p>
+                            </td>
+                            <td style="text-align:left;font-size:50px;color:#00c0ef;width: 50px;padding-bottom:0px;">
+                                <p style="color:white;font-size:x-large">@Model.ecom_open_orders</p>
+                            </td>
+                            <td style="text-align:right;font-size:35px;color:#ffffff;width: 50px;padding-left:45px;padding-bottom:0px;">
+                                <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                            </td>
+
+
+                        </tr>
+                    </table>
+                </div>
+                @*<div class="icon"></div>*@
+                @*<div style="margin-bottom: 1px;">
+                        <label class="dashboard_count" style="text-align:left">
+
+                        </label>
+                    </div>*@
+                @*/DetailedProduct/download?FileName=@this.Session["MBFileName"]&IDS=3*@
+                <table id="exampl" class="table" style="background-color:white">
+                    @*@for (int i = 0; i < Model.objEcomLink.lstCustEcomLinkHdr.Count; i++)
+                        {
+                            var lstrLinkName = Model.objEcomLink.lstCustEcomLinkHdr[i].link_name;
+                            var lstrWebAddress = Model.objEcomLink.lstCustEcomLinkHdr[i].web_address;
+                            <tr>
+                                <td>
+                                    <a href="/EcomLink/EcomGetAPI?pstrCmpId=@Model.cmp_id" style="color:darkblue;font-size:small">
+                                        <b>@lstrLinkName </b> <i class="fa fa-arrow-circle-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }*@
+                    <tr>
+                        <td>
+                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session[" g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" style="color:darkblue;font-size:small">
+                                <b>940 - SPS-ORDERS (CSV) </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OB940ChubUploadFile/OB940ChubUploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" style="color:darkblue;font-size:small">
+                                <b>940 - CommerceHub-ORDERS (CSV) </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session[" g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" style="color:darkblue;font-size:small">
+                                <b>940 - TrueCommerce™-ORDERS (CSV) </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SRUpload" style="color:darkblue;font-size:small">
+                                <b> 940 - SHIPPER SLF PICK ORDER UPLOAD (CSV) </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/EcomOrders/SearchEcomOrders?FullFillType=ALL&Status=TEMP" style="color:darkblue;font-size:small">
+                                <b>WALMART Market Place ECom Orders </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <a href="/EcomOrders/SearchEcomOrders?FullFillType=ALL&Status=TEMP" style="color:darkblue;font-size:small">
+                                <b>HOMEDEPOT Market Place ECom Orders </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <a href="/EcomOrders/SearchEcomOrders?FullFillType=ALL&Status=TEMP" style="color:darkblue;font-size:small">
+                                <b>Send ERP-ECom Orders to CUST </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                            &nbsp
+                            @*<i class="fa fa-cloud-download" aria-hidden="true"></i>*@
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-2 col-xs-2">
+            <!-- small box -->
+            <div class="small-box bg-light-blue" style="height:120px;">
+                <div class="inner">
+                    <table>
+                        <tr>
+                            <td style="width: 220px;">
+                                <p class="dashboardhdr" style="color:white;padding-bottom:0px;">3PL-ECom Order Inquiry and Analysis</p>
+                            </td>
+                            <td style="text-align:left;font-size:50px;color:#00c0ef;width: 50px;padding-bottom:0px;">
+                                <p style="color:white;font-size:x-large;margin-left:5px">@Model.ecom_open_orders</p>
+                            </td>
+                            <td style="text-align:right;font-size:35px;color:#ffffff;width: 50px;padding-bottom:0px">
+                                <i class="fa fa-file-text" aria-hidden="true"></i>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+                <table id="exampl" class="table" style="background-color:white">
+                    @*<tr>
+                            <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                940 - OB - SPS-ORDERS (CSV)
+                                <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" class="small-box-footer" style="color:#072c9a;">
+                                    <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                940 - OB - CHUB-ORDERS (CSV)
+                                <a href="/OB940ChubUploadFile/OB940ChubUploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SPSSRUpload" class="small-box-footer" style="color:#072c9a;">
+                                    <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td style="font-size:12px; color:#072c9a; font-weight:bold; ">
+                                940 - OB - GCS ORDERS (CSV)
+                                <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SRUpload" style="color:#072c9a;">
+                                    <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                                </a>
+                            </td>*@
+
+
+                    @*<td>
+                            <a href="/OB940UploadFile/OB940UploadFile?cmp_id=@Session["g_str_cmp_id"]&p_str_scn_id=940SRUpload" style="color:#072c9a;">
+                                <span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"><b>View</b></span>
+                            </a>
+                        </td>*@
+                    @*</tr>*@
+                    <tr>
+                        <td>
+                            <a href="/EcomOutboundInq/EcomOutboundInq?cmp=@Session["g_str_cmp_id"]&status=ALL&DateFm=@Session["dflt_dt_from"]&@Session["dflt_dt_to"]&screentitle=OBInquiry" style="color:darkblue;font-size:small;">
+                                <b>  3PL-ECom Order Inquiry and Analysis </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;"></td>
+                    </tr>
+
+
+                   
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;"></td>
+                    </tr>
+
+
+                </table>
+
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-2 col-xs-2">
+            <!-- small box -->
+            <div class="small-box bg-blue" style="height: 120px;">
+                <div class="inner">
+                    <table>
+                        <tr>
+                            <td style="width: 180px;">
+                                <p class="dashboardhdr" style="color:white;padding-bottom:0px;">3PL-ECom Order Proccesing</p>
+                            </td>
+                            <td style="text-align:center;font-size:50px;color:#00c0ef;width: 40px;padding-bottom:0px;">
+                                <p style="color:white;font-size:x-large;">@Model.ecom_open_orders</p>
+                            </td>
+                            <td style="text-align:right;font-size:35px;color:#ffffff;width: 40px;padding-bottom:0px">
+                                <i class="fa fa-bookmark" aria-hidden="true"></i>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br />
+
+                    <table border="1" id="exampl" class="table" style="background-color:white">
+                        <tr>
+                            <td>
+                                <a href="/VasInquiry/VasInquiry?FullFillType=ALL&cmp=@Model.cmp_id&status=ALL&DateFm=@Model.frm_dt&DateTo=@Model.to_dt&p_str_scn_id=VasInquiry" style="color:darkblue;font-size:small;">
+
+                                    <b> VAS Visibility & Analysis </b> <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:right;font-size:30px;color:#00c0ef;"></td>
+                        </tr>
+                    </table>
+
+                </div>
+                <table id="exampl" class="table" style="background-color:white">
+                    <tr>
+                        <td>
+                            <a href="/OutboundInq/OutboundInq?cmp=@Session["g_str_cmp_id"]&status=ALL&DateFm=@Session["dflt_dt_from"]&@Session["dflt_dt_to"]&screentitle=OBInquiry" style="color:darkblue;font-size:small;">
+                                <b>3PL-ECom Order Allocation </b> <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/EcomBinScanOut/ListEcomBinScanOut" style="color:darkblue;font-size:small;">
+                                <b>BIN Pick Fulfillment (BPF) </b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                            @*<i class="fa fa-bookmark" aria-hidden="true"></i>*@
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- ./col -->
+        <!-- ./col -->
+        <div class="col-lg-2 col-xs-2">
+            <!-- small box -->
+            <div class="small-box bg-blue-active" style="height: 200px;">
+                <div class="inner">
+                    <table>
+                        <tr>
+                            <td style="width: 220px;">
+                                <p class="dashboardhdr" style="color:white;padding-bottom:0px;">ECom Gateway Link Upload</p>
+                            </td>
+                            <td style="text-align:left;font-size:50px;color:#00c0ef;width: 60px;padding-bottom:0px;">
+                                <p style="color:white;font-size:x-large;margin-left:5px">@Model.ecom_open_orders</p>
+                            </td>
+                            <td style="text-align:right;font-size:40px;color:#ffffff;width: 50px;padding-bottom:0px;">
+                                <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <table id="exampl" class="table" style="background-color:white">
+                    <tr>
+                        <td>
+                            <a href="/OderLifeCycle/ViewOrder?Status=CLOSED&Fullfiltype=Vendor" style="color:darkblue;font-size:small;">
+                                <b>855 - Order Acknowledgement</b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OderLifeCycle/ViewOrder?Status=CLOSED&Fullfiltype=Vendor" style="color:darkblue;font-size:small;">
+                                <b>856 - Order Ship-Confirm</b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OderLifeCycle/ViewOrder?Status=CLOSED&Fullfiltype=Vendor" style="color:darkblue;font-size:small;">
+                                <b>810 - Order Invoice Upload</b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/OderLifeCycle/ViewOrder?Status=CLOSED&Fullfiltype=Vendor" style="color:darkblue;font-size:small;">
+                                <b>846 - Inventry stock Upload</b>  <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;font-size:30px;color:#00c0ef;">
+                            @*<i class="fa fa-cloud-upload" aria-hidden="true"></i>*@
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- ./col -->
+
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+  
+</div>
+<script type="text/javascript">
+    var id = $('#FieldId').val();
+    $("#dialog-confirm").dialog({
+        autoOpen: false,
+        resizable: false,
+        width: 500,
+        modal: true,
+        buttons: {
+            "Delete this item": function () {
+                $(this).dialog("close");
+            },
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("[data-dialog-confirm]").click(function (e) {
+        e.preventDefault();
+        var theHREF = $(this).attr("href");
+        $("#dialog-confirm").dialog('option', 'buttons', {
+            "Yes":
+            function () {
+                $.get(theHREF, null, function () { refreshList() });
+                $(this).dialog("close");
+            }, "No":
+          function () { $(this).dialog("close"); }
+        });
+        $("#dialog-confirm").dialog("open");
+    });
+</script>

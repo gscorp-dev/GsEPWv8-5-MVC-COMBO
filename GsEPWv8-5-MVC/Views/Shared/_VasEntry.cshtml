@@ -1,0 +1,712 @@
+﻿@model GsEPWv8_5_MVC.Model.VasInquiryModel
+@{
+    var TotalNumberoflst = Model.ListVasEntryGridDtl.Count();
+    var Ordercount = Model.ListVasEntryGridDtl.Count;
+
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+          .text-muted {
+    color:black;
+    }
+</style>
+
+@Html.HiddenFor(model => model.whs_id)
+@Html.HiddenFor(model => model.screentitle)
+@Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+<input type="hidden" id="one" />
+<div class="modal-header">
+    <center><h3 class="modal-title" id="myModalLabel" style="color: white;">New Vas Entry</h3></center>
+    <button type="button" id="btnvas_Close" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 29px;">Close</button>
+    <button type="button" class="btn-Close" id="btnSaveVas" style="float:right;margin-top: -18px;background-color: #00c0ef;">Save</button>
+</div>
+<div class="box-body">
+    <div class="box-header">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-11 col-sm-11 col-xs-11">
+                    <table style="width:100%;border-collapse: separate;border-spacing:0px 0.5em;">
+
+                        <tr>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">Cmp Id:</b></label>
+                            </td>
+                            <td style="width: 38%; padding-left: 1%;">
+                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl" })
+                            </td>
+                            <td style="width: 7%;text-align: right;">
+                                <label><b class="Lblmanual">Vas Id:</b></label>
+                            </td>
+                            <td style="width: 12%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.vas_id, new { @class = "form-control txtlbl", @disabled = "true", @maxlength = "50" })
+                            </td>
+                            <td style="width: 7%;text-align: right;">
+                                <label><b class="Lblmanual">Vas Dt:</b></label>
+                            </td>
+                            <td style="width: 12%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.ship_dt, new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </td>
+
+                        </tr>
+                    </table>
+                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+
+                        <tr>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">Status:</b></label>
+                            </td>
+                            <td style="width: 20%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.Status, new { @class = "form-control txtlbl", @maxlength = "50",@disabled="true" })
+
+                            </td>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">SR#:</b></label>
+                            </td>
+                            <td style="width: 20%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.so_num, new { @id = "Vassonum", @class = "form-control txtlbl", @maxlength = "50" })
+                            </td>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">FOB:</b></label>
+                            </td>
+                            <td style="width: 18%; padding-left: 1%;">
+                                @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListPick, "whs_id", "whs_id"), new { @id = "VaswhsId", @class = "form-control txtlbl" })
+                                @*@Html.TextBoxFor(model => model.whs_id, new { @id = "ps_itm_name", @class = "form-control txtlbl", @maxlength = "80", @style = "width:125px;margin-left:-18px;" })*@
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                        <tr>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">Ship To Id:</b></label>
+                            </td>
+                            <td style="width: 20%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.ship_to_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+
+                            </td>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">Cust Po#:</b></label>
+                            </td>
+                            <td style="width: 20%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.cust_po_num, new { @class = "form-control txtlbl", @maxlength = "50" })
+
+                            </td>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">Cust PO Date:</b></label>
+                            </td>
+                            <td style="width: 15%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.cust_po_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50" })
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                        <tr>
+                            <td style="width: 9%;text-align: right;">
+                                <label><b class="Lblmanual">Header Note:</b></label>
+                            </td>
+                            <td style="width: 72%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.Note, new { @class = "form-control txtlbl", @maxlength = "200" })
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+               
+            </div>
+        </div>
+        <br />
+
+
+    </div>
+</div>
+<br />
+<table>
+    <tr>
+        <td style="width:13%;padding-left:76px;">
+            <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                Total Records:
+            </span>
+        </td>
+        <td style="width: 62%;">
+            <label class="totalCount" style="text-align:left">
+                @Ordercount
+            </label>
+        </td>
+
+    </tr>
+</table>
+<br />
+
+<div class="box" style="padding: 2px;">
+    <div id="table-Details">
+        <div style="overflow-y:auto; height:auto; width:auto;">
+            <table id="GridVasEntryDtls" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10px;">Ln#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10px;">ServiceId</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:30px;">Description</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10px;">Qty</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10px;">Rate</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10px;">Amount</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:6px;">Status</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5px;">UoM</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:50px;">Note</th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                        <th style="display:none;"></th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.ListVasEntryTempGridDtl.Count; i++)
+                    {
+                        int line = i + 1;
+                        var Amt = (Model.ListVasEntryTempGridDtl[i].amt);
+                        var Rate = (Model.ListVasEntryTempGridDtl[i].list_price);
+                        var l_dec_Amt = Amt.ToString("F2");
+                        var l_dec_rate = Rate.ToString("F2");
+                        <tr id="GridID_@i" style="background-color:white;">
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@line</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.ListVasEntryTempGridDtl[i].itm_num, new { @class = "ItmNum", @id = "itmnum_" + i, @style = "width:60px;text-align:right;" })@Model.ListVasEntryTempGridDtl[i].itm_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryTempGridDtl[i].itm_name</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Html.TextBoxFor(model => model.ListVasEntryTempGridDtl[i].qty, new { @class = "Qty numericOnly", @id = "qty_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Html.TextBoxFor(model => l_dec_rate, new { @class = "itmrate", @id = "price_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;", @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Html.TextBoxFor(model => l_dec_Amt, new { @id = "amt_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">O</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryTempGridDtl[i].price_uom</td>
+                            @*<td style="font-size:10px; color:black; font-weight:bold;"><input type="text" style="width:347px;background-color:lightyellow;" value="@Model.ListVasEntryTempGridDtl[i].Note" /></td>*@
+                            @*//CR - 3PL-MVC-VAS-20180505 Added by Soniya*@
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Html.TextBoxFor(model => model.ListVasEntryGridDtl[i].notes, new { @class = "note", @id = "Note_" + i, @style = "width:750px;text-align:left;background-color:lightyellow;", @data = @line })</td>
+                            <td id="chkboxclick" id1="@line" style="text-align:center;display:none;">
+                                <input id="check_@i" name="attribute" class="attribute" type="checkbox" />
+                            </td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none;">@Html.TextBoxFor(model => model.ListVasEntryTempGridDtl[i].itm_name, new { @id = "itm_name_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right;display:none;">@Html.TextBoxFor(model => model.ListVasEntryTempGridDtl[i].price_uom, new { @id = "price_uom_" + i, @disabled = "true", @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.Hidden("Count_Values", TotalNumberoflst)
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+
+<script type="text/javascript">
+
+    //$('.attribute').attr('disabled', true);
+    //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+    var p_str_check_value = false;
+
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+    $(".Qty").blur(function () {
+        //alert('hit')
+
+        debugger
+        var QTYTEXT = $(this).val();
+
+        var $buttonClicked = $(this);
+        var IDLINE = $buttonClicked.attr('data');
+        var tot = parseFloat(IDLINE) - 1;
+        var QTYSUM = $("#qty_" + tot).val();
+        var PRICESUM = $("#price_" + tot).val();
+        var sum_iv = parseFloat(QTYSUM) * parseFloat(PRICESUM);
+        var sum_i = parseFloat(sum_iv).toFixed(2);
+        $("#amt_" + tot).val(sum_i);
+        var newamount = $("#amt_" + tot).val(sum_i);
+        if (parseFloat(sum_i) != 0) {//|| parseFloat(ITMTEXT) != 0
+            $("#check_" + tot).prop('checked', true);
+            p_str_check_value = true;
+
+            $('#one').val(p_str_check_value);
+
+            $("#check_" + tot).click();
+        }
+        else {
+            $("#check_" + tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#one').val(p_str_check_value);
+
+            $("#check_" + tot).click();
+
+        }
+    });
+    $(".itmrate").blur(function () {
+        debugger
+        var ITMTEXT = $(this).val();
+        var $buttonClicked = $(this);
+        var IDLINE = $buttonClicked.attr('data');
+        var tot = parseFloat(IDLINE) - 1;
+        var QTYSUM = $("#qty_" + tot).val();
+        var PRICESUM = $("#price_" + tot).val();
+        var sum_iv = parseFloat(QTYSUM) * parseFloat(PRICESUM);
+        var sum_i = parseFloat(sum_iv).toFixed(2);
+        $("#amt_" + tot).val(sum_i);
+        var ITMTEXT = $("#qty_" + tot).val();
+        if (parseFloat(sum_i) != 0) {// || parseFloat(QTYTEXT) != 0
+            $("#check_" + tot).prop('checked', true);
+            p_str_check_value = true;
+
+            $('#one').val(p_str_check_value);
+
+            $("#check_" + tot).click();
+        }
+        else {
+            $("#check_" + tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#one').val(p_str_check_value);
+
+            $("#check_" + tot).click();
+
+        }
+    });
+
+
+    $(document).ready(function () {
+        $('.attribute').click(function () {
+        });
+
+    });
+    //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+    $('#GridVasEntryDtls td[id="chkboxclick"]').click(function (event) {
+        debugger
+        var LINENUMBER = $(this).attr('id1');//CR-20180514-001 added by nithya
+        var Minus = LINENUMBER - 1;
+        var ImagesNewRowNumber = $("#Count_Values").val();
+        var VasId = $("#vas_id").val();
+        var _imagesCount = 0;
+        for (var i = Minus; i < LINENUMBER; i++) {
+            var p_str_check_value = $('#one').val();
+            var qty = $("#qty_" + i).val();
+            if (qty == "") {
+                qty = 0;
+            }
+            var price = $("#price_" + i).val();
+            if (price == "") {
+                price = 0;
+            }
+            var l_int_qty = $("#qty_" + i).val();
+            var l_dec_price = $("#price_" + i).val();
+            var l_dec_Amount = $("#amt_" + i).val();
+            var l_str_itmnum = $("#itmnum_" + i).val();
+            var l_str_note = $("#Note_" + i).val();
+            var l_str_itnname = $("#itm_name_" + i).val();
+            var l_str_priceuom = $("#price_uom_" + i).val();
+
+            if (p_str_check_value == "true" || p_str_check_value == "") {
+
+                $("#check_" + Minus).prop('checked', true);
+                $("#GridID_" + Minus).css("background-color", "#5ae77e");
+               
+            }
+            else {
+                $("#check_" + Minus).prop('checked', false);
+                $("#GridID_" + Minus).css("background-color", "white");
+                
+            }
+        }
+    });
+
+
+    $('#ship_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#cust_po_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    function closeModal() {
+
+        $.ajax({
+            url: '@Url.Action("TruncateVasEntry", "VasInquiry")',
+            type: 'GET',
+            cache: false,
+            success: function (data) {
+                if (data > 0) {
+                }
+            }
+        });
+    }
+    $("#Vassonum").focusout(function () {
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_sonum = $('#Vassonum').val();
+        var p_str_whs_id = $('#VaswhsId').val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/VasInquiry/LoadSRDetails")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id,
+                "p_str_sonum": p_str_sonum,
+                "p_str_whs_id": p_str_whs_id
+            },
+
+            dataType: "json",
+            success: function (e) {
+                debugger
+                $.each(e, function () {
+                    $("#VaswhsId").val(e.DATA);
+                    $("#ship_to_id").val(e.DATA1);
+                    $("#cust_po_num").val(e.DATA2);
+                    $("#notes").val(e.DATA3);
+                    $("#ship_to_id").focus();
+                });
+            },
+
+        });
+    });
+
+    $("#btnSaveVas").click(function () {
+        debugger
+        var p_str_cmp_id = $('#new_cmp_id').val();
+        var p_str_vas_id = $('#vas_id').val();
+        var p_str_vas_dt = $('#ship_dt').val();
+        var p_str_so_num = $('#Vassonum').val();
+        var p_str_whs_id = $('#VaswhsId').val();
+        var p_str_ship_to_id = $('#ship_to_id').val();
+        var p_str_cust_po_num = $('#cust_po_num').val();
+        var p_str_cust_po_dt = $('#cust_po_dt').val();
+        var objVASHdr = {};
+        objVASHdr.cmp_id = $('#new_cmp_id').val();
+        objVASHdr.vas_id = $('#vas_id').val();
+        objVASHdr.vas_dt = $('#ship_dt').val();
+        objVASHdr.so_num = $('#Vassonum').val();
+        objVASHdr.whs_id = $('#VaswhsId').val();
+        objVASHdr.ship_to_id = $('#ship_to_id').val();
+        objVASHdr.cust_po_num = $('#cust_po_num').val();
+        objVASHdr.cust_po_dt = $('#cust_po_dt').val();
+        objVASHdr.note = $('#Note').val();
+        var VASHdr = new Array();
+        VASHdr.push(objVASHdr);
+        var p_str_note = $('#Note').val();
+        p_str_check_value = $('#one').val();
+        var numberOfCheckboxes = $("input[name='attribute']:checked").length;
+        $("#ajaxLoading").show();
+        $('#btnvas_Close').attr('disabled', 'disabled');
+        if (numberOfCheckboxes == 0) {
+            swal("", "No Item Added.", "");
+            return false;
+        }
+        var ItemDetails = new Array();
+
+
+        debugger;
+        var VasdtlCount = $("#Count_Values").val();
+        debugger
+        for (var i = 0; i < VasdtlCount; i++) {
+            debugger
+            var l_int_qty = $("#qty_" + i).val();
+            var l_dec_price = $("#price_" + i).val();
+            var l_dec_Amount = $("#amt_" + i).val();
+            var l_str_itmnum = $("#itmnum_" + i).val();
+            var l_str_note = $("#Note_" + i).val();
+            var l_str_itnname = $("#itm_name_" + i).val();
+            var l_str_priceuom = $("#price_uom_" + i).val();
+
+            if (l_int_qty == "") {
+                l_int_qty = 0;
+            }
+            else if (l_int_qty == undefined) {
+                l_int_qty = 0;
+            }
+            if (l_dec_price == "") {
+                l_dec_price = 0;
+            }
+            else if (l_dec_price == undefined) {
+                l_dec_price = 0;
+            }
+            debugger;
+
+            if (l_int_qty != 0) {
+                var ItemDetail = {};
+                ItemDetail.qty = l_int_qty;
+                ItemDetail.list_price = l_dec_price;
+                ItemDetail.amt = l_dec_Amount;
+                ItemDetail.itm_num = l_str_itmnum;
+                ItemDetail.notes = l_str_note;
+                ItemDetail.itm_name = l_str_itnname;
+                ItemDetail.price_uom = l_str_priceuom;
+                ItemDetails.push(ItemDetail);
+            }
+
+        }
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/VasInquiry/SaveVasEntry")',
+                data: JSON.stringify({ ItemDetails: ItemDetails, VASHdr: VASHdr }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    debugger
+                   
+                    if (e > 0) {
+                        swal({
+                            title: "",
+                            text: "No Records to Save",           //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        });
+                    }
+                    else {
+                        debugger
+                        swal({
+                            title: "",
+                            text: "VASId#" + p_str_vas_id + " Added successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                        function () {
+                            debugger
+                            setTimeout(function () {
+                                var p_str_screen_title = $('#screentitle').val();
+                                var p_str_cmp_id = $('#new_cmp_id').val();
+                                var p_str_vasid = $('#vas_id').val();
+                                window.open('ShowVasReport?p_str_cmp_id=' + p_str_cmp_id + '&p_str_vasid=' + p_str_vasid, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowVasReport')
+                                $('#myModalAdd').modal('hide');
+                                debugger
+                                if (p_str_screen_title == "OBVisibility" || p_str_screen_title == "OBInquiry")      //CR_3PL_MVC_VAS_2018_0324_001 Added by Soniya
+                                {
+                                    $.ajax({
+                                        type: "get",
+                                        url: "/OutboundInq/GetOutboundInqDtl",
+                                        data: {
+                                            "p_str_cmp_id": p_str_cmp_id,
+                                            "p_str_so_num": p_str_so_num
+                                        },
+                                        datatype: 'html',
+                                        success: function (e) {
+                                            debugger
+                                            $("#ajaxloading").hide();
+                                            $('#showgrid').html("");
+                                            $('#showgrid').html(e);
+                                            $('#btnvas_Close').removeAttr('disabled');
+                                        },
+                                    })
+                                }
+                                else {
+                                    var p_str_cmp_id = $('#new_cmp_id').val();
+                                    var p_str_vas_id = $('#vas_id').val();                //CR - 3PL-MVC-VAS-20180505 Added by Soniya
+
+                                    $('#myModalAdd').modal('hide');
+                                    $.ajax({
+                                        type: "get",
+                                        url: "/VasInquiry/VasInquiryDtl",
+                                        data: {
+                                            "p_str_cmp_id": p_str_cmp_id,
+                                            "p_str_vas_id": p_str_vas_id,
+                                        },
+                                        datatype: 'html',
+                                        success: function (e) {
+                                            debugger
+                                            $("#ajaxloading").hide();
+                                            $('#showgrid').html("");
+                                            $('#showgrid').html(e);
+                                            $('#btnvas_Close').removeAttr('disabled');
+                                        },
+                                    })
+                                }
+                            });
+                        });
+                    }
+
+
+                },
+
+            })
+        }
+    });
+    $(function () {
+        $('#GridVasEntryDtls').DataTable({
+            "paging": false,
+            "pageLength": 100,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": false,
+            "info": false,
+            "autoWidth": true,
+        });
+        $('#GridVasEntryDtls_paginate').hide();
+    })
+
+
+    $('#last_so_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'Y-m-d'
+    });
+
+    $(function () {
+        debugger
+        $('#new_cmp_id').change(function () {
+            var p_str_cmp_id = $(this).find(":selected").val();
+            $.ajax({
+                url: '@Url.Action("CmpIdOnChange", "VasInquiry")',
+                type: 'GET',
+                cache: false,
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    $.each(e, function () {
+                        $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                    });
+                },
+            });
+        });
+
+    });
+    $("#btnvas_Close").click(function () {
+        debugger
+        var p_str_screentitle = $('#screentitle').val();
+        var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+        var p_str_screen_title = $('#screentitle').val();
+        var p_str_ShipReq_id = $('#Sonum').val();
+        sweetAlert({
+            title: "",
+            text: "Do you want to Close the Screen?",
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+                 function (isConfirm) {
+                     if (isConfirm) {
+
+                     }
+
+                     else {
+                         $('#myModalAdd').modal('hide');
+                         if (p_str_screen_title == "OBVisibility" || p_str_screen_title == "OBInquiry")      //CR_3PL_MVC_VAS_2018_0324_001 Added by Soniya
+                         {
+                             @*var url = '@Url.Action("OutboundInq", "OutboundInq")';*@
+                             $.ajax({
+                                 type: "get",
+                                 url: "/OutboundInq/GetOutboundInqDtl",
+                                 data: {
+                                     "p_str_cmp_id": p_str_cmpid,
+                                     "p_str_so_num": p_str_ShipReq_id
+                                 },
+                                 datatype: 'html',
+                                 success: function (e) {
+                                     debugger
+                                     $("#ajaxloading").hide();
+                                     $('#showgrid').html("");
+                                     $('#showgrid').html(e);
+                                 },
+                             })
+                         }
+                         else {
+
+                             var url = '@Url.Action("VasInquiry", "VasInquiry")';
+                         }
+                         $("#ajaxloading").hide();
+
+                     }
+                 });
+    })
+
+    $(".note").focusout(function () {
+        debugger
+
+        var NOTETEXT = $(this).val();
+
+        var $buttonClicked = $(this);
+        var IDLINE = $buttonClicked.attr('data');
+        var tot = parseFloat(IDLINE) - 1;
+        var QTYSUM = $("#qty_" + tot).val();
+        var PRICESUM = $("#price_" + tot).val();
+        var sum_iv = parseFloat(QTYSUM) * parseFloat(PRICESUM);
+        var sum_i = parseFloat(sum_iv).toFixed(2);
+        //var sum_i = $("#qty_" + tot).val() * $("#price_" + tot).val();
+        $("#amt_" + tot).val(sum_i);
+        var ITMTEXT = $("#qty_" + tot).val();
+        var newamount = $("#amt_" + tot).val(sum_i);
+        var qty = $("#qty_" + tot).val();
+        if (qty == "") {
+            qty = 0;
+        }
+        var price = $("#price_" + tot).val();
+        if (price == "") {
+            price = 0;
+        }
+        // var QTYTEXT = $("#amt_" + tot).val(sum_i);
+        if (parseFloat(sum_i) != 0) {// || parseFloat(QTYTEXT) != 0
+            $("#check_" + tot).prop('checked', true);
+            p_str_check_value = true;
+
+            $('#one').val(p_str_check_value);
+
+            $("#check_" + tot).click();
+        }
+        else {
+            $("#check_" + tot).prop('checked', false);
+            p_str_check_value = false;
+            $('#one').val(p_str_check_value);
+
+            $("#check_" + tot).click();
+
+        }
+
+    });
+    $('#cust_po_num').focusout(function () {
+        debugger
+        var p_str_cust_id = $('#ship_to_id').val();
+        var p_str_shipto_id = $('#cust_po_num').val();
+        var p_str_Note = $('#Note').val();
+        if (p_str_Note == "") {
+            $('#Note').val("Ship To:" + $('#ship_to_id').val() + " " + " " + " " + "Cust PO#:" + $('#cust_po_num').val());
+        }
+        else
+        {
+            $('#Note').val("Ship To:" + $('#ship_to_id').val() + " " + " " + " " + "Cust PO#:" + $('#cust_po_num').val());
+
+        }
+    });
+</script>
+

@@ -1,0 +1,184 @@
+﻿
+@model  GsEPWv8_5_MVC.Model.MailConfigModel
+
+@{
+    ViewBag.Title = "MailConfig";
+
+
+}
+<style>
+    div#ajaxLoadingLoadmail {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+<div class="modal-header" style="height:63px">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">Mail List</h4>
+    <button type="button" id="btnEmailClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+    <button type="button" id="btnEmailSubmit" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;margin-left:-28px;background-color: #00c0ef;">OK</button>
+
+    <div id="ajaxLoadingLoadmail" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+</div>
+@Html.HiddenFor(model => model.selectedEmail)
+<div class="box-body">
+    <div id="mydiv">
+        <table id="GridMailList" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="width:30%">Select</th>
+                    <th class="grid_header_backcolor" style="width:50%">Email List</th>
+
+                </tr>
+            </thead>
+            <tbody style="background-color:white">
+                @for (int i = 0; i < Model.LstUsersMail.Count; i++)
+            {
+                    <tr>
+                        <td style="width:10%">
+                            <input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.LstUsersMail[i].email" />
+                        </td>
+                       
+                        <td style="font-size:12px; color:black; font-weight:bold;width:10%">@Model.LstUsersMail[i].email</td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+    <div class="col-xs-2">
+
+    </div>
+</div>
+
+
+<script>
+    $("#btnEmailSubmit").click(function (e) {
+    debugger
+        $("#ajaxLoadingLoadmail").show();
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+        if (numberOfCheckboxes == 0) {
+
+            sweetAlert("", "Please select the Record.", "");
+            $("#ajaxLoadingLoadmail").hide();
+        }
+        else {
+            $("input[name='tblcheckbox']:checked").each(function () {
+                var check = $(this);
+                if (check.is(':checked')) {
+                    checkboxIDArray.push(check.attr('id'));
+                    SelectedRow.push(check.val());
+
+
+                }
+            });
+            var Count = $("input[name='tblcheckbox']:checked").length;
+            if (Count > 0) {
+                var SelectdID = '';
+                var NewSelectdID = $('#selectedEmail').val();
+                $.each(SelectedRow, function (i, v) {
+
+                    if (SelectdID == ''&& NewSelectdID=='')
+                        SelectdID = v;
+                    else if (SelectdID != '') {
+                        SelectdID =  SelectdID + ',' + v;
+                    }
+                    else{
+                        SelectdID = NewSelectdID + SelectdID + ',' + v;
+                    }
+                });
+                $('#NewEmailTo').val(SelectdID);
+                $('#SelectList').val(SelectdID);
+                $("#ajaxLoadingLoadmail").hide();
+                $('#myModalNewEmailList').modal('hide');
+            }
+        }
+    })
+</script>
+<script>
+    $("#btnEmailClose").click(function (e) {
+        $('#myModalNewEmailList').modal('hide');
+        $("#ajaxLoadingLoadmail").hide();
+    })
+
+</script>
+
+<script>
+    $(function () {
+        $('#GridMailList').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            "sScrollY": "160px",
+            "sScrollX": "30%",
+        });
+        $('#GridMailList_paginate').hide();
+    })
+</script>
+

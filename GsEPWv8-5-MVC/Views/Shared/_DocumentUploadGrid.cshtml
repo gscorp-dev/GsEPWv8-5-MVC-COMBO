@@ -1,0 +1,294 @@
+﻿@model GsEPWv8_5_MVC.Model.DocumentUploadModel
+
+@{
+
+    var Ordercount = Model.LstDocumentUpload.Count;
+}
+
+<div>
+    <table>
+        <tr>
+            <td style="width: 10%;">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+            </td>
+            <td style="width: 93%;">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box">
+    <div id="table-Details">
+      
+            <table id="GridDocUpload" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="width:10%">Type</th>
+                        <th class="grid_header_backcolor" style="width:19%">FileName</th>
+                        <th class="grid_header_backcolor" style="width:8%">Views</th>
+                        <th class="grid_header_backcolor" style="width:8%">Delete</th>
+                        <th class="grid_header_backcolor" style="width:15%">UploadedDtTime</th>
+                        <th class="grid_header_backcolor" style="width:15%">UploadedBy</th>
+                        <th class="grid_header_backcolor" style="width:25%">Comments</th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                    @for (int i = 0; i < Model.LstDocumentUpload.Count; i++)
+                    {
+                        var filename = @Model.LstDocumentUpload[i].orig_file_name;
+                        var filepath = @Model.LstDocumentUpload[i].file_path;
+                        var FILENAME = filepath+'\\'+filename;
+                        <tr style="background-color:white;">
+                            <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.LstDocumentUpload[i].doc_sub_type</td>
+                            <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.LstDocumentUpload[i].upload_file_name</td>
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="ViewDocumentFile" data-id="@Model.LstDocumentUpload[i].cmp_id" data-id1="@FILENAME" data-id2 ="@filename" ><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 18px;"></span><b>View</b></a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="DelDocumentFile" data-id="@Model.LstDocumentUpload[i].upload_file_name" data-id1="@Model.LstDocumentUpload[i].file_path" data-id2="@Model.LstDocumentUpload[i].upload_dt"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                            </td>
+                            <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.LstDocumentUpload[i].upload_dt</td>
+                            <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.LstDocumentUpload[i].upload_by</td>
+                            <td style="text-align:left;font-size:10px;font-weight:bold;">@Model.LstDocumentUpload[i].comments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+</div>
+
+<script>
+    $("#btnClose").click(function () {
+        
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    $(function () {
+        $('#GridDocUpload').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        });
+        $('#GridDocUpload_paginate').hide();
+    })
+    var cmp_id = $("#cmp_id").val();
+    var screentitle = $("#screentitle").val();
+    var TeamDetailPostBackUploaddocURL = '/InboundInquiry/uploaddoc';
+    $(function () {
+        debugger
+        $('#GridDocUpload tbody').on('click', '.ViewDocumentFile', function () { //CR2018-19-07-001 Added by Nithya
+        //$(".ViewDocumentFile").click(function () {
+            var $buttonClicked = $(this);
+            var cmpid = $buttonClicked.attr('data-id');
+            var path = $buttonClicked.attr('data-id1');
+            var filename = $buttonClicked.attr('data-id2');
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_cntr_id = $('#cntr_id').val();
+            var p_str_status = $('#status').val();
+            var p_str_ib_doc_id = $('#ib_doc_id').val();
+            var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+            var p_str_ref_no = $('#req_num').val();
+            var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+            var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+            var p_str_eta_dtFm = $('#eta_dt_fm').val();
+            var p_str_eta_dtTo = $('#eta_dt_to').val();
+            var p_str_rcvd_frm = $('#vend_name').val();
+            var p_str_screen_title = $('#screentitle').val();
+            var p_str_itm_num = $('#ib_Itmdtl').val();
+            var p_str_itm_color = $('#ib_itm_color').val();
+            var p_str_itm_size = $('#ib_itm_size').val();
+            var p_str_itm_desc = $('#ib_itm_name').val();
+            var p_str_itm_type = $('#status').val();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                    "p_str_doc_dtFm": p_str_doc_dtFm,
+                    "p_str_doc_dtTo": p_str_doc_dtTo,
+                    "p_str_eta_dtFm": p_str_eta_dtFm,
+                    "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                    "p_str_itm_type": p_str_itm_type
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackUploaddocURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "path": path },
+                datatype: "json",
+                success: function (path) {
+                    debugger
+                    //alert(path)
+                    var ext = path.split('.').pop();
+                    if (ext == "pdf" || ext == "PDF")
+                    {
+                        window.open('@Url.Action("DocumentUpload")?path=' + path + '&ext=' + ext + '&filename=' + filename, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                    }
+                    else
+                    {
+                        window.location.replace('@Url.Action("DocumentUpload")?path=' + path + '&ext=' + ext + '&filename=' + filename, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                    }
+                    //var fileName = path;
+                    //var fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+                    $("#ajaxLoading").hide();
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+    $("#btnCancel").click(function () {
+        var cmp_id = $("#cmp_id").val();
+        if (cmp_id == "") {
+            sweetAlert("", "Please select the Company Id", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+
+            var CompID = $('#cmp_id').val();
+            var ibdocid = $('#ibdocid').val();
+            var comment = $('#Comment').val();
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: "/InboundInquiry/GetDocumentUploadCancel",
+                data: {
+                    "CompID": CompID, "ibdocid": ibdocid, "comment": comment
+                },
+                dataType: 'html',
+                success: function (e) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalINdocupldContent').html(e);
+                    $('#myModalINdocupld').modal(options);
+                    $('#myModalINdocupld').modal('show');
+                    //$("#ajaxLoading").hide();
+                    //$('#GridDocUpload').html("");
+                    //$('#GridDocUpload').html(e);
+                },
+            })
+
+        }
+    });
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackDelURL = '/InboundInquiry/Uploaddelete';
+    $(function () {
+        $('#GridDocUpload tbody').on('click', '.DelDocumentFile', function () { //CR2018-19-07-001 Added by Nithya
+        //$(".DelDocumentFile").click(function () {
+            debugger
+            var $buttonClicked = $(this);
+            var Filename = $buttonClicked.attr('data-id');
+            var Filepath = $buttonClicked.attr('data-id1');
+            var uplddt = $buttonClicked.attr('data-id2');
+             var ibdocid =$('#ibdocid').val();
+            var options = { "backdrop": "static", keyboard: true };
+            var windowHeight = $(window).height();
+            var windowWidth = $(window).width();
+            var boxHeight = $('.modal-content').height();
+            var boxWidth = $('.modal').width();
+            var boxContent = $('.modal-content').width();
+            $("#ajaxLoading").show();
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_cntr_id = $('#cntr_id').val();
+            var p_str_status = $('#status').val();
+            var p_str_ib_doc_id = $('#ib_doc_id').val();
+            var p_str_ib_doc_id_to = $('#ib_doc_id_to').val();
+            var p_str_ref_no = $('#req_num').val();
+            var p_str_doc_dtFm = $('#ib_doc_dt_fm').val();
+            var p_str_doc_dtTo = $('#ib_doc_dt_to').val();
+            var p_str_eta_dtFm = $('#eta_dt_fm').val();
+            var p_str_eta_dtTo = $('#eta_dt_to').val();
+            var p_str_rcvd_frm = $('#vend_name').val();
+            var p_str_screen_title = $('#screentitle').val();
+            var p_str_itm_num = $('#ib_Itmdtl').val();
+            var p_str_itm_color = $('#ib_itm_color').val();
+            var p_str_itm_size = $('#ib_itm_size').val();
+            var p_str_itm_desc = $('#ib_itm_name').val();
+            var p_str_itm_type = $('#status').val();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/InboundInquiry/IB_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_cntr_id": p_str_cntr_id, "p_str_status": p_str_status, "p_str_ib_doc_id": p_str_ib_doc_id, "p_str_ib_doc_id_to": p_str_ib_doc_id_to, "p_str_ref_no": p_str_ref_no,
+                    "p_str_doc_dtFm": p_str_doc_dtFm,
+                    "p_str_doc_dtTo": p_str_doc_dtTo,
+                    "p_str_eta_dtFm": p_str_eta_dtFm,
+                    "p_str_eta_dtTo": p_str_eta_dtTo, "p_str_rcvd_frm": p_str_rcvd_frm, "p_str_screen_title": p_str_screen_title,
+                    "p_str_itm_num": p_str_itm_num, "p_str_itm_color": p_str_itm_color,
+                    "p_str_itm_size": p_str_itm_size, "p_str_itm_desc": p_str_itm_desc,
+                    "p_str_itm_type": p_str_itm_type
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+
+                },
+
+            });
+            debugger
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackDelURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmp_id": cmp_id, "Filename": Filename, "Filepath": Filepath, "uplddt": uplddt, "ibdocid": ibdocid },
+                datatype: "json",
+
+                success: function (data) {
+                    debugger
+                    $("#ajaxLoading").hide();
+                    $('#GridDocumentFile').html("");
+                    $('#GridDocumentFile').html(data);
+                    sweetAlert("", "File deleted Successfully!", "");
+                    $('#file_name').val('');
+                    var url = '@Url.Action("InboundInquiry", "InboundInquiry")';
+                    url += '?cmp=' + CompID;
+                    url += '&DateFm=' + ibdocid;
+                    window.location.href = url;
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+
+
+
+
+
+
+

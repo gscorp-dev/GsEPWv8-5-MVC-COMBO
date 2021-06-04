@@ -1,0 +1,296 @@
+﻿@model GsEPWv8_4_MVC.Model.VasInquiryModel
+@{
+    var TotalNumberoflst = Model.ListVasEntryGridDtl.Count();
+    var Ordercount = Model.ListVasEntryGridDtl.Count;
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 256%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+</style>
+@Html.HiddenFor(model => model.whs_id)
+
+<center>
+
+    <div class="box-body">
+        <div class="box-header">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-9" style="width:70%;">
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Cmp Id:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                           @Html.TextBoxFor(model => model.cmp_id, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "width:125px;" })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Vas Id:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.vas_id, new { @class = "form-control txtlbl", @maxlength = "50", @disabled = "true", @style = "width:125px;" })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Vas Date:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.ship_dt, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+                        </div>
+                    </div>
+                    @*<div class="col-xs-3" style="width:30%;">
+                        <table>
+                            <tr>
+                                <td rowspan=2>
+                                    <fieldset>
+                                        <legend>Report Selection</legend>
+
+                                        <table>
+
+                                            <tr>
+                                                <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Inquiry Report" name="radio1" /><b>VAS Report</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Post Report" name="radio1" /><b>VAS Supplies Usage(Detail)</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-left: 5px;font-size: 1.2em;"><input type="radio" value="Vas Post Report" name="radio1" /><b>VAS Supplies Usage(Summary)</b></td>
+                                            </tr>
+                                        </table>
+                                    </fieldset>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>*@
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-9">
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Status:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.Status, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;width: 120px;margin-left:-10px;">
+                            <label><b class="Lblmanual">SR#:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.so_num, new { @id = "Vassonum", @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;margin-left:-10px;">
+                            <label><b class="Lblmanual">FOB:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.DropDownListFor(model => model.whs_id, new SelectList(Model.ListwhsPickDtl, "whs_id", "whs_id"), new { @class = "form-control txtlbl", @style = "width: 122px;" })
+                            @*@Html.TextBoxFor(model => model.fob, new { @id = "ps_itm_name", @class = "form-control txtlbl", @maxlength = "80", @style = "width:125px;" })*@
+                        </div>
+                    </div>
+                    <div class="col-xs-9"></div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-9">
+                        <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Ship To Id:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.ship_to_id, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;width: 120px;margin-left:-10px;">
+                            <label><b class="Lblmanual">Cust Po#:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.cust_po_num, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:125px;" })
+
+                        </div>
+                        <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width: 120px;margin-left:-10px;">
+                            <label><b class="Lblmanual">Cust PO Dt:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.cust_po_dt, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", @style = "width:125px;" })
+                        </div>
+                    </div>
+                    <div class="col-xs-3"></div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12" style="margin-top:-8px;">
+                    <div class="col-xs-9">
+                        <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;width: 120px;">
+                            <label><b class="Lblmanual">Header Note:</b></label>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(model => model.notes, new { @class = "form-control txtlbl", @maxlength = "50", @style = "width:462px" })
+                        </div>
+                    </div>
+                    <div class="col-xs-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <table>
+        <tr>
+            <td>
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+            </td>
+            <td style="width: 64%;">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn-Email" type="button" style=" width:100px; text-align: right;" id="btnEmail" data-toggle="dropdown">
+                                    Email
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">PDF</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">WORD</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn-Print" type="button" id="btnPrint" style="width:105px;" data-toggle="dropdown">
+                                    Print/View
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" id="btnPDF" onclick="GetVasDetailPDF('');">PDF</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">WORD</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">EXCEL</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" id="btnClose" class="btn-Close" data-dismiss="modal">Close</button>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <br />
+</center>
+<div class="box" style="padding: 2px;">
+    <div id="table-Details">
+        @*<div style="overflow-y:auto; height:auto; width:auto;">*@
+        <table id="GridVasEntryEditDtl" class="table table-bordered table-striped" style="border:1px solid #121213;">
+            <thead class="grid_backcolor">
+                <tr>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Ln#</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:8%;">ServiceId</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:20%;">Description</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Qty</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Rate</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Amount</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Status</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:8%;">UoM</th>
+                    <th class="grid_header_backcolor" style="font-size:11px;width:33%;">Note</th>
+                </tr>
+            </thead>
+            <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                @for (int i = 0; i < Model.ListVasEntryGridDtl.Count; i++)
+                {
+                    var Amt = (Model.ListVasEntryGridDtl[i].Amt);
+                    var l_dec_Amt = Amt.ToString("F2");
+                    <tr id="@Model.ListVasEntryGridDtl[i].VasID" style="background-color:white;">
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.ListVasEntryGridDtl[i].dtl_line</td>
+                        @*<td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryDtl[i].cust_itm</td>*@
+                        <td style="font-size:10px; color:black; font-weight:bold;">@Html.HiddenFor(model => model.ListVasEntryGridDtl[i].cust_itm, new { @class = "Amt", @id = "itmnum_" + i, @style = "width:60px;text-align:right;" })@Model.ListVasEntryGridDtl[i].cust_itm</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryGridDtl[i].cust_itm_name</td>
+                        @*<td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListVasEntryDtl[i].ship_qty</td>*@
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListVasEntryGridDtl[i].ship_qty, new { @class = "Amt", @id = "qty_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                        @*<td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.ListVasEntryDtl[i].ship_itm_price</td>*@
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => model.ListVasEntryGridDtl[i].ship_itm_price, new { @class = "itmrate", @id = "price_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Html.TextBoxFor(model => l_dec_Amt, new { @id = "amt_" + i, @style = "width:60px;text-align:right;background-color:lightyellow;" })</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;text-align:left;width:60px;">@Model.ListVasEntryGridDtl[i].status</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListVasEntryGridDtl[i].ship_price_uom</td>
+                        <td style="font-size:10px; color:black; font-weight:bold;"><input type="text" name="note" style="width:347px;background-color:lightyellow;" value="@Model.ListVasEntryGridDtl[i].notes" /></td>                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Hidden("Count_Values", TotalNumberoflst)
+        @*</div>*@
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $(".itmrate").focusout(function () {      
+        var ImagesNewRowNumber = $("#Count_Values").val();
+        var _imagesCount = 0;
+        for (var i = 0; i < ImagesNewRowNumber; i++) {
+            var sum_i = $("#qty_" + i).val() * $("#price_" + i).val();
+            $("#amt_" + i).val(sum_i)
+            var qty = $("#qty_" + i).val();
+            var itmnum = $("#itmnum_" + i).val();
+            var price = $("#price_" + i).val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/VasInquiry/UpdRateTempDetails")',
+                data: {
+                    "p_str_qty": qty,
+                    "p_str_rate": price,
+                    "p_str_amt": sum_i,
+                    "p_str_itmnum": itmnum,
+                },
+                dataType: 'html',
+                success: function (e) {
+
+
+                },
+
+            })
+        }
+    });
+    $(".Amt").focusout(function () {   
+        var ImagesNewRowNumber = $("#Count_Values").val();
+        var _imagesCount = 0;
+        for (var i = 0; i < ImagesNewRowNumber; i++) {
+            var sum_i = $("#qty_" + i).val() * $("#price_" + i).val();
+            //alert(sum_i)
+            $("#amt_" + i).val(sum_i)
+            var newamount = $("#amt_" + i).val(sum_i);
+        }
+    });
+
+   
+    $('#GridVasEntryEditDtl').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true
+    });
+    $('#last_so_dt').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'Y-m-d'
+    });
+</script>
+
+
+

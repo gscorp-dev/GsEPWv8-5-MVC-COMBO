@@ -1,0 +1,273 @@
+﻿
+@model GsEPWv8_5_MVC.Model.CarrierModel
+@{
+    var gstrOption = @Model.option;
+}
+<style>
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style>
+    fieldset {
+        margin: 8px;
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+</style>
+<center>
+    @Html.HiddenFor(model => model.option, new { @id = "pstrOption" })
+    @Html.HiddenFor(model => model.objCarrierHdr.entered_by, new { @id = "pstrEnteredBy" })
+    @Html.HiddenFor(model => model.objCarrierHdr.entered_dt, new { @id = "pstrEnteredDt" })
+
+        <div class="modal-header">
+            @if (Model.option == "ADD")
+            {
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Carrer Master - Add</h4>
+                <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px">Close</button>
+                <button type="button" id="cmdCarrierSave" class="btn-Close" style="float:right;margin-top: -18px;background-color: #e38a2f">Save</button>
+            }
+            else if(Model.option == "DEL")
+            {
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Carrer Master - Delete</h4>
+                <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px">Close</button>
+                <button type="button" id="cmdCarrierSave" class="btn-Close" style="float:right;margin-top: -18px;background-color: #e38a2f">Delete</button>
+            }
+            else if (Model.option == "MOD")
+            {
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Carrer Master - Modify</h4>
+                <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" onclick="closeModal();" style="float:right;margin-top: -18px">Close</button>
+                <button type="button" id="cmdCarrierSave" class="btn-Close" style="float:right;margin-top: -18px;background-color: #e38a2f">Save</button>
+            }
+
+            else if (Model.option == "VIW")
+
+            {
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Carrer Master - View</h4>
+                <button type="button" id="btnClose" data-dismiss="modal" class="btn-Close" style="float:right;margin-top: -18px">Close</button>
+            }
+        </div>
+        <hr />
+
+        <div class="box-body">
+            
+                <div class="box-header" id="whs_master_add_hdr_sec">
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Carrer</label>
+                            </div>
+                            @if (Model.option == "MOD")
+                            {
+                            <div class="col-xs-3" style="text-align: right;padding-left:0%">
+                                @Html.TextBoxFor(model => model.objCarrierHdr.carrier_id, new { @class = "form-control txtlbl VLDTITMFILD", @disabled = "true", @maxlength = "10", @style = "font-size: 14px; font-family: verdana; width: 200px;background-color:lightyellow;", @id = "add_carrier_id" })
+                            </div>
+                            }
+                            else
+                            {
+                                <div class="col-xs-3" style="text-align: right;padding-left:0%">
+                                    @Html.TextBoxFor(model => model.objCarrierHdr.carrier_id, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "10", @style = "font-size: 14px; font-family: verdana; width: 200px;background-color:lightyellow;", @id = "add_carrier_id" })
+                                </div>
+                            }
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">CarrierName </label>
+                            </div>
+                            <div class="col-xs-7" style="text-align: right;padding-left:0%">
+                                @Html.TextBoxFor(model => model.objCarrierHdr.carrier_name, new { @class = "form-control txtlbl VLDTITMFILD", @maxlength = "50", @style = "font-size: 14px; font-family: verdana; width: 500px;", @id = "add_carrier_name" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Carrier Scac Code</label>
+                            </div>
+                            <div class="col-xs-3" style="text-align: right;padding-left:0%">
+                                @Html.TextBoxFor(model => model.objCarrierHdr.carrier_scac_code, new { @class = "form-control txtlbl", @maxlength = "10", @style = "font-size: 14px; font-family: verdana; width: 200px;background-color:lightyellow;", @id = "add_carrier_scac_code" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">ContactName</label>
+                            </div>
+                            <div class="col-xs-7" style="text-align: right;padding-left:0%">
+                                @Html.TextBoxFor(model => model.objCarrierHdr.contact_name, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 14px; font-family: verdana; width: 500px;background-color:lightyellow;", @id = "add_contact_name" })
+                            </div>
+                           
+                         
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Phone Number</label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;padding-left:0%">
+                                @Html.TextBoxFor(model => model.objCarrierHdr.contact_office_num, new { @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 14px; font-family: verdana; width: 200px;background-color:lightyellow;", @id = "add_contact_office_num" })
+                            </div>
+
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Cell Number</label>
+                            </div>
+                            <div class="col-xs-3" style="text-align: right;padding-left:0%">
+                                @Html.TextBoxFor(model => model.objCarrierHdr.contact_cell_num, new { @class = "form-control txtlbl", @maxlength = "20", @style = "font-size: 14px; font-family: verdana; width:200px", @id = "add_contact_cell_num" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Email</label>
+                            </div>
+                            <div class="col-xs-4" style="text-align: right;padding-left:0%">
+                                @Html.TextBoxFor(model => model.objCarrierHdr.contact_email, new { @class = "form-control txtlbl", @maxlength = "50", @style = "font-size: 14px; font-family: verdana; width:300px;", @id = "add_contact_email" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align: right;">
+                                <label class="Lblmanual">Alert Email</label>
+                            </div>
+                            <div class="col-xs-11" style="text-align: right;padding-left:0%">
+                                @Html.TextBoxFor(model => model.objCarrierHdr.carrier_alert_email, new { @class = "form-control txtlbl", @maxlength = "500", @style = "font-size: 14px; font-family: verdana;width:1000px", @id = "add_carrier_alert_email" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+
+                </div>
+    
+            </div>
+</center>
+<script type="text/javascript">
+   
+    $("#cmdCarrierSave").click(function () {
+        debugger
+        var pstrOption = $('#pstrOption').val();
+        var pstrCarrierId = $('#add_carrier_id').val();
+        var pstrCarrierScacCode = $('#add_carrier_scac_code').val();
+        var pstrCarrierName = $('#add_carrier_name').val();
+        var pstrContactName = $('#add_contact_name').val();
+        var pstrContactOfficeNum = $('#add_contact_office_num').val();
+        var pstrContactCellNum = $('#add_contact_cell_num').val();
+        var pstrContactEmail = $('#add_contact_email').val();
+        var pstrCarrierAlertEmail = $('#add_carrier_alert_email').val();
+        var pstrEnteredDt = $('#pstrEnteredDt').val();
+        var pstrEnteredBy = $('#pstrEnteredBy').val();
+        var pstrUpdatedDt = '';
+        var pstrUpdatedBy = '';
+        var pstrProcessId = '';
+        if (pstrCarrierId == "") {
+            swal("", "Please Enter the Carrer Id.", "");
+            $('#add_carrier_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if ((pstrCarrierName == "") && (pstrOption != "DEL")) {
+            swal("", "Please Enter the  Carrier Name.", "");
+            $('#add_carrier_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+       
+        else {
+
+            var objCarrierHdr = {};
+            objCarrierHdr.carrier_id = pstrCarrierId;
+            objCarrierHdr.carrier_scac_code = pstrCarrierScacCode;
+            objCarrierHdr.carrier_name = pstrCarrierName;
+            objCarrierHdr.contact_name = pstrContactName;
+            objCarrierHdr.contact_office_num = pstrContactOfficeNum;
+            objCarrierHdr.contact_cell_num = pstrContactCellNum;
+            objCarrierHdr.contact_email = pstrContactEmail;
+
+            objCarrierHdr.carrier_alert_email = pstrCarrierAlertEmail;
+            objCarrierHdr.entered_dt = pstrEnteredDt;
+            objCarrierHdr.entered_by = pstrEnteredBy;
+            objCarrierHdr.updated_dt = pstrUpdatedDt;
+            objCarrierHdr.updated_by = pstrUpdatedBy;
+            objCarrierHdr.process_id = pstrProcessId;
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/CarrierMaster/fnSaveCarrierMaster")',
+                data: JSON.stringify({
+                    "pstrOption": pstrOption, "pstrCarrierId": pstrCarrierId, "objCarrierHdr": objCarrierHdr
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (e) {
+                    if (e == "true") {
+                        swal({
+                            title: "",
+                            text: "Carrier " + pstrCarrierId + " Saved successfully.",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+                    function () {
+                        debugger
+                        setTimeout(function () {
+                            debugger
+
+                            $('#CarrerAdd').modal('hide');
+                            $.ajax({
+                                type: "get",
+                                url: "/CarrierMaster/fnGetCarrierDetails",
+                                data: {
+                                    "pstrCarrierId": "", "pstrCarrierName": ""
+                                },
+                                datatype: 'html',
+                                success: function (e) {
+                                    debugger
+                                    $("#ajaxloading").hide();
+                                  
+                                    $('#showtblCarrier').html("");
+                                    $('#showtblCarrier').html(e);
+
+                                },
+                            })
+                        });
+                    });
+
+                    }
+                    else {
+                        swal("", "Carrier is Already Exist", "");
+
+                    }
+                    $('#CarrierAdd').modal('hide');
+                },
+
+            })
+        }
+    });
+
+</script>
+
+    }
+@{Html.RenderPartial("~/Views/Shared/_Popupnotification.cshtml");}
+
+

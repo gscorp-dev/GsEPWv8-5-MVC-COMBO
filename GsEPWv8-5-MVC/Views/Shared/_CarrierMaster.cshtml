@@ -1,0 +1,177 @@
+﻿
+@model GsEPWv8_5_MVC.Model.CarrierModel
+@{
+    var RecCount = Model.lstCarrierList.Count;
+
+}
+
+@Html.HiddenFor(model => model.cmp_id)
+@Html.HiddenFor(model => model.tmp_cmp_id)
+<div class="box-body">
+    <div class="row">
+        <div class="modal-body" style="background:Scroll; margin-top:-14px; margin-left:-10px;">
+            <div>
+                <table>
+                    <tr>
+                        <td style="width:83%;">
+                            <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;">
+                                Total Records:
+                            </span>
+                            <label class="totalCount" style="text-align:left">
+                                @RecCount
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+
+                <table id="tblCarrier" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+
+                    <thead class="grid_backcolor">
+                        <tr>
+                            <<th class="grid_header_backcolor">Carrier Id</th>
+                            <th class="grid_header_backcolor">Carrier Scac Code</th>
+                            <th class="grid_header_backcolor">Carrier Name</th>
+                            <th class="grid_header_backcolor">Contact Name</th>
+                            <th class="grid_header_backcolor">Phone Number</th>
+                            <th class="grid_header_backcolor">Cell Number</th>
+                            <th class="grid_header_backcolor">Email</th>
+                            <th class="grid_header_backcolor">Alert Email</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:white">
+                        @for (int i = 0; i < Model.lstCarrierList.Count; i++)
+                        {
+
+
+                            <tr>
+
+                                <td>
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color:#59822c;" class="lnkCarrerView"  data_carrer_id="@Model.lstCarrierList[i].carrier_id" ><b>@Model.lstCarrierList[i].carrier_id</b></a>
+                                    <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="lnkCarrerEdit"  data_carrer_id="@Model.lstCarrierList[i].carrier_id" ><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                                    <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="lnkCarrerDelete"  data_carrer_id="@Model.lstCarrierList[i].carrier_id" ><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                </td>
+                               @* <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstCarrierList[i].carrier_id</td>*@
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstCarrierList[i].carrier_scac_code</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.lstCarrierList[i].carrier_name</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstCarrierList[i].contact_name</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstCarrierList[i].contact_office_num</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.lstCarrierList[i].contact_cell_num</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstCarrierList[i].contact_email</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstCarrierList[i].carrier_alert_email</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="footer" style="background-color:white;"></div>
+        </div>
+    </div>
+</div>
+
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="~/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".lnkCarrerDelete").click(function () {
+            debugger;
+            var $ViewbuttonClicked = $(this);
+            var lstrCarrerId = $ViewbuttonClicked.attr('data_carrer_id');
+            var lstrOption = 'DEL';
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '/CarrierMaster/ViewCarrierMaster',
+                contentType: "application/json; charset=utf-8",
+                data: { "pstrOption": lstrOption, "pstrCarrierId": lstrCarrerId },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#CarrierContent').html(data);
+                    $('#CarrierAdd').modal(options);
+                    $('#CarrierAdd').modal('show');
+                    $(document).ready(function () {
+                        $("#companytabsdelete :input").attr("disabled", true);
+                    });
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    $("#ajaxLoading").hide();
+                }
+            });
+        });
+        $(".lnkCarrerView").click(function () {
+            debugger;
+            var $ViewbuttonClicked = $(this);
+            var lstrCarrerId = $ViewbuttonClicked.attr('data_carrer_id');
+            var lstrOption = 'VIW';
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '/CarrierMaster/ViewCarrierMaster',
+                contentType: "application/json; charset=utf-8",
+                data: { "pstrOption": lstrOption, "pstrCarrierId": lstrCarrerId },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#CarrierContent').html(data);
+                    $('#CarrierAdd').modal(options);
+                    $('#CarrierAdd').modal('show');
+                    $(document).ready(function () {
+                        $("#companytabsdelete :input").attr("disabled", true);
+                    });
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    $("#ajaxLoading").hide();
+                }
+            });
+        });
+        $(".lnkCarrerEdit").click(function () {
+            debugger;
+            var $ViewbuttonClicked = $(this);
+            var lstrCarrerId = $ViewbuttonClicked.attr('data_carrer_id');
+            var lstrOption = 'MOD';
+            var options = { "backdrop": "static", keyboard: true };
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '/CarrierMaster/ViewCarrierMaster',
+                contentType: "application/json; charset=utf-8",
+                data: { "pstrOption": lstrOption, "pstrCarrierId": lstrCarrerId },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#CarrierContent').html(data);
+                    $('#CarrierAdd').modal(options);
+                    $('#CarrierAdd').modal('show');
+                    $(document).ready(function () {
+                        $("#companytabsdelete :input").attr("disabled", true);
+                    });
+                },
+                error: function () {
+                    swal("", "Dynamic content load failed.", "");
+                    $("#ajaxLoading").hide();
+                }
+            });
+        });
+    });
+</script>
+<script type="text/javascript">
+
+    $('#CarrerGrid').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+    });
+</script>
+
+

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RateMaster" targetNamespace="http://tempuri.org/RateMaster.xsd" xmlns:mstns="http://tempuri.org/RateMaster.xsd" xmlns="http://tempuri.org/RateMaster.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="RateMaster" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="RateMaster" msprop:Generator_UserDSName="RateMaster">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="rpt_ma_rate_eds" msprop:Generator_TableClassName="rpt_ma_rate_edsDataTable" msprop:Generator_TableVarName="tablerpt_ma_rate_eds" msprop:Generator_RowChangedName="rpt_ma_rate_edsRowChanged" msprop:Generator_TablePropName="rpt_ma_rate_eds" msprop:Generator_RowDeletingName="rpt_ma_rate_edsRowDeleting" msprop:Generator_RowChangingName="rpt_ma_rate_edsRowChanging" msprop:Generator_RowEvHandlerName="rpt_ma_rate_edsRowChangeEventHandler" msprop:Generator_RowDeletedName="rpt_ma_rate_edsRowDeleted" msprop:Generator_RowClassName="rpt_ma_rate_edsRow" msprop:Generator_UserTableName="rpt_ma_rate_eds" msprop:Generator_RowEvArgName="rpt_ma_rate_edsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="itm_num" msprop:Generator_ColumnVarNameInTable="columnitm_num" msprop:Generator_ColumnPropNameInRow="itm_num" msprop:Generator_ColumnPropNameInTable="itm_numColumn" msprop:Generator_UserColumnName="itm_num" type="xs:string" minOccurs="0" />
+              <xs:element name="type" msprop:Generator_ColumnVarNameInTable="columntype" msprop:Generator_ColumnPropNameInRow="type" msprop:Generator_ColumnPropNameInTable="typeColumn" msprop:Generator_UserColumnName="type" type="xs:string" minOccurs="0" />
+              <xs:element name="itm_name" msprop:Generator_ColumnVarNameInTable="columnitm_name" msprop:Generator_ColumnPropNameInRow="itm_name" msprop:Generator_ColumnPropNameInTable="itm_nameColumn" msprop:Generator_UserColumnName="itm_name" type="xs:string" minOccurs="0" />
+              <xs:element name="Price_uom" msprop:Generator_ColumnVarNameInTable="columnPrice_uom" msprop:Generator_ColumnPropNameInRow="Price_uom" msprop:Generator_ColumnPropNameInTable="Price_uomColumn" msprop:Generator_UserColumnName="Price_uom" type="xs:string" minOccurs="0" />
+              <xs:element name="List_price" msprop:Generator_ColumnVarNameInTable="columnList_price" msprop:Generator_ColumnPropNameInRow="List_price" msprop:Generator_ColumnPropNameInTable="List_priceColumn" msprop:Generator_UserColumnName="List_price" type="xs:decimal" minOccurs="0" />
+              <xs:element name="cmp_id" msprop:Generator_ColumnVarNameInTable="columncmp_id" msprop:Generator_ColumnPropNameInRow="cmp_id" msprop:Generator_ColumnPropNameInTable="cmp_idColumn" msprop:Generator_UserColumnName="cmp_id" type="xs:string" minOccurs="0" />
+              <xs:element name="cmp_name" msprop:Generator_ColumnVarNameInTable="columncmp_name" msprop:Generator_ColumnPropNameInRow="cmp_name" msprop:Generator_ColumnPropNameInTable="cmp_nameColumn" msprop:Generator_UserColumnName="cmp_name" type="xs:string" minOccurs="0" />
+              <xs:element name="tel" msprop:Generator_ColumnVarNameInTable="columntel" msprop:Generator_ColumnPropNameInRow="tel" msprop:Generator_ColumnPropNameInTable="telColumn" msprop:Generator_UserColumnName="tel" type="xs:string" minOccurs="0" />
+              <xs:element name="fax" msprop:Generator_ColumnVarNameInTable="columnfax" msprop:Generator_ColumnPropNameInRow="fax" msprop:Generator_ColumnPropNameInTable="faxColumn" msprop:Generator_UserColumnName="fax" type="xs:string" minOccurs="0" />
+              <xs:element name="city" msprop:Generator_ColumnVarNameInTable="columncity" msprop:Generator_ColumnPropNameInRow="city" msprop:Generator_ColumnPropNameInTable="cityColumn" msprop:Generator_UserColumnName="city" type="xs:string" minOccurs="0" />
+              <xs:element name="state_id" msprop:Generator_ColumnVarNameInTable="columnstate_id" msprop:Generator_ColumnPropNameInRow="state_id" msprop:Generator_ColumnPropNameInTable="state_idColumn" msprop:Generator_UserColumnName="state_id" type="xs:string" minOccurs="0" />
+              <xs:element name="post_code" msprop:Generator_ColumnVarNameInTable="columnpost_code" msprop:Generator_ColumnPropNameInRow="post_code" msprop:Generator_ColumnPropNameInTable="post_codeColumn" msprop:Generator_UserColumnName="post_code" type="xs:string" minOccurs="0" />
+              <xs:element name="addr_line1" msprop:Generator_ColumnVarNameInTable="columnaddr_line1" msprop:Generator_ColumnPropNameInRow="addr_line1" msprop:Generator_ColumnPropNameInTable="addr_line1Column" msprop:Generator_UserColumnName="addr_line1" type="xs:string" minOccurs="0" />
+              <xs:element name="last_so_dt" msprop:Generator_ColumnVarNameInTable="columnlast_so_dt" msprop:Generator_ColumnPropNameInRow="last_so_dt" msprop:Generator_ColumnPropNameInTable="last_so_dtColumn" msprop:Generator_UserColumnName="last_so_dt" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

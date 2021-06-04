@@ -1,0 +1,3180 @@
+﻿<div>
+    @model  GsEPWv8_5_MVC.Model.BillingInquiryModel
+
+    @{
+        ViewBag.Title = "BillingInquiry";
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+        var Ordercount = Model.ListBillingInquiry.Count;
+        decimal l_dec_tot_bill_amnt = 0;
+
+    }
+    @for (int j = 0; j < Model.ListBillingInquiry.Count(); j++)
+    {
+        var bill_amt = (Model.ListBillingInquiry[j].bill_amt);
+        decimal l_dec_bill_amnt = bill_amt;
+        if (l_dec_bill_amnt > 0)
+        {
+            l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+        }
+    }
+
+    <style>
+        .btn-PrintUPD {
+            /* background-color: #5ae77e; */
+            background-color: #009688;
+            height: 30px;
+            width: 151px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: bold;
+            color: White;
+            margin-left: 1%;
+        }
+
+        .btn-ConsolidatePrintUPD {
+            /* background-color: #5ae77e; */
+            background-color: #009688;
+            height: 30px;
+            width: 203px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: bold;
+            color: White;
+            margin-left: 1%;
+        }
+
+        div#ajaxLoading {
+            display: none;
+            width: 100px;
+            height: 100px;
+            position: fixed;
+            top: 30%;
+            left: 56%;
+            text-align: center;
+            margin-left: -50px;
+            margin-top: -100px;
+            z-index: 2;
+            overflow: auto;
+        }
+    </style>
+    <style type="text/css">
+        fieldset {
+            /*margin: 8px;*/
+            border: 1px solid silver;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        legend {
+            padding: 2px;
+        }
+
+        legend {
+            display: block;
+            width: 100%;
+            padding: 0;
+            margin-bottom: 0px;
+            font-size: 14px;
+            line-height: inherit;
+            color: #e81994;
+            border: 0;
+            font-weight: bold;
+            /*border-bottom: 1px solid #e5e5e5;*/
+        }
+
+        .fa {
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: 12px;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .ScreenTitle {
+            padding-left: 40px;
+            font-size: 18px;
+            font-family: Verdana;
+            font-weight: bold;
+            padding-top: 13px;
+        }
+    </style>
+    <link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+    <link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+
+    @Html.HiddenFor(model => model.tmp_cmp_id, new { @id = "g_str_tmp_cmp_id" })
+    @Html.HiddenFor(model => model.screentitle)
+    @using (Html.BeginForm("BillingInquiry", "BillingInquiry", FormMethod.Post, new { @id = "form", @class = "col-xs-12", @enctype = "multipart/form-data" }))
+    {
+
+        <div>
+            <table style="width: 100%;">
+                <tr>
+                    <td style="padding-top: 13px;width:10%;">
+
+                        @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                        {
+                            <a href="/DashBoard/DashBoard" id="btnDashboard">
+                                <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        }
+                        @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                        {
+                            <a href="/ECommDashBoard/ECommDashBoard" id="btnDashboard">
+                                <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        }
+                        @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                        {
+                            <a href="/DashBoardB2B/DashboardB2B" id="btnDashboard">
+                                <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        }
+                    </td>
+                    @*<td style="width: 60%" class="ScreenTitle">
+                            <h3>Doc Entry & Visibility</h3>
+                            Billing Inquiry And Analysis
+                        </td>*@
+                    @if (Model.screentitle == "BLInquiry")//CR_MVC_3PL_0317-001 Added By Nithya
+                {
+                        <td style="width: 60%" class="ScreenTitle">
+                            @*<h3>Doc Entry & Visibility</h3>*@
+                            Billing Inquiry & Analysis
+                            <input type="hidden" id="screenTitle" value="BLInquiry" />
+                        </td>
+                    }
+                    <td style="padding-top: 11px;width:30%;text-align:right">
+                       
+                        @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plpro.gensoftcorp.com")
+                        {
+                            <button type="button" id="btnClose" class="btn-Close">Close</button>
+                        }
+                        @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plecom.gensoftcorp.com")
+                        {
+                            <button type="button" id="btnCloseecom" class="btn-Close">Close</button>
+                        }
+                        @if (System.Configuration.ConfigurationManager.AppSettings["CompanyWebLink"].ToString() == "3plb2b.gensoftcorp.com")
+                        {
+                            <button type="button" id="btnCloseB2B" class="btn-Close">Close</button>
+                        }
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+        <div class="box box-default" style="box-shadow: 0 1px 1px white;">
+            <div class="box-header with-border" style="background-color:#1357d0; padding:5px; ">
+                <h6 class="box-title" style="color:white;font-size:16px; font-weight: bolder;">Filter Details</h6>
+                <div class="box-tools">
+
+                    <input type="button" class="btn btn-box-tool" style="color:white;font-size:11px; font-weight:bold;" value="(Click to hide...)" onclick="return change(this);" data-widget="collapse" title="(Click to hide...)" />
+
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                <table style="width:100%;padding-top:5px;">
+                                    <tr>
+                                        <td style="text-align: right;width: 7.4%">
+                                            <label><b class="Lblmanual">Cust Id </b></label>
+                                        </td>
+                                        <td style="width: 15%; padding-left: 1%;">
+                                            @if (Model.cmp_id == "" || Model.cmp_id == null)
+                                            {
+                                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), "---Select All---", new { @class = "form-control txtlbl" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @class = "form-control txtlbl" })
+                                            }
+                                        </td>
+                                        <td style="text-align: right; width: 3%;">
+                                            <label><b class="Lblmanual">Invoice </b></label>
+                                        </td>
+                                        <td style="width: 7%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.Bill_doc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                        </td>
+                                        <td style="text-align: right; width:3%;">
+                                            <label><b class="Lblmanual">Bill Type </b></label>
+                                        </td>
+                                        <td style="width: 7%; padding-left: 2%;">
+                                            @Html.DropDownListFor(model => model.Bill_type, new SelectList(Model.ListLookUpDtl, "name", "description"), new { @class = "form-control txtlbl" })
+                                        </td>
+
+
+                                    </tr>
+                                </table>
+                                <table style="width:100%;padding-top:5px;border-collapse: separate;border-spacing: 0px 0.5em;">
+                                    <tr>
+                                        <td style="text-align: right;width:17%; ">
+                                            <label><b class="Lblmanual">Invoice Dt Fm </b></label>
+                                        </td>
+                                        <td style="width:13%; padding-left: 1.6%;">
+                                            @Html.TextBoxFor(model => model.Bill_doc_dt_Fr, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                                        </td>
+                                        <td style="text-align: right; width:2%;">
+                                            <label><b class="Lblmanual"> To </b></label>
+                                        </td>
+                                        <td style="width:13%; padding-left: 1%;">
+                                            @Html.TextBoxFor(model => model.Bill_doc_dt_To, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "50", })
+                                        </td>
+
+                                        <td style="text-align:right;width: 18%;">
+                                            <button type="button" id="btnSearch" class="btn_search" style="margin-left: 1%;">Search </button>
+                                            <button type="button" id="btnClear" class="btn-Clear" style="margin-left: 1%;">Clear </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                </table>
+
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                @if (Model.is_company_user == "Y")
+                                {
+                                    <div class="container" style="margin-left:0px; width:100%;">
+                                        <fieldset style="margin-left: 29%;width: 65%;">
+                                            <legend>Form Action</legend>
+                                            <table style="margin-top:-5px;">
+                                                <tr>
+                                                    <td>
+
+                                                        @if (Model.is_company_user == "Y")
+                                                        {
+
+                                                            <div class="dropdown">
+                                                                <button class="btn-PrintUPD" type="button" id="btnPrint" data-toggle="dropdown">
+                                                                    Generate Bill
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                                                    <li role="presentation"><a role="menuitem" tabindex="-1" id="btnConsoleSTRGBill">Storage</a></li>
+                                                                    <li role="presentation"><a role="menuitem" tabindex="-1" id="btnConsoleInoutBill">In&Out</a></li>
+                                                                    <li role="presentation"><a role="menuitem" tabindex="-1" id="btnConsoleVasBill">Value Added Service</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </fieldset>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <fieldset>
+                                    <legend>Report Selection</legend>
+
+                                    <table style="margin-top:0px;">
+                                        <tr>
+                                            <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="BillDocument" name="radio1" checked /><b> Bill Document</b></td>
+                                            <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="BILL-DOC-SMRY" name="radio1"  /><b> Storage Bill By Style Summary</b></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="GridSummary" name="radio1" /><b> Grid Summary</b></td>  @*CR_3PL_MVC_BL_2018_0324_001  Modified by Soniya*@
+                                            <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="Consolidatedrpt" name="radio1" /><b>Consolidated Report</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="InoutBillByCubeRound" name="radio1" /><b> Inout Bill By Cube Rounded</b></td>  @*CR_3PL_MVC_BL_2018_0324_001  Modified by Soniya*@
+                                            <td style="padding-left: 10px;font-size: 1.2em;"><input type="radio" value="BillInvoice" name="radio1" /><b> Bill Invoice</b></td>
+                                        </tr>
+
+
+                                    </table>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <b style="color:blue;font-size: 12px; margin-left:5px;">Format</b>
+                                            </td>
+                                            <td>
+
+                                                <select id="id_format" class="btn-Format" type="button" style="margin-left:6px;width:70px; text-align:right " data-toggle="dropdown">
+                                                    <option>PDF</option>
+                                                    <option>XLS</option>
+
+
+                                                </select>
+
+                                            </td>
+                                            <td>
+                                                <b style="color:blue;font-size: 12px; margin-left:20px;">Mode</b>
+                                            </td>
+                                            <td>
+
+                                                <select id="id_mode" class="btn-Format" type="button" style="margin-left:6px; width:90px; text-align:right " data-toggle="dropdown">
+                                                    <option>VIEW</option>
+                                                    <option>EMAIL</option>
+
+                                                </select>
+
+
+                                            </td>
+                                            <td>
+
+                                                <button type="button" id="btnprocesss" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div id="showgrid" class="box-header" style="padding: 5px; ">
+            <div class="gridSummary">
+                <table>
+                    <tr>
+                        <td style="width:20%;text-align:right;padding-right:5%">
+                            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                                Total Records:
+                            </span>
+                            <label class="totalCount" style="text-align:left">
+                                @Ordercount
+                            </label>
+                        </td>
+                        <td style="width:20%;  ">
+                            <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                                Total Bill Amount:
+                            </span>
+                            <label class="totalCount" style="text-align:left">
+                                @l_dec_tot_bill_amnt.ToString("0.00")
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+            <hr class="break" />
+            <div class="box-body">
+
+
+                <div>
+                    <table id="GrdBillingInq" class="table table-bordered table-striped">
+
+                        <thead class="grid_backcolor">
+                            <tr>
+                                <th class="grid_header_backcolor">Print <input class="checkbox" id="ckbCheckAll" name="tblcheckbox" type="checkbox" /></th>
+                                <th class="grid_header_backcolor">Invoice</th>
+                                <th class="grid_header_backcolor">InvoiceDate</th>
+                                @if (Model.is_company_user == "Y")
+                                {
+                                    <th class="grid_header_backcolor">Action</th>
+                                }
+                                <th class="grid_header_backcolor">BillFromDate</th>
+                                <th class="grid_header_backcolor">BillToDate</th>
+                                <th class="grid_header_backcolor">Status</th>
+                                <th class="grid_header_backcolor">Bill Type</th>
+                                <th class="grid_header_backcolor">CustId</th>
+                                <th class="grid_header_backcolor">Customer Name</th>
+                                <th class="grid_header_backcolor">BillAmount</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.ListBillingInquiry.Count; i++)
+                            {
+                                var bill_amt = (Model.ListBillingInquiry[i].bill_amt);
+                                var l_dec_bill_amt = bill_amt.ToString("F2");
+                                <tr class="row-select">
+                                    <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.ListBillingInquiry[i].Bill_doc_id" /></td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;"><a href="javascript:void(0);" style="text-decoration:underline; color:#034af3;" class="BillDetail" data-id2="@Model.ListBillingInquiry[i].bill_type" data-id1="@Model.ListBillingInquiry[i].Bill_DOC_DT" data-id="@Model.ListBillingInquiry[i].Bill_doc_id">@Model.ListBillingInquiry[i].Bill_doc_id</a></td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].bill_doc_dt</td>
+                                    @if (Model.is_company_user == "Y")
+                                    {
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    if (@Model.ListBillingInquiry[i].status.Trim() == "P")
+                                                    {
+                                                    <td></td>
+                                                    <td></td>
+
+                                                    }
+                                                    else
+                                                    {
+                                                    <td>
+                                                        <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="BillPostDetail" data-id="@Model.ListBillingInquiry[i].Bill_doc_id" data-id1="@Model.ListBillingInquiry[i].cmp_id" data-id2="@Model.ListBillingInquiry[i].status" data-id3="@Model.ListBillingInquiry[i].bill_type"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Post</b></a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="BillDeleteDetail" data-id="@Model.ListBillingInquiry[i].Bill_doc_id" data-id1="@Model.ListBillingInquiry[i].cmp_id" data-id2="@Model.ListBillingInquiry[i].status" data-id3="@Model.ListBillingInquiry[i].bill_type"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                                    </td>
+                                                    }
+                                                </tr>
+                                            </table>
+                                        </td>
+
+                                    }
+                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].bill_pd_fm</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].bill_pd_to</td>
+                                    @*<td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].status</td>*@
+                                    @if (@Model.ListBillingInquiry[i].status.Trim() == "O")
+                                    {
+                                        <td style="font-size:12px; color:black; font-weight:bold;">OPEN</td>
+                                    }
+                                    else if (@Model.ListBillingInquiry[i].status.Trim() == "P")
+                                    {
+                                        <td style="font-size:12px; color:black; font-weight:bold;">POST</td>
+                                    }
+                                    @if (@Model.ListBillingInquiry[i].bill_type.Trim() == "NORM")
+                                    {
+                                        <td style="font-size:12px; color:black; font-weight:bold;">VAS</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].bill_type</td>
+                                    }
+                                    @*<td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].bill_type</td>*@
+                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].cust_id</td>
+                                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].cust_name</td>
+
+                                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@l_dec_bill_amt </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width: 1000px; height: 650px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" style="margin-top: -38px;" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="load" class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id='myModalSTRGBill' class='modal'>
+            <div class="modal-dialog">
+                <center>
+                    <div class="modal-content" style="width: 198%; ">
+
+                        <div id='myModalContentSTRGBill' style="width: 1140px;height: 655px;"></div>
+
+                    </div>
+                </center>
+            </div>
+
+        </div>
+        <div id='myModalInOutBill' class='modal'>
+            <div class="modal-dialog">
+                <center>
+                    <div class="modal-content" style="width: 198%; ">
+
+                        <div id='myModalContentInOutBill' style="width: 1140px;height: 655px;"></div>
+
+                    </div>
+                </center>
+            </div>
+
+        </div>
+        <div id='myModalConsolidateInOutBill' class='modal'>
+            <div class="modal-dialog">
+                <center>
+                    <div class="modal-content" style="width: 300%; left:-550px;">
+                        <div id='myModalContentConsolidateInOutBill' style="width: 100%;height: 1000px;"></div>
+
+                    </div>
+                </center>
+            </div>
+
+
+        </div>
+        <div id='myModalConsolidateVASBill' class='modal'>
+            <div class="modal-dialog">
+                <center>
+                    <div class="modal-content" style="width: 198%; ">
+                        <div id='myModalContentConsolidateVASBill' style="width: 1140px;height: 3000px;"></div>
+
+                    </div>
+                </center>
+            </div>
+
+
+        </div>
+
+
+        <div id='myModalConsolidateStorageBill' class='modal'>
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 300%; left:-550px;">
+                    <div id='myModalContentConsolidateStorageBill' style="width: 100%; height: 1000px;"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id='myModalVasBill' class='modal'>
+            <div class="modal-dialog">
+                <center>
+                    <div class="modal-content" style="width: 198%; ">
+
+                        <div id='myModalContentVasBill' style="width: 1140px;height: 655px;"></div>
+
+                    </div>
+                </center>
+            </div>
+
+        </div>
+        <div id='myModalEmail' class='modal'>
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 198%; left:-160px;">
+                    <div id='myModalEmailContent' style="width: 100%; height: 700px;"></div>
+                </div>
+            </div>
+
+        </div>
+    }
+    <div id='myModal' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 198%; left:-160px;">
+                <div id='myModalContent' style="width: 100%; height: 700px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div id='myModalLot' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 238%; left: -319px;">
+                <div id='myModallotContent' style="width: 100%; height: 950px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <div id='VasModal' class='modal'>
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 198%; left:-160px;">
+                <div id='myVASContent' style="width: 100%; height: 650px;"></div>
+            </div>
+        </div>
+
+    </div>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/DateTimePicker/jquery.datetimepicker.full.min.js"></script>
+    <script src="~/Scripts/sweetalert.js"></script>
+    <script type="text/javascript">
+
+        $('#search').click(function () {
+
+            $.ajax({
+                url: '@Url.Action("DisplaySearchResults", "Eship")',
+                type: 'GET',
+                cache: false,
+                success: function (data) {
+                    $("#load").html("");
+                    $("#load").html(data);
+                    $("#exampleModalLong").modal('show');
+
+                }
+            });
+        })
+        $("#btnSearch").click(function () {
+            var cmp_id = $("#cmp_id").val();
+            if (cmp_id == "") {
+                //not2("Please SELECT Cmp_id.")
+                sweetAlert("", "Please SELECT Cmp_id.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                debugger
+
+                var p_str_cmp_id = $('#cmp_id').val();
+                var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-03-10-001
+                var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                $("#ajaxLoading").show();
+                $.ajax({
+                    type: "GET",
+                    url: "/BillingInquiry/GetSearchInboundInquiry",
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To,
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        $("#ajaxLoading").hide();
+                        $('#showgrid').html("");
+                        $('#showgrid').html(e);
+                    },
+                })
+
+            }
+        });
+        function change(el) {
+            if (el.value === "(Click to hide...)")
+                el.value = "(Click to show...)";
+            else
+                el.value = "(Click to hide...)";
+        }
+        $('#Bill_doc_dt_Fr').datetimepicker({
+            timepicker: false,
+            step: 15, format: 'm-d-Y'
+        });
+        $('#Bill_doc_dt_To').datetimepicker({
+            timepicker: false,
+            step: 15, format: 'm-d-Y'
+        });
+
+        $(function () {
+            //$('#GrdBillingInq').DataTable()
+            $('#GrdBillingInq').DataTable({
+                "paging": true,
+                "pageLength": 50,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "scrollCollapse": true,
+                "sScrollY": "460px",
+                "sScrollX": "100%",
+            })
+        })
+
+        $(document).ready(function () {
+            $("btnClear").each(function () {
+                $(this).val("");
+            });
+        });
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackURL = '/BillingInquiry/Billingdtl';
+        debugger
+        $(function () {
+            $(".BillDetail").click(function () {
+                var $buttonClicked = $(this);
+                var BilldocId = $buttonClicked.attr('data-id');
+                var Billdocdate = $buttonClicked.attr('data-id1');
+                var BillType = $buttonClicked.attr('data-id2');
+                var p_str_viewmode = "View";
+                var datefrom = $("#Bill_doc_dt_Fr").val();
+                var dateto = $("#Bill_doc_dt_To").val();
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto, "BillType": BillType },
+                    datatype: "json",
+                    success: function (data) {
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal(options);
+                        $('#myModal').modal('show');
+                    },
+                    error: function () {
+                        //alert("Dynamic content load failed.");
+                        sweetAlert("", "Dynamic content load failed.", "");
+                    }
+                });
+            });
+            $("#closbtn").click(function () {
+                $('#myModal').modal('hide');
+            });
+        });
+    </script>
+
+    <script>
+
+        $(function () {
+            //$('#GrdBillingInq').DataTable()
+            $('#BillingInqRcvdDtl').DataTable({
+                //'paging': true,
+                //'lengthChange': false,
+                //'searching': false,
+                //'ordering': true,
+                //'info': true,
+                //'autoWidth': true
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                // "scrollY": "280px",
+                "scrollCollapse": true,
+                //true
+                //"sDom": 't',
+                "sScrollY": "460px",
+                "sScrollX": "100%",
+            })
+        })
+
+
+        @*$("#btnDashboard").click(function () {
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })*@
+        $("#btnDashboard").click(function () {
+            var p_str_cmpid = $('#cmp_id').val();
+            var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+
+        })
+        $("#btnClose").click(function () {
+            // CR_3PL_MVC_COMMON_2018_0326_001
+            var p_str_cmpid = $('#cmp_id').val();
+            var url = '@Url.Action("Dashboard", "Dashboard")';
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+            // CR_3PL_MVC_COMMON_2018_0326_001
+
+        })
+
+        $("#btnCloseecom").click(function () {
+            // CR_3PL_MVC_COMMON_2018_0326_001
+            var p_str_cmpid = $('#cmp_id').val();
+            var url = '@Url.Action("ECommDashBoard", "ECommDashBoard")';
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+            // CR_3PL_MVC_COMMON_2018_0326_001
+
+        })
+        
+        $("#btnCloseB2B").click(function () {
+            // CR_3PL_MVC_COMMON_2018_0326_001
+            var p_str_cmpid = $('#cmp_id').val();
+            var url = '@Url.Action("DashboardB2B", "DashboardB2B")';
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+            // CR_3PL_MVC_COMMON_2018_0326_001
+
+        })
+    </script>
+
+    <script>
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackAddURL = '/BillingInquiry/GenerateStrgBill';
+        $("#btnSTRGBill").click(function () {
+            debugger;
+            $("#ajaxLoading").show();
+            var $buttonClicked = $(this);
+            var cmpid = $('#cmp_id').val();
+            var datefrom = $("#Bill_doc_dt_Fr").val(); //CR 20180308_01 Added by Soniya
+            var dateto = $("#Bill_doc_dt_To").val(); //CR 20180308_01 Added by Soniya
+            var options = { "backdrop": "static", keyboard: true };
+
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-03-10-001
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+            if (p_str_cmp_id == "") {
+                swal("", "please select the company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackAddURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "datefrom": datefrom, "dateto": dateto },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentSTRGBill').html(data);
+                    $('#myModalSTRGBill').modal(options);
+                    $('#myModalSTRGBill').modal('show');
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackAddURLINOUT = '/BillingInquiry/LoadGenerateInoutBillDetails';
+
+        $("#btnInoutBill").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var cmpid = $('#cmp_id').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-03-10-001
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+            if (p_str_cmp_id == "") {
+                swal("", "please select the company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackAddURLINOUT,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "p_str_screen_title": p_str_screen_title },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentInOutBill').html(data);
+                    $('#myModalInOutBill').modal(options);
+                    $('#myModalInOutBill').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoading").hide();
+
+                }
+            });
+        });
+        var cmp_id = $("#cmp_id").val();
+        var VASDetailPostBackAddURL = '/BillingInquiry/GenerateVASBill';
+        $("#btnVasBill").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var cmpid = $('#cmp_id').val();
+            var p_str_scn_id = $('#screentitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-03-10-001
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+            if (p_str_cmp_id == "") {
+                swal("", "please select the company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: VASDetailPostBackAddURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "p_str_scn_id": p_str_scn_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+
+                    $('#myModalContentVasBill').html(data);
+                    $('#myModalVasBill').modal(options);
+                    $('#myModalVasBill').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoading").hide();
+
+                }
+            });
+        });
+    </script>
+
+    <script>
+
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackAddURLInoutConsole = '/BillingInquiry/LoadGenerateConsolidateInoutBillDetails';
+
+        $("#btnConsoleInoutBill").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var cmpid = $('#cmp_id').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-03-10-001
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+            if (p_str_cmp_id == "") {
+                swal("", "please select the company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackAddURLInoutConsole,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "p_str_screen_title": p_str_screen_title },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentConsolidateInOutBill').html(data);
+                    $('#myModalConsolidateInOutBill').modal(options);
+                    $('#myModalConsolidateInOutBill').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoading").hide();
+
+                }
+            });
+        });
+    </script>
+    <script>
+
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackAddURLConsole = '/BillingInquiry/LoadGenerateConsolidateVasDetails';
+
+        $("#btnConsoleVasBill").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var cmpid = $('#cmp_id').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-03-10-001
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+            if (p_str_cmp_id == "") {
+                swal("", "please select the company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackAddURLConsole,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "p_str_screen_title": p_str_screen_title },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentConsolidateVASBill').html(data);
+                    $('#myModalConsolidateVASBill').modal(options);
+                    $('#myModalConsolidateVASBill').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoading").hide();
+
+                }
+            });
+        });
+    </script>
+
+    <script>
+
+        var cmp_id = $("#cmp_id").val();
+        var TeamDetailPostBackAddURLStorageConsole = '/BillingInquiry/LoadGenerateConsolidateStorageDetails';
+
+        $("#btnConsoleSTRGBill").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var cmpid = $('#cmp_id').val();
+            var p_str_screen_title = $('#screenTitle').val();
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-03-10-001
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+            if (p_str_cmp_id == "") {
+                swal("", "please select the company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                },
+
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackAddURLStorageConsole,
+                contentType: "application/json; charset=utf-8",
+                data: { "cmpid": cmpid, "p_str_screen_title": p_str_screen_title },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContentConsolidateStorageBill').html(data);
+                    $('#myModalConsolidateStorageBill').modal(options);
+                    $('#myModalConsolidateStorageBill').modal('show');
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoading").hide();
+
+                }
+            });
+        });
+    </script>
+    <div>
+        <script>
+            var cmp_id = $("#cmp_id").val();
+            var DeletePostBackURL = '/BillingInquiry/Billingdtl';
+            $(function () {
+                $(".BillDeleteDetail").click(function () {
+                    debugger
+                    var $buttonClicked = $(this);
+
+                    var BilldocId = $buttonClicked.attr('data-id');
+                    var Billdocdate = $buttonClicked.attr('data-id3');
+                    var p_str_viewmode = "D";
+                    var datefrom = $("#Bill_doc_dt_Fr").val(); //CR 20180308_01 Added by Soniya
+                    var dateto = $("#Bill_doc_dt_To").val(); //CR 20180308_01 Added by Soniya
+                    var options = { "backdrop": "static", keyboard: true };
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                    var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-03-10-001
+                    var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                    var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                    if (p_str_cmp_id == "") {
+                        swal("", "please select the company.", "");
+                        $('#cmp_id').focus();
+                        $('body,html').animate({ scrolltop: 0 }, 0);
+                        er = 1;
+                        return false;
+                    }
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To
+                        },
+
+                        dataType: "json",
+                        success: function (e) {
+                            //alert(e)
+                        },
+                    });
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto },
+
+                        datatype: "json",
+                        success: function (data) {
+                            $("#ajaxLoading").hide();
+
+                            $('#myModalContent').html(data);
+                            $('#myModal').modal(options);
+                            $('#myModal').modal('show');
+                        },
+                        error: function () {
+                            //alert("Dynamic content load failed.");
+                            $("#ajaxLoading").hide();
+
+                            sweetAlert("", "Dynamic content load failed.", "");
+                        }
+                    });
+
+
+                });
+                var DeletePostBackURL = '/BillingInquiry/Billingdtl';
+                $(".BillViewDetail").click(function () {
+                    var $buttonClicked = $(this);
+
+                    var BilldocId = $buttonClicked.attr('data-id');
+                    var Billdocdate = $buttonClicked.attr('data-id3');
+                    var p_str_viewmode = "V";
+                    var options = { "backdrop": "static", keyboard: true };
+                    $.ajax({
+                        type: "GET",
+                        url: '/BillingInquiry/Billingdtl',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode },
+
+                        datatype: "json",
+                        success: function (data) {
+                            $('#myModalContent').html(data);
+                            $('#myModal').modal(options);
+                            $('#myModal').modal('show');
+                        },
+                        error: function () {
+                            //alert("Dynamic content load failed.");
+                            sweetAlert("", "Dynamic content load failed.", "");
+                        }
+                    });
+                });
+                $(".BillPostDetail").click(function () {
+                    var $buttonClicked = $(this);
+
+                    var BilldocId = $buttonClicked.attr('data-id');
+                    var Billdocdate = $buttonClicked.attr('data-id3');
+                    var p_str_viewmode = "P";
+                    var datefrom = $("#Bill_doc_dt_Fr").val(); //CR20180515-001 Added by Nithya
+                    var dateto = $("#Bill_doc_dt_To").val();
+                    var options = { "backdrop": "static", keyboard: true };
+
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto }, //CR20180515-001 Added by Nithya
+
+                        datatype: "json",
+                        success: function (data) {
+                            $('#myModalContent').html(data);
+                            $('#myModal').modal(options);
+                            $('#myModal').modal('show');
+                        },
+                        error: function () {
+                            //alert("Dynamic content load failed.");
+                            sweetAlert("", "Dynamic content load failed.", "");
+                        }
+                    });
+                });
+                $("#closbtn").click(function () {
+                    $('#myModal').modal('hide');
+                });
+            });
+        </script>
+    </div>
+    <div>
+        <div>
+            <div>
+                <div>
+                    <script>
+
+                        $("#btnprocesss").click(function () {
+                            debugger
+                            var getFormat = $('#id_format').find(":selected").text();
+                            var getMode = $('#id_mode').find(":selected").text();
+                            var var_name = $("input[name='radio1']:checked").val();
+
+                            if (getFormat == 'PDF' && getMode == 'VIEW') {
+                                debugger
+                                var cmp_id = $("#cmp_id").val();
+                                if (cmp_id == "") {
+                                    //not2("Please SELECT Cmp_id.")
+                                    sweetAlert("", "Please SELECT Cmp_id.", "");
+                                    $('#cmp_id').focus();
+                                    $('body,html').animate({ scrollTop: 0 }, 0);
+                                    er = 1;
+                                    return false;
+                                }
+                                var type = "PDF";
+                                var SelectedRow = [];
+                                var checkboxIDArray = [];
+                                var var_name = $("input[name='radio1']:checked").val();
+                                if (var_name == "GridSummary") {
+                                    var p_str_radio = var_name;
+                                    var p_str_cmp_id = $('#cmp_id').val();
+                                    var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                    var p_str_Bill_type = $('#Bill_type').val();
+                                    var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                    var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                    $("#ajaxLoading").show();
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/BillingInquiry/ShowReportResult",
+                                        contentType: "application/json; charset=utf-8",
+                                        data: {
+                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                            "type": type
+                                        },
+                                        datatype: "json",
+                                        success: function (data) {
+                                            debugger
+                                            if (data == 1) {
+                                                sweetAlert("", "No Records Found.", "");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                            else {
+                                                $("#ajaxLoading").hide();
+                                                window.open('ShowReport?p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id +
+                                                    '&p_str_Bill_doc_id=' + p_str_Bill_doc_id + '&p_str_Bill_type=' + p_str_Bill_type +
+                                                    '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+                                                return false;
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("Dynamic content load failed.");
+                                            $("#ajaxLoading").hide();
+                                        }
+                                    });
+
+                                }
+                                else if (var_name == "Consolidatedrpt") {
+                                    var SelectedRow = [];
+                                    var checkboxIDArray = [];
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                    $("input[name='tblcheckbox']:checked").each(function () {
+                                        var check = $(this);
+                                        if (check.is(':checked')) {
+                                            checkboxIDArray.push(check.attr('id'));
+                                            SelectedRow.push(check.val());
+                                        }
+                                    });
+                                    var Count = $("input[name='tblcheckbox']:checked").length;
+                                    if (Count > 0) {
+                                        var SelectdID = '';
+                                        $.each(SelectedRow, function (i, v) {
+
+                                            if (SelectdID == '')
+                                                SelectdID = v;
+                                            else
+                                                SelectdID = SelectdID + ',' + v;
+                                        });
+                                        var SelectedRow = [];
+                                        var checkboxIDArray = [];
+                                        var var_name = "";
+                                        var p_str_radio = var_name;
+                                        var p_str_cmp_id = $('#cmp_id').val();
+                                        var p_str_Bill_doc_id = SelectdID;
+                                        var p_str_Bill_type = $('#Bill_type').val();
+                                        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                        var SelectdID = SelectdID;
+                                        var type = "PDF";
+                                        var cmp_id = $("#cmp_id").val();
+                                        if (cmp_id == "") {
+                                            sweetAlert("", "Please Select Cmp_id.", "");
+                                            $('#cmp_id').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "ALL") {
+                                            sweetAlert("", "Please Select Bill type.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "STRG") {
+                                            sweetAlert("", "No Consolidated Bill For Storage.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        $("input[name='tblcheckbox']").prop("checked", false);
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/BillingInquiry/ShowConsolidateReportResult",
+                                            contentType: "application/json; charset=utf-8",
+                                            data: {
+                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                "type": type
+                                            },
+                                            datatype: "json",
+                                            success: function (data) {
+                                                debugger
+
+                                                if (data == 1) {
+                                                    sweetAlert("", "No Records Found.", "");
+
+                                                    $("#ajaxLoading").hide();
+                                                }
+                                                else {
+                                                    $("#ajaxLoading").hide();
+                                                    window.open('/BillingInquiry/ShowConsolidateReport?p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+                         + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+                                                    return false;
+                                                }
+                                            },
+                                            error: function () {
+                                                alert("Dynamic content load failed.");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                        });
+
+                                    }
+                                    else {
+                                        var p_str_radio = var_name;
+                                        var p_str_cmp_id = $('#cmp_id').val();
+                                        var p_str_Bill_doc_id = SelectdID;
+                                        var p_str_Bill_type = $('#Bill_type').val();
+                                        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                        var SelectdID = SelectdID;
+                                        var type = "PDF";
+                                        var cmp_id = $("#cmp_id").val();
+                                        if (cmp_id == "") {
+                                            sweetAlert("", "Please Select Cmp_id.", "");
+                                            $('#cmp_id').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "ALL") {
+                                            sweetAlert("", "Please Select Bill type.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "STRG") {
+                                            sweetAlert("", "No Consolidated Bill For Storage.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/BillingInquiry/ShowConsolidateReportResult",
+                                            contentType: "application/json; charset=utf-8",
+                                            data: {
+                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                "type": type
+                                            },
+                                            datatype: "json",
+                                            success: function (data) {
+                                                debugger
+
+                                                if (data == 1) {
+                                                    sweetAlert("", "No Records Found.", "");
+                                                    $("#ajaxLoading").hide();
+                                                }
+                                                else {
+                                                    $("#ajaxLoading").hide();
+                                                    window.open('/BillingInquiry/ShowConsolidateReport?p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+                         + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+                                                    return false;
+                                                }
+                                            },
+                                            error: function () {
+                                                alert("Dynamic content load failed.");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                        });
+
+                                    }
+                                    //}
+                                }
+                                else {
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                    if (numberOfCheckboxes == 0) {
+
+                                        sweetAlert("", "Please select the Record to Print.", "");
+                                    }
+
+                                    else {
+                                        $("input[name='tblcheckbox']:checked").each(function () {
+                                            var check = $(this);
+                                            if (check.is(':checked')) {
+                                                checkboxIDArray.push(check.attr('id'));
+                                                SelectedRow.push(check.val());
+                                            }
+                                        });
+                                        var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                        if (Count == 1) {
+                                            var SelectdID = '';
+                                            $.each(SelectedRow, function (i, v) {
+
+                                                if (SelectdID == '')
+                                                    SelectdID = v;
+                                                else
+                                                    SelectdID = SelectdID + ',' + v;
+
+                                            });
+                                            var Count = $("input[name='tblcheckbox']:checked").length;
+                                            if (Count == 1) {
+                                                var SelectedID = '';
+                                                $.each(SelectedRow, function (i, v) {
+
+                                                    if (SelectedID == '')
+                                                        SelectedID = v;
+                                                    else
+                                                        SelectedID = SelectedID + ',' + v;
+
+                                                });
+                                                var var_name = $("input[name='radio1']:checked").val();
+                                                var p_str_radio = var_name;
+                                                var p_str_cmp_id = $('#cmp_id').val();
+                                                var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                                var p_str_Bill_type = $('#Bill_type').val();
+                                                var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                                var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                                if (var_name == "BillInvoice") {
+                                                    $.ajax({
+                                                        url: '@Url.Action("CheckStatus", "BillingInquiry")',
+                                                        type: 'GET',
+                                                        dataType: 'json',
+                                                        data: {
+                                                            SelectedID: SelectedID, p_str_cmp_id: p_str_cmp_id, p_str_radio: p_str_radio, p_str_Bill_doc_id: p_str_Bill_doc_id, p_str_Bill_type: p_str_Bill_type, p_str_doc_dt_Fr: p_str_doc_dt_Fr, p_str_doc_dt_To: p_str_doc_dt_To
+
+                                                        },
+                                                        cache: false,
+                                                        success: function (data) {
+                                                            if (data == "P") {
+
+                                                                $("input[name='tblcheckbox']").prop("checked", false);
+                                                                window.open("/BillingInquiry/ShowReport?p_str_radio=" + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+                                       + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+                                                                return false;
+
+                                                            }
+                                                            else if (data == "O") {
+                                                                sweetAlert("", "Bill DocNum Not Posted.", "");
+                                                            }
+                                                            $("#report_selection").val('');
+                                                        }
+                                                    });
+                                                }
+                                                if (var_name == "BillDocument") {
+                                                    $.ajax({
+                                                        type: "GET",
+                                                        url: "/BillingInquiry/ShowReportResult",
+                                                        contentType: "application/json; charset=utf-8",
+                                                        data: {
+                                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                            "type": type
+                                                        },
+                                                        datatype: "json",
+                                                        success: function (data) {
+                                                            debugger
+                                                            if (data == 1) {
+                                                                sweetAlert("", "No Records Found.", "");
+                                                                $("#ajaxLoading").hide();
+                                                            }
+                                                            else {
+                                                                $("#ajaxLoading").hide();
+                                                                window.open("/BillingInquiry/ShowReport?p_str_radio=" + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+                              + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+                                                                return false;
+                                                            }
+                                                        },
+                                                        error: function () {
+                                                            alert("Dynamic content load failed.");
+                                                            $("#ajaxLoading").hide();
+                                                        }
+                                                    });
+
+                                                }
+
+                                                if (var_name == "InoutBillByCubeRound") {
+                                                    debugger
+                                                    var p_str_cmp_id = $('#cmp_id').val();
+                                                    window.location.replace('@Url.Action("XlsInoutBillByCubeRoundComp")?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + SelectedID, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                                                }
+
+                                                if (var_name == "Consolidatedrpt") {
+
+                                                    $.ajax({
+                                                        type: "GET",
+                                                        url: "/BillingInquiry/ShowReportResult",
+                                                        contentType: "application/json; charset=utf-8",
+                                                        data: {
+                                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                            "type": type
+                                                        },
+                                                        datatype: "json",
+                                                        success: function (data) {
+                                                            debugger
+                                                            if (data == 1) {
+                                                                sweetAlert("", "No Records Found.", "");
+                                                                $("#ajaxLoading").hide();
+                                                            }
+                                                            else {
+                                                                $("#ajaxLoading").hide();
+                                                                window.open('/BillingInquiry/ShowConsolidateReport?p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+                       + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+                                                                return false;
+                                                            }
+                                                        },
+                                                        error: function () {
+                                                            alert("Dynamic content load failed.");
+                                                            $("#ajaxLoading").hide();
+                                                        }
+                                                    });
+
+                                                }
+
+                                            }
+                                            else {
+                                                sweetAlert("", "Please select One Record to Print.", "");
+                                                return false;
+                                                $("input:checkbox").each(function () {
+                                                    var check = $(this);
+                                                    if (check.is(':checked')) {
+                                                        this.checked = !this.checked;
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        else {
+                                            sweetAlert("", "Please select One Record to Print.", "");
+                                            return false;
+                                        }
+                                    }
+                                }
+                            }
+
+
+
+
+                            if (getFormat == 'XLS' && getMode == 'VIEW') {
+                                debugger
+                                var cmp_id = $("#cmp_id").val();
+                                if (cmp_id == "") {
+                                    //not2("Please SELECT Cmp_id.")
+                                    sweetAlert("", "Please SELECT Cmp_id.", "");
+                                    $('#cmp_id').focus();
+                                    $('body,html').animate({ scrollTop: 0 }, 0);
+                                    er = 1;
+                                    return false;
+                                }
+                                var type = "XLS";
+                                var SelectedRow = [];
+                                var checkboxIDArray = [];
+                                var var_name = $("input[name='radio1']:checked").val();
+                                if (var_name == "GridSummary") {
+                                    var p_str_radio = var_name;
+                                    var p_str_cmp_id = $('#cmp_id').val();
+                                    var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                    var p_str_Bill_type = $('#Doc_Type').val();
+                                    var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                    var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/BillingInquiry/ShowReport",
+                                        contentType: "application/json; charset=utf-8",
+                                        data: {
+                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                            "type": type
+                                        },
+                                        datatype: "json",
+                                        success: function (data) {
+                                            debugger
+                                            if (data == 1) {
+                                                sweetAlert("", "No Records Found.", "");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                            else {
+                                                $("#ajaxLoading").hide();
+                                                window.location.replace("/BillingInquiry/ShowReport?p_str_radio=" + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+              + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type)
+
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("Dynamic content load failed.");
+                                            $("#ajaxLoading").hide();
+                                        }
+                                    });
+
+
+                                }
+                                else if (var_name == "InoutBillByCubeRound") {
+                                    debugger
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                    if (numberOfCheckboxes == 0) {
+
+
+                                        sweetAlert("", "Please select the Record to Print.", "");
+                                    }
+
+                                    else {
+                                        $("input[name='tblcheckbox']:checked").each(function () {
+                                            var check = $(this);
+                                            if (check.is(':checked')) {
+                                                checkboxIDArray.push(check.attr('id'));
+                                                SelectedRow.push(check.val());
+                                            }
+                                        });
+
+                                        var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                        if (Count == 1) {
+                                            var SelectdID = '';
+                                            $.each(SelectedRow, function (i, v) {
+
+                                                if (SelectdID == '')
+                                                    SelectdID = v;
+                                                else
+                                                    SelectdID = SelectdID + ',' + v;
+
+                                            });
+
+
+
+                                            var p_str_cmp_id = $('#cmp_id').val();
+
+
+                                            window.location.replace('@Url.Action("XlsInoutBillByCubeRoundComp")?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + SelectdID,
+                                                "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                                        }
+
+                                    }
+
+                                }
+
+                                else if ((var_name == "BillDocument") || (var_name == "BILL-DOC-SMRY")) {
+                                    debugger
+
+                                    var p_str_radio = var_name;
+                                    var p_str_cmp_id = $('#cmp_id').val();
+                                   
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+
+
+
+                                    if (numberOfCheckboxes == 0) {
+                                        sweetAlert("", "Please select the Record to Print.", "");
+                                    }
+                                    else {
+                                        $("input[name='tblcheckbox']:checked").each(function () {
+                                            var check = $(this);
+                                            if (check.is(':checked')) {
+                                                checkboxIDArray.push(check.attr('id'));
+                                                SelectedRow.push(check.val());
+                                            }
+                                        });
+                                        
+                                        var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                       
+
+                                        if (Count == 1) {
+                                            var l_str_bill_doc_id = '';
+                                            $.each(SelectedRow, function (i, v) {
+
+                                                if (l_str_bill_doc_id == '')
+                                                    l_str_bill_doc_id = v;
+                                                else
+                                                    l_str_bill_doc_id = l_str_bill_doc_id + ',' + v;
+
+                                            });
+                                            if ((var_name == "BILL-DOC-SMRY"))
+                                            {
+                                                $("input[name='tblcheckbox']:checked").each(function () {
+                                                    var check = $(this);
+                                                    if (check.is(':checked')) {
+                                                        var p_str_bill_type = $(this).attr('data_bill_type');
+                                                        if (p_str_bill_type != "STRG") {
+                                                            sweetAlert("", "Invalid Bill Type", "");
+                                                            $("#ajaxLoading").hide();
+                                                            return false;
+                                                        }
+                                                        else {
+                                                            window.location.replace('/BillingInquiry/ViewXLSBill?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + l_str_bill_doc_id + '&p_str_radio=' + p_str_radio, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                            else
+                                            {
+                                                window.location.replace('/BillingInquiry/ViewXLSBill?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + l_str_bill_doc_id + '&p_str_radio=' + p_str_radio, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                                            }
+                                           
+
+                                           
+                                        }
+
+                                    }
+
+                                }
+
+                                else if (var_name == "Consolidatedrpt") {
+                                    var SelectedRow = [];
+                                    var checkboxIDArray = [];
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                    $("input[name='tblcheckbox']:checked").each(function () {
+                                        var check = $(this);
+                                        if (check.is(':checked')) {
+                                            checkboxIDArray.push(check.attr('id'));
+                                            SelectedRow.push(check.val());
+                                        }
+                                    });
+                                    var Count = $("input[name='tblcheckbox']:checked").length;
+                                    if (Count > 0) {
+                                        var SelectdID = '';
+                                        $.each(SelectedRow, function (i, v) {
+
+                                            if (SelectdID == '')
+                                                SelectdID = v;
+                                            else
+                                                SelectdID = SelectdID + ',' + v;
+                                        });
+                                        var SelectedRow = [];
+                                        var checkboxIDArray = [];
+                                        var var_name = "";
+                                        var p_str_radio = var_name;
+                                        var p_str_cmp_id = $('#cmp_id').val();
+                                        var p_str_Bill_doc_id = SelectdID;
+                                        var p_str_Bill_type = $('#Bill_type').val();
+                                        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                        var SelectdID = SelectdID;
+                                        var type = "XLS";
+                                        var cmp_id = $("#cmp_id").val();
+                                        if (cmp_id == "") {
+                                            sweetAlert("", "Please Select Cmp_id.", "");
+                                            $('#cmp_id').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "ALL") {
+                                            sweetAlert("", "Please Select Bill type.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "STRG") {
+                                            sweetAlert("", "No Consolidated Bill For Storage.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        $("input[name='tblcheckbox']").prop("checked", false);
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/BillingInquiry/ShowConsolidateReportResult",
+                                            contentType: "application/json; charset=utf-8",
+                                            data: {
+                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                "type": type
+                                            },
+                                            datatype: "json",
+                                            success: function (data) {
+                                                debugger
+                                                if (data == 1) {
+                                                    sweetAlert("", "No Records Found.", "");
+                                                    $("#ajaxLoading").hide();
+                                                }
+                                                else {
+                                                    $("#ajaxLoading").hide();
+                                                    window.location.replace('/BillingInquiry/ShowConsolidateReport?p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+                       + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+                                                }
+                                            },
+                                            error: function () {
+                                                alert("Dynamic content load failed.");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                        });
+
+
+                                    }
+                                    else {
+                                        var p_str_radio = var_name;
+                                        var p_str_cmp_id = $('#cmp_id').val();
+                                        var p_str_Bill_doc_id = SelectdID;
+                                        var p_str_Bill_type = $('#Bill_type').val();
+                                        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                        var SelectdID = SelectdID;
+                                        var type = "XLS";
+                                        var cmp_id = $("#cmp_id").val();
+                                        if (cmp_id == "") {
+                                            sweetAlert("", "Please Select Cmp_id.", "");
+                                            $('#cmp_id').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "ALL") {
+                                            sweetAlert("", "Please Select Bill type.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "STRG") {
+                                            sweetAlert("", "No Consolidated Bill For Storage.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/BillingInquiry/ShowConsolidateReportResult",
+                                            contentType: "application/json; charset=utf-8",
+                                            data: {
+                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                "type": type
+                                            },
+                                            datatype: "json",
+                                            success: function (data) {
+                                                debugger
+                                                if (data == 1) {
+                                                    sweetAlert("", "No Records Found.", "");
+                                                    $("#ajaxLoading").hide();
+                                                }
+                                                else {
+                                                    $("#ajaxLoading").hide();
+                                                    window.location.replace('/BillingInquiry/ShowConsolidateReport?p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+
+                                                }
+                                            },
+                                            error: function () {
+                                                alert("Dynamic content load failed.");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                        });
+                                    }
+                                    //}
+                                }
+
+                                else if (var_name == "BillInvoice") {
+                                    debugger
+
+                                    var p_str_radio = var_name;
+                                    var p_str_cmp_id = $('#cmp_id').val();
+
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+
+                                    if (numberOfCheckboxes == 0) {
+                                        sweetAlert("", "Please select the Record to Print.", "");
+                                    }
+                                    else {
+                                        $("input[name='tblcheckbox']:checked").each(function () {
+                                            var check = $(this);
+                                            if (check.is(':checked')) {
+                                                checkboxIDArray.push(check.attr('id'));
+                                                SelectedRow.push(check.val());
+                                            }
+                                        });
+
+                                        var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                        if (Count == 1) {
+                                            var l_str_bill_doc_id = '';
+                                            $.each(SelectedRow, function (i, v) {
+
+                                                if (l_str_bill_doc_id == '')
+                                                    l_str_bill_doc_id = v;
+                                                else
+                                                    l_str_bill_doc_id = l_str_bill_doc_id + ',' + v;
+
+                                            });
+
+                                            window.location.replace('/BillingInquiry/ViewXLSBill?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + l_str_bill_doc_id + '&p_str_radio=' + p_str_radio, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                                        }
+
+                                    }
+
+                                }
+
+                                else {
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                    if (numberOfCheckboxes == 0) {
+
+                                        sweetAlert("", "Please select the Record to Print.", "");
+                                    }
+
+                                    else {
+                                        $("input[name='tblcheckbox']:checked").each(function () {
+                                            var check = $(this);
+                                            if (check.is(':checked')) {
+                                                checkboxIDArray.push(check.attr('id'));
+                                                SelectedRow.push(check.val());
+                                            }
+                                        });
+                                        var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                        if (Count == 1) {
+                                            var SelectdID = '';
+                                            $.each(SelectedRow, function (i, v) {
+
+                                                if (SelectdID == '')
+                                                    SelectdID = v;
+                                                else
+                                                    SelectdID = SelectdID + ',' + v;
+
+                                            });
+                                            var Count = $("input[name='tblcheckbox']:checked").length;
+                                            if (Count == 1) {
+                                                var SelectedID = '';
+                                                $.each(SelectedRow, function (i, v) {
+
+                                                    if (SelectedID == '')
+                                                        SelectedID = v;
+                                                    else
+                                                        SelectedID = SelectedID + ',' + v;
+
+                                                });
+                                                var var_name = $("input[name='radio1']:checked").val();
+                                                var p_str_radio = var_name;
+                                                var p_str_cmp_id = $('#cmp_id').val();
+                                                var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                                var p_str_Bill_type = $('#Bill_type').val();
+                                                var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                                var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+
+                                                if (var_name == "BillInvoice") {
+                                                    $.ajax({
+                                                        url: '@Url.Action("CheckStatus", "BillingInquiry")',
+                                                        type: 'GET',
+                                                        dataType: 'json',
+                                                        data: {
+                                                            SelectedID: SelectedID, p_str_cmp_id: p_str_cmp_id, p_str_radio: p_str_radio, p_str_Bill_doc_id: p_str_Bill_doc_id, p_str_Bill_type: p_str_Bill_type, p_str_doc_dt_Fr: p_str_doc_dt_Fr, p_str_doc_dt_To: p_str_doc_dt_To
+
+                                                        },
+                                                        cache: false,
+                                                        success: function (data) {
+                                                            if (data == "P") {
+
+                                                                $("input[name='tblcheckbox']").prop("checked", false);
+                                                                window.open("/BillingInquiry/ShowReport?p_str_radio=" + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type, 'BillingInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + p_str_radio)
+
+                                                                return false;
+
+                                                            }
+                                                            else if (data == "O") {
+                                                                sweetAlert("", "Bill DocNum Not Posted.", "");
+                                                            }
+                                                            $("#report_selection").val('');
+                                                        }
+                                                    });
+                                                }
+                                                if (var_name == "BillDocument") {
+
+                                                    $.ajax({
+                                                        type: "GET",
+                                                        url: "/BillingInquiry/ShowReportResult",
+                                                        contentType: "application/json; charset=utf-8",
+                                                        data: {
+                                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                            "type": type
+                                                        },
+                                                        datatype: "json",
+                                                        success: function (data) {
+                                                            debugger
+                                                            if (data == 1) {
+                                                                sweetAlert("", "No Records Found.", "");
+                                                                $("#ajaxLoading").hide();
+                                                            }
+                                                            else {
+                                                                $("#ajaxLoading").hide();
+                                                                window.location.replace("/BillingInquiry/ShowReport?p_str_radio=" + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+                            + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type)
+
+                                                            }
+                                                        },
+                                                        error: function () {
+                                                            alert("Dynamic content load failed.");
+                                                            $("#ajaxLoading").hide();
+                                                        }
+                                                    });
+
+                                                }
+                                                else if (var_name == "InoutBillByCubeRound") {
+                                                    debugger
+
+
+                                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                                    if (numberOfCheckboxes == 0) {
+
+
+                                                        sweetAlert("", "Please select the Record to Print.", "");
+                                                    }
+
+                                                    else {
+
+
+                                                        $("input[name='tblcheckbox']:checked").each(function () {
+                                                            var check = $(this);
+                                                            if (check.is(':checked')) {
+                                                                checkboxIDArray.push(check.attr('id'));
+                                                                SelectedRow.push(check.val());
+                                                            }
+                                                        });
+
+                                                        var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                                        if (Count == 1) {
+                                                            var SelectdID = '';
+                                                            $.each(SelectedRow, function (i, v) {
+
+                                                                if (SelectdID == '')
+                                                                    SelectdID = v;
+                                                                else
+                                                                    SelectdID = SelectdID + ',' + v;
+
+                                                            });
+
+
+
+                                                            var p_str_cmp_id = $('#cmp_id').val();
+                                                            window.location.replace('@Url.Action("XlsInoutBillByCubeRoundComp")?p_str_cmp_id=' + p_str_cmp_id + '&p_str_bill_doc_id=' + SelectdID, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                                                        }
+
+                                                    }
+
+                                                    if (var_name == "Consolidatedrpt") {
+
+                                                        $.ajax({
+                                                            type: "GET",
+                                                            url: "/BillingInquiry/ShowReportResult",
+                                                            contentType: "application/json; charset=utf-8",
+                                                            data: {
+                                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                                "type": type
+                                                            },
+                                                            datatype: "json",
+                                                            success: function (data) {
+                                                                debugger
+                                                                if (data == 1) {
+                                                                    sweetAlert("", "No Records Found.", "");
+                                                                    $("#ajaxLoading").hide();
+                                                                }
+                                                                else {
+                                                                    $("#ajaxLoading").hide();
+                                                                    window.location.replace('/BillingInquiry/ShowConsolidateReport?p_str_radio=' + p_str_radio + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_Bill_doc_id=' + p_str_Bill_doc_id
+                             + '&p_str_Bill_type=' + p_str_Bill_type + '&p_str_doc_dt_Fr=' + p_str_doc_dt_Fr + '&p_str_doc_dt_To=' + p_str_doc_dt_To + '&SelectdID=' + SelectdID + '&type=' + type)
+
+                                                                }
+                                                            },
+                                                            error: function () {
+                                                                alert("Dynamic content load failed.");
+                                                                $("#ajaxLoading").hide();
+                                                            }
+                                                        });
+
+                                                    }
+
+                                                }
+                                                else {
+                                                    sweetAlert("", "Please select One Record to Print.", "");
+                                                    return false;
+
+                                                }
+                                            }
+                                            else {
+                                                sweetAlert("", "Please select One Record to Print.", "");
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if ((getFormat == 'PDF' || getFormat == 'XLS') && getMode == 'EMAIL') {
+                                debugger
+                                var cmp_id = $("#cmp_id").val();
+                                var var_name = $("input[name='radio1']:checked").val();
+                                if (cmp_id == "") {
+                                    //not2("Please SELECT Cmp_id.")
+                                    sweetAlert("", "Please SELECT Cmp_id.", "");
+                                    $('#cmp_id').focus();
+                                    $('body,html').animate({ scrollTop: 0 }, 0);
+                                    er = 1;
+                                    return false;
+                                }
+                                if (getFormat == 'PDF') {
+                                    var type = "PDF";
+                                }
+                                if (getFormat == 'XLS') {
+                                    var type = "XLS";
+                                }
+                                var SelectedRow = [];
+                                var checkboxIDArray = [];
+
+                                if (var_name == "GridSummary") {
+                                    var TeamDetailPostemailBackURL = '/BillingInquiry/EmailShowReport';
+                                    var p_str_radio = var_name;
+                                    var p_str_cmp_id = $('#cmp_id').val();
+                                    var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                    var p_str_Bill_type = $('#data-id3').val();
+                                    var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                    var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                    var options = { "backdrop": "static", keyboard: true };
+                                    $("#ajaxLoading").show();
+                                    $.ajax({
+                                        type: "GET",
+                                        url: TeamDetailPostemailBackURL,
+                                        contentType: "application/json; charset=utf-8",
+                                        data: {
+                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                            "type": type
+                                        },
+                                        datatype: "json",
+                                        success: function (data) {
+                                            $('#myModalEmailContent').html(data);
+                                            $('#myModalEmail').modal(options);
+                                            $('#myModalEmail').modal('show');
+
+                                        },
+                                        error: function () {
+                                            alert("Dynamic content load failed.");
+                                        }
+                                    });
+                                }
+                                if (var_name == "InoutBillByCubeRound") {
+                                    debugger
+
+                                    sweetAlert("Email Section - Under Construction!");
+                                    /*
+                                    var TeamDetailPostemailBackURL = '/BillingInquiry/XlsInoutBillByCubeRoundCompEmail';
+                                    var p_str_cmp_id = $('#cmp_id').val();
+
+                                    $("#ajaxLoading").show();
+                                    $.ajax({
+
+                                        type: "GET",
+                                        url: TeamDetailPostemailBackURL,
+                                        contentType: "application/json; charset=utf-8",
+                                        data: {
+                                            "p_str_cmp_id=" : p_str_cmp_id, "&p_str_bill_doc_id=": SelectedID
+                                        },
+                                        datatype: "json",
+                                        success: function (data) {
+                                            $('#myModalEmailContent').html(data);
+                                            $('#myModalEmail').modal(options);
+                                            $('#myModalEmail').modal('show');
+
+                                        },
+                                        error: function () {
+                                            alert("Dynamic content load failed.");
+                                        }
+                                    });*/
+                                }
+
+                                else if (var_name == "Consolidatedrpt") {
+                                    var SelectedRow = [];
+                                    var checkboxIDArray = [];
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                    $("input[name='tblcheckbox']:checked").each(function () {
+                                        var check = $(this);
+                                        if (check.is(':checked')) {
+                                            checkboxIDArray.push(check.attr('id'));
+                                            SelectedRow.push(check.val());
+                                        }
+                                    });
+                                    var Count = $("input[name='tblcheckbox']:checked").length;
+                                    if (Count > 0) {
+                                        var SelectdID = '';
+                                        $.each(SelectedRow, function (i, v) {
+
+                                            if (SelectdID == '')
+                                                SelectdID = v;
+                                            else
+                                                SelectdID = SelectdID + ',' + v;
+                                        });
+                                        var SelectedRow = [];
+                                        var checkboxIDArray = [];
+                                        var p_str_radio = var_name;
+                                        var p_str_cmp_id = $('#cmp_id').val();
+                                        var p_str_Bill_doc_id = SelectdID;
+                                        var p_str_Bill_type = $('#Bill_type').val();
+                                        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                        var SelectdID = SelectdID;
+                                        var type = "PDF";
+                                        var cmp_id = $("#cmp_id").val();
+                                        if (cmp_id == "") {
+                                            sweetAlert("", "Please Select Cmp_id.", "");
+                                            $('#cmp_id').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "ALL") {
+                                            sweetAlert("", "Please Select Bill type.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "STRG") {
+                                            sweetAlert("", "No Consolidated Bill For Storage.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        $("input[name='tblcheckbox']").prop("checked", false);
+                                        var options = { "backdrop": "static", keyboard: true };
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/BillingInquiry/ShowConsolidateReportResult",
+                                            contentType: "application/json; charset=utf-8",
+                                            data: {
+                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                "type": type
+                                            },
+                                            datatype: "json",
+                                            success: function (data) {
+                                                debugger
+
+                                                if (data == 1) {
+                                                    sweetAlert("", "No Records Found.", "");
+
+                                                    $("#ajaxLoading").hide();
+                                                }
+                                                else {
+                                                    $.ajax({
+                                                        type: "GET",
+                                                        url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                        contentType: "application/json; charset=utf-8",
+                                                        data: {
+                                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                            "type": type
+                                                        },
+                                                        datatype: "json",
+                                                        success: function (data) {
+                                                            $("#ajaxLoading").hide();
+                                                            $('#myModalEmailContent').html(data);
+                                                            $('#myModalEmail').modal(options);
+                                                            $('#myModalEmail').modal('show');
+
+                                                        }
+                                                    })
+
+
+                                                }
+                                            },
+                                            error: function () {
+                                                alert("Dynamic content load failed.");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                        });
+
+                                    }
+                                    else {
+                                        var p_str_radio = var_name;
+                                        var p_str_cmp_id = $('#cmp_id').val();
+                                        var p_str_Bill_doc_id = SelectdID;
+                                        var p_str_Bill_type = $('#Bill_type').val();
+                                        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                        var SelectdID = SelectdID;
+                                        var type = "PDF";
+                                        var cmp_id = $("#cmp_id").val();
+                                        if (cmp_id == "") {
+                                            sweetAlert("", "Please Select Cmp_id.", "");
+                                            $('#cmp_id').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "ALL") {
+                                            sweetAlert("", "Please Select Bill type.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        if (p_str_Bill_type == "STRG") {
+                                            sweetAlert("", "No Consolidated Bill For Storage.", "");
+                                            $('#Bill_type').focus();
+                                            $('body,html').animate({ scrollTop: 0 }, 0);
+                                            er = 1;
+                                            return false;
+                                        }
+                                        var options = { "backdrop": "static", keyboard: true };
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/BillingInquiry/ShowConsolidateReportResult",
+                                            contentType: "application/json; charset=utf-8",
+                                            data: {
+                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                "type": type
+                                            },
+                                            datatype: "json",
+                                            success: function (data) {
+                                                debugger
+
+                                                if (data == 1) {
+                                                    sweetAlert("", "No Records Found.", "");
+                                                    $("#ajaxLoading").hide();
+                                                }
+                                                else {
+                                                    $("#ajaxLoading").hide();
+                                                    $.ajax({
+                                                        type: "GET",
+                                                        url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                        contentType: "application/json; charset=utf-8",
+                                                        data: {
+                                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                            "type": type
+                                                        },
+                                                        datatype: "json",
+                                                        success: function (data) {
+                                                            $("#ajaxLoading").hide();
+                                                            $('#myModalEmailContent').html(data);
+                                                            $('#myModalEmail').modal(options);
+                                                            $('#myModalEmail').modal('show');
+
+                                                        }
+                                                    })
+
+                                                }
+                                            },
+                                            error: function () {
+                                                alert("Dynamic content load failed.");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                        });
+
+                                    }
+                                    //}
+                                }
+                                else {
+                                    var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                    if (numberOfCheckboxes == 0) {
+
+                                        sweetAlert("", "Please select the Record to Print.", "");
+                                    }
+
+                                    else {
+                                        $("input[name='tblcheckbox']:checked").each(function () {
+                                            var check = $(this);
+                                            if (check.is(':checked')) {
+                                                checkboxIDArray.push(check.attr('id'));
+                                                SelectedRow.push(check.val());
+                                            }
+                                        });
+                                        var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                        if (Count == 1) {
+                                            var SelectdID = '';
+                                            $.each(SelectedRow, function (i, v) {
+
+                                                if (SelectdID == '')
+                                                    SelectdID = v;
+                                                else
+                                                    SelectdID = SelectdID + ',' + v;
+
+                                            });
+                                            var Count = $("input[name='tblcheckbox']:checked").length;
+                                            if (Count == 1) {
+                                                var SelectedID = '';
+                                                $.each(SelectedRow, function (i, v) {
+
+                                                    if (SelectedID == '')
+                                                        SelectedID = v;
+                                                    else
+                                                        SelectedID = SelectedID + ',' + v;
+
+                                                });
+                                                var var_name = $("input[name='radio1']:checked").val();
+                                                var p_str_radio = var_name;
+                                                var p_str_cmp_id = $('#cmp_id').val();
+                                                var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                                var p_str_Bill_type = $('#Bill_type').val();
+                                                var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                                var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                                var options = { "backdrop": "static", keyboard: true };
+                                                if (var_name == "BillInvoice") {
+                                                    $.ajax({
+                                                        url: '@Url.Action("CheckStatus", "BillingInquiry")',
+                                                        type: 'GET',
+                                                        dataType: 'json',
+                                                        data: {
+                                                            SelectedID: SelectedID, p_str_cmp_id: p_str_cmp_id, p_str_radio: p_str_radio, p_str_Bill_doc_id: p_str_Bill_doc_id, p_str_Bill_type: p_str_Bill_type, p_str_doc_dt_Fr: p_str_doc_dt_Fr, p_str_doc_dt_To: p_str_doc_dt_To
+
+                                                        },
+                                                        cache: false,
+                                                        success: function (data) {
+                                                            if (data == "P") {
+
+                                                                $("input[name='tblcheckbox']").prop("checked", false);
+                                                                $.ajax({
+                                                                    type: "GET",
+                                                                    url: "/BillingInquiry/EmailShowReport",
+                                                                    contentType: "application/json; charset=utf-8",
+                                                                    data: {
+                                                                        "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                                        "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                                        "type": type
+                                                                    },
+                                                                    datatype: "json",
+                                                                    success: function (data) {
+                                                                        $("#ajaxLoading").hide();
+                                                                        $('#myModalEmailContent').html(data);
+                                                                        $('#myModalEmail').modal(options);
+                                                                        $('#myModalEmail').modal('show');
+
+                                                                    }
+                                                                })
+
+                                                            }
+                                                            else if (data == "O") {
+                                                                sweetAlert("", "Bill DocNum Not Posted.", "");
+                                                            }
+                                                            $("#report_selection").val('');
+                                                        }
+                                                    });
+                                                }
+                                                if (var_name == "BillDocument") {
+                                                    var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                                    var TeamDetailPostemailBackURL = '/BillingInquiry/EmailShowReport';
+                                                    if (Count == 1) {
+                                                        $("#ajaxLoading").show();
+                                                        var options = { "backdrop": "static", keyboard: true };
+                                                        var var_name = $("input[name='radio1']:checked").val();
+                                                        var p_str_radio = var_name;
+                                                        var p_str_cmp_id = $('#cmp_id').val();
+                                                        var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                                        var p_str_Bill_type = $('#data-id3').val();
+                                                        var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                                        var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                                        $.ajax({
+                                                            type: "GET",
+                                                            url: TeamDetailPostemailBackURL,
+                                                            contentType: "application/json; charset=utf-8",
+                                                            data: {
+                                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                                "type": type
+                                                            },
+
+                                                            datatype: "json",
+                                                            success: function (data) {
+                                                                $("#ajaxLoading").hide();
+                                                                $('#myModalEmailContent').html(data);
+                                                                $('#myModalEmail').modal(options);
+                                                                $('#myModalEmail').modal('show');
+
+                                                            },
+                                                            error: function () {
+                                                                alert("Dynamic content load failed.");
+                                                            }
+
+                                                            //success: function (data) {
+                                                            //    debugger
+                                                            //    if (data == 1) {
+                                                            //        sweetAlert("", "No Records Found.", "");
+                                                            //        $("#ajaxLoading").hide();
+                                                            //    }
+                                                            //    else {
+                                                            //        $("#ajaxLoading").hide();
+
+
+                                                            //    }
+                                                            //},
+                                                            //error: function () {
+                                                            //    alert("Dynamic content load failed.");
+                                                            //    $("#ajaxLoading").hide();
+                                                            //}
+                                                        });
+
+                                                    }
+                                                    else {
+                                                        sweetAlert("", "Please select One Record to Print.", "");
+                                                        return false;
+                                                    }
+
+                                                }
+                                                //if (var_name == "Consolidatedrpt") {
+                                                //      var options = { "backdrop": "static", keyboard: true };
+                                                //    $.ajax({
+                                                //        type: "GET",
+                                                //        url: "/BillingInquiry/ShowReportResult",
+                                                //        contentType: "application/json; charset=utf-8",
+                                                //        data: {
+                                                //            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                //            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                //            "type": type
+                                                //        },
+                                                //        datatype: "json",
+                                                //        success: function (data) {
+                                                //            debugger
+                                                //            if (data == 1) {
+                                                //                sweetAlert("", "No Records Found.", "");
+                                                //                $("#ajaxLoading").hide();
+                                                //            }
+                                                //            else {
+                                                //                $("#ajaxLoading").hide();
+                                                //                $.ajax({
+                                                //                    type: "GET",
+                                                //                    url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                //                    contentType: "application/json; charset=utf-8",
+                                                //                    data: {
+                                                //                        "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                //                        "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                //                        "type": type
+                                                //                    },
+                                                //                    datatype: "json",
+                                                //                    success: function (data) {
+                                                //                        $("#ajaxLoading").hide();
+                                                //                        $('#myModalEmailContent').html(data);
+                                                //                        $('#myModalEmail').modal(options);
+                                                //                        $('#myModalEmail').modal('show');
+
+                                                //                    }
+                                                //                })
+
+                                                //            }
+                                                //        },
+                                                //        error: function () {
+                                                //            alert("Dynamic content load failed.");
+                                                //            $("#ajaxLoading").hide();
+                                                //        }
+                                                //    });
+
+                                                //}
+
+                                            }
+
+
+
+                                            else {
+                                                sweetAlert("", "Please select One Record to Print.", "");
+                                                return false;
+                                                $("input:checkbox").each(function () {
+                                                    var check = $(this);
+                                                    if (check.is(':checked')) {
+                                                        this.checked = !this.checked;
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        else {
+                                            sweetAlert("", "Please select One Record to Print.", "");
+                                            return false;
+                                        }
+                                    }
+                                }
+                            }
+
+                            @*if (getFormat == 'XLS' && getMode == 'EMAIL') {
+                            debugger
+                            var cmp_id = $("#cmp_id").val();
+                            if (cmp_id == "") {
+
+                                sweetAlert("", "Please SELECT Cmp_id.", "");
+                                $('#cmp_id').focus();
+                                $('body,html').animate({ scrollTop: 0 }, 0);
+                                er = 1;
+                                return false;
+                            }
+                            var type = "XLS";
+                            var SelectedRow = [];
+                            var checkboxIDArray = [];
+                            var var_name = $("input[name='radio1']:checked").val();
+                            if (var_name == "GridSummary") {
+                                var p_str_radio = var_name;
+                                var p_str_cmp_id = $('#cmp_id').val();
+                                var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                var p_str_Bill_type = $('#Bill_type').val();
+                                var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                $.ajax({
+                                    type: "GET",
+                                    url: "/BillingInquiry/ShowReportResult",
+                                    contentType: "application/json; charset=utf-8",
+                                    data: {
+                                        "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                        "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                        "type": type
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        debugger
+                                        if (data == 1) {
+                                            sweetAlert("", "No Records Found.", "");
+                                            $("#ajaxLoading").hide();
+                                        }
+                                        else {
+                                            $("#ajaxLoading").hide();
+                                            $.ajax({
+                                                type: "GET",
+                                                url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                contentType: "application/json; charset=utf-8",
+                                                data: {
+                                                    "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                    "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                    "type": type
+                                                },
+                                                datatype: "json",
+                                                success: function (data) {
+                                                    $("#ajaxLoading").hide();
+                                                    $('#myModalEmailContent').html(data);
+                                                    $('#myModalEmail').modal(options);
+                                                    $('#myModalEmail').modal('show');
+
+                                                }
+                                            })
+
+                                        }
+                                    },
+                                    error: function () {
+                                        alert("Dynamic content load failed.");
+                                        $("#ajaxLoading").hide();
+                                    }
+                                });
+
+
+                            }
+                            else if (var_name == "Consolidatedrpt") {
+                                var SelectedRow = [];
+                                var checkboxIDArray = [];
+                                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+
+                                $("input[name='tblcheckbox']:checked").each(function () {
+                                    var check = $(this);
+                                    if (check.is(':checked')) {
+                                        checkboxIDArray.push(check.attr('id'));
+                                        SelectedRow.push(check.val());
+                                    }
+                                });
+                                var Count = $("input[name='tblcheckbox']:checked").length;
+                                if (Count > 0) {
+                                    var SelectdID = '';
+                                    $.each(SelectedRow, function (i, v) {
+
+                                        if (SelectdID == '')
+                                            SelectdID = v;
+                                        else
+                                            SelectdID = SelectdID + ',' + v;
+                                    });
+                                    var SelectedRow = [];
+                                    var checkboxIDArray = [];
+                                    var p_str_radio = var_name;
+                                    var p_str_cmp_id = $('#cmp_id').val();
+                                    var p_str_Bill_doc_id = SelectdID;
+                                    var p_str_Bill_type = $('#Bill_type').val();
+                                    var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                    var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                    var SelectdID = SelectdID;
+                                    var type = "XLS";
+                                    var cmp_id = $("#cmp_id").val();
+                                    if (cmp_id == "") {
+                                        sweetAlert("", "Please Select Cmp_id.", "");
+                                        $('#cmp_id').focus();
+                                        $('body,html').animate({ scrollTop: 0 }, 0);
+                                        er = 1;
+                                        return false;
+                                    }
+                                    if (p_str_Bill_type == "ALL") {
+                                        sweetAlert("", "Please Select Bill type.", "");
+                                        $('#Bill_type').focus();
+                                        $('body,html').animate({ scrollTop: 0 }, 0);
+                                        er = 1;
+                                        return false;
+                                    }
+                                    if (p_str_Bill_type == "STRG") {
+                                        sweetAlert("", "No Consolidated Bill For Storage.", "");
+                                        $('#Bill_type').focus();
+                                        $('body,html').animate({ scrollTop: 0 }, 0);
+                                        er = 1;
+                                        return false;
+                                    }
+                                    $("input[name='tblcheckbox']").prop("checked", false);
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/BillingInquiry/ShowConsolidateReportResult",
+                                        contentType: "application/json; charset=utf-8",
+                                        data: {
+                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                            "type": type
+                                        },
+                                        datatype: "json",
+                                        success: function (data) {
+                                            debugger
+                                            if (data == 1) {
+                                                sweetAlert("", "No Records Found.", "");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                            else {
+                                                $("#ajaxLoading").hide();
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                    contentType: "application/json; charset=utf-8",
+                                                    data: {
+                                                        "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                        "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                        "type": type
+                                                    },
+                                                    datatype: "json",
+                                                    success: function (data) {
+                                                        $("#ajaxLoading").hide();
+                                                        $('#myModalEmailContent').html(data);
+                                                        $('#myModalEmail').modal(options);
+                                                        $('#myModalEmail').modal('show');
+
+                                                    }
+                                                })
+
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("Dynamic content load failed.");
+                                            $("#ajaxLoading").hide();
+                                        }
+                                    });
+
+
+                                }
+                                else {
+                                    var p_str_radio = var_name;
+                                    var p_str_cmp_id = $('#cmp_id').val();
+                                    var p_str_Bill_doc_id = SelectdID;
+                                    var p_str_Bill_type = $('#Bill_type').val();
+                                    var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                    var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                    var SelectdID = SelectdID;
+                                    var type = "XLS";
+                                    var cmp_id = $("#cmp_id").val();
+                                    if (cmp_id == "") {
+                                        sweetAlert("", "Please Select Cmp_id.", "");
+                                        $('#cmp_id').focus();
+                                        $('body,html').animate({ scrollTop: 0 }, 0);
+                                        er = 1;
+                                        return false;
+                                    }
+                                    if (p_str_Bill_type == "ALL") {
+                                        sweetAlert("", "Please Select Bill type.", "");
+                                        $('#Bill_type').focus();
+                                        $('body,html').animate({ scrollTop: 0 }, 0);
+                                        er = 1;
+                                        return false;
+                                    }
+                                    if (p_str_Bill_type == "STRG") {
+                                        sweetAlert("", "No Consolidated Bill For Storage.", "");
+                                        $('#Bill_type').focus();
+                                        $('body,html').animate({ scrollTop: 0 }, 0);
+                                        er = 1;
+                                        return false;
+                                    }
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/BillingInquiry/ShowConsolidateReportResult",
+                                        contentType: "application/json; charset=utf-8",
+                                        data: {
+                                            "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                            "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                            "type": type
+                                        },
+                                        datatype: "json",
+                                        success: function (data) {
+                                            debugger
+                                            if (data == 1) {
+                                                sweetAlert("", "No Records Found.", "");
+                                                $("#ajaxLoading").hide();
+                                            }
+                                            else {
+                                                $("#ajaxLoading").hide();
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                    contentType: "application/json; charset=utf-8",
+                                                    data: {
+                                                        "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                        "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                        "type": type
+                                                    },
+                                                    datatype: "json",
+                                                    success: function (data) {
+                                                        $("#ajaxLoading").hide();
+                                                        $('#myModalEmailContent').html(data);
+                                                        $('#myModalEmail').modal(options);
+                                                        $('#myModalEmail').modal('show');
+
+                                                    }
+                                                })
+
+
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("Dynamic content load failed.");
+                                            $("#ajaxLoading").hide();
+                                        }
+                                    });
+
+
+                                }
+                                //}
+                            }
+                            else {
+                                var numberOfCheckboxes = $("input[name='tblcheckbox']:checked").length;
+                                if (numberOfCheckboxes == 0) {
+
+                                    sweetAlert("", "Please select the Record to Print.", "");
+                                }
+
+                                else {
+                                    $("input[name='tblcheckbox']:checked").each(function () {
+                                        var check = $(this);
+                                        if (check.is(':checked')) {
+                                            checkboxIDArray.push(check.attr('id'));
+                                            SelectedRow.push(check.val());
+                                        }
+                                    });
+                                    var Count = $("input[name='tblcheckbox']:checked").length;
+
+                                    if (Count == 1) {
+                                        var SelectdID = '';
+                                        $.each(SelectedRow, function (i, v) {
+
+                                            if (SelectdID == '')
+                                                SelectdID = v;
+                                            else
+                                                SelectdID = SelectdID + ',' + v;
+
+                                        });
+                                        var Count = $("input[name='tblcheckbox']:checked").length;
+                                        if (Count == 1) {
+                                            var SelectedID = '';
+                                            $.each(SelectedRow, function (i, v) {
+
+                                                if (SelectedID == '')
+                                                    SelectedID = v;
+                                                else
+                                                    SelectedID = SelectedID + ',' + v;
+
+                                            });
+                                            var var_name = $("input[name='radio1']:checked").val();
+                                            var p_str_radio = var_name;
+                                            var p_str_cmp_id = $('#cmp_id').val();
+                                            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+                                            var p_str_Bill_type = $('#Bill_type').val();
+                                            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+                                            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+                                            if (var_name == "BillInvoice") {
+                                                $.ajax({
+                                                    url: '@Url.Action("CheckStatus", "BillingInquiry")',
+                                                    type: 'GET',
+                                                    dataType: 'json',
+                                                    data: {
+                                                        SelectedID: SelectedID, p_str_cmp_id: p_str_cmp_id, p_str_radio: p_str_radio, p_str_Bill_doc_id: p_str_Bill_doc_id, p_str_Bill_type: p_str_Bill_type, p_str_doc_dt_Fr: p_str_doc_dt_Fr, p_str_doc_dt_To: p_str_doc_dt_To
+
+                                                    },
+                                                    cache: false,
+                                                    success: function (data) {
+                                                        if (data == "P") {
+
+                                                            $("input[name='tblcheckbox']").prop("checked", false);
+                                                            $.ajax({
+                                                                type: "GET",
+                                                                url: "/BillingInquiry/ShowReportResult",
+                                                                contentType: "application/json; charset=utf-8",
+                                                                data: {
+                                                                    "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                                    "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                                    "type": type
+                                                                },
+                                                                datatype: "json",
+                                                                success: function (data) {
+                                                                    debugger
+                                                                    if (data == 1) {
+                                                                        sweetAlert("", "No Records Found.", "");
+                                                                        $("#ajaxLoading").hide();
+                                                                    }
+                                                                    else {
+                                                                        $("#ajaxLoading").hide();
+                                                                        $.ajax({
+                                                                            type: "GET",
+                                                                            url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                                            contentType: "application/json; charset=utf-8",
+                                                                            data: {
+                                                                                "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                                                "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                                                "type": type
+                                                                            },
+                                                                            datatype: "json",
+                                                                            success: function (data) {
+                                                                                $("#ajaxLoading").hide();
+                                                                                $('#myModalEmailContent').html(data);
+                                                                                $('#myModalEmail').modal(options);
+                                                                                $('#myModalEmail').modal('show');
+
+                                                                            }
+                                                                        })
+
+
+                                                                    }
+                                                                },
+                                                                error: function () {
+                                                                    alert("Dynamic content load failed.");
+                                                                    $("#ajaxLoading").hide();
+                                                                }
+                                                            });
+
+                                                        }
+                                                        else if (data == "O") {
+                                                            sweetAlert("", "Bill DocNum Not Posted.", "");
+                                                        }
+                                                        $("#report_selection").val('');
+                                                    }
+                                                });
+                                            }
+                                            if (var_name == "BillDocument") {
+
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: "/BillingInquiry/ShowReportResult",
+                                                    contentType: "application/json; charset=utf-8",
+                                                    data: {
+                                                        "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                        "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                        "type": type
+                                                    },
+                                                    datatype: "json",
+                                                    success: function (data) {
+                                                        debugger
+                                                        if (data == 1) {
+                                                            sweetAlert("", "No Records Found.", "");
+                                                            $("#ajaxLoading").hide();
+                                                        }
+                                                        else {
+                                                            $("#ajaxLoading").hide();
+                                                            $.ajax({
+                                                                type: "GET",
+                                                                url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                                contentType: "application/json; charset=utf-8",
+                                                                data: {
+                                                                    "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                                    "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                                    "type": type
+                                                                },
+                                                                datatype: "json",
+                                                                success: function (data) {
+                                                                    $("#ajaxLoading").hide();
+                                                                    $('#myModalEmailContent').html(data);
+                                                                    $('#myModalEmail').modal(options);
+                                                                    $('#myModalEmail').modal('show');
+
+                                                                }
+                                                            })
+
+
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        alert("Dynamic content load failed.");
+                                                        $("#ajaxLoading").hide();
+                                                    }
+                                                });
+
+                                            }
+                                            if (var_name == "Consolidatedrpt") {
+
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: "/BillingInquiry/ShowReportResult",
+                                                    contentType: "application/json; charset=utf-8",
+                                                    data: {
+                                                        "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                        "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                        "type": type
+                                                    },
+                                                    datatype: "json",
+                                                    success: function (data) {
+                                                        debugger
+                                                        if (data == 1) {
+                                                            sweetAlert("", "No Records Found.", "");
+                                                            $("#ajaxLoading").hide();
+                                                        }
+                                                        else {
+                                                            $("#ajaxLoading").hide();
+                                                            $.ajax({
+                                                                type: "GET",
+                                                                url: "/BillingInquiry/ShowConsolidateReportEmail",
+                                                                contentType: "application/json; charset=utf-8",
+                                                                data: {
+                                                                    "p_str_radio": p_str_radio, "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id,
+                                                                    "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To, "SelectdID": SelectdID,
+                                                                    "type": type
+                                                                },
+                                                                datatype: "json",
+                                                                success: function (data) {
+                                                                    $("#ajaxLoading").hide();
+                                                                    $('#myModalEmailContent').html(data);
+                                                                    $('#myModalEmail').modal(options);
+                                                                    $('#myModalEmail').modal('show');
+
+                                                                }
+                                                            })
+
+
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        alert("Dynamic content load failed.");
+                                                        $("#ajaxLoading").hide();
+                                                    }
+                                                });
+
+                                            }
+
+                                        }
+                                        else {
+                                            sweetAlert("", "Please select One Record to Print.", "");
+                                            return false;
+
+                                        }
+                                    }
+                                    else {
+                                        sweetAlert("", "Please select One Record to Print.", "");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }*@
+
+                        });
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#btnClose").click(function () {
+            debugger
+            var p_str_screentitle = $('#screentitle').val();
+            var p_str_cmpid = $('#g_str_tmp_cmp_id').val();
+
+            var url = '@Url.Action("Dashboard", "Dashboard")';
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+        })
+        $("#btnDashboard").click(function () {
+            var p_str_cmpid = $('#cmp_id').val();
+            var url = '@Url.Action("Dashboard", "Dashboard")';      //CR_3PL_MVC_BL_2018_0313_001 Added by Soniya
+            url += '?id=' + p_str_cmpid;
+            window.location.href = url;
+        })
+        $(function () {
+            //$("#cmp_id").change(function () {
+            //    var l_str_comp = this.value;
+            //    debugger
+            //    $("#p_str_company").val(l_str_comp);
+            //});
+            $('#cmp_id').change(function () {
+                debugger;
+                var l_str_comp = this.value;
+                debugger
+                $("#p_str_company").val(l_str_comp);
+                var p_str_cmp_id = $(this).find(":selected").val();
+                $.ajax({
+                    url: '@Url.Action("CmpIdOnChange", "BillingInquiry")',
+                    type: 'GET',
+                    cache: false,
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id
+                    },
+
+                    dataType: "json",
+                    success: function (e) {
+                        $.each(e, function () {
+                            $("#tmp_cmp_id").val(this.l_str_tmp_cmp_id);
+                        });
+                    },
+                });
+            });
+
+        });
+    </script>
+</div>

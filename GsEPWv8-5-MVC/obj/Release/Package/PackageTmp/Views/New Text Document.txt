@@ -1,0 +1,140 @@
+CREATE PROCEDURE [dbo].[proc_get_web_Ship_Req_Inq]                     
+ @Cmp_ID  varchar(100),       
+ @so_NumFm  varchar(10),       
+ @so_NumTo  varchar(10),       
+ @so_DtFm  varchar(30),       
+ @so_DtTo  varchar(30),      
+ @CustPo  varchar(30),       
+ @AlocNo  varchar(20),        
+ @status varchar(50) ,    
+ @store varchar(10),    
+ @batchId varchar(20) ,    
+ @ShipdtFm varchar(50),    
+ @ShipdtTo varchar(50),    
+ @Cust_name varchar(50)                  
+                   
+AS                  
+BEGIN                  
+ SET NOCOUNT ON;                 
+ SET @cmp_id = ISNULL(@cmp_id, '')       
+ SET @so_NumFm = ISNULL(@so_NumFm, '')       
+ SET @so_NumTo = ISNULL(@so_NumTo, '')       
+ SET @so_DtFm = ISNULL(@so_DtFm, '')       
+ SET @so_DtTo = ISNULL(@so_DtTo, '')       
+ SET @CustPo = ISNULL(@CustPo, '')       
+  SET @AlocNo = ISNULL(@AlocNo, '')                  
+ SET @status = ISNULL(@status, '')     
+ SET @store = ISNULL(@store, '')      
+ SET @batchId = ISNULL(@batchId, '')                  
+ SET @ShipdtFm = ISNULL(@ShipdtFm, '')                  
+ SET @ShipdtTo = ISNULL(@ShipdtTo, '')     
+ SET @Cust_name = ISNULL(@Cust_name, '')                  
+    
+                  
+                  
+CREATE TABLE #TmpBillingInq (      
+quote_num varchar ( 10),                  
+so_num varchar ( 20),     
+aloc_doc_id varchar(20),     
+cmp_id varchar ( 10),       
+status varchar(20),     
+step  varchar(50),      
+so_dt varchar(50),       
+cust_id varchar(50),        
+ordr_num varchar(50),       
+cust_name varchar(150),      
+cust_ordr_num varchar(50),       
+store_id varchar(100)  ,  
+aloc_dt  varchar ( 20),  
+ship_doc_id  varchar ( 20),  
+Ship_dt  varchar ( 20),  
+VasId varchar ( 20)  
+   
+ )                        
+                  
+ DECLARE @SqlSentence nvarchar(max)='',                  
+   @CommonFilter nvarchar(max)=''                  
+                  
+        IF ( LEN(@cmp_id) > 0 )                  
+              SET @CommonFilter += 'Sohd.cmp_id = ''' +@cmp_id +''' AND '             
+        IF ( LEN(@Cust_name) > 0 )                  
+              SET @CommonFilter += 'Sohd.cust_name like  ''%'+@Cust_name +''' AND '                
+        IF ( LEN(@so_NumFm) > 0 AND LEN(@so_NumTo) > 0)                
+              SET @CommonFilter += 'Sohd.so_num BETWEEN ''' + @so_NumFm + ''' AND ''' + @so_NumTo + ''' AND '                
+       ELSE IF ( LEN(@so_NumFm) > 0 )                
+              SET @CommonFilter += 'Sohd.so_num = ''' + @so_NumFm + ''' AND '                
+       ELSE IF ( LEN(@so_NumTo) > 0 )                
+              SET @CommonFilter += 'Sohd.so_num <= ''' + @so_NumTo + ''' AND '        
+            
+   IF ( LEN(@so_DtFm) > 0 AND LEN(@so_DtTo) > 0)                
+              SET @CommonFilter += 'Sohd.so_dt BETWEEN ''' + @so_DtFm + ''' AND ''' + @so_DtTo + ''' AND '                
+       ELSE IF ( LEN(@so_DtFm) > 0 )                
+              SET @CommonFilter += 'Sohd.so_dt = ''' + @so_DtFm + ''' AND '                
+       ELSE IF ( LEN(@so_DtTo) > 0 )                
+              SET @CommonFilter += 'Sohd.so_dt <= ''' + @so_DtTo + ''' AND '         
+  IF ( LEN( @CustPo) > 0 )                  
+              SET @CommonFilter += 'Sohd.cust_ordr_num = ''' +@CustPo +''' AND '      
+  IF ( LEN( @AlocNo) > 0 )                  
+              SET @CommonFilter += 'AlocDtl.aloc_doc_id = ''' +@AlocNo +''' AND '      
+  IF (( @status)='OPEN')    
+   SET @CommonFilter += 'Sohd.status = ''' +'O' +''' AND '      
+  IF (( @status)='SHIP')              
+              SET @CommonFilter += 'Sohd.status = ''' +'S' +''' AND '      
+ IF ( ( @status)='POST' )           
+SET @CommonFilter += 'AlocDtl.status = ''' +'P' +''' AND '     
+ IF ( ( @status)='ALOC' )    
+      SET @CommonFilter += 'AlocDtl.status = ''' +'S' +''' AND '     
+  IF ( LEN( @store) > 0 )                  
+              SET @CommonFilter += 'Sohd.store_id = ''' +@store +''' AND '      
+  IF ( LEN( @batchId) > 0 )                  
+              SET @CommonFilter += 'Sohd.quote_num = ''' +@batchId +''' AND '     
+      
+  IF ( LEN(@ShipdtFm) > 0 AND LEN(@ShipdtTo) > 0)                
+              SET @CommonFilter += 'shipHdr.ship_dt BETWEEN ''' + @ShipdtFm + ''' AND ''' + @ShipdtTo + ''' AND '                
+       ELSE IF ( LEN(@ShipdtFm) > 0 )                
+              SET @CommonFilter += 'shipHdr.ship_dt = ''' + @ShipdtFm + ''' AND '                
+       ELSE IF ( LEN(@ShipdtTo) > 0 )                
+              SET @CommonFilter += 'shipHdr.ship_dt <= ''' + @ShipdtTo + ''' AND '             
+             SET @SqlSentence =' SELECT DISTINCT Sohd.quote_num,Sohd.so_num, AlocDtl.aloc_doc_id,Sohd.cmp_id, case AlocDtl.[status] when ''P'' then ''P'' else Sohd.[status] end Status ,    
+sohd.step, CONVERT(VARCHAR(10),Sohd.so_dt,110), Sohd.cust_id,Sohd.ordr_num,Sohd.cust_name, Sohd.cust_ordr_num,  Sohd.store_id , CONVERT(VARCHAR(10),AlocHdr.aloc_dt,110),  
+shipDtl.ship_doc_id ,CONVERT(VARCHAR(10),shipHdr.ship_dt,110),VasHdr.ship_doc_id as VasId  
+FROM  tbl_so_hdr as sohd left outer join    
+tbl_iv_aloc_dtl as AlocDtl on Sohd.cmp_id = AlocDtl.cmp_id and Sohd.so_num = AlocDtl.so_num    
+left outer join tbl_iv_aloc_hdr as AlocHdr on Sohd.cmp_id = AlocHdr.cmp_id and AlocDtl.aloc_doc_id = AlocHdr.aloc_doc_id    
+left outer join tbl_iv_ship_dtl as shipDtl on Sohd.cmp_id = shipDtl.cmp_id and Sohd.so_num = shipDtl.so_num and AlocDtl.aloc_doc_id = shipDtl.aloc_doc_id  
+left outer join tbl_iv_ship_hdr as shipHdr on Sohd.cmp_id = shipHdr.cmp_id  and shipDtl.ship_doc_id = shipHdr.ship_doc_id   
+left outer join tbl_iv_vas_hdr as VasHdr on Sohd.cmp_id = VasHdr.cmp_id and Sohd.so_num = VasHdr.so_num     
+ WHERE '+ @CommonFilter +  'LEN(Sohd.cmp_id) > 0  Order by Sohd.so_num  desc '                  
+                       
+ print  @SqlSentence                  
+                  
+ INSERT #TmpBillingInq EXEC (@SqlSentence)                  
+      
+SELECT * FROM #TmpBillingInq                
+    
+DROP TABLE #TmpBillingInq                  
+END 
+
+GO
+CREATE Procedure dbo.[SP_MVC_IB_GET_RCEV_DTL_COUNT]    
+@p_str_cmp_id varchar(20),    
+@p_str_ibdoc_id varchar(20)    
+AS    
+BEGIN   
+select max(dtl_line) as recv_dtl_count from tbl_ib_doc_recv_dtl_temp 
+ WHERE cmp_id = @P_Str_Cmp_Id and ib_doc_id=@P_Str_Ibdoc_Id   
+END
+
+
+GO
+CREATE Procedure [dbo].[proc_get_inbound_status]          
+     @cmp_id      varchar(10) = NULL ,            
+ @ib_doc_id     varchar(10) = NULL       
+ As         
+ BEGIN          
+                      
+ SELECT [STATUS] FROM tbl_ib_doc_hdr WHERE cmp_id =@cmp_id AND ib_doc_id = @ib_doc_id    
+       
+ END 
+
+GO

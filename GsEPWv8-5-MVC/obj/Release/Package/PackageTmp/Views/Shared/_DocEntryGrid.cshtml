@@ -1,0 +1,336 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+
+@{
+    var Ordercount = Model.ListDocuEntrydtl.Count;
+}
+<!-- /.box-header -->
+@Html.HiddenFor(model => model.l_bool_edit_flag)
+<div>
+    <table>
+        <tr>
+            <td style="width: 10%;">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+            </td>
+            <td style="width: 90%;">
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box">
+    <div id="table-Details">
+        <div style="overflow-y:auto; height:auto; width:auto;">
+            <table id="GridDocuEntry" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">Ln#</th>
+                        <th class="grid_header_backcolor">Ctn Ln#</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">Name</th>
+                        <th class="grid_header_backcolor">OrderQty</th>
+                        <th class="grid_header_backcolor">PPK</th>
+                        <th class="grid_header_backcolor">Ctns</th>
+                        <th class="grid_header_backcolor">Factory</th>
+                        <th class="grid_header_backcolor">Vend PO Num</th>
+                        <th class="grid_header_backcolor">Customer</th>
+                        <th class="grid_header_backcolor">CustPO</th>
+                        <th class="grid_header_backcolor">Pick List</th>
+                        <th class="grid_header_backcolor">L/W/H</th>
+                        <th class="grid_header_backcolor">Cube</th>
+                        <th class="grid_header_backcolor">Weight</th>
+                        <th class="grid_header_backcolor">Note</th>
+                        <th id="hideth"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                    @for (int i = 0; i < Model.ListDocuEntrydtl.Count; i++)
+                    {
+                        int line = i + 1;
+                        <tr id="@Model.ListDocuEntrydtl[i].cmp_id ">
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].line_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].ctn_line</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].itm_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].itm_color</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].itm_size</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].itm_name</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.ListDocuEntrydtl[i].ordr_qty</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align :right">@Model.ListDocuEntrydtl[i].ppk</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align :right">@Model.ListDocuEntrydtl[i].ctns</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].factory_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].po_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].cust_name</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].cust_po_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].pick_list</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].length / @Model.ListDocuEntrydtl[i].width / @Model.ListDocuEntrydtl[i].height </td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].cube</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListDocuEntrydtl[i].weight</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align :left">@Model.ListDocuEntrydtl[i].note</td>
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="DocEntryEditDetail" data-id="@Model.ListDocuEntrydtl[i].cmp_id" data-id1="@Model.ListDocuEntrydtl[i].ib_doc_id" data-id2="@Model.ListDocuEntrydtl[i].line_num" data-id3="@Model.ListDocuEntrydtl[i].itm_code" data-id4="@Model.ListDocuEntrydtl[i].DocEntry" data-id5="@Model.ListDocuEntrydtl[i].itm_num" data-id6="@Model.ListDocuEntrydtl[i].itm_color" data-id7="@Model.ListDocuEntrydtl[i].itm_size"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Edit</b></a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="DocEntryDelDetail" data-id="@Model.ListDocuEntrydtl[i].cmp_id" data-id1="@Model.ListDocuEntrydtl[i].ib_doc_id" data-id2="@Model.ListDocuEntrydtl[i].line_num" data-id3="@Model.ListDocuEntrydtl[i].itm_code" data-id4="@Model.ListDocuEntrydtl[i].DocEntry" data-id5="@Model.ListDocuEntrydtl[i].itm_num" data-id6="@Model.ListDocuEntrydtl[i].itm_color" data-id7="@Model.ListDocuEntrydtl[i].itm_size"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                            </td>             
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(function () {
+        $('#GridDocuEntry').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridDocuEntry_paginate').hide();
+    })
+    $(function () {
+        $('#GridDocuEntryEdit').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridDocuEntryEdit_paginate').hide();
+    })
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+    $("input[name='tblcheckbox']").click(function () {
+
+        if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+            $("#chkAll").prop("checked", true);
+        }
+        else {
+            $("#chkAll").prop("checked", false);
+        }
+
+    });
+
+   $('#GridDocuEntry tbody').on('click', '.DocEntryEditDetail', function () {
+        debugger
+        $("#ajaxLoading").show();
+
+        var $buttonClicked = $(this);
+        var P_Str_CmpId = $buttonClicked.attr('data-id');        
+        var P_Str_IbdocId = $buttonClicked.attr('data-id1');
+        var P_Str_LineNum = $buttonClicked.attr('data-id2');
+        var P_Str_ItmCode = $buttonClicked.attr('data-id3');
+        var P_str_DocEntry_Id = $buttonClicked.attr('data-id4');
+        var P_Str_style = $buttonClicked.attr('data-id5');
+        var P_Str_Color = $buttonClicked.attr('data-id6');
+        var P_str_Size = $buttonClicked.attr('data-id7');
+        var l_bool_is_in_edit = $('#l_bool_edit_flag').val();
+        if (l_bool_is_in_edit == "true") {
+            sweetAlert("", "Already a Line is Selected for Mod, Pls. Include Before Edit.", "");//CR_MVC_3PL_0317-001 Added By Nithya
+            return false;
+        }
+        //$(this).closest('tr').remove();
+
+        $('#GridDocuEntry tr').each(function () {
+            var tdVal = $(this).find("td:first").text();
+            if(tdVal == P_Str_LineNum)
+            $(this).hide();
+        });
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/DocEntryEditDisplayGridToTextbox")',
+            contentType: "application/json; charset=utf-8",
+            data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId, "P_Str_LineNum": P_Str_LineNum, "P_Str_ItmCode": P_Str_ItmCode, "P_str_DocEntry_Id": P_str_DocEntry_Id },
+            datatype: "json",
+            success: function (e) {
+                $.each(e, function () {
+                    debugger
+                 
+                    $("#Itmdtl").val(this.itm_num);
+                    $("#itm_color").val(this.itm_color);
+                    $("#itm_size").val(this.itm_size);
+                    $("#itm_name").val(this.itm_name);
+                    $("#ord_qty").val(this.ordr_qty);
+                    $("#ctn_qty").val(this.ctns);
+                    $("#LineNum").val(this.line_num);
+                    $("#note").val(this.note);
+                    $("#length").val(this.length);
+                    $("#width").val(this.width);
+                    $("#height").val(this.depth);
+                    $("#weight").val(this.wgt);
+                    $("#cube").val(this.cube);
+                    $("#docuppk").val(this.ppk);
+                    $("#ppk").val(this.ppk);
+                    $("#doclength").val(this.length);
+                    $("#docwidth").val(this.width);
+                    $("#docheight").val(this.height);
+                    $("#docweight").val(this.weight);
+                    $("#doccube").val(this.cube);
+                    $("#strg_rate").val(this.strg_rate);
+                    $("#inout_rate").val(this.inout_rate);
+                    $("#itm_code").val(this.itm_code);
+                    $("#loc_id").val(this.loc_id);
+                    $("#add_po_num").val(this.po_num);
+                    $("#add_factory_id").val(this.factory_id);
+                    $("#add_cust_name").val(this.cust_name);
+                    $("#add_cust_po_num").val(this.cust_po_num);
+                    $("#add_pick_list").val(this.pick_list);
+
+                    $("#ctn_line").val(this.ctn_line);
+                    var p_str_cmp_id = $('#cmp_id').val();
+                    var p_str_style = $('#Itmdtl').val();
+                    var p_str_color = $('#itm_color').val();
+                    var p_str_size = $('#itm_size').val();
+                    var p_str_Itmcode = $('#itm_code').val();
+                    $("#ajaxLoading").hide();
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/LoadAvailQty")',
+                        data: {
+                            "p_str_cmp_id": p_str_cmp_id, "p_str_style": p_str_style, "p_str_color": p_str_color, "p_str_size": p_str_size, "p_str_Itmcode": p_str_Itmcode
+                        },
+
+                        dataType: "json",
+                        success: function (e) {
+                            //alert(e)
+
+                            $.each(e, function () {
+                                //$("#avlqty").val(this.avail_qty);
+                                $("#length").val(this.length);
+                                $("#width").val(this.width);
+                                $("#height").val(this.depth);
+                                $("#weight").val(this.wgt);
+                                $("#cube").val(this.cube);
+                                $("#ppk").val(this.ctn_qty);
+                                $("#l_bool_edit_flag").val('true');//CR_MVC_3PL_0317-001 Added By Nithya
+                            });
+                        },
+
+                    });
+                });
+            },
+        });
+    });
+
+    //$(". ").click(function () {
+    $('#GridDocuEntry tbody').on('click', '.DocEntryDelDetail', function () {
+
+        debugger
+        var $buttonClicked = $(this);
+        var P_Str_CmpId = $buttonClicked.attr('data-id');
+        var P_Str_IbdocId = $buttonClicked.attr('data-id1');
+        var P_Str_LineNum = $buttonClicked.attr('data-id2');
+        var P_Str_ItmCode = $buttonClicked.attr('data-id3');
+        var P_str_DocEntry_Id = $buttonClicked.attr('data-id4');
+        var l_str_itm_num = $buttonClicked.attr('data-id5');
+        var l_str_itm_color = $buttonClicked.attr('data-id6');
+        var l_str_itm_size = $buttonClicked.attr('data-id7');
+        var l_str_del_message = "Do you want to delete the line #";
+        var l_str_del_display_message = l_str_del_message + P_Str_LineNum + " - Item : " + l_str_itm_num + " - " + l_str_itm_color + " / " + l_str_itm_size;
+        sweetAlert({
+            title: "",
+            text: l_str_del_display_message,
+            type: "",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "No",
+            cancelButtonText: "Yes",
+            closeOnConfirm: true,
+            // closeOnCancel: true
+        },
+               function (isConfirm) {
+                   if (isConfirm) {
+
+                   }
+
+                   else {
+                       $("#ajaxLoading").show();
+
+                       $.ajax({
+                           type: "GET",
+                           url: '@Url.Content("~/InboundInquiry/DocEntryDeleteGridData")',
+                           data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId, "P_Str_LineNum": P_Str_LineNum, "P_Str_ItmCode": P_Str_ItmCode, "P_str_DocEntry_Id": P_str_DocEntry_Id },
+
+                           datatype: "html",
+                           success: function (e) {                
+                               $("#ajaxLoading").hide();
+                               $('#GridDocEntry').html("");
+                               $('#GridDocEntry').html(e);
+                               debugger
+
+                               sweetAlert("", "Item Deleted Successfully", "");
+                               //var p_str_ib_doc_id = $('#DocEntryCount').val();
+                               //$("#DocEntryCount").val(this.DocEntryCount);
+                
+                               $.ajax({
+                                   type: "GET",
+                                   url: '@Url.Content("~/InboundInquiry/DocEntryCount")',
+                                   contentType: "application/json; charset=utf-8",
+                                   data: { "P_Str_CmpId": P_Str_CmpId, "P_Str_IbdocId": P_Str_IbdocId },
+                                   datatype: "json",
+                                   success: function (e) {                   
+                                       debugger
+                                       var rowCount = e;
+                                       $('#LineNum').val((rowCount * 1) + 1);
+
+                         
+                       
+                                   },
+                               });
+              
+                               //var rowCount = $("#    td").closest("tr").length;
+                               //alert(rowCount)
+                               //var val = $('#LineNum').val();
+
+
+
+                           },
+                           error: function () {
+                               $("#ajaxLoading").hide();
+
+                               //alert("Dynamic content load failed.");
+                               sweetAlert("", "Dynamic content load failed.", "");
+                           }
+                       });
+                   }
+               });
+    });
+</script>
+
+
+
+
+
+

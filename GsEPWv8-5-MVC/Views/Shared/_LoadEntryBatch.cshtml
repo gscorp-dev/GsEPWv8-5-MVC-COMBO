@@ -1,0 +1,659 @@
+﻿@model GsEPWv8_5_MVC.Model.OBLoadUploadFileModel
+@{
+    var Ordercount = Model.ListOBLoadUploadDtl.Count;
+    var l_int_error_count = Model.ListOBLoadUploadInvalidData.Count;
+    var l_str_error_desc = Model.error_desc;
+}
+<style type="text/css">
+    div#ajaxLoading {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 30%;
+        left: 56%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    fieldset {
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .Lblmanual {
+        color: #0d8cb5;
+        font-family: Trebuchet;
+        font-size: 1.8em;
+        left: 10px;
+        width: 56px;
+    }
+
+    .text-muted {
+        color: black;
+    }
+</style>
+
+<script src="~/Scripts/sweetalert.js"></script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/Style/CommonStyleSheet.css" rel="stylesheet" />
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+<link href="~/Scripts/DateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
+
+<div>
+    <div class="modal-header">
+        <table style="width: 100%;">
+            <tr class="row">
+                <td class="col-xs-3">
+                    <a href="#" id="btn-Dashboard" style="text-align:left">
+                        <b style="font-size:15px;text-decoration: underline;">Dashboard</b>
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </td>
+
+                <td class="col-xs-6 ScreenTitle" style="text-align:center; color:white">
+                    BATCH LOAD ENTRY
+                    <input type="hidden" id="screenTitle" value="LoadEntryBatch" />
+                </td>
+
+                <td class="col-xs-3" style="text-align:right">
+                    <button type="button" id="btn-Close" class="btn-Close">Close</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+    <div class="box box-default">
+        <br />
+        <fieldset>
+            <legend>Batch Load Entry Details</legend>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr class="row">
+                                <td style="text-align: right;" class="col-xs-2">
+                                    <label class="Lblmanual"><b>Company:</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompany, "cmp_id", "cmp_name"), "---Select---", new { @class = "form-control" })
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label class="Lblmanual" style="width: 100%;"><b>File Name: </b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    <input type="file" name="FileUpload" id="upload_file_name" onchange="updateFileName()" style="display:none" title="" />
+
+                                    @Html.TextBoxFor(x => x.objOBLoadUploadFileInfo.file_name, new { @class = "form-control", @name = "file_name", @id = "file_name" })
+                                </td>
+                                <td style="text-align: left;" class="col-xs-5">
+                                    <button type="button" style="background-color:#1a45bf" id="btnBrowse" class="btn_browse" onclick="document.getElementById('upload_file_name').click();">Browse</button>
+                                    <button type="submit" id="btnImport" class="btn_upload">Import </button>
+                                    <button type="button" id="btnSave" class="btn_Receive" style="width:80px;">Save </button>
+                                    <button type="reset" id="btn-Clear" class="btn-Clear">Clear </button>
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="width:100%;border-collapse: separate;border-spacing: 0px 0.5em;">
+                            <tr class="row">
+                                <td style="text-align: right;" class="col-xs-2">
+                                    <label><b class="Lblmanual">Upload Dt Fm:</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.upload_dt_from, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10" })
+                                </td>
+                                <td style="text-align: right;" class="col-xs-1">
+                                    <label><b class="Lblmanual">To:</b></label>
+                                </td>
+                                <td style="text-align: right;" class="col-xs-2">
+                                    @Html.TextBoxFor(model => model.upload_dt_to, new { @class = "form-control txtlbl", placeholder = "MM/DD/YYYY", @maxlength = "10", })
+                                </td>
+                                <td style="text-align: left;" class="col-xs-1">
+                                    <button type="button" id="btnSearch" class="btn_search">Search </button>
+                                </td>
+                                <td style="text-align: left;" class="col-xs-4">
+                                    <a id="upload" href="@Url.Action("LoadEntryTemplatedownload", "OutboundInq")" target="_blank" style="text-decoration:underline; color:#4c8cff;"><b style="font-size:13px;"> Batch Load Entry - Sample Upload </b></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <div id="LoadEntryshowgrid" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+            <div class="container-fluid">
+                <div id="grd_load_entry" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+                    <div>
+                        <div>
+                            <table id="GridLoadEntry" class="table table-bordered table-striped" style="border:1px solid #121213 ;width:100%">
+                                <thead class="grid_backcolor">
+                                    <tr>
+                                        <th class="grid_header_backcolor" style="width:10%">Batch ID</th>
+                                        <th class="grid_header_backcolor" style="width:10%">CUST PO#</th>
+                                        <th class="grid_header_backcolor" style="width:7.5%">DEPT#</th>
+                                        <th class="grid_header_backcolor" style="width:7.5%">STORE#</th>
+                                        <th class="grid_header_backcolor" style="width:8%">LOAD NUM</th>
+                                        <th class="grid_header_backcolor" style="width:12%">LOAD APPROVE DT</th>
+                                        <th class="grid_header_backcolor" style="width:15%">CARRIER</th>
+                                        <th class="grid_header_backcolor" style="width:15%">CARRIER PICK DT</th>
+                                        <th class="grid_header_backcolor" style="width:10%">TOTAL CUBE</th>
+                                        <th class="grid_header_backcolor" style="width:10%">TOTAL WEIGHT</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @for (int i = 0; i < Model.ListOBLoadUploadDtl.Count; i++)
+                                    {
+                                        <tr>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">
+                                                @Model.ListOBLoadUploadDtl[i].batch_num
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">
+                                                @Model.ListOBLoadUploadDtl[i].cust_po
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">
+                                                @Model.ListOBLoadUploadDtl[i].dept_id
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">
+                                                @Model.ListOBLoadUploadDtl[i].store_id
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">
+                                                @Model.ListOBLoadUploadDtl[i].load_number
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">
+                                                @Model.ListOBLoadUploadDtl[i].load_approve_dt
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">
+                                                @Model.ListOBLoadUploadDtl[i].carrier_name
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:left">
+                                                @Model.ListOBLoadUploadDtl[i].load_pick_dt
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">
+                                                @Model.ListOBLoadUploadDtl[i].tot_cube
+                                            </td>
+                                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">
+                                                @Model.ListOBLoadUploadDtl[i].tot_weight
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div id='myModalEmail' class='modal'>
+                <div class="modal-dialog">
+                    <div class="modal-content" style="width: 198%; left:-160px;">
+                        <div id='myModalEmailContent' style="width: 100%; height: 605px;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id='UsersEmail' class='modal' style="padding-left:947px;padding-top:271px">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="width: 100%;">
+                        <div id='UsersEmailContent' style="width: 100%; height: 360px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+<script src="~/Scripts/sweetalert.js"></script>
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    function updateFileName() {
+        debugger
+        var upload_file_name = document.getElementById('upload_file_name');
+        var file_name = document.getElementById('file_name');
+        var fileNameIndex = upload_file_name.value.lastIndexOf("\\");
+        file_name.value = upload_file_name.value.substring(fileNameIndex + 1);
+        $('#btnImport').removeAttr('disabled');
+        $('#btnSearch').attr('disabled', 'disabled');
+    }
+</script>
+<script type="text/javascript">
+
+    var file_name = $('#file_name').val();
+
+    $('#btn-Clear').click(function () {
+        debugger
+        $('#file_name').val('');
+        $('#upload_file_name').val('');
+        $('#ref_num').val('');
+        $('#upload_dt_from').val('');
+        $('#upload_dt_to').val('');
+        var l_str_cmp_id = $('#cmp_id').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/LoadEntryBatchClearAll")',
+            data: {
+                "p_str_cmp_id": l_str_cmp_id
+            },
+            dataType: 'html',
+            success: function (result) {
+
+                $("#ajaxLoading").hide();
+                $('#LoadEntryshowgrid').html("");
+                $('#LoadEntryshowgrid').html(result);
+                $('#btnBrowse').removeAttr('disabled');
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    });
+    $(document).ready(function () {
+
+        $('#btnImport').click(function () {
+            debugger
+            var l_str_cmp_id = $('#cmp_id').val();
+            var l_str_file_name = $('#file_name').val();
+            var fileExtension = l_str_file_name.substr((l_str_file_name.lastIndexOf('.') + 1));
+            $('#btnSave').removeAttr('disabled');
+            $('#btnSearch').attr('disabled', 'disabled');
+            if (fileExtension != "csv") {
+                swal("", "Please Check the File Format, Upload only .CSV File", "");
+                $('#file_name').val('');
+                $('#upload_file_name').val('');
+                $('#LoadEntryshowgrid').show();
+                return false;
+
+            }
+            if (l_str_cmp_id == "") {
+                swal("", "please select the company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            if (l_str_file_name == "") {
+                swal("", "please select the File.", "");
+                $('#file_name').focus();
+                $('body,html').animate({ scrolltop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+
+            $(document).ready(function () {
+                $("#btnSave :input").attr("disabled", false);
+            });
+
+            var l_str_cmp_id = $('#cmp_id').val();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/LoadEntryBatchClearAll")',
+                data: {
+                    "p_str_cmp_id": l_str_cmp_id
+                },
+                dataType: 'html',
+                success: function (result) {
+
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/OutboundInq/CheckLoadEntryFileExists")',
+                data: {
+                    "p_str_cmp_id": l_str_cmp_id, "p_str_file_name": l_str_file_name
+                },
+                dataType: 'html',
+                success: function (e) {
+                    debugger
+                    $("#ajaxLoading").hide();
+                    if (e == "true") {
+                        sweetAlert({
+                            title: "",
+                            text: "File Already Exist, Do you want to Continue?",
+                            type: "",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "No",
+                            cancelButtonText: "Yes",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#file_name').focus();
+
+                        }
+
+                        else {
+
+                            $("#ajaxLoading").show();
+                            if (window.FormData !== undefined) {
+                                $('#LoadEntryErrorgrid').html("");
+                                $('#LoadEntryshowgrid').html("");
+                                var fileUpload = $("#upload_file_name").get(0);
+                                var files = fileUpload.files;
+
+                                // Create FormData object
+                                var fileData = new FormData();
+
+                                // Looping over all files and add it to FormData object
+                                for (var i = 0; i < files.length; i++) {
+                                    fileData.append(files[i].name, files[i]);
+                                }
+
+                                // Adding one more key to FormData object
+                                fileData.append('username', 'Manas');
+                                $("#ajaxLoading").show();
+                                $.ajax({
+                                    url: '/OutboundInq/UploadLoadEntryFile?l_str_cmp_id=' + l_str_cmp_id,
+                                    type: "POST",
+                                    contentType: false, // Not to set any content header
+                                    processData: false, // Not to process data
+                                    data: fileData,
+                                    success: function (result) {
+                                        $("#ajaxLoading").hide();
+                                        debugger
+                                        if (result.error_mode == true) {
+
+                                            $("#error_desc").val(this.error_desc);
+                                            $('#LoadEntryErrorgrid').show();
+                                            $('#LoadEntryErrorgrid').html("");
+                                            $('#LoadEntryErrorgrid').html(this.error_desc);
+                                            $("#error_desc").val(this.error_desc);
+
+                                            $("#ajaxLoading").show();
+                                            if (window.FormData !== undefined) {
+
+                                                var fileUpload = $("#upload_file_name").get(0);
+                                                var files = fileUpload.files;
+
+                                                // Create FormData object
+                                                var fileData = new FormData();
+
+                                                // Looping over all files and add it to FormData object
+                                                for (var i = 0; i < files.length; i++) {
+                                                    fileData.append(files[i].name, files[i]);
+                                                }
+
+                                                // Adding one more key to FormData object
+                                                fileData.append('username', 'Manas');
+                                                $("#ajaxLoading").show();
+                                                $.ajax({
+                                                    url: '/OutboundInq/UploadLoadEntryFile?l_str_cmp_id=' + l_str_cmp_id,
+                                                    type: "POST",
+                                                    contentType: false, // Not to set any content header
+                                                    processData: false, // Not to process data
+                                                    data: fileData,
+                                                    success: function (result) {
+                                                        $("#ajaxLoading").hide();
+                                                        debugger
+                                                        if (result.error_mode == true) {
+                                                            $("#error_desc").val(this.error_desc);
+                                                            $('#LoadEntryErrorgrid').show();
+                                                            $('#LoadEntryErrorgrid').html("");
+                                                            $('#LoadEntryErrorgrid').html(this.error_desc);
+                                                            $("#error_desc").val(this.error_desc);
+                                                        }
+
+                                                        $("#ajaxLoading").hide();
+                                                        $('#LoadEntryshowgrid').html("");
+                                                        $('#LoadEntryshowgrid').html(result);
+                                                        debugger
+                                                        $.ajax({
+                                                            type: "GET",
+                                                            url: '@Url.Content("~/OutboundInq/ErrorDescCount")',
+                                                            contentType: "application/json; charset=utf-8",
+                                                            data: "",
+                                                            datatype: "json",
+                                                            success: function (result) {
+                                                                debugger
+                                                                if (result == "true") {
+                                                                    swal("", "Exception found.Please correct the File and Reupload ", "");
+                                                                    return false;
+                                                                }
+                                                            },
+                                                            error: function (err) {
+                                                                swal(err.statusText);
+                                                            }
+                                                        });
+
+                                                    },
+                                                    error: function (err) {
+                                                        swal(err.statusText);
+                                                    }
+                                                });
+
+                                            } else {
+                                                swal("FormData is not supported.");
+                                            }
+                                        }
+
+
+                                        else {
+
+                                            $("#ajaxLoading").hide();
+                                            $('#LoadEntryshowgrid').html("");
+                                            $('#LoadEntryshowgrid').html(result);
+                                        }
+
+                                    },
+                                    error: function (err) {
+                                        swal(err.statusText);
+                                    }
+                                });
+
+                            } else {
+                                swal("FormData is not supported.");
+                            }
+                        }
+                    });
+
+                    }
+                    else {
+                        if (window.FormData !== undefined) {
+
+                            var fileUpload = $("#upload_file_name").get(0);
+                            var files = fileUpload.files;
+
+                            // Create FormData object
+                            var fileData = new FormData();
+
+                            // Looping over all files and add it to FormData object
+                            for (var i = 0; i < files.length; i++) {
+                                fileData.append(files[i].name, files[i]);
+                            }
+
+                            // Adding one more key to FormData object
+                            fileData.append('username', 'Manas');
+                            $("#ajaxLoading").show();
+                            $.ajax({
+                                url: '/OutboundInq/UploadLoadEntryFile?l_str_cmp_id=' + l_str_cmp_id,
+                                type: "POST",
+                                contentType: false, // Not to set any content header
+                                processData: false, // Not to process data
+                                data: fileData,
+                                success: function (result) {
+                                    $("#ajaxLoading").hide();
+                                    debugger
+                                    if (result.error_mode == true) {
+
+                                        $("#error_desc").val(this.error_desc);
+                                        $('#LoadEntryErrorgrid').show();
+                                        $('#LoadEntryErrorgrid').html("");
+                                        $('#LoadEntryErrorgrid').html(result);
+                                        $('#LoadEntryErrorgrid').html(this.error_desc);
+                                        $("#error_desc").val(this.error_desc);
+                                        if (result.Error_flag = "O") {
+                                            swal("", "Exception found.Please correct the File and Reupload ", "");
+                                            return false;
+                                        }
+                                    }
+                                    else {
+
+                                        $("#ajaxLoading").hide();
+                                        $('#LoadEntryshowgrid').html("");
+                                        $('#LoadEntryshowgrid').html(result);
+                                    }
+                                },
+                                error: function (err) {
+                                    swal(err.statusText);
+                                }
+                            });
+                        } else {
+                            swal("FormData is not supported.");
+                        }
+                    }
+                },
+
+            })
+
+        });
+    });
+
+
+    $("#btn-Close").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+
+
+    $("#btnSave").click(function () {
+        debugger
+        var x = document.getElementById("GridLoadEntry").rows.length;
+        var l_int_error_count = $("#l_int_error_count").val();
+
+        if (l_int_error_count != 0) {
+            swal("", "Exception found.Please correct the File and Reupload ", "");
+            return false;
+        }
+
+        $('#btnSearch').attr('disabled', 'disabled');
+
+
+        var rowCount = $("#GridLoadEntry td").closest("tr").length;
+        if (rowCount == 0 || rowCount == null) {
+            swal("", "No Record found to save", "");
+            return false;
+        }
+
+        $("#ajaxLoading").show();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_file_name = $('#file_name').val();
+
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/OutboundInq/SaveLoadEntryBatch")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_file_name": p_str_file_name
+                },
+                dataType: 'html',
+                success: function (e) {
+                    debugger
+                    var obj = JSON.parse(e);
+                    var l_str_error_desc = obj.error_desc;
+                   
+
+                    //if (l_str_error_desc != 'undefined') {
+                    //    $("#ajaxLoading").hide();
+                    //    swal("", l_str_error_desc, "");
+                    //    return false;
+                    //}
+
+
+                    if (e.error_mode == "true") {
+                        $("#ajaxLoading").hide();
+                        swal("", "Exception found.Please correct the File and Reupload ", "");
+                        return false;
+                    }
+
+
+                    $("#ajaxLoading").hide();
+                    swal("", "Load Entry Saved Successfully ", "");
+                    var p_str_cmpid = $('#cmp_id').val();
+                    var url = '@Url.Action("Dashboard", "Dashboard")';
+                    url += '?id=' + p_str_cmpid;
+                    window.location.href = url;
+                    //$("#ajaxLoading").hide();
+                    //$('#LoadEntryshowgrid').html("");
+                    //$('#LoadEntryshowgrid').html(result);
+
+
+                },
+
+            })
+        }
+    });
+
+    $("#btn-Dashboard").click(function () {
+        debugger
+        var p_str_cmpid = $('#cmp_id').val();
+        var url = '@Url.Action("Dashboard", "Dashboard")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+
+    })
+
+    $('#so_dtFm').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+    $('#so_dtTo').datetimepicker({
+        timepicker: false,
+        step: 15, format: 'm-d-Y'
+    });
+
+</script>

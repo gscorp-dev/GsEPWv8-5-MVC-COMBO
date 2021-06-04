@@ -1,0 +1,164 @@
+﻿
+@model GsEPWv8_5_MVC.Model.OutboundShipRptModel
+
+@{
+    var Ordercount = Model.LstOutboundShipRptInqdetail.Count;
+}
+<!-- /.box-header -->
+@*<div class="box-body">*@
+<div class="gridSummary">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style="font-size:12px;color:black;font-weight: 200;text-align:left;padding-right: 10px;width:6%;padding-left: 12px;font-family: verdana;">
+                <label><b>Total Ctn(s)</b></label>
+            </td>
+            <td style="width:8%;">
+                @Html.TextBoxFor(model => model.TotalCtn, new { @class = "form-control txtlbl", @style = "width:180px;font-weight: 900;font-family: verdana;color: red;font-size: 16px;" }) @*CR_3PL_MVC_OB_2018_0316_002*@
+            </td>
+            <td style="font-size:12px;color:black;font-weight: bold;text-align:left;padding-right: 10px;width:6%;padding-left: 13px;font-family: verdana;">
+                <label><b>Total Qty(s)</b></label>
+            </td>
+            <td style="width:8%;">
+                @Html.TextBoxFor(model => model.TotalQty, new { @class = "form-control txtlbl", @style = "width:180px;font-weight: 900;font-family: verdana;color: red;font-size: 16px;" }) @*CR_3PL_MVC_OB_2018_0316_002*@
+            </td>
+            <td style="width:50%;"></td>
+            <td style=" width:105px;"></td>
+            <td style=" width:105px;"></td>
+            <td>
+                @*<button type="button" id="btnClose" class="btn-Close">Close</button>*@
+
+            </td>
+        </tr>
+
+    </table>
+</div>
+@*<br />*@
+
+<div class="box box-primary">
+
+    <div>
+        <br />
+    </div>
+    <table id="GridShippingInq" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">SR#</th>
+                <th class="grid_header_backcolor">BoL#</th>
+                <th class="grid_header_backcolor">Ship Dt</th>
+                <th class="grid_header_backcolor">REF#</th>
+                <th class="grid_header_backcolor">Style</th>
+                <th class="grid_header_backcolor">Color</th>
+                <th class="grid_header_backcolor">Size</th>
+                <th class="grid_header_backcolor">Ctns</th>
+                <th class="grid_header_backcolor">Pcs</th>
+                <th class="grid_header_backcolor">Cust PO#</th>
+                <th class="grid_header_backcolor">Carrier</th>
+                <th class="grid_header_backcolor">Whs Id</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.LstOutboundShipRptInqdetail.Count; i++)
+            {
+                <tr class="row-select">
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].so_num</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].ship_doc_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].ship_dt</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].ref_num</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].itm_num</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstOutboundShipRptInqdetail[i].itm_color</td>
+                    <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstOutboundShipRptInqdetail[i].itm_size</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstOutboundShipRptInqdetail[i].Ctns</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstOutboundShipRptInqdetail[i].Pcs</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.LstOutboundShipRptInqdetail[i].cust_ord</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstOutboundShipRptInqdetail[i].ship_via_name</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.LstOutboundShipRptInqdetail[i].whs_id</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    function GetRes() {        
+        var SelectedRow = [];
+        var checkboxIDArray = [];
+        var chkbtn = $(this).html();
+        var var_name = $("input[name='radio1']:checked").val();
+        var p_str_cmp_id = $('#cmp_id').val();
+        var p_str_whs_id = $('#whs_id').val();
+        var p_str_cust_po = $('#cust_ord').val();
+        var p_str_ship_dt_fm = $('#ship_dt_fm').val();
+        var p_str_ship_dt_to = $('#ship_dt_to').val();
+        var p_str_BoL = $('#ship_doc_id').val();
+        var p_str_Carrier = $('#ship_via_name').val();
+        var p_str_Style = $('#Itmdtl').val();
+        var p_str_Color = $('#itm_color').val();
+        var p_str_Size = $('#itm_size').val();
+        if (var_name == "OutbndDate") {
+
+            window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                '&p_str_Size=' + p_str_Size, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+        }
+        else if (var_name == "OutbndStyle") {
+            window.open('ShowReport?var_name=' + var_name + '&p_str_cmp_id=' + p_str_cmp_id + '&p_str_whs_id=' + p_str_whs_id + '&p_str_cust_po=' + p_str_cust_po +
+                '&p_str_ship_dt_fm=' + p_str_ship_dt_fm + '&p_str_ship_dt_to=' + p_str_ship_dt_to + '&p_str_BoL=' + p_str_BoL + '&p_str_Carrier=' + p_str_Carrier + '&p_str_Style=' + p_str_Style + '&p_str_Color=' + p_str_Color +
+                '&p_str_Size=' + p_str_Size, 'OutboundShipRpt', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?var_name=' + var_name)
+        }
+    }
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+
+
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    $(function () {
+
+        $('#GridShippingInq').DataTable({
+            "pageLength": 50,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        })
+       
+    })
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+    });
+    $("input[name='tblcheckbox']").click(function () {
+
+        if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+            $("#chkAll").prop("checked", true);
+        }
+        else {
+            $("#chkAll").prop("checked", false);
+        }
+    });   
+</script>
+<script>
+   
+</script>
+
+
+
+

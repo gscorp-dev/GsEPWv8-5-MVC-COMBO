@@ -1,0 +1,697 @@
+﻿@model GsEPWv8_5_MVC.Model.OutboundInqModel
+@{
+
+
+}
+@Html.HiddenFor(model => model.cmp_id)
+@Html.HiddenFor(model => model.LineNum)
+<input type="hidden" id="LineNums" value="@Session["lineNum"]" />
+@Html.HiddenFor(model => model.View_Flag)
+<input type="hidden" id="three" />
+<input type="hidden" id="four" />
+<div id="ajaxLoading" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+<style type="text/css">
+    #GridmanualAlocDTL tr td:nth-child(1) {
+        width: 6.8%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(2) {
+        width: 6.7%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(3) {
+        width: 6.8%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(4) {
+        width: 6.7%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(5) {
+        width: 6.8%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(6) {
+        width: 6.7%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(7) {
+        width: 6.8%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(8) {
+        width: 6.7%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(9) {
+        width: 6.8%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(10) {
+        width: 6.7%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(11) {
+        width: 6.8%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(12) {
+        width: 6.8%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(13) {
+        width: 6.7%;
+    }
+
+    #GridmanualAlocDTL tr td:nth-child(14) {
+        width: 6.7%;
+    }
+</style>
+
+<div>
+    <div class="row">
+        <div class="box box-primary">
+            <table id="GridmanualAlocDTL" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+                    <tr>
+                        <th class="grid_header_backcolor">Sel</th>
+                        <th class="grid_header_backcolor">Ln</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">LocId</th>
+                        <th class="grid_header_backcolor">Rcvd Dt</th>
+                        <th class="grid_header_backcolor">ctns</th>
+                        <th class="grid_header_backcolor">ppk</th>
+                        <th class="grid_header_backcolor">AvailQty</th>
+                        <th class="grid_header_backcolor">Aloc Qty</th>
+                        <th class="grid_header_backcolor">Bal Qty</th>
+                        <th class="grid_header_backcolor">Lotid</th>
+                        <th class="grid_header_backcolor">PatedId</th>
+                        <th class="grid_header_backcolor">Po Num</th>
+
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12); display:block; max-height:300px; overflow-y:scroll;">
+                    @for (int j = 0; j < Model.LstManualAloc.Count; j++)
+                    {
+                        int row = j + 1;
+                        int AlocQty = Model.LstManualAloc[j].Aloc;
+                        var ColCheck = Model.LstManualAloc[j].colChk;
+                        if (Model.LstManualAloc[j].Aloc == 0)
+                        {
+                            <tr style="background-color:white; background-color:white;display:table; width:100%; table-layout:fixed;">
+                                @if (ColCheck == "True")
+                                {
+                                    <td id="chkaloc" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" id4="@Model.LstManualAloc[j].colChk" style="text-align:center"><input id="getcheck" name="attribute2" class="attribute2" checked type="checkbox" /></td>
+                                }
+                                else
+                                {
+
+                                    <td id="chkaloc" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" id4="@Model.LstManualAloc[j].colChk" style="text-align:center"><input id="getcheck1" name="attribute2" class="attribute2" type="checkbox" /></td>
+                                }
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold; text-align:left;">@row</td>
+                                <td id="tblclk" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" id4="@Model.LstManualAloc[j].colChk" style="font-size:10px; color:black; font-weight:bold;text-align:left;"><a style="color:blue; text-decoration:underline">@Model.LstManualAloc[j].itm_num<span class="glyphicon glyphicon-pencil" style="font-size: 12px;"></span></a></td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].itm_color</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].itm_size</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].loc_id</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].rcvd_dt.ToString("MM/dd/yyyy")</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].pkg_cnt</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].pkg_qty</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].avail_qty</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].Aloc</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].back_ordr_qty</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].lot_id</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].palet_id</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].po_num</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr style="background-color:lightblue; display:table; width:100%; table-layout:fixed;">
+                                @if (ColCheck == "True")
+                                {
+                                    <td id="chkaloc" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" id4="@Model.LstManualAloc[j].colChk" style="text-align:center"><input id="getcheck" name="attribute2" class="attribute2" checked type="checkbox" /></td>
+                                }
+                                else
+                                {
+
+                                    <td id="chkaloc" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" id4="@Model.LstManualAloc[j].colChk" style="text-align:center"><input id="getcheck1" name="attribute2" class="attribute2" type="checkbox" /></td>
+                                }
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold; text-align:left;">@row</td>
+                                <td id="tblclk" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" id4="@Model.LstManualAloc[j].colChk" style="font-size:10px; color:black; font-weight:bold;text-align:left;"><a style="color:blue; text-decoration:underline">@Model.LstManualAloc[j].itm_num</a></td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].itm_color</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].itm_size</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].loc_id</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].rcvd_dt.ToString("MM/dd/yyyy")</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].pkg_cnt</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].pkg_qty</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].avail_qty</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].Aloc</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:right;">@Model.LstManualAloc[j].back_ordr_qty</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].lot_id</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].palet_id</td>
+                                <td id="" id1="@row" id2="@Model.LstManualAloc[j].Aloc" id3="@Model.LstManualAloc[j].back_ordr_qty" style="font-size:10px; color:black; font-weight:bold;text-align:left;">@Model.LstManualAloc[j].po_num</td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.attribute2').click(function () {
+            var getcbl2 = (this.checked ? 'true' : 'false');
+            $('#three').val(getcbl2);
+        });
+        //$('.attribute3').click(function () {
+        //    var getcbl3 = (this.checked ? 'true' : 'false');
+        //    $('#four').val(getcbl3);
+        //});
+    });
+
+</script>
+<script type="text/javascript">
+    $('#GridmanualAlocDTL td[id="chkaloc"]').click(function () {
+        debugger
+        $('#btnchanges').hide();//CR20180730-001 Added by Nithya
+        var p_str_RowNo = $(this).attr('id1');
+        var p_str_Reqqty = $('#AlocreqQty').val();
+        var p_str_AlocatedQty = $(this).attr('id3');
+        var firstColumn = $(this).attr('id4');
+        var Alocated = $('#Alocalocated').val();
+        var AUnCheckvalue = $('#three').val();
+        //alert(AUnCheckvalue)
+        var ACheckvalue = $('#four').val();
+        $("#ajaxLoading").show();
+        //alert(ACheckvalue)
+        //if (AUnCheckvalue == 'true' && ACheckvalue == 'true') {
+        //    var AUnCheckvalue = "True";
+        //}
+        //else {
+        //    var ACheckvalue = "False";
+        //}
+        var p_str_cmp_id = $('#cmp_id').val();
+        $.ajax({
+            type: "GET",
+            url: "/OutboundInq/DocAlocEditDisplayGridToTextbox",
+            data: {
+                "p_str_RowNo": p_str_RowNo, "UnCheckvalue": AUnCheckvalue, "Checkvalue": ACheckvalue, "p_str_Reqqty": p_str_Reqqty, "p_str_AlocatedQty": p_str_AlocatedQty, "firstColumn": firstColumn, "Alocated": Alocated
+            },
+            datatype: "json",
+            success: function (e) {
+                debugger
+                if (e == 1) {
+                    swal("", "Required Quantity is Zero You can not Allocate More than Required Qty!!!", "");
+                    $('body,html').animate({ scrollTop: 0 }, 0);
+                    er = 1;
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/OutboundInq/ShowManualAlocEdit")',
+                        data: {
+                            "p_str_RowNo": p_str_RowNo
+                        },
+                        dataType: 'html',
+                        success: function (e) {
+                            $("#ajaxLoading").hide();
+                            $('#hdrgridAloc').hide();
+                            $('#hdrgridAlocshow').html("");
+                            $('#hdrgridAlocshow').html(e);
+                            var GridList = Session["GridInvoiceList"].ToString();
+                            GridList = null;
+                        },
+                    })
+                    return false;
+                }
+                else {
+                    $("#AlocLocId").val(e.loc_id);
+                    $("#Alocselavail").val(e.back_ordr_qty);
+                    $("#PkgQty").val(e.pkg_qty);
+                    $("#Alocalocqty").val(e.Aloc);
+                    $("#LineNum").val(e.linenum);
+                    //$("#Alocalocqty").val(e.SelAloc);
+                    $("#Alocselavail").val(e.SelAloc);
+                    $("#Alocalocated").val(e.alocated);
+                    $("#Alocalocqty").val(e.alocated);
+                    $("#balanceQty").val(e.balanceqty);
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/OutboundInq/ShowManualAloc")',
+                        data: {
+                        },
+                        dataType: 'html',
+                        success: function (e) {
+                            $("#ajaxLoading").hide();
+                            $('#hdrgridAloc').hide();
+                            $('#hdrgridAlocshow').html("");
+                            $('#hdrgridAlocshow').html(e);
+                        },
+                    })
+                }
+            },
+        })
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#GridmanualAlocDTL').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#GridmanualAlocDTL_paginate').hide();
+    })
+    $('#GridmanualAlocDTL td[id="tblclk"]').click(function () {
+        debugger
+        $('#btnchanges').hide();//CR20180730-001 Added by Nithya
+        var p_str_RowNo = $(this).attr('id1');
+        var p_str_Reqqty = $('#AlocreqQty').val();
+        var p_str_AlocatedQty = $(this).attr('id3');
+        var firstColumn = $(this).attr('id4');
+        var Alocated = $('#Alocalocated').val();
+        //var UnCheckvalue = ($('#getcheck').is(":checked"))
+        //var Checkvalue = ($('#getcheck1').is(":checked"))
+        //    if (UnCheckvalue == 'True' && Checkvalue == 'True') {
+        //        UnCheckvalue == 'True';
+        //    }
+        //    else {
+        //        Checkvalue == 'False';
+        //    }
+        var AUnCheckvalue = $('#three').val();
+        //alert(AUnCheckvalue)
+        var ACheckvalue = $('#four').val();
+        var p_str_cmp_id = $('#cmp_id').val();
+        $.ajax({
+            type: "GET",
+            url: "/OutboundInq/DocAlocStyleEditDisplayGridToTextbox",
+            data: {
+                "p_str_RowNo": p_str_RowNo, "UnCheckvalue": AUnCheckvalue, "Checkvalue": ACheckvalue, "p_str_Reqqty": p_str_Reqqty, "p_str_AlocatedQty": p_str_AlocatedQty, "firstColumn": firstColumn, "Alocated": Alocated
+            },
+            datatype: "json",
+            success: function (e) {
+                debugger
+                $("#AlocLocId").val(e.loc_id);
+                $("#Alocselavail").val(e.back_ordr_qty);
+                $("#PkgQty").val(e.pkg_qty);
+                $("#Alocalocqty").val(e.Aloc);
+                $("#LineNum").val(e.linenum);
+                $("#AlocSelalocate").val(e.SelAloc);//CR20180616-001 Added By Nithya
+                $("#Alocselavail").val(e.avail_qty);
+                $("#Alocalocated").val(e.alocated);
+                $("#Alocalocqty").val(e.SelAloc);
+                $("#balanceQty").val(e.balanceqty);
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/OutboundInq/ShowManualAloc")',
+                    data: {
+                    },
+                    dataType: 'html',
+                    success: function (e) {
+                        $("#ajaxLoading").hide();
+                        $('#hdrgridAloc').hide();
+                        $('#AlocSelalocate').focus();
+                        $('#hdrgridAlocshow').html("");
+                        $('#hdrgridAlocshow').html(e);
+                    },
+                })
+            },
+        })
+    });
+</script>
+<script type="text/javascript">
+    $("#btnchanges").click(function () {
+        debugger
+        $('#btndones').show();
+        var p_str_line_num = $('#LineNum').val();
+        var p_str_Alocselalocated = $('#AlocSelalocate').val();
+        var p_str_AlocreqQty = $('#AlocreqQty').val();
+        var p_str_Alocalocated = $('#Alocalocated').val();
+        var l_str_avail_qty = $('#Alocavailable').val();
+        var l_str_Aloc = $('#Alocalocqty').val();
+        var Alocated = $('#Alocalocated').val();
+        if (p_str_line_num == "") {
+            p_str_line_num = 0;
+        }
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/IncludeManualAloc")',
+            data: {
+                "p_str_line_num": p_str_line_num, "p_str_Alocselalocated": p_str_Alocselalocated, "p_str_AlocreqQty": p_str_AlocreqQty, "Alocated": Alocated
+            },
+            dataType: 'html',
+            success: function (e) {
+                if (e == 1) {
+                    swal("", "Required Qty is Zero ,Try to Allocate more Quantity than Required.", "");
+                    $('body,html').animate({ scrollTop: 0 }, 0);
+                    $("#ajaxLoading").hide();
+                    er = 1;
+                    return false;
+                }
+                //if (e == '2') {
+                //    swal("", " Selected Qty is Not Multiple of Ppk. Do You Want to Break the Package.", "");
+                //    $('body,html').animate({ scrollTop: 0 }, 0);
+                //    er = 1;
+                //    return false;
+                //}
+                if (e == 3) {
+                    swal("", " Required Qty is Less than Entered Qty.", "");
+                    $('#AlocSelalocate').focus();
+                    $('body,html').animate({ scrollTop: 0 }, 0);
+                    $("#ajaxLoading").hide();
+                    er = 1;
+                    return false;
+                }
+                if (e == 4) {
+                    sweetAlert({
+                        title: "",
+                        text: "Selected Qty is Not Multiple of Ppk. Do You Want to Break the Package?",
+                        type: "",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "No",
+                        cancelButtonText: "Yes",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+       function (isConfirm) {
+           if (isConfirm) {
+               swal.close();
+           }
+
+           else {
+               debugger
+               $.ajax({
+                   type: "get",
+                   url: "/OutboundInq/IncludeManualAlocEdit",
+                   data: {
+                       "p_str_line_num": p_str_line_num,
+                       "p_str_Alocselalocated": p_str_Alocselalocated,
+                       "p_str_AlocreqQty": p_str_AlocreqQty, "Alocated": Alocated
+                   },
+                   datatype: 'html',
+                   success: function (e) {
+                       debugger
+                       $("#ajaxLoading").hide();
+                       if (e == 3) {
+                           swal("", " Required Qty is Less than Entered Qty.", "");
+                           $('#AlocSelalocate').focus();
+                           $("#ajaxLoading").hide();
+                           $('body,html').animate({ scrollTop: 0 }, 0);
+                           er = 1;
+                           return false;
+                       }
+                       //CR-20180616-001
+                       if (e == 5) {
+                           sweetAlert({
+                               title: "",
+                               text: "Entered Qty is Greater than Avail Qty. Do you Want to Allocate Avail Qty?",
+                               type: "",
+                               showCancelButton: true,
+                               confirmButtonClass: "btn-danger",
+                               confirmButtonText: "No",
+                               cancelButtonText: "Yes",
+                               closeOnConfirm: true,
+                               closeOnCancel: true
+                           },
+              function (isConfirm) {
+                  if (isConfirm) {
+                      swal.close();
+                  }
+
+                  else {
+                      debugger
+                      $.ajax({
+                          type: "get",
+                          url: "/OutboundInq/IncludeManualAvailQty",
+                          data: {
+                              "p_str_line_num": p_str_line_num,
+                              "p_str_Alocselalocated": p_str_Alocselalocated,
+                              "p_str_AlocreqQty": p_str_AlocreqQty, "Alocated": Alocated
+                          },
+                          datatype: 'html',
+                          success: function (e) {
+                              debugger
+                              $("#ajaxLoading").hide();
+                              $('#hdrgridAloc').hide();
+                              $('#hdrgridAlocshow').show();
+                              $('#hdrgridAlocshow').html("");
+                              $('#hdrgridAlocshow').html(e);
+                              $('#PkgQty').val('');
+                              $('#AlocLocId').val('');
+                              $('#Alocselavail').val('');
+                              $('#Alocalocqty').val('');
+                              $('#AlocSelalocate').val('');
+                              @*var value = '@Request.RequestContext.HttpContext.Session["SelAlocated"]';
+                              $('#Alocalocated').val(value);*@
+                              $.ajax({
+                                  type: "GET",
+                                  url: '@Url.Content("~/OutboundInq/GetAlocatedQty")',
+                                  contentType: "application/json; charset=utf-8",
+                                  data: {},
+                                  datatype: "json",
+                                  success: function (e) {
+                                      debugger
+                                      var rowCount = e;
+                                      $('#Alocalocated').val((rowCount));
+                                  },
+                              });
+                              //$('#Alocselalocated').val('');
+                              //$('#LineNum').val('');
+                          },
+                      })
+                  }
+              });
+                       }
+                       //END
+                       else
+                       {
+                           $("#ajaxLoading").hide();
+                           $('#hdrgridAloc').hide();
+                           $('#hdrgridAlocshow').show();
+                           $('#hdrgridAlocshow').html("");
+                           $('#hdrgridAlocshow').html(e);
+                           $('#PkgQty').val('');
+                           $('#AlocLocId').val('');
+                           $('#Alocselavail').val('');
+                           $('#Alocalocqty').val('');
+                           $('#AlocSelalocate').val('');
+                       @*var value = '@Request.RequestContext.HttpContext.Session["SelAlocated"]';
+                           $('#Alocalocated').val(value);*@
+                           $.ajax({
+                               type: "GET",
+                               url: '@Url.Content("~/OutboundInq/GetAlocatedQty")',
+                               contentType: "application/json; charset=utf-8",
+                               data: {},
+                               datatype: "json",
+                               success: function (e) {
+                                   debugger
+                                   var rowCount = e;
+                                   $('#Alocalocated').val((rowCount));
+                               },
+                           });
+                       }
+
+                       //$('#selalocated').val('');
+                       //$('#LineNum').val('');
+                   },
+               })
+           }
+       });
+                }
+                if (e == 5) {
+                    sweetAlert({
+                        title: "",
+                        text: "Entered Qty is Greater than Avail Qty. Do you Want to Allocate Avail Qty?",
+                        type: "",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "No",
+                        cancelButtonText: "Yes",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+       function (isConfirm) {
+           if (isConfirm) {
+               swal.close();
+           }
+
+           else {
+               debugger
+               $.ajax({
+                   type: "get",
+                   url: "/OutboundInq/IncludeManualAvailQty",
+                   data: {
+                       "p_str_line_num": p_str_line_num,
+                       "p_str_Alocselalocated": p_str_Alocselalocated,
+                       "p_str_AlocreqQty": p_str_AlocreqQty, "Alocated": Alocated
+                   },
+                   datatype: 'html',
+                   success: function (e) {
+                       debugger
+                       $("#ajaxLoading").hide();
+                       $('#hdrgridAloc').hide();
+                       $('#hdrgridAlocshow').show();
+                       $('#hdrgridAlocshow').html("");
+                       $('#hdrgridAlocshow').html(e);
+                       $('#PkgQty').val('');
+                       $('#AlocLocId').val('');
+                       $('#Alocselavail').val('');
+                       $('#Alocalocqty').val('');
+                       $('#AlocSelalocate').val('');
+                       @*var value = '@Request.RequestContext.HttpContext.Session["SelAlocated"]';
+                       $('#Alocalocated').val(value);*@
+                       $.ajax({
+                           type: "GET",
+                           url: '@Url.Content("~/OutboundInq/GetAlocatedQty")',
+                           contentType: "application/json; charset=utf-8",
+                           data: {},
+                           datatype: "json",
+                           success: function (e) {
+                               debugger
+                               var rowCount = e;
+                               $('#Alocalocated').val((rowCount));
+                           },
+                       });
+                       //$('#Alocselalocated').val('');
+                       //$('#LineNum').val('');
+                   },
+               })
+           }
+       });
+                }
+
+                else {
+                    debugger
+                    $("#ajaxLoading").hide();
+                    $('#hdrgridAloc').hide();
+                    $('#hdrgridAlocshow').show();
+                    $('#hdrgridAlocshow').html("");
+                    $('#hdrgridAlocshow').html(e);
+                    $('#PkgQty').val('');
+                    $('#AlocLocId').val('');
+                    $('#Alocselavail').val('');
+                    $('#Alocalocqty').val('');
+                    $('#AlocSelalocate').val('');
+                    @*alert(@Session["SelAlocated"]);
+                    $('#Alocalocated').val(@Session["SelAlocated"]);*@
+                    @*var value = '@Request.RequestContext.HttpContext.Session["SelAlocated"]';
+                    $('#Alocalocated').val(value);*@
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/OutboundInq/GetAlocatedQty")',
+                        contentType: "application/json; charset=utf-8",
+                        data: {},
+                        datatype: "json",
+                        success: function (e) {
+                            debugger
+                            var rowCount = e;
+                            $('#Alocalocated').val((rowCount));
+                        },
+                    });
+                    //$('#Alocselalocated').val('');
+                    //$('#LineNum').val('');
+                }
+            },
+        });
+    });
+
+    $("#btndones").click(function () {
+        debugger
+        var p_str_cmp_id = $('#cmp_id').val();
+        var Whsid = $('#Alocwhsid').val();
+        var dueqty = $('#Alocqueqty').val();
+        var Availqty = $('#Alocavailable').val();
+        var View_Flag = $('#View_Flag').val();
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/OutboundInq/MAnualAlocSave")',
+            data: {
+                "p_str_cmp_id": p_str_cmp_id, "Whsid": Whsid, "dueqty": dueqty, "Availqty": Availqty, "View_Flag": View_Flag
+            },
+            dataType: 'html',
+            success: function (e) {
+                $("#ajaxLoading").hide();
+                if (e == 1) {
+                    $('[href="#childtabsAloc-4"]').closest('li').hide();
+                    $('[href="#childtabsAloc-3"]').trigger('click');
+                    $('[href="#childtabsAloc-3"]').closest('li').show();
+                    //$("#childtabsAloc").tabs("option", "active", $("#childtabsAloc").tabs('option', 'active') - 1);
+                }
+                else {
+                    $('#hdrgridAlocSummary').hide();
+                    $('#hdrgridAlocSummaryshow').html("");
+                    $('#hdrgridAlocSummaryshow').html(e);
+                    $('#PkgQty').val('');
+                    $('#AlocLocId').val('');
+                    $('#Alocselavail').val('');
+                    $('#Alocalocqty').val('');
+                    $('#AlocSelalocate').val('');
+                    ////CR-180407-001 Added By Nithya
+                    $('[href="#childtabsAloc-4"]').closest('li').hide();
+                    $('[href="#childtabsAloc-3"]').trigger('click');
+                    $('[href="#childtabsAloc-3"]').closest('li').show();
+
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/OutboundInq/OutboundAlocOrders")',
+                        contentType: "application/json; charset=utf-8",
+                        data: { "p_str_cmp_id": p_str_cmp_id },
+                        datatype: "json",
+                        success: function (data) {
+                            $("#ajaxLoading").hide();
+                            $('#hdrgridAlocOrder').html(data);
+                            $('#hdrgridAlocOrdershow').modal(options);
+                            $('#hdrgridAlocOrdershow').modal('show');
+                        },
+                        error: function () {
+                            swal("", "Dynamic content load failed.", "");
+                        }
+                    });
+                }
+                //   $("#childtabs-4").hide();
+                //$("a[href='#childtabs-4']").tab("hide");
+                //$("#ajaxLoading").hide();
+                //$('#hdrgridAlocSummary').hide();
+                //$('#hdrgridAlocSummaryshow').html("");
+                //$('#hdrgridAlocSummaryshow').html(e);
+                //$('[href="#childtabs-4"]').closest('li').hide();
+                //$('[href="#childtabs-3"]').trigger('click');
+                //$('#PkgQty').val('');
+                //$('#AlocLocId').val('');
+                //$('#Alocselavail').val('');
+                //$('#Alocalocqty').val('');
+                //$('#AlocSelalocate').val('');
+                //$('#LineNum').val('');
+                //debugger
+                //$("#ajaxLoading").hide();
+                //$('#hdrgridAloc').hide();
+                //$('#hdrgridAlocshow').html("");
+                //$('#hdrgridAlocshow').html(e);
+                //$('#PkgQty').val('');
+                //$('#AlocLocId').val('');
+                //$('#Alocselavail').val('');
+                //$('#Alocalocqty').val('');
+                //$('#Alocselalocated').val('');
+                //$('#LineNum').val('');
+            },
+        })
+    });
+</script>
+<script type="text/javascript">
+    $(".Alocate").bind('keypress', function (e) {
+        $('#btnchanges').show();
+        $('#btndones').hide();
+    });
+</script>

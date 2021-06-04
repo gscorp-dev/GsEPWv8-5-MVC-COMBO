@@ -1,0 +1,371 @@
+﻿@model  GsEPWv8_5_MVC.Model.MailConfigModel
+
+@{
+    ViewBag.Title = "MailConfig";
+   
+
+}
+<style>
+    div#ajaxLoadingSaveMail {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<style type="text/css">
+    fieldset {
+        /*margin: 8px;*/
+        border: 1px solid silver;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    legend {
+        padding: 2px;
+    }
+
+    legend {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 23px;
+        font-size: 14px;
+        line-height: inherit;
+        color: #e81994;
+        border: 0;
+        font-weight: bold;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: 12px;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .ScreenTitle {
+        padding-left: 40px;
+        font-size: 18px;
+        font-family: Verdana;
+        font-weight: bold;
+        padding-top: 13px;
+    }
+
+    .ui-autocomplete {
+        color: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;text-align:center">Mail Entry</h4>
+    <button type="button" id="btnNewConfigClose" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 21px;">Close</button>
+    <button type="button" id="btnSave" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;margin-left:-28px;background-color: #00c0ef;">Save</button>
+   
+</div>
+<div id="ajaxLoadingSaveMail" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+<fieldset style="margin-top:-1px;">
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-2" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Comp ID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -20px;width:38%;">
+                            @Html.DropDownListFor(model => model.cmp_id, new SelectList(Model.ListCompanyPickDtl, "cmp_id", "cmp_name"), new { @id = "new_cmp_id", @class = "form-control txtlbl", @maxlength = "100", @style = "background-color:lightyellow;" })
+                        </div>
+                        <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Status:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -20px;">
+                        @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                                            {
+
+                                            new SelectListItem() {Text = "Active", Value="Active"},
+                                            new SelectListItem() {Text = "InActive", Value="InActive"},
+                                            }, new { @class = "form-control txtlbl", @style = "background-color:lightyellow;" })
+                    </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 131px;margin-left:-10px;">
+                            <label><b class="Lblmanual">ScreenID:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-11px;">
+                            @Html.DropDownListFor(model => model.scn_id, new List<SelectListItem>
+                                            {
+                                             new SelectListItem() {Text = "Select", Value=""},
+                                            new SelectListItem() {Text = "Inbound Inquiry", Value="Inbound Inquiry"},
+                                            new SelectListItem() {Text = "Outbound Inquiry", Value="Outbound Inquiry"},
+                                            new SelectListItem() {Text = "Stock Inquiry", Value="Stock Inquiry"},
+                                              new SelectListItem() {Text = "StockAsOfDate Inquiry", Value="StockAsOfDate Inquiry"},
+                                            new SelectListItem() {Text = "Vas Inquiry", Value="Vas Inquiry"},
+                                            new SelectListItem() {Text = "Billing Inquiry", Value="Billing Inquiry"},
+                                           
+                                            }, new { @class = "form-control txtlbl",@style= "background-color:lightyellow;width:233px",@id="ScreenID", })
+
+                        </div>
+                        <div class=" col-xs-1" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;margin-left:94px;">
+                            <label><b class="Lblmanual">ReportName:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left: -16px;">
+                            @Html.DropDownListFor(model => model.rpt_name, new SelectList(Model.LstMailConfigReports, "rpt_id", "rpt_name"), "ALL ", new { @class = "form-control txtlbl", @id = "LstMailConfigNewReports",@style = "background-color:lightyellow;width:300px" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-12" style="margin-top: -8px;">                                 
+                        <div class="col-xs-2" style="text-align:right;margin-top:6px;font-size:12px;width: 120px;">
+                            <label><b class="Lblmanual">Email To:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:-12px;">
+                            @Html.TextBoxFor(model => model.EmailTo, new { @class = "form-control txtlbl", @maxlength = "10000",@id="NewEmailTo",@style="width:670px" })
+                        </div>
+                        <div class="col-xs-2" style="text-align:right;margin-top:0px;font-size:12px;width: 120px;margin-left:520px;">
+                            <button class="btn-Clear" id="btnEmailSelect" type="button" style="background-color:red;width:132px" align="center">Pick UsersList</button>
+                        </div>
+                        
+                    </div>
+                </div>
+                <br />
+                <br />
+            <div class="row">
+                <div class="col-xs-12" style="margin-top: -8px;">
+                    <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;">
+                        <label><b class="Lblmanual">Email CC:</b></label>
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -12px;">
+                        @Html.TextBoxFor(model => model.EmailCC, new { @class = "form-control txtlbl", @maxlength = "10000", @id = "NewEmailCC", @style = "width:670px", placeholder = " Use Comma (,) to include multiple emails" })
+                    </div>
+                    <div class="col-xs-2" style="margin-left: -12px;">
+                        <label><b class="Lblmanual" style="margin-left:378px"> </b></label>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <br />
+                    <div class="row">
+                        <div class="col-xs-2" style="text-align: right;  margin-top: 6px;font-size:12px;width: 120px;left:12px;">
+                            <label><b class="Lblmanual">Message:</b></label>
+                        </div>
+                        <div class="col-xs-2" style="margin-left:3px;">
+                            @Html.TextAreaFor(model => model.emailbody, new { @class = "form-control txtlbl", @maxlength = "100", @id = "NewEmailMessage", @style = "width:670px;height:122px" })
+                        </div>
+                    </div>
+                    <div>
+                        @Html.HiddenFor(model => model.econtent, new { @id = "SelectList" })
+                    </div>
+                
+            </div>
+
+        </div>
+</fieldset>
+
+
+
+<script>
+    $("#btnNewConfigClose").click(function () {
+        debugger
+        var p_str_cmpid = $('#new_cmp_id').val();
+        var url = '@Url.Action("MailConfig", "MailConfig")';
+        url += '?id=' + p_str_cmpid;
+        window.location.href = url;
+    })
+</script>
+
+
+<script type="text/javascript">
+    var TeamDetailPostemailBackURL = '/MailConfig/LoadMailList';
+    debugger
+         $(function () {
+             $("#btnEmailSelect").click(function () {
+                 var compid = $('#new_cmp_id').val();
+                 var SelectedMailList = $('#SelectList').val();
+                 var options = { "backdrop": "static", keyboard: true };
+                 $("#ajaxLoadingSaveMail").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostemailBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "compid": compid, "SelectedMailList": SelectedMailList
+                },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoadingSaveMail").hide();
+                    $('#myModalNewContentEmailList').html(data);
+                    $('#myModalNewEmailList').modal(options);
+                    $('#myModalNewEmailList').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                    $("#ajaxLoadingSaveMail").hide();
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModalNewEmailList').modal('hide');
+            $("#ajaxLoadingSaveMail").hide();
+        });
+    });
+</script>
+
+<script>
+        $('#btnSave').click(function () {
+            debugger
+            var compid = $('#new_cmp_id').val();
+            var screenid = $('#ScreenID').val();
+            var Reportid = $('#LstMailConfigNewReports').val();
+            var mailto = $('#NewEmailTo').val();
+            var mailcc = $('#NewEmailCC').val();
+            var content = $('#NewEmailMessage').val();
+            var status = $('#Status').val();
+            if (compid == "") {
+                sweetAlert("", "Company Name is Required.", "");
+                return false;
+            }
+            if (screenid == "") {
+                sweetAlert("", "ScreenID is Required", "");
+                return false;
+            }
+            if (Reportid == "")
+            {
+                sweetAlert("", "ReportName is Required", "");
+                return false;
+            }
+            if (mailto == "") {
+                sweetAlert("", "Atleast One Email To is Required", "");
+                return false;
+            }
+            if (content == "") {
+                sweetAlert("", "Email Content is Required", "");
+                return false;
+            }
+            if (status == "") {
+                sweetAlert("", "Email Content is Required", "");
+                return false;
+            }
+            $("#ajaxLoadingSaveMail").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/MailConfig/SaveConfigDetails")',
+                data: '{compid:"' + compid + '",screenid:"' + screenid + '",Reportid:"' + Reportid +'",mailto: "' + mailto + '",mailcc:"' + mailcc + '",content: "' + content + '",status: "' + status + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (e) {
+                    if (e == true) {
+                        swal({
+                            title: "",
+                            text: " Details Saved successfully",
+                            type: "",
+                            showCancelButton: false,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Ok",
+                            closeOnConfirm: true
+                        },
+
+                         function () {
+                             setTimeout(function () {
+                                 $('#myModalNew').modal('hide');
+                                 $.ajax({
+                                     type: "get",
+                                     url: "/MailConfig/MailConfig",
+                                     data: {
+
+                                     },
+                                     datatype: 'html',
+                                     success: function (e) {
+                                         debugger
+                                         $("#ajaxLoadingSaveMail").hide();
+
+                                     },
+                                 })
+
+                             });
+                         });
+                      
+                    }
+                    else
+                    {
+                        sweetAlert("", "Details are already Exist Please Check it", "");
+                        $('#NewEmailTo').val('');
+                        $('#NewEmailCC').val('');
+                        $('#NewEmailMessage').val('');
+                        $("#ajaxLoadingSaveMail").hide();
+                    }
+                },
+
+                failure: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveMail").hide();
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveMail").hide();
+                }
+            });
+
+
+
+        })
+
+</script>
+<script>
+    $('#ScreenID').on('change', function () {
+            debugger
+            var compid = $('#new_cmp_id').val();
+            var screenid = $(this).find(":selected").val();
+            $("#ajaxLoadingSaveMail").hide();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/MailConfig/MailConfigChange")',
+                data: '{compid: "' + compid + '" ,screenid: "' + screenid + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (r) {
+                    $("#ajaxLoading").hide();
+                    var NewReportname = $('#LstMailConfigNewReports');
+                    NewReportname.empty();
+                    $.each(r.LstMailConfigReports, function (key, value) {
+                        NewReportname.append('<option value=' + value.rpt_id + '>' + value.rpt_name + '</option>');
+                    });
+                   
+                },
+
+                failure: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveMail").hide();
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                    $("#ajaxLoadingSaveMail").hide();
+
+                }
+            });
+
+
+        });
+</script>

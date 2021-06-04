@@ -1,0 +1,94 @@
+﻿@model GsEPWv8_5_MVC.Model.ExceptionReportsModel
+
+@{
+    var Ordercount = Model.LstExceptionRpt.Count;
+}
+<div class="gridSummary">
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%;text-align:right">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style="width:105px;"></td>
+            <td style="width:105px;"></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<br />
+<div class="box box-primary">
+    <br />
+    <table id="ParGrdExceptionRpt" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">CMP_ID</th>
+                <th class="grid_header_backcolor">SR#</th>
+                <th class="grid_header_backcolor">SR Date</th>
+                <th class="grid_header_backcolor">ALOC STATUS</th>
+                <th class="grid_header_backcolor">STYLE</th>
+                <th class="grid_header_backcolor">COLOR</th>
+                <th class="grid_header_backcolor">SIZE</th>
+                <th class="grid_header_backcolor">SR QTY</th>
+                <th class="grid_header_backcolor">ALOC DOC ID</th>
+                <th class="grid_header_backcolor">ALOC QTY</th>
+                <th class="grid_header_backcolor">SHIP DOC ID</th>
+                <th class="grid_header_backcolor">SHIP QTY</th>
+                <th class="grid_header_backcolor">IN QTY</th>
+                <th class="grid_header_backcolor">OUT QTY</th>
+                <th class="grid_header_backcolor">HST QTY</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.LstExceptionRpt.Count; i++)
+            {
+                <tr class="row-select">
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].CMP_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].SO_NUM</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].SO_DT.ToString("MM/dd/yyyy")</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].ALOC_STATUS</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].ITM_NUM</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].ITM_COLOR</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].ITM_SIZE</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstExceptionRpt[i].SO_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].ALOC_DOC_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstExceptionRpt[i].ALOC_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstExceptionRpt[i].SHIP_DOC_ID</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstExceptionRpt[i].SHIP_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstExceptionRpt[i].IN_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstExceptionRpt[i].OUT_QTY</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.LstExceptionRpt[i].HST_QTY</td>                  
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+
+    $('#ParGrdExceptionRpt').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "scrollCollapse": true,
+        "sScrollY": "460px",
+        "sScrollX": "100%",
+
+    });
+</script>
+
+
+
+
+
+

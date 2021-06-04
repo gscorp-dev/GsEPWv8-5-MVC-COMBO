@@ -1,0 +1,614 @@
+﻿@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+
+@{
+    var Ordercount = Model.ListBillingInquiry.Count;
+    decimal l_dec_tot_bill_amnt = 0;
+
+}
+@for (int j = 0; j < Model.ListBillingInquiry.Count(); j++)
+{
+    var bill_amt = (Model.ListBillingInquiry[j].bill_amt);
+    decimal l_dec_bill_amnt = bill_amt;
+    if (l_dec_bill_amnt > 0)
+    {
+        l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+    }
+}
+<!-- /.box-header -->
+<br />
+<div class="gridSummary">
+    <table>
+        <tr>
+            <td style="width:20%;text-align:right;padding-right:5%">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @Ordercount
+                </label>
+            </td>
+            <td style="width:20%;  ">
+                <span style="font-size: 1.5em;color:#116b42;font-weight: bold;text-align:right;">
+                    Total Bill Amount:
+                </span>
+                <label class="totalCount" style="text-align:left">
+                    @l_dec_tot_bill_amnt.ToString("0.00")
+                </label>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="box box-primary">
+    @*<div class="box-body">*@
+    <div class="row">
+    </div>
+    <br />
+
+    <table id="GrdBillingInq" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor">Print <input class="checkbox" id="ckbCheckAll" name="tblcheckbox" type="checkbox" /></th>
+                <th class="grid_header_backcolor">Invoice</th>
+                <th class="grid_header_backcolor">InvoiceDate</th>
+                @if (Model.is_company_user == "Y")
+                {
+                    <th class="grid_header_backcolor">Action</th>
+                }
+                <th class="grid_header_backcolor">BillFromDate</th>
+                <th class="grid_header_backcolor">BillToDate</th>
+                <th class="grid_header_backcolor">Status</th>
+                <th class="grid_header_backcolor">Bill Type</th>
+                <th class="grid_header_backcolor">CustId</th>
+                <th class="grid_header_backcolor">Customer Name</th>
+                <th class="grid_header_backcolor">BillAmount</th>
+
+            </tr>
+        </thead>
+
+        <tbody style="width:100%">
+            @for (int i = 0; i < Model.ListBillingInquiry.Count; i++)
+            {
+                var bill_amt = (Model.ListBillingInquiry[i].bill_amt);
+                decimal l_dec_bill_amnt = bill_amt;
+                if (l_dec_bill_amnt > 0)
+                {
+                    l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + l_dec_bill_amnt;
+                }
+                var l_dec_bill_amt = bill_amt.ToString("F2");
+
+                <tr class="row-select">
+                    <td style="text-align:center;width:3%"><input class="checkbox" id="chkdd_@i" name="tblcheckbox" type="checkbox" value="@Model.ListBillingInquiry[i].Bill_doc_id"  data_bill_type="@Model.ListBillingInquiry[i].bill_type" /></td>
+                    <td style="width:13%">
+                    <table>
+                        <tr>
+                            <td style="font-size:12px; color:black; font-weight:bold;">
+
+                                <a href="javascript:void(0);" style="text-decoration:underline; color:#034af3;" class="BillDetail" data-id1="@Model.ListBillingInquiry[i].Bill_DOC_DT" data-id="@Model.ListBillingInquiry[i].Bill_doc_id" data-id2="@Model.ListBillingInquiry[i].bill_type">@Model.ListBillingInquiry[i].Bill_doc_id</a>
+
+                            @if ((@Model.ListBillingInquiry[i].bill_type.Trim() == "INOUT" || @Model.ListBillingInquiry[i].bill_type.Trim() == "NORM") && @Model.ListBillingInquiry[i].status.Trim() != "VOID")
+                            {
+
+
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="BillRegenerate" data-id="@Model.ListBillingInquiry[i].cmp_id" data-id1 ="@Model.ListBillingInquiry[i].cust_id" data-id2="@Model.ListBillingInquiry[i].Bill_doc_id" data-id3="@Model.ListBillingInquiry[i].bill_doc_dt" data-id4="@Model.ListBillingInquiry[i].bill_pd_fm" data-id5="@Model.ListBillingInquiry[i].bill_pd_to" data-id6 ="@Model.ListBillingInquiry[i].bill_type"><span class="glyphicon glyphicon-repeat" style="font-size: 18px;">
+                                  </span><b>ReBill</b></a>
+                            </td>
+
+                            }
+                            else
+                            {
+                                <td style="font-size:12px; color:black; font-weight:bold;"></td>
+                            }
+
+                        </tr>
+                        </table>
+                    </td>
+
+                        <td style="font-size:12px; color:black; font-weight:bold; width:4%">@Model.ListBillingInquiry[i].bill_doc_dt</td>
+                        <td style="width:8%">
+                            <table>
+                                <tr>
+                                    @if (Model.is_company_user == "Y")
+                                    {
+                                        if (@Model.ListBillingInquiry[i].status.Trim() == "P")
+                                        {
+                                            <td> </td>
+                                            <td> </td>
+                                        }
+                                        else if (@Model.ListBillingInquiry[i].status.Trim() == "O")
+                                        {
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline;color: blue;" class="BillPostDetail" data-id="@Model.ListBillingInquiry[i].Bill_doc_id" data-id1="@Model.ListBillingInquiry[i].cmp_id" data-id2="@Model.ListBillingInquiry[i].status" data-id3="@Model.ListBillingInquiry[i].Bill_DOC_DT"><span class="glyphicon glyphicon-pencil" style="font-size: 18px;"></span><b>Post</b></a>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="BillDeleteDetail" data-id="@Model.ListBillingInquiry[i].Bill_doc_id" data-id1="@Model.ListBillingInquiry[i].cmp_id" data-id2="@Model.ListBillingInquiry[i].status" data-id3="@Model.ListBillingInquiry[i].bill_type"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>Del</b></a>
+                                            </td>
+
+                                        }
+                                        else if ((@Model.ListBillingInquiry[i].status.Trim() == "VOID")  && (Session["UserID"].ToString() == "pm"))
+                                        {
+                                            <td>
+                                                
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="BillDeleteDetail" data-id="@Model.ListBillingInquiry[i].Bill_doc_id" data-id1="@Model.ListBillingInquiry[i].cmp_id" data-id2="@Model.ListBillingInquiry[i].status" data-id3="@Model.ListBillingInquiry[i].bill_type"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>V.Del</b></a>
+                                            </td>
+
+                                        }
+
+                                        else
+                                        {
+                                            <td> </td>
+                                            <td> </td>
+                                        }
+
+
+
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="font-size:12px; color:black; font-weight:bold; width:8%">@Model.ListBillingInquiry[i].bill_pd_fm</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; width:8%">@Model.ListBillingInquiry[i].bill_pd_to</td>
+                        @if (@Model.ListBillingInquiry[i].status.Trim() == "O")
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">OPEN</td>
+                        }
+                        else if (@Model.ListBillingInquiry[i].status.Trim() == "P")
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">POST</td>
+                        }
+
+                        else if (@Model.ListBillingInquiry[i].status.Trim() == "VOID")
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">VOID</td>
+                        }
+
+                        @if (@Model.ListBillingInquiry[i].bill_type.Trim() == "NORM")
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">VAS</td>
+                        }
+                        else
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.ListBillingInquiry[i].bill_type</td>
+                        }
+                        <td style="font-size:12px; color:black; font-weight:bold; width:15%">@Model.ListBillingInquiry[i].cust_id</td>
+                        <td style="font-size:12px; color:black; font-weight:bold; width:15%">@Model.ListBillingInquiry[i].cust_name</td>
+                        <td style="font-size:12px; color:black; font-weight:bold;text-align:right; width:8%">@l_dec_bill_amt </td>
+
+</tr>
+            }
+
+            </tbody>
+            </table>
+        </div>
+
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 300%;left:-550px; ">
+            <div id='myModalContent' style="width: 100%; height: 1000px; "></div>
+        </div>
+    </div>
+</div>
+
+<div id='myModalBillRegGen' class='modal'>
+    <div class="modal-dialog">
+        <center>
+            <div class="modal-content" style="width: 300%; left:-550px;">
+                <div id='myModalContentBillRegGen' style="width: 100%;height: 1050px;"></div>
+
+            </div>
+        </center>
+    </div>
+</div>
+
+
+<div id='myModalVASBillRegGen' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 300%;left:-550px; ">
+            <div id='myModalContentVASBillRegGen' style="width: 100%; height: 1050px; "></div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostBackURL = '/BillingInquiry/Billingdtl';
+
+    $(function () {
+        debugger
+        $('#GrdBillingInq tbody').on('click', '.BillDetail', function () {
+            var $buttonClicked = $(this);
+            var BilldocId = $buttonClicked.attr('data-id');
+            var Billdocdate = $buttonClicked.attr('data-id1');
+            var BillType = $buttonClicked.attr('data-id2');
+            var p_str_viewmode = "View";
+            var Type = "Inout"
+            var datefrom = $("#Bill_doc_dt_Fr").val();//CR20180515-001
+            var dateto = $("#Bill_doc_dt_To").val();
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto, "Type": Type, "BillType": BillType },//CR20180515-001
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+    $("#btnClose").click(function () {
+
+        window.location.href = '@Url.Action("Dashboard", "DashBoard")';
+    })
+    $(function () {
+        //$('#GrdBillingInq').DataTable()
+        $('#GrdBillingInq').DataTable({
+            "paging": true,
+            "pageLength": 50,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            "sScrollY": "460px",
+            "sScrollX": "100%",
+        })
+    })
+
+
+                  
+</script>
+<script>
+    var cmp_id = $("#cmp_id").val();
+    var DeletePostBackURL = '/BillingInquiry/Billingdtl';
+    var UrlReGenerateBill = '/BillingInquiry/BillRegenerate';
+
+    $(function () {
+        $('#GrdBillingInq tbody').on('click', '.BillRegenerate', function () {
+            debugger
+            var $buttonClicked = $(this);
+
+            var p_str_cmp_id = $buttonClicked.attr('data-id');
+            var p_str_cust_id = $buttonClicked.attr('data-id1');
+            var p_str_bill_doc_id = $buttonClicked.attr('data-id2');
+            var p_str_bill_doc_dt = $buttonClicked.attr('data-id3');
+            var p_str_bill_from_dt = $buttonClicked.attr('data-id4');
+            var p_str_bill_to_dt = $buttonClicked.attr('data-id5');
+            var p_str_bill_type = $buttonClicked.attr('data-id6');
+            var p_str_viewmode = "R";
+            var options = { "backdrop": "static", keyboard: true };
+            var Type = "";
+            $("#ajaxLoading").show();
+
+                 $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cust_id, "p_str_Bill_doc_id": p_str_bill_doc_id, "p_str_Bill_type": p_str_bill_type,
+                    "p_str_doc_dt_Fr": p_str_bill_from_dt, "p_str_doc_dt_To": p_str_bill_to_dt,
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+
+            $.ajax({
+                type: "GET",
+                url: UrlReGenerateBill,
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_cust_id": p_str_cust_id, "p_str_bill_doc_id": p_str_bill_doc_id, "p_str_bill_doc_dt": p_str_bill_doc_dt,
+                    "p_str_bill_from_dt": p_str_bill_from_dt, "p_str_bill_to_dt": p_str_bill_to_dt, "p_str_bill_type": p_str_bill_type
+                },
+
+                datatype: "json",
+                success: function (data) {
+
+                    if (p_str_bill_type == 'NORM')
+                        {
+                        $('#myModalContentVASBillRegGen').html(data);
+                        $('#myModalVASBillRegGen').modal(options);
+                        $('#myModalVASBillRegGen').modal('show');
+                    }
+                    else
+                    {
+                        $('#myModalContentBillRegGen').html(data);
+                        $('#myModalBillRegGen').modal(options);
+                        $('#myModalBillRegGen').modal('show');
+                    }
+
+                    $("#ajaxLoading").hide();
+
+                    return true;
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+
+
+        });
+        var DeletePostBackURL = '/BillingInquiry/Billingdtl';
+        $(".BillViewDetail").click(function () {
+            var $buttonClicked = $(this);
+
+            var BilldocId = $buttonClicked.attr('data-id');
+            var Billdocdate = $buttonClicked.attr('data-id3');
+            var p_str_viewmode = "V";
+            var datefrom = $("#Bill_doc_dt_Fr").val(); //CR 20180308_01 Added by Soniya
+            var dateto = $("#Bill_doc_dt_To").val(); //CR 20180308_01 Added by Soniya
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: '/BillingInquiry/Billingdtl',
+                contentType: "application/json; charset=utf-8",
+                data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto, "Type": Type },
+
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+
+        $('#GrdBillingInq tbody').on('click', '.BillEditDetail', function () {
+            var $buttonClicked = $(this);
+
+            var BilldocId = $buttonClicked.attr('data-id');
+            var Billdocdate = $buttonClicked.attr('data-id3');
+            var p_str_viewmode = "E";
+            var datefrom = $("#Bill_doc_dt_Fr").val(); //CR20180515-001 Added by Nithya
+            var dateto = $("#Bill_doc_dt_To").val();
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-04-28-001 Added By Nithya
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr,
+                    "p_str_doc_dt_To": p_str_doc_dt_To,
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto }, //CR20180515-001 Added by Nithya
+
+                datatype: "json",
+                success: function (data) {
+
+
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+<script>
+    var cmp_id = $("#cmp_id").val();
+    var DeletePostBackURL = '/BillingInquiry/Billingdtl';
+    $(function () {
+        $('#GrdBillingInq tbody').on('click', '.BillDeleteDetail', function () {
+            debugger
+            var $buttonClicked = $(this);
+
+            var BilldocId = $buttonClicked.attr('data-id');
+            var Billdocdate = $buttonClicked.attr('data-id3');
+            var p_str_viewmode = "D";
+            var datefrom = $("#Bill_doc_dt_Fr").val(); //CR 20180308_01 Added by Soniya
+            var dateto = $("#Bill_doc_dt_To").val(); //CR 20180308_01 Added by Soniya
+            var options = { "backdrop": "static", keyboard: true };
+            var Type = "";
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-04-28-001
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_bill_doc_id, "p_str_Bill_type": p_str_Bill_type,
+                    "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To,
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto, "Type": Type },
+
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+
+
+        });
+        var DeletePostBackURL = '/BillingInquiry/Billingdtl';
+        $(".BillViewDetail").click(function () {
+            var $buttonClicked = $(this);
+
+            var BilldocId = $buttonClicked.attr('data-id');
+            var Billdocdate = $buttonClicked.attr('data-id3');
+            var p_str_viewmode = "V";
+            var datefrom = $("#Bill_doc_dt_Fr").val(); //CR 20180308_01 Added by Soniya
+            var dateto = $("#Bill_doc_dt_To").val(); //CR 20180308_01 Added by Soniya
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: '/BillingInquiry/Billingdtl',
+                contentType: "application/json; charset=utf-8",
+                data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto, "Type": Type },
+
+                datatype: "json",
+                success: function (data) {
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+
+        $('#GrdBillingInq tbody').on('click', '.BillPostDetail', function () {
+            var $buttonClicked = $(this);
+
+            var BilldocId = $buttonClicked.attr('data-id');
+            var Billdocdate = $buttonClicked.attr('data-id3');
+            var p_str_viewmode = "P";
+            var datefrom = $("#Bill_doc_dt_Fr").val(); //CR20180515-001 Added by Nithya
+            var dateto = $("#Bill_doc_dt_To").val();
+            var options = { "backdrop": "static", keyboard: true };
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_Bill_doc_id = $('#Bill_doc_id').val();
+            var p_str_Bill_type = $('#Bill_type').val();//CRMVC-3PL-2018-04-28-001 Added By Nithya
+            var p_str_doc_dt_Fr = $('#Bill_doc_dt_Fr').val();
+            var p_str_doc_dt_To = $('#Bill_doc_dt_To').val();
+
+
+
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/BillingInquiry/BILL_INQ_HDR_DATA")',
+                data: {
+                    "p_str_cmp_id": p_str_cmp_id, "p_str_Bill_doc_id": p_str_Bill_doc_id, "p_str_Bill_type": p_str_Bill_type, "p_str_doc_dt_Fr": p_str_doc_dt_Fr, "p_str_doc_dt_To": p_str_doc_dt_To,
+                },
+                dataType: "json",
+                success: function (e) {
+                    //alert(e)
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "BilldocId": BilldocId, "cmp_id": cmp_id, "Billdocdate": Billdocdate, "p_str_viewmode": p_str_viewmode, "datefrom": datefrom, "dateto": dateto }, //CR20180515-001 Added by Nithya
+
+                datatype: "json",
+                success: function (data) {
+
+
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+
+                },
+                error: function () {
+                    //alert("Dynamic content load failed.");
+                    sweetAlert("", "Dynamic content load failed.", "");
+                }
+            });
+        });
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+<script>
+
+    $("input[name=chkAll").click(function () {
+        if ($(this).prop("checked") == true) {
+
+            $("input[name='tblcheckbox']").prop("checked", true);
+        }
+        else if ($(this).prop("checked") == false) {
+
+            $("input[name='tblcheckbox']").prop("checked", false);
+        }
+
+    });
+
+
+
+    //$("input[name='tblcheckbox']").click(function () {
+
+    //    if ($("input[name='tblcheckbox']").length == $("input[name='tblcheckbox']:checked").length) {
+    //        $("#chkAll").prop("checked", true);
+    //    }
+    //    else {
+    //        $("#chkAll").prop("checked", false);
+    //    }
+
+    //});
+    //$("input[name='tblcheckbox']").on('change', function () {
+    //    $("input[name='tblcheckbox']").not(this).prop('checked', false);
+    //});
+    //$('input[name=radio2]').change(function () {
+    //    alert('hit')
+    //    $("input[name='tblcheckbox']").not(this).prop('checked', false);
+    //    $(document).ready(function () {
+    //        $("#ckbCheckAll").click(function () {
+    //            $(".checkbox").prop('checked', $(this).prop('checked'));
+    //        });
+
+    //        $(".checkbox").change(function () {
+    //            if (!$(this).prop("checked")) {
+    //                $("#ckbCheckAll").prop("checked", false);
+    //            }
+    //        });
+    //    });
+    //});
+</script>
+

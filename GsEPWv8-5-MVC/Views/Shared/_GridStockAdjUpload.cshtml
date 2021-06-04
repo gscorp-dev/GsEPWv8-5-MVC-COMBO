@@ -1,0 +1,133 @@
+﻿@model GsEPWv8_5_MVC.Model.InvStkAdjModel
+@{
+    var Ordercount = Model.ListInvStkAdjUpload.Count;
+    var l_int_error_count = Model.ListInvPhyCountInvalidData.Count;
+    var l_str_error_desc = Model.error_desc;
+}
+<div id="grdInvAdjUpload" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+    <div>
+
+        <div>
+            <table id="grdStyle" class="table table-bordered table-striped" style="border:1px solid #121213 ;width:120%">
+                <thead class="grid_backcolor">
+                    <tr>
+                        @*<th class="grid_header_backcolor" style="width:3%"><input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" />Sel</th>*@
+                        <th class="grid_header_backcolor" style="width:3%">Ln#</th>
+                        <th class="grid_header_backcolor" style="width:7%">Style</th>
+                        <th class="grid_header_backcolor" style="width:6%">color </th>
+                        <th class="grid_header_backcolor" style="width:5%">Size</th>
+                        <th class="grid_header_backcolor" style="width:10%">Desc</th>
+                        <th class="grid_header_backcolor" style="width:6%">Lot# </th>
+                        <th class="grid_header_backcolor" style="width:6%">PO#</th>
+                        <th class="grid_header_backcolor" style="width:5%">Action</th>
+                        <th class="grid_header_backcolor" style="width:6%">Location</th>
+                        <th class="grid_header_backcolor" style="width:6%">New Location</th>
+                        <th class="grid_header_backcolor" style="width:5%">Ctn(s)</th>
+                        <th class="grid_header_backcolor" style="width:5%">New Ctn(s)</th>
+                        <th class="grid_header_backcolor" style="width:4%">PPK</th>
+                        <th class="grid_header_backcolor" style="width:4%">New PPK</th>
+
+                        <th class="grid_header_backcolor" style="width:6%">Reason</th>
+                        <th class="grid_header_backcolor" style="width:14%">Note</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (int i = 0; i < Model.ListInvStkAdjUpload.Count; i++)
+                    {
+
+                        <tr class="row-select">
+                            @*<td  style="text-align:center">
+                                <input class="checkbox" id="chkdd_@i" name="tblcheckboxItemCode" type="checkbox" value="@Model.ListInvStkAdjUpload[i].ref_num" />
+                            </td>*@
+                            <td style="font-size:10px; color:black; font-weight:bold;text-align:right">@Model.ListInvStkAdjUpload[i].dtl_line</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListInvStkAdjUpload[i].itm_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold; text-align:left"> @Model.ListInvStkAdjUpload[i].itm_color</td>
+                            <td style="font-size:10px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].itm_size</td>
+                            <td style="font-size:10px; color:black; font-weight:bold;">@Model.ListInvStkAdjUpload[i].itm_name</td>
+
+                            <td style="font-size:10px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].lot_id</td>
+                            <td style="font-size:10px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].po_num</td>
+                            <td style="font-size:10px; color:black; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].action_flag</td>
+                            <td style="font-size:10px; color:blue;background-color:thistle; text-align:left">@Model.ListInvStkAdjUpload[i].cur_loc_id</td>
+                            <td style="font-size:10px; color:blue;background-color:yellow; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].new_loc_id</td>
+
+                            <td style="font-size:10px; color:blue;background-color:thistle;text-align:right">@Model.ListInvStkAdjUpload[i].cur_avail_ctn</td>
+                            <td style="font-size:10px; color:blue;background-color:yellow;text-align:right">@Model.ListInvStkAdjUpload[i].new_avail_ctn</td>
+                            <td style="font-size:10px; color:blue;background-color:thistle;text-align:right">@Model.ListInvStkAdjUpload[i].cur_itm_qty</td>
+                            <td style="font-size:10px; color:blue;background-color:yellow; font-weight:bold; text-align:right">@Model.ListInvStkAdjUpload[i].new_itm_qty</td>
+                            <td style="font-size:10px; color:blue;background-color:yellow; font-weight:bold;text-align:left">@Model.ListInvStkAdjUpload[i].adj_reason</td>
+                            <td style="font-size:10px; color:blue;background-color:yellow; font-weight:bold; text-align:left">@Model.ListInvStkAdjUpload[i].adj_note</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div id="divgrdInvAdjUploadError" class="box-header" style="padding: 5px; background-color: #eee;border-radius: 5px;">
+        <div style="font-size:14px; color:red; font-weight:bold;">
+            Inv Physical count File Upload Error Summary:
+            <label id="l_str_error_count" style="text-align:left">
+                @l_int_error_count
+            </label>
+        </div>
+
+        <div>
+            <input type="hidden" value="@ViewBag.l_int_error_count" id="l_int_error_count" />
+            <input type="hidden" value="@ViewBag.l_str_error_desc" id="l_str_error_desc" />
+        </div>
+
+        <br />
+        <div>
+            <table class="table table-bordered table-striped " style="border:1px solid #121213 ;width:100%" id="GridIB943Error">
+                <thead class="grid_backcolor">
+                    <tr>
+                        
+                        <th class="grid_header_backcolor" style="width:5%">Line#</th>
+                        <th class="grid_header_backcolor" style="width:50%">Line Data</th>
+                        <th class="grid_header_backcolor" style="width:35%">Error description</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @for (int i = 0; i < Model.ListInvPhyCountInvalidData.Count; i++)
+                    {
+
+
+                        <tr style="background-color:white;" class="row-select">
+                            <td style="font-size:13px; color:red; font-weight:bold; width:5%">@Model.ListInvPhyCountInvalidData[i].line_num</td>
+
+                            <td style="font-size:13px; color:red; font-weight:bold; width:50%">@Model.ListInvPhyCountInvalidData[i].line_data</td>
+                            <td style="font-size:13px; color:red; font-weight:bold; width:35%">@Model.ListInvPhyCountInvalidData[i].error_desc</td>
+
+                        </tr>
+
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+        $('#chkSelectAll').click(function (event) {
+            if ($(this).is(":checked")) {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $('.checkbox').each(function () {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+</script>

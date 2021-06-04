@@ -1,0 +1,508 @@
+﻿
+@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+
+@{
+    var Ordercounts = Model.ListRcvgDtl.Count;
+    int Ordercount = 0;
+    int TotalQty = 0;
+    int Totalctn = 0;
+    var g_int_total_records = Model.ListRcvgDtl.Count;
+}
+@for (int i = 0; i < Model.LstRcvdEntryCountDtl.Count; i++)
+{
+    Ordercount = Model.LstRcvdEntryCountDtl[i].recvcount;
+}
+<!-- /.box-header -->
+@for (int j = 0; j < Model.ListRcvgDtl.Count(); j++)
+{
+    var qty = (Model.ListRcvgDtl[j].tot_qty);
+    if (qty > 0)
+    {
+        TotalQty = TotalQty + qty;
+    }
+    var ctn = (Model.ListRcvgDtl[j].tot_ctn);
+    if (ctn > 0)
+    {
+        Totalctn = Totalctn + ctn;
+    }
+
+}
+
+<div id="GridRecvEdit">
+
+    <table id="MainRcvdDimEdit" style="width:100%">
+        <tr style="display:inline-block;width:30%">
+            <td style="width:66%;">
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Records:
+                </span>
+            </td>
+
+            <td style="width:30%;">
+                <label class="totalCount" style="text-align:left">
+                    @Model.recvcount
+                </label>
+            </td>
+
+        </tr>
+        <tr style="display:inline-block;width:30%">
+            <td>
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Qty:
+                </span>
+            </td>
+
+            <td style="width:30%;">
+                <label class="totalCount" style="text-align:left">
+                    @TotalQty
+                </label>
+            </td>
+
+        </tr>
+        <tr style="display:inline-block;width:30%">
+            <td>
+                <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                    Total Ctns:
+                </span>
+            </td>
+
+            <td style="width:40%;">
+                <label class="totalCount" style="text-align:left">
+                    @Totalctn
+                </label>
+            </td>
+            <td>
+                <button type="button" id="btnItemEditSave" class="btn-Close" style="float:right;background-color: #00c0ef;width:auto">Save Dim</button>
+            </td>
+            <td> </td>
+            <td>
+                <button type="button" id="btnItemEditClose" class="btn-Close">Close</button>
+            </td>
+        </tr>
+    </table>
+
+    @*<table style="width:100%">
+   
+       
+        <tr style="display:inline-block;width:30%">
+        
+
+            <td style="width:70%;">
+                <label class="totalCount" style="text-align:left">
+                    @Model.recvcount
+                </label>
+            </td>
+
+           <td >
+                <button type="button" id="btnItemEditSave" class="btn-Close" style="float:right;background-color: #00c0ef;">Save</button>
+            </td>
+            <td> </td>
+            <td>
+                <button type="button" id="btnItemEditClose" class="btn-Close">Close</button>
+            </td>
+        </tr>
+    </table>*@
+
+</div>
+<br />
+<div class="box">
+    <div id="table-Details-edit">
+        <div style="overflow-y:auto; height:auto; width:auto;">
+            <table id="grdDimEdit" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor">Sel</th>
+                        <th class="grid_header_backcolor">Line</th>
+                        <th class="grid_header_backcolor" style="display:none;">CtnLine</th>
+                        <th class="grid_header_backcolor" style="display:none;">ItmCode</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">Description</th>
+
+                        <th class="grid_header_backcolor">Ctn(s)</th>
+                        <th class="grid_header_backcolor">PPk</th>
+                        <th class="grid_header_backcolor">TotQty</th>
+
+                        <th class="grid_header_backcolor">Loc Id</th>
+
+                        <th class="grid_header_backcolor">Length</th>
+                        <th class="grid_header_backcolor">Width</th>
+                        <th class="grid_header_backcolor">Depth</th>
+                        <th class="grid_header_backcolor col-xs-1">CalcCube</th>
+                        <th class="grid_header_backcolor">Cube</th>
+                        <th class="grid_header_backcolor">Weight</th>
+                   
+              
+                        <th class="grid_header_backcolor">Factory</th>
+                        <th class="grid_header_backcolor">Vend PO</th>
+                        <th class="grid_header_backcolor">Customer</th>
+                        <th class="grid_header_backcolor">CustPO</th>
+                        <th class="grid_header_backcolor">Pick List</th>
+
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+
+                    @for (int i = 0; i < Model.ListRcvgDtl.Count; i++)
+                    {
+                        int line = i + 1;
+                        string lstrItmCode = Model.ListRcvgDtl[i].itm_code;
+                        int lintDtlLine =  Model.ListRcvgDtl[i].dtl_line;
+                        int lintCtnNum = Model.ListRcvgDtl[i].ctn_line;
+
+                        <tr id="@Model.ListRcvgDtl[i].cmp_id ">
+
+                            <td id="chkItmEdit" DataCurLine="@line" DataItmCode="@lstrItmCode" DataDtlLine="@lintDtlLine" DataCtnLine="@lintCtnNum" style="text-align:center;">
+                            @if (lintCtnNum == 1)
+                            {
+                                <input id="check_@i" name="chkItmEdit"   class="attribute" type="checkbox" />
+                            }
+                            else
+                            {
+                                <input id="check_@i" name="chkItmEdit" disabled="disabled" class="attribute" type="checkbox" />
+                            }
+                            </td>
+
+                            <td style="font-size:10px; color:black; font-weight:normal;">@Html.TextBoxFor(model => model.ListRcvgDtl[i].dtl_line, new { @id = "NewDtlLine_" + i, @readonly = "readonly", @style = "width:50px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal;display:none;">@Html.TextBoxFor(model => model.ListRcvgDtl[i].ctn_line, new { @id = "NewCtnLine_" + i})</td>
+                            <td style="font-size:10px; color:black; font-weight:normal;display:none;">@Html.TextBoxFor(model => model.ListRcvgDtl[i].itm_code, new { @id = "NewItmCode_" + i, @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].itm_num, new { @id = "NewItmNum_" + i, @readonly = "readonly", @style = "width:120px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].itm_color, new { @id = "NewItmColor_" + i, @readonly = "readonly", @style = "width:100px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].itm_size, new { @id = "NewItmSize_" + i, @readonly = "readonly", @style = "width:90px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].itm_name, new { @id = "NewItmName_" + i, @readonly = "readonly", @style = "width:150px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].tot_ctn, new { @id = "NewTotCtn_" + i, @readonly = "readonly", @class = "numericOnly CalcTotQty", @maxlength = "10", @style = "width:60px;text-align:right;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line, @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].ctn_qty, new { @id = "NewCtnQty_" + i, @readonly = "readonly", @class = "numericOnly CalcTotQty", @maxlength = "6", @style = "width:50px;text-align:right;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line, @data = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].tot_qty, new { @id = "NewTotQty_" + i, @readonly = "readonly ctrNumber ", @maxlength = "10", @style = "width:70px;text-align:right;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            @if (lintCtnNum == 1)
+                            {
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].loc_id, new { @id = "NewLocId_" + i, @class = "clsLocId", @maxlength = "10", @style = "width:80px;text-align:left;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].length, new { @id = "Newlength_" + i, @class = "three-decimals ctrNumber", @maxlength = "10", @style = "width:70px;text-align:right;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line, @curLine = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].width, new { @id = "NewWidth_" + i, @class = "three-decimals ctrNumber", @maxlength = "10", @style = "width:70px;text-align:right;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].depth, new { @id = "NewDepth_" + i, @class = "three-decimals ctrNumber ", @maxlength = "10", @style = "width:70px;text-align:right;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">
+                                <a href="javascript:void(0);" class="btn btn-primary small btnCalcCube" style="color: white;height: 25px;width: 100px; border-radius: 5px;font-size: 10px;font-family: bold;padding-top: 5px; background-color:#ff9966" data=@i>Calc Cube</a>
+                            </td>
+
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].cube, new { @id = "NewCube_" + i, @class = "three-decimals ctrNumber ", @maxlength = "10", @style = "width:80px;text-align:right;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line, @curLine = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].wgt, new { @id = "NewWgt_" + i, @class = "three-decimals ctrNumber ", @maxlength = "10", @style = "width:80px;text-align:right;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].factory_id, new { @id = "NewFactoryId_" + i, @maxlength = "20", @style = "width:100px;text-align:left;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].po_num, new { @id = "NewPoNum_" + i, @maxlength = "20", @style = "width:100px;text-align:left;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].cust_name, new { @id = "NewCustName_" + i, @maxlength = "50", @style = "width:150px;text-align:left;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].cust_po_num, new { @id = "NewCustPoNum_" + i, @maxlength = "20", @style = "width:100px;text-align:left;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].pick_list, new { @id = "NewPickList_" + i, @maxlength = "100", @style = "width:200px;text-align:left;background-color:lightyellow;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+
+                            }
+                            else
+                            {
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].loc_id, new { @id = "NewLocId_" + i, @readonly = "readonly", @class = "clsLocId", @maxlength = "10", @style = "width:80px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].length, new { @id = "Newlength_" + i, @readonly = "readonly", @class = "two-decimals ctrNumber", @maxlength = "10", @style = "width:70px;text-align:right;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line, @curLine = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].width, new { @id = "NewWidth_" + i, @readonly = "readonly", @class = "two-decimals ctrNumber", @maxlength = "10", @style = "width:70px;text-align:right;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].depth, new { @id = "NewDepth_" + i, @readonly = "readonly", @class = "two-decimals ctrNumber ", @maxlength = "10", @style = "width:70px;text-align:right;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">
+                                <a href="javascript:void(0);" class="btn btn-primary small btnCalcCube" style="color: white;height: 25px;width: 100px; border-radius: 5px;font-size: 10px;font-family: bold;padding-top: 5px; background-color:#ff9966" data=@i>Calc Cube</a>
+                            </td>
+
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].cube, new { @id = "NewCube_" + i, @readonly = "readonly", @class = "three-decimals ctrNumber ", @maxlength = "10", @style = "width:80px;text-align:right;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line, @curLine = @line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].wgt, new { @id = "NewWgt_" + i, @readonly = "readonly", @class = "two-decimals ctrNumber ", @maxlength = "10", @style = "width:80px;text-align:right;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].factory_id, new { @id = "NewFactoryId_" + i, @readonly = "readonly", @maxlength = "20", @style = "width:100px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].po_num, new { @id = "NewPoNum_" + i, @readonly = "readonly", @maxlength = "20", @style = "width:100px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].cust_name, new { @id = "NewCustName_" + i, @readonly = "readonly", @maxlength = "50", @style = "width:150px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].cust_po_num, new { @id = "NewCustPoNum_" + i, @readonly = "readonly", @maxlength = "20", @style = "width:100px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+                            <td style="font-size:10px; color:black; font-weight:normal; text-align :left">@Html.TextBoxFor(model => model.ListRcvgDtl[i].pick_list, new { @id = "NewPickList_" + i, @readonly = "readonly", @maxlength = "100", @style = "width:200px;text-align:left;background-color:white;", @dataDtlLine = @Model.ListRcvgDtl[i].dtl_line, @dataCtnLine = @Model.ListRcvgDtl[i].ctn_line })</td>
+
+}
+
+
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@Html.Hidden("hdn_total_records", g_int_total_records)
+<script>
+    $(function () {
+        $('#grdDimEdit tbody').on('click', '.btnCalcCube', function () {
+            debugger
+            var $buttonClicked = $(this);
+            var l_int_cur_row = $buttonClicked.attr('data');
+            var l_int_cur_line = parseFloat(l_int_cur_row);
+            var l_int_ctn_line = $("#NewCtnLine_" + l_int_cur_line).val();
+            if (l_int_ctn_line == 1)
+            {
+              
+                var l_dec_length = $("#Newlength_" + l_int_cur_line).val();
+                var l_dec_width = $("#NewWidth_" + l_int_cur_line).val();
+                var l_dec_depth = $("#NewDepth_" + l_int_cur_line).val();
+           
+                if (l_dec_length == 0) {
+                    sweetAlert("", "Please enter the Length for the current line", "");
+                    return false;
+                }
+                if (l_dec_width == 0) {
+                    sweetAlert("", "Please enter the Width for the current line", "");
+                    return false;
+                }
+                if (l_dec_depth == 0) {
+                    sweetAlert("", "Please enter the Depth for the current line", "");
+                    return false;
+                }
+                if ((l_dec_length < 2) || (l_dec_width < 2) || (l_dec_depth < 2)) {
+                    sweetAlert("", "Dimension L/W/B should be greater than 2 ", "");
+                    return false;
+                }
+              
+                $("#NewCube_" + l_int_cur_line).val((l_dec_length * l_dec_width * l_dec_depth) / 1728);
+                $("#NewCube_" + l_int_cur_line).val(parseFloat($("#NewCube_" + l_int_cur_line).val()).toFixed(3));
+            }
+        });
+    });
+
+</script>
+
+<script type="text/javascript">
+
+    $(".clsLocId").autocomplete({
+        matchContains: true,
+        minChars: 1,
+        mustMatch: true,
+        source: "/StockChange/ItemXGetLocDtl?cmp_id=" + $('#cmp_id').val() + "&",
+        select: function (event, ui) {
+            debugger
+            $("#NewLoc").val(ui.item.loc_id);
+            closeOnSelect: true
+        }
+    });
+    $(".ui-autocomplete").css("z-index", "2147483647");
+</script>
+
+<script>
+
+    var p_str_check_value = false;
+    $(".numericOnly").bind('keypress', function (e) {
+        if (e.keyCode == '9' || e.keyCode == '16') {
+            return;
+        }
+        var code;
+        if (e.keyCode) code = e.keyCode;
+        else if (e.which) code = e.which;
+        if (e.which == 46)
+            return false;
+        if (code == 8 || code == 46)
+            return true;
+        if (code < 48 || code > 57)
+            return false;
+    });
+
+    $(".two-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(2);
+        if (this.value == 'NaN') {
+            this.value = 0;
+            return false;
+        }
+    });
+    $(".three-decimals").change(function () {
+        this.value = parseFloat(this.value).toFixed(3);
+        if (this.value == 'NaN') {
+            this.value = 0;
+            return false;
+        }
+    });
+
+
+        $(".CalcTotQty").focusout(function () {
+        debugger
+       
+        var $buttonClicked = $(this);
+        var i_int_cur_line = $buttonClicked.attr('data');
+        var l_int_ctn_line = $("#NewCtnLine_" + l_int_cur_line).val();
+        if (l_int_ctn_line == 1)
+        {
+            var l_int_line = parseFloat(i_int_cur_line) - 1;
+            var lintTotCtns = $("#NewTotCtn_" + l_int_line).val();
+            var lintPPK = $("#NewCtnQty_" + l_int_line).val();
+            if ((lintTotCtns != "") && (lintTotCtns != null) && (lintPPK != "") && (lintPPK != null)) {
+                var lintTotQty = parseInt(lintTotCtns) * parseInt(lintPPK);
+
+                $("#NewTotQty_" + l_int_line).val(lintTotQty);
+
+            }
+            else {
+
+                $("#NewTotQty_" + l_int_line).val('0');
+            }
+        }
+    });
+
+
+
+
+</script>
+
+
+<script>
+
+    $("#btnItemEditClose").click(function ()
+
+    {
+        var pstrCmpId = $('#new_cmp_id').val();
+        var pstrIBDocId = $('#ibdocid').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Content("~/InboundInquiry/IncludeReceivingDimEdit")',
+            data: {
+                "pstrCmpId": pstrCmpId, "pstrIBDocId": pstrIBDocId
+            },
+
+            dataType: 'html',
+            success: function (e) {
+                if (e == 0) {
+                    sweetAlert("", "Error while inserting Temp Data.", "");
+                }
+                else {
+                    $(document).ready(function () {
+                        var x = document.getElementById("btnDimLocEdit");
+                        x.style.display = "block";
+
+                    });
+
+                    $('#modalDimLocEditPart').html("");
+                    $('#modalDimLocEditPart').hide();
+                  
+                    $("#childtabsrcv").tabs("option", "active", $("#childtabsrcv").tabs('option', 'active') - 1);
+
+                    $('#GridDocRecvEntry').html("");
+                    $('#GridDocRecvEntry').html(e);
+                    $('#GridDocRecvEntry').show();
+                }
+            }
+        });
+    });
+
+    $("#btnItemEditSave").click(function () {
+        debugger;
+
+        var checkboxIDArray = [];
+        var SelectedRow = [];
+        var l_int_sel_count = $("input[name='chkItmEdit']:checked").length;
+
+
+
+        if (l_int_sel_count == 0) {
+
+            sweetAlert("", "Please select the Record to Update Data", "");
+        }
+        else {
+            var objRcvdDataUpdateHdr = {};
+            var pstrCmpId = $('#new_cmp_id').val();
+            var pstrIBDocId = $('#ibdocid').val();
+
+            var l_int_tot_rec = $("#hdn_total_records").val();
+            var ItemDetails = new Array();
+
+
+
+            for (var i = 0; i < l_int_tot_rec; i++) {
+                var l_str_is_selected = false;
+                var l_chkbox = "check_" + i;
+                var element = document.getElementById(l_chkbox);
+                if (typeof (element) != 'undefined' && element != null) {
+                    var l_str_is_selected = document.getElementById(l_chkbox).checked;
+                }
+                else {
+                    l_str_is_selected = false;
+                }
+
+                if (l_str_is_selected) {
+
+                    var ItemDetail = {};
+                    ItemDetail.cmp_id = pstrCmpId;
+                    ItemDetail.ib_doc_id = pstrIBDocId;
+
+                    ItemDetail.dtl_line = $("#NewDtlLine_" + i).val();
+                    ItemDetail.ctn_line = $("#NewCtnLine_" + i).val();
+                    ItemDetail.itm_code = $("#NewItmCode_" + i).val();
+                    ItemDetail.itm_qty = $("#NewCtnQty_" + i).val();
+                    ItemDetail.tot_ctn = $("#NewTotCtn_" + i).val();
+
+                    ItemDetail.tot_qty = $("#NewTotQty_" + i).val();
+                    ItemDetail.loc_id = $("#NewLocId_" + i).val();
+
+                    ItemDetail.length = $("#Newlength_" + i).val();
+                    ItemDetail.width = $("#NewWidth_" + i).val();
+                    ItemDetail.depth = $("#NewDepth_" + i).val();
+                    ItemDetail.wgt = $("#NewWgt_" + i).val();
+                    ItemDetail.cube = $("#NewCube_" + i).val();
+                    ItemDetail.factory_id = $("#NewFactoryId_" + i).val();
+                    ItemDetail.vend_po_num = $("#NewPoNum_" + i).val();
+                    ItemDetail.cust_name = $("#NewCustName_" + i).val();
+                    ItemDetail.cust_po_num = $("#NewCustPoNum_" + i).val();
+                    ItemDetail.pick_list = $("#NewPickList_" + i).val();
+                    ItemDetail.process_id = '9999';
+
+                    ItemDetails.push(ItemDetail);
+                }
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Content("~/InboundInquiry/SaveReceivingDimEdit")',
+                data: JSON.stringify({
+                    "pstrCmpId": pstrCmpId,"pstrIBDocId":pstrIBDocId,
+                    ItemDetails: ItemDetails
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                success: function (e) {
+
+
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Content("~/InboundInquiry/IncludeReceivingDimEdit")',
+                        data: {
+                            "pstrCmpId": pstrCmpId, "pstrIBDocId": pstrIBDocId
+                        },
+
+                        dataType: 'html',
+                        success: function (e) {
+                            if (e == 0) {
+                                sweetAlert("", "Error while inserting Temp Data.", "");
+                            }
+                            else
+                            {
+                                sweetAlert("", "Dimension Details updated successfully", "");
+                                $(document).ready(function () {
+                                    var x = document.getElementById("btnDimLocEdit");
+                                    x.style.display = "block";
+
+                                });
+
+                                $('#modalDimLocEditPart').html("");
+                                $('#modalDimLocEditPart').hide();
+                                $("#childtabsrcv").tabs("option", "active", $("#childtabsrcv").tabs('option', 'active') - 1);
+                                $('#GridDocRecvEntry').html("");
+                                $('#GridDocRecvEntry').html(e);
+                                $('#GridDocRecvEntry').show();
+                            }
+                        }
+                    });
+
+
+
+                   
+                }
+
+
+            });
+
+
+        }
+
+    });
+
+</script>

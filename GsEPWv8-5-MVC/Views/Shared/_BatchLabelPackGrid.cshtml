@@ -1,0 +1,62 @@
+﻿@model GsEPWv8_5_MVC.Model.PickLabelModel
+@{
+    var SRCount = Model.lstPickLabelSmry;
+}
+
+    <div id="ShowBinLableGrid" class="box-header" style="padding: 5px; ">
+
+
+    <div class="box-body">
+        <div>
+            <table id="GrdLoadEntryInq" class="table table-bordered table-striped" style="border:1px solid #121213;">
+                <thead class="grid_backcolor">
+                    <tr>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%;">Select All <input class="checkbox" id="chkSelectAll" name="tblcheckboxselect" type="checkbox" /></th>
+                        @*<th class="grid_header_backcolor" style="font-size:11px;width:8%;">Batch#</th>*@
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;">SR#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:7%;">SR Date</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Order#</th>
+                        @*<th class="grid_header_backcolor" style="font-size:11px;width:10%;">Ref#</th>*@
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cust Name</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Cust Order#</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:5%;">OrderQty</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Ship To</th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">Address1 </th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:8%;">Address2 </th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">City </th>
+                        <th class="grid_header_backcolor" style="font-size:11px;width:10%;">State - Zip Code</th>
+
+                    </tr>
+                </thead>
+
+                <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+
+                    @for (int i = 0; i < Model.lstPickLabelSmry.Count; i++)
+                    {
+                        var lstrState = Model.lstPickLabelSmry[i].st_state_id + "-" + Model.lstPickLabelSmry[i].st_post_code;
+
+
+                        <tr style="background-color:white;">
+                            <td style="text-align:center"><input class="checkbox" id="chkdd_@i" name="tblcheckboxSRNum" type="checkbox" value="@Model.lstPickLabelSmry[i].so_num" checked="checked" /></td>
+                            @*<td style="font-size:9px; color:black; font-weight:bold;text-align:left">@Model.lstPickLabelSmry[i].batch_num</td>*@
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left">@Model.lstPickLabelSmry[i].so_num</td>
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left">@Model.lstPickLabelSmry[i].so_dt</td>
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left">@Model.lstPickLabelSmry[i].ordr_num</td>
+                            @*<td style="font-size:9px; color:black; font-weight:bold;text-align:left">@Model.lstPickLabelSmry[i].ref_no</td>*@
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left;">@Model.lstPickLabelSmry[i].cust_name</td>
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left;">@Model.lstPickLabelSmry[i].cust_ordr_num</td>
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left;">@Model.lstPickLabelSmry[i].aloc_qty</td>
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left;">@Model.lstPickLabelSmry[i].st_attn</td>
+
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left">@Model.lstPickLabelSmry[i].st_addr_line1</td>
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left">@Model.lstPickLabelSmry[i].st_addr_line2</td>
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left;">@Model.lstPickLabelSmry[i].st_city</td>
+                            <td style="font-size:9px; color:black; font-weight:bold;text-align:left;">@lstrState </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

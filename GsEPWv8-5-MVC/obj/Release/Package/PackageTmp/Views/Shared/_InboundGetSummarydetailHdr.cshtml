@@ -1,0 +1,94 @@
+﻿@model GsEPWv8_5_MVC.Model.InboundReceivingModel
+@{
+
+
+}
+@Html.HiddenFor(model => model.cmp_id)
+<div>
+    <fieldset>
+        <legend style="color:cornflowerblue; font-size:15px;">Details</legend>
+        <div class="box-header" style=" margin-top:-27px;">
+            <div style=" overflow: auto;">
+                <table id="example4" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                    <thead class="grid_backcolor">
+                        <tr>
+                            <th class="grid_header_backcolor">Status</th>
+                            <th class="grid_header_backcolor">Container#</th>
+                            <th class="grid_header_backcolor">IBDocId</th>
+                            <th class="grid_header_backcolor">Style</th>
+                            <th class="grid_header_backcolor">Color</th>
+                            <th class="grid_header_backcolor">Size</th>
+                            <th class="grid_header_backcolor">Description</th>
+                            <th class="grid_header_backcolor">Lot#</th>
+                            <th class="grid_header_backcolor">PONO</th>
+                            <th class="grid_header_backcolor">RcvdDt</th>
+                            <th class="grid_header_backcolor">RcvdCtns</th>
+                            <th class="grid_header_backcolor">PPK</th>
+                            <th class="grid_header_backcolor">RcvdQty</th>
+                            <th class="grid_header_backcolor">Length</th>
+                            <th class="grid_header_backcolor">Width</th>
+                            <th class="grid_header_backcolor">Height</th>
+                            <th class="grid_header_backcolor">Weight</th>
+                            <th class="grid_header_backcolor">Cube</th>
+                            <th class="grid_header_backcolor">PaletID</th>
+
+                        </tr>
+                    </thead>
+                    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+                        @for (int i = 0; i < Model.LstInboundReceivingHdr.Count; i++)
+                        {
+                            var Length = decimal.Parse(Model.LstInboundReceivingHdr[i].LENGTH);
+                            var Width = decimal.Parse(Model.LstInboundReceivingHdr[i].WIDTH);
+                            var Height = decimal.Parse(Model.LstInboundReceivingHdr[i].DEPTH);
+                            var Wgt = (Model.LstInboundReceivingHdr[i].WEIGHT);
+                            var Cube = (Model.LstInboundReceivingHdr[i].CUBE);
+                            var l_dec_Length = Length.ToString("F2");
+                            var l_dec_Width = Width.ToString("F2");
+                            var l_dec_Height = Height.ToString("F2");
+                            var l_dec_Wgt = Height.ToString("F2");
+                            var l_dec_Cube = Height.ToString("F3");
+
+                            <tr style="background-color:white;">
+
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].STATUS</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].CONTAINER</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].IB_DOC_ID</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].STYLE</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].COLOR</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].SIZE</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].ITEM_NAME</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].LOT_ID</td>
+                                <td style="font-size:12px; color:black; font-weight:bold; ">@Model.LstInboundReceivingHdr[i].PO_NUM</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].RCVD_DT</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].TOTAL_CTNS</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].PPK</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].TOTAL_QTY</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@l_dec_Length</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@l_dec_Width</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@l_dec_Height</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@l_dec_Wgt</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@l_dec_Cube</td>
+                                <td style="font-size:12px; color:black; font-weight:bold;">@Model.LstInboundReceivingHdr[i].PALET_ID</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </fieldset>
+</div>
+<script type="text/javascript">
+    $("#example4").DataTable();
+    $('#example5').DataTable({
+        "pageLength": 10,
+        'paging': true,
+        'lengthChange': false,
+        'searching': false,
+        'ordering': false,
+        'info': false,
+        'autoWidth': false,
+    });
+</script>

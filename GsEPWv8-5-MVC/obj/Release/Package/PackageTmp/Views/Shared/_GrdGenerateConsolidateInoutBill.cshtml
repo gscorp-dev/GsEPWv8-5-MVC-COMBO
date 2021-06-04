@@ -1,0 +1,202 @@
+﻿
+@model GsEPWv8_5_MVC.Model.BillingInquiryModel
+
+@{
+    var Ordercount = Model.ListSaveSTRGBillDetails.Count;
+    decimal l_dec_tot_bill_amnt = 0;
+    var lintTotCtns = 0;
+    decimal ldecTotCube = 0;
+}
+
+
+@for (int j = 0; j < Model.ListSaveSTRGBillDetails.Count(); j++)
+{
+    var bill_amt = (Model.ListSaveSTRGBillDetails[j].TotAmount);
+    int lintLineCtns = Model.ListSaveSTRGBillDetails[j].TotalCtns;
+    decimal ldecLineCube = Model.ListSaveSTRGBillDetails[j].TotCube;
+
+    decimal l_dec_bill_amnt = bill_amt;
+
+    if (l_dec_bill_amnt > 0)
+    {
+        l_dec_tot_bill_amnt = l_dec_tot_bill_amnt + bill_amt;
+        lintTotCtns = lintTotCtns + lintLineCtns;
+        ldecTotCube = ldecTotCube + ldecLineCube;
+
+    }
+
+}
+
+<div class="box-body">
+    <div class="row">
+        <table>
+            <tr>
+                <td style="width:10%;">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Records:
+                    </span>
+                </td>
+                <td style="width: 10%;">
+                    <label class="totalCount" style="text-align:left">
+                       @Ordercount
+                    </label>
+                </td>
+                <td>
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Total Inv Amount( Excluding IBS ):   
+                        <label id="blbTotBillAmt" class="totalCount" style="text-align:left">
+                            $ @l_dec_tot_bill_amnt.ToString("0.00")
+                        </label>
+                    </span>
+                </td>
+               
+                <td style="width:10%;">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:center;">
+                        Total Ctn(s):
+                    </span>
+                </td>
+                <td style="width: 10%;">
+                    <label class="totalCount" style="text-align:left">
+                        @lintTotCtns
+                    </label>
+                </td>
+
+                <td style="width:10%;">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:center;">
+                        Total Cube :
+                    </span>
+                </td>
+                <td style="width: 10%;">
+                    <label class="totalCount" style="text-align:left">
+                        @ldecTotCube.ToString("0.00")
+                    </label>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <table id="grdIBBill" class="table table-bordered table-striped" style="border:1px solid #121213;">
+        <thead class="grid_backcolor">
+            <tr>
+                <th class="grid_header_backcolor" style="font-size:12px;width:3%;">Exclude</th>    
+                <th class="grid_header_backcolor" style="font-size:12px;width:8%;">IB DOC#</th>
+                <th class="grid_header_backcolor" style="font-size:12px;width:8%;">IB Date</th>
+                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Cont ID</th>
+                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Lot ID</th>
+                <th style="display:none;"></th>
+                <th class="grid_header_backcolor" style="font-size:12px;width:10%;">Cust PO</th>
+                <th class="grid_header_backcolor" style="font-size:12px;width:7%;">Ctns</th>
+                <th class="grid_header_backcolor" style="font-size:12px;width:8%;">Cube</th>
+                <th class="grid_header_backcolor" style="font-size:12px;width:12%;">List Price</th>
+                <th class="grid_header_backcolor" style="font-size:12px;width:12%;">Total Amount</th>
+                <th style="display:none;"></th>
+               
+            </tr>
+        </thead>
+        <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+            @for (int i = 0; i < Model.ListSaveSTRGBillDetails.Count; i++)
+            {
+                var bill_amt = (Model.ListSaveSTRGBillDetails[i].TotAmount);
+                decimal l_dec_bill_amnt = bill_amt;
+                var tot_amnt = l_dec_bill_amnt.ToString("F2");
+                var listprice = (Model.ListSaveSTRGBillDetails[i].list_price);
+                decimal l_dec_list_price = listprice;
+                var tot_list_price= l_dec_list_price.ToString("F2");
+                <tr style="background-color:white;">
+                    <td id="idInvRec" grdRowId ="@i" style="text-align:center">
+                    <input class="checkbox"  id="chkIOBillLine_@i"  name="tblcheckbox5"  type="checkbox" value="@Model.ListSaveSTRGBillDetails[i].lot_id" /></td>
+                    <td style="font-size:10px; color:black; font-weight:bold;text-align:left;">
+                    <a href="javascript:void(0);" class="anchorlotDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.ListSaveSTRGBillDetails[i].lot_id" data-id1="@Model.ListSaveSTRGBillDetails[i].ib_doc_id">@Model.ListSaveSTRGBillDetails[i].ib_doc_id</a> </td>
+                    
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListSaveSTRGBillDetails[i].RcvdDate</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListSaveSTRGBillDetails[i].cont_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListSaveSTRGBillDetails[i].lot_id</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => Model.ListSaveSTRGBillDetails[i].lot_id, new { @id = "bl_lot_id_" + i, @rowId = @i })</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;">@Model.ListSaveSTRGBillDetails[i].po_num</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;">@Model.ListSaveSTRGBillDetails[i].TotalCtns</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;width:60px;">@Model.ListSaveSTRGBillDetails[i].TotCube</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;width:60px;">@tot_list_price</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:right;width:60px;">@tot_amnt</td>
+                    <td style="font-size:12px; color:black; font-weight:bold;text-align:left;display:none; ">@Html.TextBoxFor(model => Model.ListSaveSTRGBillDetails[i].TotAmount, new { @id = "bl_line_amt_" + i, @rowId = @i })</td>
+                </tr>               
+            }
+        </tbody>
+    </table>
+
+
+</div>
+@Html.Hidden("l_dec_tot_bill_amnt", l_dec_tot_bill_amnt)
+<script type="text/javascript">
+
+    $('#grdIBBill td[id="idInvRec"]').click(function (event) {
+        debugger;
+        var lstrRowId = $(this).attr('grdRowId');
+        var lintIOBillLine = "chkIOBillLine_" + lstrRowId;
+        var lblnLineSelected = document.getElementById(lintIOBillLine).checked;
+        var lstrLineAmt = $("#bl_line_amt_" + lstrRowId).val();
+        var ldecTotBillAmount = $("#l_dec_tot_bill_amnt").val();
+        if (lblnLineSelected)
+        {
+            ldecTotBillAmount = parseFloat(ldecTotBillAmount) - parseFloat(lstrLineAmt);
+            $("#l_dec_tot_bill_amnt").val(ldecTotBillAmount);
+        }
+        else
+        {
+            $("#l_dec_tot_bill_amnt").val(ldecTotBillAmount);
+        }
+    });
+    </script>
+<script>
+    $(function(){
+        $('#grdIBBill').DataTable({
+            'paging': false,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+        });
+        $('#grdIBBill_paginate').hide();
+    })
+</script>
+<script>
+
+    var cmp_id = $("#cmp_id").val();
+    var TeamDetailPostLOTBackURL = '/BillingInquiry/LotDetail';
+    $(function () {
+
+        $('#grdIBBill tbody').on('click', '.anchorlotDetail', function () {
+
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var ibdocid = $buttonClicked.attr('data-id1');
+            var options = { "backdrop": "static", keyboard: true };
+
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostLOTBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "Id": id, "cmp_id": cmp_id, "ibdocid": ibdocid },
+                datatype: "json",
+                success: function (data) {
+
+                    $("#ajaxLoading").hide();
+                    $('#myModallotContent').html(data);
+                    $('#myModalLot').modal(options);
+                    $('#myModalLot').modal('show');
+
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();         
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+    });
+</script>
+
+
+

@@ -1,0 +1,260 @@
+﻿
+@model GsEPWv8_5_MVC.Model.OutboundInqModel
+@{
+//var TotalNumberoflst = Model.ListVasEntryGridDtl.Count();
+//var Ordercount = Model.ListVasEntryGridDtl.Count;
+}
+<style type="text/css">
+    .Ratecontainer {
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1em;
+    }
+
+    .form-horizontal {
+        width: 47%;
+    }
+
+    .radio {
+        font-size: 14px;
+        color: #2196F3;
+    }
+</style>
+@*@Html.HiddenFor(model => model.whs_id)*@
+
+
+
+
+
+
+
+<center>
+
+
+
+    <div class="modal-body">
+        <div class="Ratecontainer">
+            <div class="row">
+                <div >
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+                            <!-- Form Name -->
+                            <legend>ShipTo Address Details</legend>
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="pull-right">
+                                        <button type="submit" class="btn-Close" style="background-color: #e05724">Cancel</button>
+                                        <button type="button" id="btnShipAddrsSave" class="btn-Close" style="background-color: #e38a2f">Save</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <div id="dvPassport" class="radio">
+                                        <table>
+                                            <tr>
+                                                <td style="padding-left: 36px;">
+                                                    <input type="radio" value="GridShiptemp" name="radio1" />
+                                                    <b> Temp</b>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" value="GridShippermanant" name="radio1" /><b> Permanant</b>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="textinput">Ship To</label>
+                                <div class="col-sm-4">
+                                    @Html.HiddenFor(model => model.cmp_id, new { @id = "p_strr_cmpid", @name = "txtcmp" })
+                                    @Html.HiddenFor(model => model.cust_id, new { @id = "p_strr_cmpid", @name = "txtcmp" })
+
+
+
+
+                                    @Html.TextBoxFor(model => model.shipto_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                                <label class="col-sm-2 control-label" for="textinput">Attn</label>
+                                <div class="col-sm-4">
+                                    @Html.TextBoxFor(model => model.Attn, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                            </div>
+                            <!-- Text input-->
+                            @*<div class="form-group">
+                                    <label class="col-sm-2 control-label" for="textinput">Attn</label>
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(model => model.Attn, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                    </div>
+                                </div>*@
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="textinput">DC#</label>
+                                <div class="col-sm-4">
+                                    @Html.TextBoxFor(model => model.dc_id, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                                <label class="col-sm-2 control-label" for="textinput">Mail Name</label>
+                                <div class="col-sm-4">
+                                    @Html.TextBoxFor(model => model.Mailname, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="textinput">Addr1</label>
+                                <div class="col-sm-4">
+                                    @Html.TextBoxFor(model => model.Addr1, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                                <label class="col-sm-2 control-label" for="textinput">Addr2</label>
+                                <div class="col-sm-4">
+                                    @Html.TextBoxFor(model => model.Addr2, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                            </div>
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="textinput">City</label>
+                                <div class="col-sm-4">
+                                    @Html.TextBoxFor(model => model.city, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                                <label class="col-sm-2 control-label" for="textinput">State</label>
+                                <div class="col-sm-4">
+                                    @Html.DropDownListFor(model => model.state, new SelectList(Model.ListStatePick, "State_ID", "statedtl"), new { @class = "form-control txtlbl select2", @style = "font-size: 10px; font-family: verdana; width: 130px;" })
+                                </div>
+
+                            </div>
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="textinput">Postcode</label>
+                                <div class="col-sm-4">
+                                    @Html.TextBoxFor(model => model.zipcode, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                </div>
+                                <label class="col-sm-2 control-label" for="textinput">Country</label>
+                                <div class="col-sm-4">
+                                    @Html.DropDownListFor(model => model.country, new SelectList(Model.ListCntryPick, "Cntry_Id", "Countrydtl"), new { @class = "form-control txtlbl select2", @style = "font-size: 10px; font-family: verdana; width: 130px;" })
+                                </div>
+                            </div>
+
+
+                        </fieldset>
+                    </form>
+                </div><!-- /.col-lg-12 -->
+            </div><!-- /.row -->
+        </div>
+    </div>
+</center>
+<script type="text/javascript">
+        $('#last_so_dt').datetimepicker({
+            timepicker: false,
+            step: 15, format: 'Y-m-d'
+        });
+        $('#list_price').val("");
+
+        $("#btnShipAddrsSave").click(function () {
+            var p_str_cmp_id = $('#cmp_id').val();
+            var p_str_cmp_id = $('#cust_id').val();
+            var p_str_shipto_id = $('#shipto_id').val();
+            var p_str_store_id = $('#Attn').val();
+
+            var p_str_Attn = $('#Attn').val();
+            var p_str_dc_id = $('#dc_id').val();
+            var p_str_Mailname = $('#Mailname').val();
+            var p_str_Addr1 = $('#Addr1').val();
+            var p_str_Addr2 = $('#Addr2').val();
+            var p_str_city = $('#city').val();
+            var p_str_state = $('#state').val();
+            var p_str_zipcode = $('#zipcode').val();
+            var p_str_country = $('#country').val();
+            if (p_str_cmp_id == "") {
+                swal("", "Please Select The Company.", "");
+                $('#cmp_id').focus();
+                $('body,html').animate({ scrollTop: 0 }, 0);
+                er = 1;
+                return false;
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/OutboundInq/SaveShipReqEntry")',
+                    data: {
+                        "p_str_cmp_id": p_str_cmp_id,
+                        "p_str_cust_id": p_str_cust_id,
+                        "p_str_Sonum": p_str_Sonum,
+                        "p_str_pricetkt": p_str_pricetkt, "p_str_so_dt": p_str_so_dt, "p_str_ShipDt": p_str_ShipDt, "p_str_CancelDt": p_str_CancelDt,
+                        "p_str_refno": p_str_refno, "p_str_freight_id": p_str_freight_id, "p_str_status": p_str_status, "p_str_Type": p_str_Type
+                        , "p_str_AuthId": p_str_AuthId, "p_str_fob": p_str_fob, "p_str_ShipVia": p_str_ShipVia, "p_str_shipchrg": p_str_shipchrg
+                        , "p_str_CustPO": p_str_CustPO, "p_str_CustOrderdt": p_str_CustOrderdt, "p_str_dept_id": p_str_dept_id, "p_str_store_id": p_str_store_id,
+                        "p_str_Note": p_str_Note, "p_str_shipto_id": p_str_shipto_id, "p_str_Attn": p_str_Attn, "p_str_dc_id": p_str_dc_id,
+                        "p_str_Mailname": p_str_Mailname, "p_str_Addr1": p_str_Addr1, "p_str_Addr2": p_str_Addr2, "p_str_city": p_str_city, "p_str_state": p_str_state,
+                        "p_str_zipcode": p_str_zipcode, "p_str_country": p_str_country
+                    },
+                    dataType: 'html',
+                    timeout: 500,
+                    success: function (e) {
+                        if (e != null) {
+
+                            swal("", "Your record Added successfully.", "");
+                            @*setTimeout(
+                                function RoleCreateMove() {
+                                    window.location.href = '@Url.Action("OutboundInq", "OutboundInq")';
+                                }, 500);*@
+                            var type = "PDF";
+                            var p_str_sonum = $('#Sonum').val();
+                            var p_str_cmpid = $('#cmp_id').val();
+                            var p_str_radio = "GridShipAck";
+                            var p_str_so_NumFm = $('#so_numFm').val();
+                            var p_str_so_NumTo = $('#so_numTo').val();
+                            var p_str_batch_id = $('#quote_num').val();
+                            var SelectdID = p_str_sonum;
+                            debugger;
+
+                            //window.open('ShowReport?SelectedID=' + SelectdID + '&type=' + type, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?SelectedID=' + SelectdID)
+                            $.ajax({
+                                url: '@Url.Action("GetShipReqRpt", "OutboundInq")',
+                                type: 'GET',
+                                dataType: 'json',
+                                data: {
+                                    SelectedID: p_str_sonum, p_str_cmpid: p_str_cmpid, p_str_radio: p_str_radio, p_str_so_NumFm: p_str_so_NumFm, p_str_so_NumTo: p_str_so_NumTo, p_str_batch_id: p_str_batch_id
+
+                                },//'collections='+SelectedRow,
+                                cache: false,
+                                success: function (data) {
+                                    if (data > 0) {
+                                        //$("input[name='tblcheckbox']").prop("checked", false);
+                                        //window.open('ShowReport', 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport' + SelectedID + type)
+                                        window.open('ShowReport?SelectedID=' + SelectdID + '&type=' + type, 'OutboundInq', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowReport?SelectedID=' + SelectdID)
+
+                                    }
+                                    $("#report_selection").val('');
+                                }
+                            });
+
+
+                        }
+                    },
+
+                })
+            }
+        });
+       
+</script>
+
+<script>
+        var modal_lv = 0;
+        $('.modal').on('shown.bs.modal', function (e) {
+            $('.modal-backdrop:last').css('zIndex', 1051 + modal_lv);
+            $(e.currentTarget).css('zIndex', 1052 + modal_lv);
+            modal_lv++
+        });
+        $('.modal').on('hidden.bs.modal', function (e) {
+            modal_lv--
+        });
+    </script>

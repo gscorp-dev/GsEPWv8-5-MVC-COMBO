@@ -1,0 +1,335 @@
+﻿@model GsEPWv8_5_MVC.Model.OBCtnLblPrntModel
+@{
+
+}
+
+@Html.HiddenFor(model => model.cmp_id)
+@Html.HiddenFor(model => model.so_num)
+<style type="text/css">
+    div#table-Details {
+        border: 10px solid white;
+        box-shadow: 0px 0px 15px;
+    }
+</style>
+<style>
+    div#ajaxLoadingLabelPrint {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<script>
+$(document).ready(function(){
+    //var myHid = $('#EmailMessage').val(EmailMsg);
+
+});
+</script>
+<link href="~/Scripts/ManualSheets/jquery-ui.css" rel="stylesheet" />
+<div class="modal-header">
+    <center><h4 class="modal-title" id="myModalLabel" style="color:white;font-weight:800;">Label Carton Print</h4></center>
+</div>
+<div id="ajaxLoadingLabelPrint" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+    <div>
+        <table  align="right" style="margin-top:0px; ">
+            
+            <tr>
+                <td style="padding-left: 20px; color: #e81994;font-size: 1.5em;padding-bottom:8px;"><input type="radio" value="SigleLbl" name="chkLbl" checked /><b>  Thermal Print (Single Label)</b></td>
+                <td style="padding-left: 50px;font-size: 1.5em; color: #e81994;padding-bottom: 8px;"><input type="radio" value="MutyLbl" name="chkLbl" /><b> Laser Print (Six Lables)</b></td>
+                <td><button type="button" id="btnGenerateLabels" class="btn-Close" style="float:right;background-color: #00c0ef;">Print Label</button></td>
+                <td><button type="button" class="btn_mclose" data-dismiss="modal" aria-hidden="true" style="float:right;">Close</button></td>
+            </tr>
+
+        </table>
+      
+       
+
+
+    </div>
+    <br />
+    <hr />
+
+    <div class="box-body">
+        <div class="box-header">
+            <div class="container">
+                <div style="border: 1px solid #ada8a8;margin-top:-33px;">
+
+
+                    <table>
+                        <tr>
+
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">Cmp Id:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].cmp_id, new { @id = "txtCmpId", @class = "form-control", required = "required", @maxlength = "10", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">SR#:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].so_num, new { @id = "txtSRNum", @class = "form-control", @maxlength = "10", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+                        <tr>
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">Ship From#:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].ship_from, new { @id = "txtShipFromName", @class = "form-control", @maxlength = "10", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+
+
+                        <tr>
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">Address 1:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].ship_from_addr1, new { @id = "txtShipFromAddr1", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+
+
+                        <tr>
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">Address 2:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].ship_from_addr2, new { @id = "txtShipFromAddr2", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+
+
+                        <tr>
+
+
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">Ship To#:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].ship_to, new { @id = "txtShipToMailName", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+
+                        <tr>
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">Address 1:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].ship_to_addr1, new { @id = "txtShipToAddr1", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+
+                        <tr>
+                        <tr>
+                            <td style="width:13%; text-align:right;"></td>
+                            <td style="width: 75%; padding-left: 1%;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].ship_to_addr2, new { @id = "txtShipToAddr2", @class = "form-control", @maxlength = "50", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+
+                        <tr>
+
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">PO#:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].cust_ordr_num, new { @id = "txtPONum", @class = "form-control", @maxlength = "20", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+                        <tr>
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">Order#:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].ordr_num, new { @id = "txtSoNum", @class = "form-control", @maxlength = "20", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+
+                        <tr>
+
+                        <tr>
+                            <td style="width:13%; text-align:right;">
+                                <b style="font-size: 14px;">No of Ctns#:</b>
+                            </td>
+                            <td style="padding-bottom: 10px;padding-left: 10px;">
+                                @Html.TextBoxFor(model => model.LstCtnLabelPrint[0].tot_ctns, new { @id = "txtCtns", @class = "form-control", @maxlength = "4", @style = "Font-weight:bold; width: 956px; height:40px;" })
+                            </td>
+                        <tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $('#btnGenerateLabels').click(function () {
+            debugger
+            //$("#ajaxLoadingLabelPrint").show();
+            var var_sel_lbl = $("input[name='chkLbl']:checked").val();
+            var OBCtnLblPrnt = {
+                cmp_id: $("#txtCmpId").val(),
+                so_num: $("#so_num").val(),
+                ship_from: $("#txtShipFromName").val(),
+                ship_from_addr1: $("#txtShipFromAddr1").val(),
+                ship_from_addr2: $("#txtShipFromAddr2").val(),
+                ship_to: $("#txtShipToMailName").val(),
+                ship_to_addr1: $("#txtShipToAddr1").val(),
+                ship_to_addr2: $("#txtShipToAddr2").val(),
+                cust_ordr_num: $("#txtPONum").val(),
+                ordr_num: $("#txtSoNum").val(),
+                tot_ctns: $("#txtCtns").val(),
+                lbl_per_page: $("input[name='chkLbl']:checked").val(),
+
+            }
+            if ($('#txtCmpId').val() == '') {
+                $('#txtCmpId').css('border-color', 'red');
+                sweetAlert("", "Please Select Company", "");
+                return false;
+
+            }
+
+            if ($('#so_num').val() == '') {
+                $('#so_num').css('border-color', 'red');
+                sweetAlert("", "Please Enter SR#", "");
+                return false;
+
+            }
+
+            if ($('#txtShipFromName').val() == '') {
+                $('#txtShipFromName').css('border-color', 'red');
+                sweetAlert("", "Please Enter Ship From", "");
+                return false;
+
+            }
+            if ($('#txtShipFromAddr1').val() == '') {
+                $('#txtShipFromAddr1').css('border-color', 'red');
+                sweetAlert("", "Please Enter Ship From Address1", "");
+                return false;
+
+            }
+
+            if ($('#txtShipFromAddr2').val() == '') {
+                $('#txtShipFromAddr2').css('border-color', 'red');
+                sweetAlert("", "Please Enter Ship From Address2", "");
+                return false;
+
+            }
+
+            if ($('#txtShipToMailName').val() == '') {
+                $('#txtShipToMailName').css('border-color', 'red');
+                sweetAlert("", "Please Enter Ship To Mail Name", "");
+                return false;
+
+            }
+
+            if ($('#txtShipToAddr1').val() == '') {
+                $('#txtShipToAddr1').css('border-color', 'red');
+                sweetAlert("", "Please Enter Ship To Address1", "");
+                return false;
+
+            }
+
+            if ($('#txtShipToAddr2').val() == '') {
+                $('#txtShipToAddr2').css('border-color', 'red');
+                sweetAlert("", "Please Enter Ship To Address2", "");
+                return false;
+
+            }
+
+            if ($('#txtPONum').val() == '') {
+                $('#txtPONum').css('border-color', 'red');
+                sweetAlert("", "Please Enter PO#", "");
+                return false;
+
+            }
+            if ($('#txtSoNum').val() == '') {
+                $('#txtSoNum').css('border-color', 'red');
+                sweetAlert("", "Please Enter SO#", "");
+                return false;
+
+            }
+
+            if ($('#txtCtns').val() == '') {
+                $('#txtCtns').css('border-color', 'red');
+              
+                sweetAlert("", "Please Enter Ctn(s)", "");
+                //$("#ajaxLoadingLabelPrint").show();
+                return false;
+
+            }
+
+            if ($('#txtCtns').val() == '0') {
+                $('#txtCtns').css('border-color', 'red');
+            
+                sweetAlert("", "Please Enter Ctn(s)", "");
+                //$("#ajaxLoadingLabelPrint").hide();
+                return false;
+
+            }
+
+
+            //if ($('#txtCtns').val() == '') {
+            //    $('#txtCtns').css('border-color', 'red');
+            //    return false;
+            //    $("#ajaxLoadingLabelPrint").hide();
+            //}
+
+            //if ($('#txtCtns').val() == '0') {
+            //    $('#txtCtns').css('border-color', 'red');
+
+            //    return false;
+            //    $("#ajaxLoadingLabelPrint").hide();
+            //}
+
+
+            else {
+
+                $.ajax({
+                    url: '@Url.Action("GenerateCtnLabels", "OutboundInq")',
+                    type: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    dataType: "json",
+                    data: JSON.stringify(OBCtnLblPrnt),
+                    success: function (data) {
+                        var ext = data.split('.').pop();
+                        var fileNameIndex = data.lastIndexOf("/") + 1;
+                        var filename = data.substr(fileNameIndex);
+                        window.open('@Url.Action("DocumentUpload")?path=' + data + '&ext=' + ext + '&filename=' + filename, "_blank", "scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700");
+                        $("#ajaxLoadingLabelPrint").hide();
+                        sweetAlert("", "Label Printed Successfully", "");
+                        $('#myModalLabelPrint').modal('hide');
+                    }
+                });
+            }
+        })
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+﻿@model GsEPWv8_5_MVC.Model.ClsOBAlocEditModel
+@{
+}
+    <div class="row">
+        <div class="box box-primary">
+            <h6><b style="font-size: 14px;color: mediumvioletred;">Allocation Details</b></h6>
+            <table id="grdAlocDtlEdit" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+                <thead class="grid_backcolor" style="display:table; width:100%; table-layout:fixed;">
+                    <tr>
+                        <th class="grid_header_backcolor">AlcLn#</th>
+                        <th class="grid_header_backcolor">Ctnln</th>
+                        <th class="grid_header_backcolor">Style</th>
+                        <th class="grid_header_backcolor">Color</th>
+                        <th class="grid_header_backcolor">Size</th>
+                        <th class="grid_header_backcolor">LocId</th>
+                        <th class="grid_header_backcolor">PPK</th>
+                        <th class="grid_header_backcolor">Ctn(s)</th>
+                        <th class="grid_header_backcolor">Aloc Qty</th>
+                        <th class="grid_header_backcolor">RcvdDt</th>
+                        <th class="grid_header_backcolor">LotId</th>
+                        <th class="grid_header_backcolor">Vendor PoNo</th>
+
+
+                    </tr>
+                </thead>
+                <tbody style="display:block; max-height:146px; overflow-y:scroll;">
+                    @for (int i = 0; i < Model.lstOBAlocCtn.Count; i++)
+                    {
+                        <tr class="row-select" style="background-color:white;display:table; width:100%; table-layout:fixed;">
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].line_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;"> @Model.lstOBAlocCtn[i].ctn_line</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].itm_num</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].itm_color</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].itm_size</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].loc_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;text-align:right">@Model.lstOBAlocCtn[i].itm_qty</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Model.lstOBAlocCtn[i].ctn_cnt</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;  text-align:right">@Model.lstOBAlocCtn[i].line_qty</td>
+                            <td style="font-size:12px; color:black; font-weight:bold; ">@Model.lstOBAlocCtn[i].rcvd_dt.ToString("MM/dd/yyyy")</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].lot_id</td>
+                            <td style="font-size:12px; color:black; font-weight:bold;">@Model.lstOBAlocCtn[i].po_num</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
