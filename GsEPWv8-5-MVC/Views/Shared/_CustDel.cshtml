@@ -656,7 +656,7 @@
                                     <div class="col-xs-1" style="text-align:right; width: 16.67%;">
 
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                         <label><b class="Lblmanual"> Ecom Reciving by Bin </b></label>
                                         @Html.CheckBoxFor(model => model.ecom_recv_by_bin)
                                     </div>
@@ -664,6 +664,11 @@
                                     <div class="col-xs-3">
                                         <label><b class="Lblmanual"> 940-Allow New item  </b></label>
                                         @Html.CheckBoxFor(model => model.allow_940_new_item, new { @id = "v_del_allow_940_new_item" })
+                                    </div>
+
+                                    <div class="col-xs-2" style="margin-left: -10px;">
+                                        <label><b class="Lblmanual"> scan serial  </b></label>
+                                        @Html.DropDownListFor(model => model.is_scan_serial, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "v_del_scan_serial", @disabled = "true", @class = "form-control txtlbl", @maxlength = "50", @style = "width:100px;" })
                                     </div>
                                 </div>
                             </div>

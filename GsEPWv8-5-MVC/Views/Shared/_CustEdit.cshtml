@@ -691,7 +691,7 @@
                             </div>
                         </fieldset>
                         <fieldset>
-                            <legend style="text-align: left;">First Time Settings</legend>
+                            <legend style="text-align: left;">First Time Settings  ceck </legend>
                             <div class="row">
                                 <div class="col-xs-12" style="margin-top: -20px;">
                                     <div class="col-xs-1" style="text-align:left; ">
@@ -726,7 +726,7 @@
                                         <label><b class="Lblmanual">is Scan Serial</b></label>
                                     </div>
                                     <div class="col-xs-1" style="margin-left: -12px;">
-                                        @Html.DropDownListFor(model => model.cube_auto_calc, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "e_edit_cube_autocalc", @class = "form-control txtlbl", @maxlength = "50", @style = "width:100px;" })
+                                        @Html.DropDownListFor(model => model.is_scan_serial, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "e_edit_scan_serial", @class = "form-control txtlbl", @maxlength = "50", @style = "width:100px;" })
                                     </div>
                                 </div>
                             </div>
@@ -1078,7 +1078,8 @@
         var p_str_ecom_recv_by_bin = $('#v_edit_ecom_recv_by_bin').is(':checked');
         var p_str_allow_940_new_item = $('#v_edit_allow_940_new_item').is(':checked');
         var p_str_cust_type = $('#e_add_cust_type').val();
-        
+        var p_str_scan_serial = $('#e_edit_scan_serial').val();
+        alert(p_str_scan_serial);
 
         var lintUsers = $("input[name='selUserIdEdit']:checked").length;
         var arySelUsers = [];
@@ -1184,7 +1185,7 @@
                     "p_str_min_inout_cube": p_str_min_inout_cube, "p_str_min_strg_cube": p_str_min_strg_cube, "lstrUserList": lstrUserList,
                     "pstrIORateId": pstrIORateId, "pstrIORateName": pstrIORateName, "pdecIORatePrice": pdecIORatePrice,
                     "pstrStrgRateId": pstrStrgRateId, "pstrStrgRateName": pstrStrgRateName, "pdecStrgRatePrice": pdecStrgRatePrice,
-                    "p_str_ecom_recv_by_bin": p_str_ecom_recv_by_bin, "p_str_allow_940_new_item": p_str_allow_940_new_item, "p_str_cust_type": p_str_cust_type
+                    "p_str_ecom_recv_by_bin": p_str_ecom_recv_by_bin, "p_str_allow_940_new_item": p_str_allow_940_new_item, "p_str_cust_type": p_str_cust_type, "p_str_scan_serial": p_str_scan_serial
                     
                 },
                 dataType: 'html',

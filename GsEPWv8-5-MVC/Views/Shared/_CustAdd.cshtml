@@ -734,9 +734,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12">
-
-
+                        <div class="col-xs-12" style="margin-top:10px;">
+                            <div class="col-xs-1" style="text-align:right; margin-top:4px;font-size:12px;width: 121px;margin-left:0px;">
+                                <label><b class="Lblmanual">is Scan Serial</b></label>
+                            </div>
+                            <div class="col-xs-1" style="margin-left: -12px;">
+                                @Html.DropDownListFor(model => model.is_scan_serial, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "a_add_scan_serial", @class = "form-control txtlbl", @maxlength = "50", @style = "width:100px;" })
+                            </div>
                         </div>
                     </div>
 
@@ -1042,6 +1046,7 @@
         var p_str_ecom_recv_by_bin = $('#ecom_recv_by_bin').is(':checked');
         var p_str_allow_940_new_item = $('#v_add_allow_940_new_item').is(':checked');
         var p_str_cust_type = $('#a_add_cust_type').val();
+        var p_str_scan_serial = $('#a_add_scan_serial').val();
 
 
         debugger
@@ -1198,7 +1203,7 @@ function (isConfirm) {
                 "p_str_min_inout_cube": p_str_min_inout_cube, "p_str_min_strg_cube": p_str_min_strg_cube, "p_str_Cust_initial": p_str_Cust_initial,
                 "lstrUserList": lstrUserList, "pstrIORateId": pstrIORateId, "pstrIORateName": pstrIORateName, "pdecIORatePrice": pdecIORatePrice,
                 "pstrStrgRateId": pstrStrgRateId, "pstrStrgRateName": pstrStrgRateName, "pdecStrgRatePrice": pdecStrgRatePrice,
-                "p_str_ecom_recv_by_bin": p_str_ecom_recv_by_bin, "p_str_allow_940_new_item": p_str_allow_940_new_item, "p_str_cust_type": p_str_cust_type
+                "p_str_ecom_recv_by_bin": p_str_ecom_recv_by_bin, "p_str_allow_940_new_item": p_str_allow_940_new_item, "p_str_cust_type": p_str_cust_type, "p_str_scan_serial": p_str_scan_serial
             },
             dataType: 'html',
             success: function (e) {

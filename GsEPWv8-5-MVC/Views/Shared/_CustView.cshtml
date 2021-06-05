@@ -802,7 +802,16 @@
 
                                 </div>
                             </div>
-
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top:10px;">
+                                    <div class="col-xs-1" style="text-align:right; margin-top:4px;font-size:12px;width: 121px;margin-left:0px;">
+                                        <label><b class="Lblmanual">is Scan Serial</b></label>
+                                    </div>
+                                    <div class="col-xs-1" style="margin-left: -12px;">
+                                        @Html.DropDownListFor(model => model.is_scan_serial, new SelectList(Model.ListCubeRounded, "name", "description"), new { @id = "v_view_scan_serial", @class = "form-control txtlbl", @maxlength = "50", @style = "width:100px;" })
+                                    </div>
+                                </div>
+                            </div>
                         </fieldset>
                     </div>
                 </div>

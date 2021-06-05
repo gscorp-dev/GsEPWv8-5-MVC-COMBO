@@ -520,7 +520,8 @@ namespace GsEPWv8_5_MVC.Data.Implementation
                         @min_strg_cube = objCustMaster.min_strg_cube,
                         @ecom_recv_by_bin = objCustMaster.ecom_recv_by_bin,
                         @allow_940_new_item = objCustMaster.allow_940_new_item,
-                        @cust_type = objCustMaster.cust_type
+                        @cust_type = objCustMaster.cust_type,
+                        @scan_serial = objCustMaster.is_scan_serial
 
                     }, commandType: CommandType.StoredProcedure);
 
@@ -617,7 +618,8 @@ namespace GsEPWv8_5_MVC.Data.Implementation
                         @min_strg_cube = objCustMaster.min_strg_cube,
                         @ecom_recv_by_bin = objCustMaster.ecom_recv_by_bin,
                         @allow_940_new_item = objCustMaster.allow_940_new_item,
-                        @cust_type = objCustMaster.cust_type
+                        @cust_type = objCustMaster.cust_type,
+                        @scan_serial = objCustMaster.is_scan_serial
                     }, commandType: CommandType.StoredProcedure);
 
             }

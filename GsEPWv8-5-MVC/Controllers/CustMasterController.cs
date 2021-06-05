@@ -523,6 +523,15 @@ namespace GsEPWv8_5_MVC.Controllers
                     objCustMaster.is_bill_by_cube_rounded = "No";
                 }
 
+                objCustMaster.is_scan_serial = objCustMaster.ListCustConfig[0].is_scan_serial;
+                if (objCustMaster.ListCustConfig[0].is_scan_serial == "Y")
+                {
+                    objCustMaster.is_scan_serial = "Yes";
+                }
+                else
+                {
+                    objCustMaster.is_scan_serial = "No";
+                }
                 //END
             }
 
@@ -541,6 +550,7 @@ namespace GsEPWv8_5_MVC.Controllers
                 objCustMaster.is_bill_by_cube_rounded = "No";
                 objCustMaster.min_inout_cube = 0;
                 objCustMaster.min_strg_cube = 0;
+                objCustMaster.is_scan_serial = "No";
             }
             objLookUp.id = "19";
             objLookUp.lookuptype = "DocAllowNewItem";
@@ -787,7 +797,15 @@ namespace GsEPWv8_5_MVC.Controllers
                 objCustMaster.ecom_recv_by_bin = objCustMaster.ListCustConfig[0].ecom_recv_by_bin;
                 objCustMaster.allow_940_new_item = objCustMaster.ListCustConfig[0].allow_940_new_item;
                 objCustMaster.cust_type = objCustMaster.ListCustConfig[0].cust_type;
-
+                objCustMaster.is_scan_serial = objCustMaster.ListCustConfig[0].is_scan_serial;
+                if (objCustMaster.ListCustConfig[0].is_scan_serial == "Y")
+                {
+                    objCustMaster.is_scan_serial = "Yes";
+                }
+                else
+                {
+                    objCustMaster.is_scan_serial = "No";
+                }
                 //END
             }
             else
@@ -808,6 +826,7 @@ namespace GsEPWv8_5_MVC.Controllers
                 objCustMaster.ecom_recv_by_bin = false;
                 objCustMaster.allow_940_new_item = false;
                 objCustMaster.cust_type = "B2B";
+                objCustMaster.is_scan_serial = "No";
             }
 
             objLookUp.id = "16";
@@ -1112,6 +1131,15 @@ namespace GsEPWv8_5_MVC.Controllers
                 objCustMaster.ecom_recv_by_bin = objCustMaster.ListCustConfig[0].ecom_recv_by_bin;
                 objCustMaster.allow_940_new_item = objCustMaster.ListCustConfig[0].allow_940_new_item;
                 objCustMaster.cust_type = objCustMaster.ListCustConfig[0].cust_type;
+                objCustMaster.is_scan_serial = objCustMaster.ListCustConfig[0].is_scan_serial;
+                if (objCustMaster.ListCustConfig[0].is_scan_serial == "Y")
+                {
+                    objCustMaster.is_scan_serial = "Yes";
+                }
+                else
+                {
+                    objCustMaster.is_scan_serial = "No";
+                }
 
                 CustMaster objCustRate = ServiceObject.fnGetCustDfltRate(cmp_id);
                 if (objCustRate.ListCustDfltRate.Count > 0)
@@ -1151,6 +1179,7 @@ namespace GsEPWv8_5_MVC.Controllers
                 objCustMaster.min_inout_cube = 0;
                 objCustMaster.min_strg_cube = 0;
                 objCustMaster.cust_type = "B2B";
+                objCustMaster.is_scan_serial = "No";
             }
             objLookUp.id = "19";
             objLookUp.lookuptype = "DocAllowNewItem";
@@ -1406,6 +1435,15 @@ namespace GsEPWv8_5_MVC.Controllers
                 objCustMaster.ecom_recv_by_bin = objCustMaster.ListCustConfig[0].ecom_recv_by_bin;
                 objCustMaster.allow_940_new_item = objCustMaster.ListCustConfig[0].allow_940_new_item;
                 objCustMaster.cust_type = objCustMaster.ListCustConfig[0].cust_type;
+                objCustMaster.is_scan_serial = objCustMaster.ListCustConfig[0].is_scan_serial;
+                if (objCustMaster.ListCustConfig[0].is_scan_serial == "Y")
+                {
+                    objCustMaster.is_scan_serial = "Yes";
+                }
+                else
+                {
+                    objCustMaster.is_scan_serial = "No";
+                }
             }
             else
             {
@@ -1424,6 +1462,7 @@ namespace GsEPWv8_5_MVC.Controllers
                 objCustMaster.min_inout_cube =0;
                 objCustMaster.min_strg_cube = 0;
                 objCustMaster.cust_type = "B2B";
+                objCustMaster.is_scan_serial = "No";
             }
 
 
@@ -1543,7 +1582,7 @@ namespace GsEPWv8_5_MVC.Controllers
              string p_str_pmt_term,string p_str_cube_auto_cacl, string p_str_is_bill_by_cube_rounded, String p_str_min_inout_cube, 
              String p_str_min_strg_cube, string p_str_Cust_initial, string lstrUserList,
              string pstrIORateId, string pstrIORateName, string pdecIORatePrice, string pstrStrgRateId, 
-             string pstrStrgRateName, string pdecStrgRatePrice, bool p_str_ecom_recv_by_bin, bool p_str_allow_940_new_item, string p_str_cust_type)
+             string pstrStrgRateName, string pdecStrgRatePrice, bool p_str_ecom_recv_by_bin, bool p_str_allow_940_new_item, string p_str_cust_type, string p_str_scan_serial)
         {
             try
             {
@@ -1797,7 +1836,15 @@ namespace GsEPWv8_5_MVC.Controllers
                     objCustMaster.allow_940_new_item = p_str_allow_940_new_item;
                     objCustMaster.cust_type = p_str_cust_type;
 
-
+                    objCustMaster.is_scan_serial = p_str_scan_serial.Trim();
+                    if (p_str_scan_serial.Trim() == "Yes")
+                    {
+                        objCustMaster.is_scan_serial = "Y";
+                    }
+                    else
+                    {
+                        objCustMaster.is_scan_serial = "N";
+                    }
 
                     objCustMaster.pmt_term = p_str_pmt_term;
                     ServiceObject.SaveCustMasterConfig(objCustMaster);
@@ -1886,7 +1933,7 @@ namespace GsEPWv8_5_MVC.Controllers
            string p_str_pmt_terms,string p_str_cube_auto_calc, string p_str_is_bill_by_cube_rounded, String p_str_min_inout_cube, 
            String p_str_min_strg_cube, string lstrUserList,
             string pstrIORateId, string pstrIORateName, string pdecIORatePrice, string pstrStrgRateId, string pstrStrgRateName, string pdecStrgRatePrice,
-            bool p_str_ecom_recv_by_bin, bool p_str_allow_940_new_item, string p_str_cust_type)
+            bool p_str_ecom_recv_by_bin, bool p_str_allow_940_new_item, string p_str_cust_type, string p_str_scan_serial)
         {
             string l_str_lot_count = string.Empty;
             string l_str_docid_count = string.Empty;
@@ -2063,7 +2110,15 @@ namespace GsEPWv8_5_MVC.Controllers
             objCustMaster.allow_940_new_item = p_str_allow_940_new_item;
 
             objCustMaster.cust_type = p_str_cust_type;
-
+            objCustMaster.is_scan_serial = p_str_scan_serial.Trim();
+            if (p_str_scan_serial.Trim() == "Yes")
+            {
+                objCustMaster.is_scan_serial = "Y";
+            }
+            else
+            {
+                objCustMaster.is_scan_serial = "N";
+            }
             objCustMaster.pmt_term = p_str_pmt_terms;            
             if (p_str_whs_id != null)
             {

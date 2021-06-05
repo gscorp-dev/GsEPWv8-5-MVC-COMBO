@@ -147,6 +147,7 @@ namespace GsEPWv8_5_MVC.Model
         public bool ecom_recv_by_bin { get; set; }
         public bool allow_940_new_item { get; set; }
         public string cust_type { get; set; }
+        public string is_scan_serial { get; set; }
 
     }
     public class CustMasterModel : CustMasterDtlModel
