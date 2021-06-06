@@ -515,7 +515,7 @@ namespace GsEPWv8_5_MVC.Core.Entity
         public IList<InboundInquiry> List_get_ibs_dtl { get; set; }
         public IList<InboundInquiry> List_get_Ibs_Doc_ID { get; set; }
         public IList<LookUp> ListContainerType { get; set; }
-
+        public string is_scan_serial { get; set; }
 
     }
 
