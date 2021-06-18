@@ -493,27 +493,7 @@
                          setTimeout(function () {
                              $('#myModalNew').modal('hide');
                              this.LoadScanDetails();
-                             //var id = $buttonClicked.attr('data-id');
-                             //var options = { "backdrop": "static", keyboard: true };
-                             //var TeamDetailPostBackURL = '/ItemCodeScanSerial/LoadScanSerialDetails';
-                             //$("#ajaxLoading").show();
-                             //$.ajax({
-                             //    type: "GET",
-                             //    url: TeamDetailPostBackURL,
-                             //    contentType: "application/json; charset=utf-8",
-                             //    data: { "Id": id, "cmp_id": cmp_id },
-                             //    datatype: "json",
-                             //    success: function (data) {
-                             //        $("#ajaxLoading").hide();
-                             //        $('#myModalContent').html(data);
-                             //        $('#myModal').modal(options);
-                             //        $('#myModal').modal('show');
-                             //    },
-                             //    error: function () {
-                             //        $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
-                             //        swal("Dynamic content load failed.");
-                             //    }
-                             //});
+                             
 
                          });
                      });
@@ -608,6 +588,7 @@
             }
         });
     };
+
     $("#").click(function () {
         debugger
         var p_str_cmp_id = $('#v_add_cust_of_cmpid').val();
