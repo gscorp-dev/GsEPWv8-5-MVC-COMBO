@@ -115,6 +115,7 @@ namespace GsEPWv8_5_MVC.Data.Interface
         InboundInquiry InsertTblIbDocRecvDtlTemp(InboundInquiry objInboundInquiry);
         InboundInquiry GetItmName(InboundInquiry objInboundInquiry);
         InboundInquiry GetItmCode(InboundInquiry objInboundInquiry);
+        InboundInquiry GetItmCodeByByItemMaster(InboundInquiry objInboundInquiry);
         InboundInquiry UpdtItmDtl(InboundInquiry objInboundInquiry);
         InboundInquiry GetCheckExistGridDataRecvEntry(InboundInquiry objInboundInquiry);
         InboundInquiry InsertRecvEntryTemptable(InboundInquiry objInboundInquiry);
@@ -178,6 +179,8 @@ namespace GsEPWv8_5_MVC.Data.Interface
          string checkIBDocInUse(string p_str_cmp_id, string p_str_ib_doc_id);
          bool checkIBDocRcvd(string pstrCmpId, string pstrIbDocId);
          string fnIBRecvDtlEditTempSave(string pstrCmpId, DataTable dtIBRrecvDtlEditTemp);
-       
+       void InsertScanInDetails(InboundInquiry objInboundInquiry);
+        List<ItemScanIN> getScanInDetailsByItemCode(string cmpId, string itm_code, string itm_serial_num);
+
     }
 }

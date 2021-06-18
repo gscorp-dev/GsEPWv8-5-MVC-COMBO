@@ -515,6 +515,9 @@ namespace GsEPWv8_5_MVC.Core.Entity
         public IList<InboundInquiry> List_get_ibs_dtl { get; set; }
         public IList<InboundInquiry> List_get_Ibs_Doc_ID { get; set; }
         public IList<LookUp> ListContainerType { get; set; }
+
+        public IList<ItemScanIN> ListItemScanIN { get; set; }
+        public ItemScanIN ItemScanIN { get; set; }
         public string is_scan_serial { get; set; }
 
     }
@@ -565,5 +568,27 @@ namespace GsEPWv8_5_MVC.Core.Entity
 
     }
 
+    public class ItemScanIN
+    {
+        public string cmp_id { get; set; }
+        public string itm_code { get; set; }
+        public string itm_serial_num { get; set; }
+        public string itm_num { get; set; }
+        public string itm_color { get; set; }
+        public string itm_size { get; set; }
+        public string status { get; set; }
+        public string ib_doc_id { get; set; }
+        public DateTime? ib_doc_dt { get; set; }
+        public string ob_doc_id { get; set; }
+        public DateTime? ob_doc_dt { get; set; }
+        public string ib_user { get; set; }
+        public string ob_user { get; set; }
+        public string itm_name { get; set; }
+        public string ppk { get; set; }
+        public string ctn { get; set; }
+        public string TotalQty { get; set; }
+
+        public int balanceScan { get; set; }
+    }
 
 }

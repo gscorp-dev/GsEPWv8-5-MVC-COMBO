@@ -401,8 +401,8 @@ namespace GsEPWv8_5_MVC.Model
         public IList<InboundInquiry> List_get_Ibs_Doc_ID { get; set; }
         public IList<LookUp> ListContainerType { get; set; }
 
-
-
+        public IList<ItemScanIN> ListItemScanIN { get; set; }
+        public ItemScanIN ItemScanIN { get; set; }
 
     }
 }

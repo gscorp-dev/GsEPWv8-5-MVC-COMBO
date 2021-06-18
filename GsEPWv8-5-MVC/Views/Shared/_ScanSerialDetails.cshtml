@@ -1,0 +1,794 @@
+﻿@model GsEPWv8_5_MVC.Model.InboundInquiryModel
+@{
+    var Ordercount = Model.ListAckRptDetails.Count;
+    @Html.HiddenFor(model => model.cmp_id);
+    //// int TotalQty = 0;
+    // int Totalctn = 0;
+    // decimal l_dec_tot_cube = 0;
+    // decimal l_dec_tot_wgt = 0;
+}
+@*@for (int j = 0; j < Model.ListAckRptDetails.Count(); j++)
+{
+    var qty = (Model.ListAckRptDetails[j].TotalQty);
+    if (qty > 0)
+    {
+        TotalQty = TotalQty + qty;
+    }
+    var ctn = (Model.ListAckRptDetails[j].ctn);
+    if (ctn > 0)
+    {
+        Totalctn = Totalctn + ctn;
+    }
+    var l_dec_cube = (Model.ListAckRptDetails[j].CUBE);
+    if (l_dec_cube > 0)
+    {
+        l_dec_tot_cube = l_dec_tot_cube + (ctn * l_dec_cube);
+    }
+    var l_dec_wgt = (Model.ListAckRptDetails[j].wgt);
+    if (l_dec_wgt > 0)
+    {
+        l_dec_tot_wgt = l_dec_tot_wgt + (ctn * l_dec_wgt);
+    }
+
+}*@
+<style type="text/css">
+    div#table-Details {
+        border: 1px solid #999;
+        box-shadow: 0px 0px 15px;
+    }
+
+    table.dataTable thead > tr > th {
+        padding-right: 0px;
+    }
+
+    .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+        border: 1px solid #f5f5f5;
+    }
+
+    .dataTables_wrapper {
+        padding-top: 10px;
+    }
+
+    div#ajaxLoadingScanSerialDetails {
+        display: none;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 40%;
+        left: 53%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<center>
+    @Html.HiddenFor(model => model.status)
+    @Html.HiddenFor(model => model.Itm_Code)
+    @Html.HiddenFor(model => model.ItemScanIN.itm_name)
+    @Html.HiddenFor(model => model.ItemScanIN.ppk)
+    @Html.HiddenFor(model => model.ItemScanIN.ctn)
+    @Html.HiddenFor(model => model.ItemScanIN.TotalQty)
+   
+    @*objInboundInquiry.ItemScanIN.itm_name = itm_name;
+    objInboundInquiry.ItemScanIN.ppk = ppk;
+    objInboundInquiry.ItemScanIN.ctn = ctn;
+    objInboundInquiry.ItemScanIN.TotalQty = TotalQty;*@
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Item Scan IN</h4>
+        <button type = "button" style="margin-left: 88%; margin-top: -1%;" id="btnClose" class="btn-Close" data-dismiss="modal">Close</button>
+        <button type = "button" id="btnSaveScanSerial" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+    </div>
+    <center><label style = "font-size:20px;" ><b> Item Scan IN</b></label></center>
+    <hr />
+    @*<div id = "ajaxLoadingScanSerialDetails" style= "display:none;" >< img src= "~/Images/ajax-loader.gif" /></ div >*@
+
+        <div id="ajaxLoadingScanSerialDetails" style="display:none;"><img src="~/Images/ajax-loader.gif" /></div>
+
+          <div class="box-body">
+        <div class="box-header">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="col-md-9 col-sm-9 col-xs-9" style="bottom: -24px;">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px; font-size:10px;">
+                                <label><b class="Lblmanual">Cmp Id</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.CompID, new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
+                                <label><b class="Lblmanual">IBDocID</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ibdocid, new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+                            <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
+                                <label><b class="Lblmanual">ContainerID</b></label>
+
+                            </div>
+                            <div class="col-xs-2" style="margin-left:-17px;">
+                                @Html.TextBoxFor(model => model.Container, new { @class = "form-control txtlbl", @maxlength = "50" })
+                            </div>
+
+                            <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
+                                <label><b class="Lblmanual">Load date</b></label>
+                            </div>
+                            <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ib_load_dt, new { @class = "form-control txtlbl", @maxlength = "10" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Status</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.status, new { @class = "form-control txtlbl", @maxlength = "50", @id = "Statuspar" })
+
+                            </div>
+                            <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">VenderName</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -15px;">
+                                @Html.TextBoxFor(model => model.vend_name, new { @class = "form-control txtlbl", @maxlength = "50", })
+                            </div>
+
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Ref No</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -15px;">
+                                @Html.TextBoxFor(model => model.refno, new { @class = "form-control txtlbl", @maxlength = "50", })
+
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Ref No</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -15px;">
+                                @Html.TextBoxFor(model => model.refno, new { @class = "form-control txtlbl", @maxlength = "50", })
+
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Style</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_num, new { @id = "itm_num", @class = "form-control txtlbl", @maxlength = "50", })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Color</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_color, new { @id = "itm_color", @class = "form-control txtlbl", @maxlength = "50", })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Size</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_size, new { @id = "itm_size", @class = "form-control txtlbl", @maxlength = "50", })
+                            </div>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual">Serial</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_serial_num, new { @id= "itm_serial_num", @class = "form -control txtlbl", @maxlength = "50", })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-3" style="display:none">
+                    <div class="container">
+                        <fieldset>
+                            <legend style = "text-align:center" > Report Selection</legend>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <b style = "color:blue;font-size: 12px;" > Format </ b >
+                                        < select id="Formatrcvddtlid" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right" data-toggle="dropdown">
+                                            <option>PDF</option>
+                                            <option>XLS</option>
+                                        </select>
+
+                                    </td>
+                                    <td>
+                                        <b style = "color:blue;font-size: 12px;padding-left:20px;" > Mode </ b >
+                                        < select id="Modercvddtlid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
+                                            <option>VIEW</option>
+                                            <option>EMAIL</option>
+
+                                        </select>
+
+
+                                    </td>
+                                    <td>
+
+                                        <button type = "button" id="btnrcvddtl" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
+                                    </td>
+
+                                </tr>
+
+
+                            </table>
+                        </fieldset>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    <fieldset style = "width:100%" >
+        <legend style="text-align:left;color:orange;margin-bottom:10px;">Total Summary</legend><hr style = "margin-bottom:0px;" />
+
+
+         <div class="row">
+            <div class="col-xs-12">
+                @*<div class="col-xs-2" style="margin-left:3%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Records:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-13%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @Model.ItemScanIN.
+                    </label>
+                </div>*@
+                <div class="col-xs-2" style="margin-left:-5%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;">
+                        Qty:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-13%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @Model.ItemScanIN.ctn
+                    </label>
+                </div>
+                <div class="col-xs-2" style="margin-left:-5%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                        Total Ctns:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-10%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @Model.ItemScanIN.TotalQty
+                    </label>
+                </div>
+                <div class="col-xs-2" style="margin-left:-5%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                        Scan In Cpunt:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-10%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                       @Model.ListItemScanIN.Count
+                    </label>
+                </div>
+                <div class="col-xs-2" style="margin-left:-5%; margin-top:1%">
+                    <span style="font-size: 1.5em;color:#ff5600;font-weight: bold;text-align:right;padding-left:53px">
+                        Scan In Remaining:
+                    </span>
+                </div>
+                <div class="col-xs-2" style="margin-left:-2%;margin-top:1%">
+                    <label class="totalCount" style="text-align:left">
+                        @Model.ItemScanIN.balanceScan
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    </fieldset>
+
+    <br />
+</center>
+
+
+<table id="InbndScanSerialDtl" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+    <thead class="grid_backcolor">
+        <tr>
+            <th class="grid_header_backcolor" style="font-size:11px;width:4%;">SN#</th>
+            
+            <th class="grid_header_backcolor" style="font-size:11px;width:13%;">Item Serial Number</th>
+            
+            
+        </tr>
+    </thead>
+    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+        @for (int i = 0; i < Model.ListItemScanIN.Count; i++)
+    {
+
+           
+
+            <tr style="background-color:white;" >
+                <td style="text-align:center;font-size:11px;font-weight:bold;">@(i+1)</td>
+                <td style="text-align:left;font-size:11px;font-weight:bold;">@Model.ListItemScanIN[i].itm_serial_num
+
+                    @*<a href="javascript:void(0);"  style="text-decoration:underline; color: cadetblue;font-size:13px;" class="anchorScanDetail"
+                       data-id="@Model.ListItemScanIN[i].itm_code"
+                       data-id1="@Model.ListItemScanIN[i].itm_num"
+                       data-id2="@Model.ListItemScanIN[i].itm_color"
+                       data-id3="@Model.ListItemScanIN[i].itm_size"
+                       data-id4="@Model.ListItemScanIN[i].itm_name"
+                       data-id5="@Model.ListItemScanIN[i].ppk"
+                       data-id6="@Model.ListItemScanIN[i].ib_doc_id"
+                       data-id7="@Model.ListItemScanIN[i].ctn"
+                       data-id8="@Model.ListItemScanIN[i].TotalQty"></a>*@
+                </td>
+                
+            </tr>
+       }
+    </tbody>
+</table>
+
+<script>
+      @*  $('#InbndScanSerialDtl').DataTable({
+            "pageLength": 10,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': false,
+            'info': false,
+            'autoWidth': false,
+
+        });
+        $('#InbndRcvdDtl_paginate').hide();*@
+
+
+    $(function () {
+        //$(".anchorscanDetail").click(function () {
+        $('#InbndScanSerialDtl tbody').on('click', '.anchorScanDetail', function () { //CR2018-04-07-001 Added by Nithya
+            debugger;
+            var TeamDetailPostBackURL = '/InboundInquiry/LoadScanItemCodeDetails';
+            var cmp_id = $("#cmp_id").val();
+            var $buttonClicked = $(this);
+            var $buttonClicked = $(this);
+            var id = $("#ibdocid").val();
+            var data = $buttonClicked.attr('data-id');
+            var data1 = $buttonClicked.attr('data-id1');
+            var data2 = $buttonClicked.attr('data-id2');
+            var data3 = $buttonClicked.attr('data-id3');
+            var data4 = $buttonClicked.attr('data-id4');
+            var data5 = $buttonClicked.attr('data-id5');
+            var data6 = $buttonClicked.attr('data-id6');
+            var data7 = $buttonClicked.attr('data-id7');
+            var data8 = $buttonClicked.attr('data-id8');
+            //alert(data);
+            //alert(data1);
+            //alert(data2);
+            //alert(data3);
+            //alert(data4); alert(data5); alert(data6); alert(data7); alert(data8);
+            var options = { "backdrop": "static", keyboard: true };
+            alert(cmp_id);
+            alert(id);
+            $("#ajaxLoading").show();
+            $.ajax({
+                type: "GET",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "Id": id, "cmp_id": cmp_id },
+                datatype: "json",
+                success: function (data) {
+                    $("#ajaxLoading").hide();
+                    $('#myModalContent').html(data);
+                    $('#myModal').modal(options);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                    swal("Dynamic content load failed.");
+                }
+            });
+        });
+
+    });
+
+    $('#btnSaveScanSerial').click(function () {
+        debugger
+        var compid = $('#cmp_id').val();
+        //var screenid = $('#ScreenID').val();
+        //var Reportid = $('#LstMailConfigNewReports').val();
+        //var mailto = $('#NewEmailTo').val();
+        //var mailcc = $('#NewEmailCC').val();
+        //var content = $('#NewEmailMessage').val();
+        //var status = $('#Status').val();
+        //if (compid == "") {
+        //    sweetAlert("", "Company Name is Required.", "");
+        //    return false;
+        //}
+        //if (screenid == "") {
+        //    sweetAlert("", "ScreenID is Required", "");
+        //    return false;
+        //}
+        //if (Reportid == "") {
+        //    sweetAlert("", "ReportName is Required", "");
+        //    return false;
+        //}
+        //if (mailto == "") {
+        //    sweetAlert("", "Atleast One Email To is Required", "");
+        //    return false;
+        //}
+        //if (content == "") {
+        //    sweetAlert("", "Email Content is Required", "");
+        //    return false;
+        //}
+        if ($("#itm_serial_num").val() == "") {
+            sweetAlert("", "itm_serial_num is Required", "");
+            return false;
+        }
+        var cmp_id = $("#cmp_id").val();
+        var $buttonClicked = $(this);
+        var $buttonClicked = $(this);
+        var id = $("#ibdocid").val();
+
+
+        var cmp_id = $("#cmp_id").val();
+        //var $buttonClicked = $(this);
+        //var $buttonClicked = $(this);
+        var id = $("#ibdocid").val();
+
+        var ibdocid = $("#ibdocid").val();
+        var Itm_Code = $("#Itm_Code").val();
+        var itm_num = $("#itm_num").val();
+        var itm_color = $("#itm_color").val();
+        var itm_size = $("#itm_size").val();
+        var itm_serial_num = $("#itm_serial_num").val();
+        var TotalQty = $("#ItemScanIN_TotalQty").val();
+        var ppk = $("#ItemScanIN_ppk").val();
+        var ctn = $("#ItemScanIN_ctn").val();
+        var itm_name = $("#ItemScanIN_itm_name").val();
+        //alert('ibdocid:'+ibdocid);
+        //alert('Itm_Code:' + Itm_Code);
+        //alert('itm_color:' + itm_color);
+        //alert('itm_size:' + itm_size);
+        //alert('itm_serial_num:' + itm_serial_num);
+        //alert('TotalQty:' + TotalQty);
+        //alert('ppk:' + ppk);
+        //alert('ctn:' + ctn);
+        //alert('itm_name:' + itm_name);
+
+       // alert(ibdocid); alert(ibdocid);
+        //var data = $buttonClicked.attr('data-id');
+        //var data1 = $buttonClicked.attr('data-id1');
+        //var data2 = $buttonClicked.attr('data-id2');
+        //var data3 = $buttonClicked.attr('data-id3');
+        //var data4 = $buttonClicked.attr('data-id4');
+        //var data5 = $buttonClicked.attr('data-id5');
+        //var data6 = $buttonClicked.attr('data-id6');
+        //var data7 = $buttonClicked.attr('data-id7');
+        //var data8 = $buttonClicked.attr('data-id8');
+
+        $("#ajaxLoadingScanSerialDetails").show();
+        var ScanPostBackURL = '/ItemCodeScanSerial/SaveScanInDetails';
+        $.ajax({
+            type: "GET",
+            url: ScanPostBackURL,
+            data: { "Id": ibdocid, "cmp_id": cmp_id, "Itm_Code": Itm_Code, "Style": itm_num, "Color": itm_color, "Size": itm_size, "itm_name": itm_name, "ppk": ppk, "ctn": ctn, "TotalQty": TotalQty, "itm_serial_num": itm_serial_num },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+
+            success: function (e) {
+               // alert(e);
+                if (e == true) {
+                    swal({
+                        title: "",
+                        text: " Scan In Details Saved successfully",
+                        type: "",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+
+                     function () {
+                         setTimeout(function () {
+                             $('#myModalNew').modal('hide');
+                             this.LoadScanDetails();
+                             //var id = $buttonClicked.attr('data-id');
+                             //var options = { "backdrop": "static", keyboard: true };
+                             //var TeamDetailPostBackURL = '/ItemCodeScanSerial/LoadScanSerialDetails';
+                             //$("#ajaxLoading").show();
+                             //$.ajax({
+                             //    type: "GET",
+                             //    url: TeamDetailPostBackURL,
+                             //    contentType: "application/json; charset=utf-8",
+                             //    data: { "Id": id, "cmp_id": cmp_id },
+                             //    datatype: "json",
+                             //    success: function (data) {
+                             //        $("#ajaxLoading").hide();
+                             //        $('#myModalContent').html(data);
+                             //        $('#myModal').modal(options);
+                             //        $('#myModal').modal('show');
+                             //    },
+                             //    error: function () {
+                             //        $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                             //        swal("Dynamic content load failed.");
+                             //    }
+                             //});
+
+                         });
+                     });
+
+                }
+                else {
+                    sweetAlert("", "Scan Details are already Exist Please correct it", "");
+                    $("#itm_serial_num").val('')
+                    $("#ajaxLoadingScanSerialDetails").hide();
+                }
+            },
+
+            failure: function (response) {
+                alert(response.responseText);
+                $("#ajaxLoadingScanSerialDetails").hide();
+            },
+            error: function (response) {
+                alert(response.responseText);
+                $("#ajaxLoadingScanSerialDetails").hide();
+            }
+        });
+
+
+
+    });
+
+
+
+    function LoadScanDetails () { //CR2018-04-07-001 Added by Nithya
+        debugger;
+        var TeamDetailPostBackURL = '/ItemCodeScanSerial/LoadScanSerialDetails';
+        var cmp_id = $("#cmp_id").val();
+        var $buttonClicked = $(this);
+        var $buttonClicked = $(this);
+        var id = $("#ibdocid").val();
+
+        var ibdocid = $("#ibdocid").val();
+        var Itm_Code = $("#Itm_Code").val();
+        var itm_num = $("#itm_num").val();
+        var itm_color = $("#itm_color").val();
+        var itm_size = $("#itm_size").val();
+        var itm_serial_num = $("#itm_serial_num").val();
+        var TotalQty = $("#ItemScanIN_TotalQty").val();
+        var ppk = $("#ItemScanIN_ppk").val();
+        var ctn = $("#ItemScanIN_ctn").val();
+        var itm_name = $("#ItemScanIN_itm_name").val();
+        //alert('Loadin ibdocid:' + ibdocid);
+        //alert('Loadin Itm_Code:' + Itm_Code);
+        //alert('Loadin itm_color:' + itm_color);
+        //alert('Loadin itm_size:' + itm_size);
+        //alert('Loadin itm_serial_num:' + itm_serial_num);
+        //alert('Loadin TotalQty:' + TotalQty);
+        //alert('Loadin ppk:' + ppk);
+        //alert('Loadin ctn:' + ctn);
+        //alert('Loadin itm_name:' + itm_name);
+
+        //var data = $buttonClicked.attr('data-id');
+        //var data1 = $buttonClicked.attr('data-id1');
+        //var data2 = $buttonClicked.attr('data-id2');
+        //var data3 = $buttonClicked.attr('data-id3');
+        //var data4 = $buttonClicked.attr('data-id4');
+        //var data5 = $buttonClicked.attr('data-id5');
+        //var data6 = $buttonClicked.attr('data-id6');
+        //var data7 = $buttonClicked.attr('data-id7');
+        //var data8 = $buttonClicked.attr('data-id8');
+
+        // alert(data);
+        //alert(data1);
+        //alert(data2);
+        //alert(data3);
+        //alert(data4); alert(data5); alert(data6); alert(data7); alert(data8);
+
+        var options = { "backdrop": "static", keyboard: true };
+        // alert(cmp_id);
+        // alert(id);
+        $("#ajaxLoading").show();
+        $.ajax({
+            type: "GET",
+            url: TeamDetailPostBackURL,
+            contentType: "application/json; charset=utf-8",
+            data: { "Id": ibdocid, "cmp_id": cmp_id, "Itm_Code": Itm_Code, "Style": itm_num, "Color": itm_color, "Size": itm_size, "itm_name": itm_name, "ppk": ppk, "ctn": ctn, "TotalQty": TotalQty },
+            datatype: "json",
+            success: function (data) {
+                $("#ajaxLoading").hide();
+                $('#myModalContent').html(data);
+                $('#myModal').modal(options);
+                $('#myModal').modal('show');
+            },
+            error: function () {
+                $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                swal("Dynamic content load failed.");
+            }
+        });
+    };
+    $("#").click(function () {
+        debugger
+        var p_str_cmp_id = $('#v_add_cust_of_cmpid').val();
+        var p_str_cust_id = $('#v_add_cmp_id').val();
+        var p_str_cmp_name = $('#v_add_cmp_name').val();
+        var p_str_radio = $("input[name='radioaddrs']:checked").val();
+        var pstrStrgRateName = $('#v_add_strg_rate_name').val();
+        var pdecStrgRatePrice = $('#v_add_strg_rate_price').val();
+        var p_str_ecom_recv_by_bin = $('#ecom_recv_by_bin').is(':checked');
+        var p_str_allow_940_new_item = $('#v_add_allow_940_new_item').is(':checked');
+        var p_str_cust_type = $('#a_add_cust_type').val();
+        var p_str_scan_serial = $('#a_add_scan_serial').val();
+
+
+        debugger
+        if (p_str_cmp_id == "") {
+            swal("", "Please Select The Company.", "");
+            $('#v_add_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+        if (p_str_cust_id == "") {
+            swal("", "Please Select The Cust ID.", "");
+            $('#v_add_cmp_id').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+        if (p_str_cmp_name == "") {
+            swal("", "Please Select The Company Name.", "");
+            $('#new_cmp_name').focus();
+            $('body,html').animate({ scrollTop: 0 }, 0);
+            er = 1;
+            return false;
+        }
+
+
+        else {
+
+
+            sweetAlert({
+                title: "",
+                text: "" + p_str_whs_id + " set as Default Warehouse for this customer(Yes/No)",
+                type: "",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "No",
+                cancelButtonText: "Yes",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+
+                        $('#v_add_whs_id').val('');
+                        $('#v_add_whs_id').focus();
+                        swal.close();
+                        return false;
+                    }
+                    else {
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Content("~/CustMaster/SaveCustdtls")',
+                            data: {
+                                "p_str_cmp_id": p_str_cmp_id,
+                                "p_str_cust_id": p_str_cust_id,
+                                "p_str_cmp_name": p_str_cmp_name, "p_str_whs_id": p_str_whs_id, "p_str_source": p_str_source,
+                                "p_str_region": p_str_region, "p_str_territory": p_str_territory,
+                                "p_str_cust_grp_id": p_str_cust_grp_id, "p_str_status": p_str_status, "p_str_contact": p_str_contact, "p_str_dt_of_entry": p_str_dt_of_entry,
+                                "p_str_last_chg_dt": p_str_last_chg_dt, "p_str_tel": p_str_tel, "p_str_fax": p_str_fax, "p_str_email": p_str_email, "p_str_web": p_str_web, "p_str_cell": p_str_cell,
+                                "p_str_bl_free_days": p_str_bl_free_days, "p_str_strg_bill": p_str_strg_bill, "p_str_inout_bill": p_str_inout_bill, "p_str_allow_new_item": p_str_allow_new_item, "p_str_itm_listby": p_str_itm_listby, "p_str_auto_inc": p_str_auto_inc,
+                                "p_str_rcv_lot_by": p_str_rcv_lot_by, "p_str_initstrg": p_str_initstrg, "p_str_aloc_by": p_str_aloc_by,
+                                "p_str_mail_name": p_str_mail_name, "p_str_attn": p_str_attn, "p_str_addr1": p_str_addr1, "p_str_addr2": p_str_addr2, "p_str_city": p_str_city, "p_str_state": p_str_state,
+                                "p_str_zip": p_str_zip, "p_str_country": p_str_country, "p_str_frieght_id": p_str_frieght_id, "p_str_ship_via_id": p_str_ship_via_id,
+                                "p_str_catg": p_str_catg, "p_str_bill_cycle": p_str_bill_cycle,
+                                "p_str_credit_code": p_str_credit_code, "p_str_credit_type": p_str_credit_type, "p_str_credit_msg": p_str_credit_msg,
+                                "p_str_credit_limit": p_str_credit_limit, "p_str_discount": p_str_discount, "p_str_terms_code": p_str_terms_code, "p_str_order_value": p_str_order_value,
+                                "p_str_tax_code": p_str_tax_code, "p_str_tax_exempt": p_str_tax_exempt,
+                                "p_str_gl_num": p_str_gl_num, "p_str_file_name": p_str_file_name, "p_str_recv_doc_itm": p_str_recv_doc_itm, "p_str_stk_chk_reqt": p_str_stk_chk_reqt, "p_str_pmt_term": p_str_pmt_term,
+                                "p_str_cube_auto_cacl": p_str_cube_auto_cacl, "p_str_is_bill_by_cube_rounded": p_str_is_bill_by_cube_rounded,
+                                "p_str_min_inout_cube": p_str_min_inout_cube, "p_str_min_strg_cube": p_str_min_strg_cube,
+                                "p_str_Cust_initial": p_str_Cust_initial, "lstrUserList": lstrUserList, "pstrIORateId": pstrIORateId, "pstrIORateName": pstrIORateName, "pdecIORatePrice": pdecIORatePrice,
+                                "pstrStrgRateId": pstrStrgRateId, "pstrStrgRateName": pstrStrgRateName, "pdecStrgRatePrice": pdecStrgRatePrice,
+                                "p_str_ecom_recv_by_bin": p_str_ecom_recv_by_bin, "p_str_allow_940_new_item": p_str_allow_940_new_item, "p_str_cust_type": p_str_cust_type
+                            },
+                            dataType: 'json',
+                            success: function (e) {
+                                if (e == '1') {
+                                    //sweetAlert("", "UserId" + p_str_user_id + "Alreadry Exist.", "");
+                                    swal({
+                                        title: "",
+                                        text: "CustomerId " + p_str_cust_id + " Alreadry Exist.",
+                                        type: "",
+                                        showCancelButton: false,
+                                        confirmButtonClass: "btn-danger",
+                                        confirmButtonText: "Ok",
+                                        closeOnConfirm: true
+                                    },
+                                    function () {
+                                        debugger
+                                        setTimeout(function () {
+                                            debugger
+                                            var url = '@Url.Action("CustMaster", "CustMaster")';
+                                            window.location.href = url;
+                                        });
+                                    });
+                                }
+                                else if (e == '2') {
+                                    sweetAlert("", "Pls Import Image File  Before Save.", "");
+                                    return false;
+                                }
+                                else if (e == '3') {
+                                    sweetAlert("", "Customer Initials Already Exists ! ", "");
+                                    return false;
+                                }
+                                else {
+                                    swal({
+                                        title: "",
+                                        text: "CustomerId " + p_str_cust_id + " Added successfully.",
+                                        type: "",
+                                        showCancelButton: false,
+                                        confirmButtonClass: "btn-danger",
+                                        confirmButtonText: "Ok",
+                                        closeOnConfirm: true
+                                    },
+                                    //swal("", "Your record Added successfully.", "");
+                                     function () {
+
+                                         setTimeout(function () {
+                                             var p_str_cmp_id = $('#v_add_cust_of_cmpid').val();
+                                             var p_str_cust_id = $('#v_add_cmp_id').val();
+                                             $('#CustomerAdd').modal('hide');
+                                             $.ajax({
+                                                 type: "get",
+                                                 url: "/CustMaster/CustMasterDtl",
+                                                 data: {
+                                                     "p_str_cmp_id": p_str_cmp_id,
+                                                     "p_str_cust_id": p_str_cust_id,
+
+
+                                                 },
+                                                 datatype: 'html',
+                                                 success: function (e) {
+                                                     debugger
+                                                     $("#ajaxloading").hide();
+                                                     $('#CustomerGrid').html("");
+                                                     $('#CustomerGrid').html(e);
+                                                 },
+                                             })
+
+                                         });
+
+                                     });
+
+                                }
+                            },
+
+                        })
+
+                    }
+                }
+            );
+
+
+
+        }
+    });
+    //});
+
+    //function InboundReceivedDetailExcel() {
+    //    debugger
+    //    var var_name = $("input[name='radio1']:checked").val();
+
+    //}
+    ////CR_3PL_MVC_BL_2018_0317_001 Added By Soniya 17-03-2018
+    //function InboundReceivedDetailEmailPDF() {
+    //    debugger
+
+    //    // window.open('ShowdtlReport?p_str_cmpid=' + p_str_cmp_id + '&p_str_status=' + p_str_status + '&p_str_ib_doc_id=' + p_str_ib_doc_id, 'InboundInquiry', "toolbar=no, scrollbars=yes, resizable=yes, top=200, left=500, width=950, height=700", 'ShowdtlReport')
+    //}
+</script>
+

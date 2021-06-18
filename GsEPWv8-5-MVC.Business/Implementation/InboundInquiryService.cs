@@ -439,6 +439,11 @@ namespace GsEPWv8_5_MVC.Business.Implementation
         {
             return objRepository.GetItmCode(objInboundInquiry);
         }
+
+        public InboundInquiry GetItmCodeByByItemMaster(InboundInquiry objInboundInquiry)
+        {
+            return objRepository.GetItmCodeByByItemMaster(objInboundInquiry);
+        }
         public InboundInquiry UpdtItmDtl(InboundInquiry objInboundInquiry)
         {
             return objRepository.UpdtItmDtl(objInboundInquiry);
@@ -700,7 +705,15 @@ namespace GsEPWv8_5_MVC.Business.Implementation
             return objRepository.fnIBRecvDtlEditTempSave(pstrCmpId, dtIBRrecvDtlEditTemp);
         }
 
-       
+        public void InsertScanInDetails(InboundInquiry objInboundInquiry)
+        {
+            objRepository.InsertScanInDetails(objInboundInquiry);
+        }
+
+        public List<ItemScanIN> getScanInDetailsByItemCode(string cmpId, string itm_code, string itm_serial_num)
+        {
+            return objRepository.getScanInDetailsByItemCode(cmpId, itm_code, itm_serial_num);
+        }
     }
 }
 

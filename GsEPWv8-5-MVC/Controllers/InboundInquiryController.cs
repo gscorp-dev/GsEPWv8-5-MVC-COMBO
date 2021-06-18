@@ -2218,6 +2218,36 @@ namespace GsEPWv8_5_MVC.Controllers
             InboundInquiryModel InboundInquiryModel = Mapper.Map<InboundInquiry, InboundInquiryModel>(objInboundInquiry);
             return PartialView("_InboundRcvdDetail", InboundInquiryModel);
         }
+
+        public ActionResult LoadItemCodeDetails(string Id, string cmp_id)
+        {
+            InboundInquiry objInboundInquiry = new InboundInquiry();
+            InboundInquiryService ServiceObject = new InboundInquiryService();
+
+            objInboundInquiry.CompID = cmp_id;
+            objInboundInquiry.ib_doc_id = Id;
+            objInboundInquiry.LineNum = 1;
+            objInboundInquiry = ServiceObject.GetInboundHdrDtl(objInboundInquiry);
+            objInboundInquiry.Container = (objInboundInquiry.ListAckRptDetails[0].Container == null || objInboundInquiry.ListAckRptDetails[0].Container == string.Empty ? string.Empty : objInboundInquiry.ListAckRptDetails[0].Container.Trim());
+            objInboundInquiry.status = (objInboundInquiry.ListAckRptDetails[0].status == null || objInboundInquiry.ListAckRptDetails[0].status == string.Empty ? string.Empty : objInboundInquiry.ListAckRptDetails[0].status.Trim());
+            objInboundInquiry.InboundRcvdDt = (objInboundInquiry.ListAckRptDetails[0].InboundRcvdDt == null || objInboundInquiry.ListAckRptDetails[0].InboundRcvdDt == string.Empty ? string.Empty : objInboundInquiry.ListAckRptDetails[0].InboundRcvdDt.Trim());
+            //objInboundInquiry.vend_id = objInboundInquiry.ListAckRptDetails[0].vend_id.Trim();
+
+            objInboundInquiry.vend_id = (objInboundInquiry.ListAckRptDetails[0].vend_id == null || objInboundInquiry.ListAckRptDetails[0].vend_id == string.Empty ? string.Empty : objInboundInquiry.ListAckRptDetails[0].vend_id.Trim());
+            objInboundInquiry.vend_name = (objInboundInquiry.ListAckRptDetails[0].vend_name == null || objInboundInquiry.ListAckRptDetails[0].vend_name == string.Empty ? string.Empty : objInboundInquiry.ListAckRptDetails[0].vend_name.Trim());
+            objInboundInquiry.FOB = (objInboundInquiry.ListAckRptDetails[0].FOB == null || objInboundInquiry.ListAckRptDetails[0].FOB == string.Empty ? string.Empty : objInboundInquiry.ListAckRptDetails[0].FOB.Trim());
+            objInboundInquiry.refno = (objInboundInquiry.ListAckRptDetails[0].refno == null || objInboundInquiry.ListAckRptDetails[0].refno == string.Empty ? string.Empty : objInboundInquiry.ListAckRptDetails[0].refno.Trim());
+
+            objInboundInquiry.ibdocid = Id;
+            objInboundInquiry = ServiceObject.GetDocEntryId(objInboundInquiry);
+            objInboundInquiry.doc_entry_id = objInboundInquiry.doc_entry_id;
+            objInboundInquiry.cmp_id = cmp_id;
+            objInboundInquiry = ServiceObject.GetInboundDtl(objInboundInquiry);
+            Mapper.CreateMap<InboundInquiry, InboundInquiryModel>();
+            InboundInquiryModel InboundInquiryModel = Mapper.Map<InboundInquiry, InboundInquiryModel>(objInboundInquiry);
+            return PartialView("_ItemCodeScanDetails", InboundInquiryModel);
+        }
+
         //CR_3PL_MVC_BL_2018_0226_001 Modified By Ravi 26-02-2018
         public ActionResult LotDetail(string Id, string cmp_id, string ibdocid)
         {
