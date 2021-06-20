@@ -79,7 +79,7 @@
     <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">Item Scan IN</h4>
         <button type = "button" style="margin-left: 88%; margin-top: -1%;" id="btnClose" class="btn-Close" data-dismiss="modal">Close</button>
-        <button type = "button" id="btnSaveScanSerial" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>
+        @*<button type = "button" id="btnSaveScanSerial" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Save</button>*@
     </div>
     <center><label style = "font-size:20px;" ><b> Item Scan IN</b></label></center>
     <hr />
@@ -97,27 +97,27 @@
                                 <label><b class="Lblmanual">Cmp Id</b></label>
                             </div>
                             <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.CompID, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                @Html.TextBoxFor(model => model.CompID, new { @class = "form-control txtlbl", @readonly = true, @maxlength = "50" })
                             </div>
                             <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
                                 <label><b class="Lblmanual">IBDocID</b></label>
                             </div>
                             <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.ibdocid, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                @Html.TextBoxFor(model => model.ibdocid, new { @class = "form-control txtlbl", @readonly = true, @maxlength = "50" })
                             </div>
                             <div class="col-xs-1" style="text-align: right; margin-top: 6px;font-size:10px;">
                                 <label><b class="Lblmanual">ContainerID</b></label>
 
                             </div>
                             <div class="col-xs-2" style="margin-left:-17px;">
-                                @Html.TextBoxFor(model => model.Container, new { @class = "form-control txtlbl", @maxlength = "50" })
+                                @Html.TextBoxFor(model => model.Container, new { @class = "form-control txtlbl", @readonly = true, @maxlength = "50" })
                             </div>
 
                             <div class="col-xs-1" style="text-align: right;  margin-top: 6px;font-size:10px;">
                                 <label><b class="Lblmanual">Load date</b></label>
                             </div>
                             <div class="col-xs-2" style="text-align: right;font-size:10px;margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.ib_load_dt, new { @class = "form-control txtlbl", @maxlength = "10" })
+                                @Html.TextBoxFor(model => model.ib_load_dt, new { @class = "form-control txtlbl", @readonly = true, @maxlength = "10" })
                             </div>
 
                         </div>
@@ -129,28 +129,28 @@
                                 <label><b class="Lblmanual">Status</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.status, new { @class = "form-control txtlbl", @maxlength = "50", @id = "Statuspar" })
+                                @Html.TextBoxFor(model => model.status, new { @class = "form-control txtlbl", @readonly = true, @maxlength = "50", @id = "Statuspar" })
 
                             </div>
                             <div class="col-xs-1" style="text-align:right;margin-top:6px;font-size:10px;">
                                 <label><b class="Lblmanual">VenderName</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -15px;">
-                                @Html.TextBoxFor(model => model.vend_name, new { @class = "form-control txtlbl", @maxlength = "50", })
+                                @Html.TextBoxFor(model => model.vend_name, new { @class = "form-control txtlbl", @readonly = true, @maxlength = "50", })
                             </div>
 
                             <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
                                 <label><b class="Lblmanual">Ref No</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -15px;">
-                                @Html.TextBoxFor(model => model.refno, new { @class = "form-control txtlbl", @maxlength = "50", })
+                                @Html.TextBoxFor(model => model.refno, new { @class = "form-control txtlbl", @readonly = true, @maxlength = "50", })
 
                             </div>
                             <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
-                                <label><b class="Lblmanual">Ref No</b></label>
+                                <label><b class="Lblmanual">Item Code</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -15px;">
-                                @Html.TextBoxFor(model => model.refno, new { @class = "form-control txtlbl", @maxlength = "50", })
+                                @Html.TextBoxFor(model => model.itm_code, new { @class = "form-control txtlbl", @readonly = true, @maxlength = "50", })
 
                             </div>
                         </div>
@@ -163,66 +163,49 @@
                                 <label><b class="Lblmanual">Style</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.ItemScanIN.itm_num, new { @id = "itm_num", @class = "form-control txtlbl", @maxlength = "50", })
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_num, new { @id = "itm_num", @readonly = true, @class = "form-control txtlbl", @maxlength = "50", })
                             </div>
                             <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
                                 <label><b class="Lblmanual">Color</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.ItemScanIN.itm_color, new { @id = "itm_color", @class = "form-control txtlbl", @maxlength = "50", })
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_color, new { @id = "itm_color", @readonly = true, @class = "form-control txtlbl", @maxlength = "50", })
                             </div>
                             <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
                                 <label><b class="Lblmanual">Size</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.ItemScanIN.itm_size, new { @id = "itm_size", @class = "form-control txtlbl", @maxlength = "50", })
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_size, new { @id = "itm_size", @readonly = true, @class = "form-control txtlbl", @maxlength = "50" })
                             </div>
                             <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
-                                <label><b class="Lblmanual">Serial</b></label>
+                                <label><b class="Lblmanual">Item Name</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.ItemScanIN.itm_serial_num, new { @id= "itm_serial_num", @class = "form -control txtlbl", @maxlength = "50", })
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_name, new { @id = "itm_name",  @readonly = true, @class = "form-control txtlbl", @maxlength = "50" })
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-3" style="display:none">
-                    <div class="container">
-                        <fieldset>
-                            <legend style = "text-align:center" > Report Selection</legend>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <b style = "color:blue;font-size: 12px;" > Format </ b >
-                                        < select id="Formatrcvddtlid" class="btn-Format" type="button" style="margin-left:6px;width:55px; text-align:right" data-toggle="dropdown">
-                                            <option>PDF</option>
-                                            <option>XLS</option>
-                                        </select>
+                   
+                    <div class="row">
+                        <div class="col-xs-12">
 
-                                    </td>
-                                    <td>
-                                        <b style = "color:blue;font-size: 12px;padding-left:20px;" > Mode </ b >
-                                        < select id="Modercvddtlid" class="btn-Format" type="button" style="margin-left:6px; width:80px; text-align:right" data-toggle="dropdown">
-                                            <option>VIEW</option>
-                                            <option>EMAIL</option>
+                            <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
+                                <label><b class="Lblmanual"> Scan In</b></label>
+                            </div>
+                            <div class="col-xs-2" style="margin-left: -1%;">
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_serial_num, new { @id= "itm_serial_num", @class = "form-control txtlbl", @maxlength = "50", @onkeypress = "keypresshandle(event);" })
+                                
+                            </div>
 
-                                        </select>
+                            <div class="col-xs-1" style="text-align:right; margin-top:15px;font-size:10px;">
+                                <button type="button" id="btnSaveScanSerial" class="btn-Close" style="float:right;margin-top: -18px;margin-right: 2px;background-color: #00c0ef;">Include</button>
+                            </div>
+                           
 
-
-                                    </td>
-                                    <td>
-
-                                        <button type = "button" id="btnrcvddtl" class="btn_search" style="margin-left:10px; margin-bottom:3px;">Process</button>
-                                    </td>
-
-                                </tr>
-
-
-                            </table>
-                        </fieldset>
+                        </div>
                     </div>
-
                 </div>
+                
             </div>
         </div>
     </div>
@@ -293,7 +276,7 @@
 </center>
 
 
-<table id="InbndScanSerialDtl" class="table table-bordered table-striped" style="border:1px solid #121213 ;">
+<table id="InbndScanSerialDtl" class="table table-bordered table-striped" style="height: 200px!important; overflow: auto!important;border:1px solid #121213;">
     <thead class="grid_backcolor">
         <tr>
             <th class="grid_header_backcolor" style="font-size:11px;width:4%;">SN#</th>
@@ -303,7 +286,7 @@
             
         </tr>
     </thead>
-    <tbody style="background-color:rgba(0, 0, 0, 0.12);">
+    <tbody style="background-color:rgba(0, 0, 0, 0.12);height: 200px!important; overflow: auto!important;">
         @for (int i = 0; i < Model.ListItemScanIN.Count; i++)
     {
 
@@ -343,6 +326,12 @@
         });
         $('#InbndRcvdDtl_paginate').hide();*@
 
+    function keypresshandle(e) {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            $('#btnSaveScanSerial').click();
+        }
+    }
 
     $(function () {
         //$(".anchorscanDetail").click(function () {
@@ -401,10 +390,10 @@
         //var mailcc = $('#NewEmailCC').val();
         //var content = $('#NewEmailMessage').val();
         //var status = $('#Status').val();
-        //if (compid == "") {
-        //    sweetAlert("", "Company Name is Required.", "");
-        //    return false;
-        //}
+        if (compid == "") {
+            sweetAlert("", "Company Name is Required.", "");
+            return false;
+        }
         //if (screenid == "") {
         //    sweetAlert("", "ScreenID is Required", "");
         //    return false;
@@ -490,18 +479,22 @@
                     },
 
                      function () {
+                         $("#itm_serial_num").focus();
                          setTimeout(function () {
                              $('#myModalNew').modal('hide');
                              this.LoadScanDetails();
+                             $("#itm_serial_num").focus();
                              
 
                          });
+                         $("#itm_serial_num").focus();
                      });
 
                 }
                 else {
                     sweetAlert("", "Scan Details are already Exist Please correct it", "");
-                    $("#itm_serial_num").val('')
+                    $("#itm_serial_num").val('');
+                    $("#itm_serial_num").focus();
                     $("#ajaxLoadingScanSerialDetails").hide();
                 }
             },
@@ -581,6 +574,7 @@
                 $('#myModalContent').html(data);
                 $('#myModal').modal(options);
                 $('#myModal').modal('show');
+                $("#itm_serial_num").focus();
             },
             error: function () {
                 $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
