@@ -271,15 +271,15 @@
                 <td style="text-align:right;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].ctn</td>
                 <td style="text-align:right;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].TotalQty
                   <br/>  <a href="javascript:void(0);" style="text-decoration:underline; color: cadetblue;font-size:13px;" class="anchorScanDetail"
-                        data-id="@Model.ListAckRptDetails[i].Itm_Code"
-                       data-id1="@Model.ListAckRptDetails[i].Style"
-                       data-id2="@Model.ListAckRptDetails[i].Color"
-                       data-id3="@Model.ListAckRptDetails[i].Size"
-                       data-id4="@Model.ListAckRptDetails[i].itm_name"
-                       data-id5="@Model.ListAckRptDetails[i].ppk"
-                       data-id6="@Model.ListAckRptDetails[i].Color"
-                       data-id7="@Model.ListAckRptDetails[i].ctn"
-                       data-id8="@Model.ListAckRptDetails[i].TotalQty"
+                        dItm_Code="@Model.ListAckRptDetails[i].Itm_Code"
+                       dStyle="@Model.ListAckRptDetails[i].Style"
+                       dColor="@Model.ListAckRptDetails[i].Color"
+                       dSize="@Model.ListAckRptDetails[i].Size"
+                       dItemName="@Model.ListAckRptDetails[i].itm_name"
+                       dppk="@Model.ListAckRptDetails[i].ppk"
+                       dColor1="@Model.ListAckRptDetails[i].Color"
+                       dCtn="@Model.ListAckRptDetails[i].ctn"
+                       dTotalQty="@Model.ListAckRptDetails[i].TotalQty"
                        > scan serial</a>
                 </td>Color
                 <td style="text-align:right;font-size:11px;font-weight:bold;">@Model.ListAckRptDetails[i].CUBE</td>
@@ -394,15 +394,15 @@
             var $buttonClicked = $(this);
             var $buttonClicked = $(this);
             var id = $("#ibdocid").val();
-            var data = $buttonClicked.attr('data-id');
-            var data1 = $buttonClicked.attr('data-id1');
-            var data2 = $buttonClicked.attr('data-id2');
-            var data3 = $buttonClicked.attr('data-id3');
-            var data4 = $buttonClicked.attr('data-id4');
-            var data5 = $buttonClicked.attr('data-id5');
-            var data6 = $buttonClicked.attr('data-id6');
-            var data7 = $buttonClicked.attr('data-id7');
-            var data8 = $buttonClicked.attr('data-id8');
+            var dItm_Code = $buttonClicked.attr('dItm_Code');
+            var dStyle = $buttonClicked.attr('dStyle');
+            var dColor = $buttonClicked.attr('dColor');
+            var dSize = $buttonClicked.attr('dSize');
+            var dItemName = $buttonClicked.attr('dItemName');
+            var dppk = $buttonClicked.attr('dppk');
+            var data6 = $buttonClicked.attr('dColor');
+            var dCtn = $buttonClicked.attr('dCtn');
+            var dTotalQty = $buttonClicked.attr('dTotalQty');
 
             // alert(data);
             //alert(data1);
@@ -418,7 +418,7 @@
                 type: "GET",
                 url: TeamDetailPostBackURL,
                 contentType: "application/json; charset=utf-8",
-                data: { "Id": id, "cmp_id": cmp_id , "Itm_Code": data, "Style": data1, "Color": data2, "Size": data3, "itm_name": data4, "ppk": data5, "ctn": data7, "TotalQty":data8  },
+                data: { "Id": id, "cmp_id": cmp_id, "Itm_Code": dItm_Code, "Style": dStyle, "Color": dColor, "Size": dSize, "itm_name": dItemName, "ppk": dppk, "ctn": dCtn, "TotalQty": dTotalQty },
                 datatype: "json",
                 success: function (data) {
                     $("#ajaxLoading").hide();
