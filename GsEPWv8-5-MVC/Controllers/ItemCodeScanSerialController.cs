@@ -104,7 +104,7 @@ namespace GsEPWv8_4_MVC.Controllers
 
 
        // [HttpPost]
-        public ActionResult SaveScanInDetails(string Id, string cmp_id, string Itm_Code, string Style, string Color, string Size, string itm_name, string ppk, string ctn, string TotalQty, string itm_serial_num)
+        public ActionResult SaveScanInDetails(string Id, string cmp_id, string Itm_Code, string Style, string Color, string Size, string itm_name, string ppk, string ctn, string TotalQty, string itm_serial_num, string itm_serial_num_exist)
         {
             InboundInquiry objInboundInquiry = new InboundInquiry();
             InboundInquiryService ServiceObject = new InboundInquiryService();
@@ -131,14 +131,41 @@ namespace GsEPWv8_4_MVC.Controllers
             objInboundInquiry.ItemScanIN.itm_serial_num = itm_serial_num;
             objInboundInquiry.ItemScanIN.ib_doc_dt = null;
             objInboundInquiry.ItemScanIN.ob_doc_dt = null;
+            objInboundInquiry.ItemScanIN.itm_serial_num_exist = itm_serial_num_exist;
 
             objInboundInquiry.ItemScanIN.itm_serial_num = itm_serial_num;
-            if (!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any())
+            if (!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any() && itm_serial_num_exist.ToString() == string.Empty)
                 ServiceObject.InsertScanInDetails(objInboundInquiry);
+            else if (itm_serial_num_exist.ToString() != string.Empty)
+            {
+                if ((!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any()))
+                    ServiceObject.EditScanInDetails(objInboundInquiry);
+                else
+                    return Json(false, JsonRequestBehavior.AllowGet);
+            }
             else
                 return Json(false, JsonRequestBehavior.AllowGet);
             return Json(true, JsonRequestBehavior.AllowGet);
 
+        }
+
+        public ActionResult DeleteScanInDetails ( string cmpid, string ItmCode, string Serial )
+        {
+            InboundInquiry objInboundInquiry = new InboundInquiry();
+            InboundInquiryService ServiceObject = new InboundInquiryService();
+
+            
+            objInboundInquiry = ServiceObject.GetInboundDtl(objInboundInquiry);
+            objInboundInquiry.ItemScanIN = new ItemScanIN();
+            objInboundInquiry.ItemScanIN.cmp_id = cmpid;
+            objInboundInquiry.ItemScanIN.itm_code = ItmCode;
+            objInboundInquiry.ItemScanIN.itm_serial_num = Serial;
+            objInboundInquiry.ItemScanIN.ib_doc_dt = null;
+            objInboundInquiry.ItemScanIN.ob_doc_dt = null;
+
+            ServiceObject.DeleteScanInDetails(objInboundInquiry);
+            
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
     }
 }

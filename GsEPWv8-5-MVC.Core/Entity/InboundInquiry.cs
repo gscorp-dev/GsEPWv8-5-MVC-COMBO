@@ -573,6 +573,7 @@ namespace GsEPWv8_5_MVC.Core.Entity
         public string cmp_id { get; set; }
         public string itm_code { get; set; }
         public string itm_serial_num { get; set; }
+        public string itm_serial_num_exist { get; set; }
         public string itm_num { get; set; }
         public string itm_color { get; set; }
         public string itm_size { get; set; }

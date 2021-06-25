@@ -5592,7 +5592,7 @@ namespace GsEPWv8_5_MVC.Data.Implementation
 
         }
 
-        //InsertTempDocEntryDetails
+        
         public void InsertScanInDetails(InboundInquiry objInboundInquiry)
         {
             using (IDbConnection connection = ConnectionManager.OpenConnection())
@@ -5615,6 +5615,41 @@ namespace GsEPWv8_5_MVC.Data.Implementation
                         @ob_doc_dt = objInboundInquiry.ItemScanIN.ob_doc_dt,
                         @ib_user = objInboundInquiry.ItemScanIN.ib_user??"",
                         @ob_user = objInboundInquiry.ItemScanIN.ob_user??""
+                    }, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+
+        public void DeleteScanInDetails(InboundInquiry objInboundInquiry)
+        {
+            using (IDbConnection connection = ConnectionManager.OpenConnection())
+            {
+                const string storedProcedure1 = "sp_delete_itm_scan_serial_hdr";
+                connection.Execute(storedProcedure1,
+                    new
+                    {
+                        @cmp_id = objInboundInquiry.ItemScanIN.cmp_id,
+                        @itm_code = objInboundInquiry.ItemScanIN.itm_code,
+                        @itm_serial_num = objInboundInquiry.ItemScanIN.itm_serial_num,
+                       
+                    }, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+
+        public void EditScanInDetails(InboundInquiry objInboundInquiry)
+        {
+            using (IDbConnection connection = ConnectionManager.OpenConnection())
+            {
+                const string storedProcedure1 = "sp_update_itm_scan_serial_hdr";
+                connection.Execute(storedProcedure1,
+                    new
+                    {
+                        @cmp_id = objInboundInquiry.ItemScanIN.cmp_id,
+                        @itm_code = objInboundInquiry.ItemScanIN.itm_code,
+                        @itm_serial_num = objInboundInquiry.ItemScanIN.itm_serial_num,
+                        @itm_serial_num_exist = objInboundInquiry.ItemScanIN.itm_serial_num_exist
+
                     }, commandType: CommandType.StoredProcedure);
 
             }

@@ -714,6 +714,17 @@ namespace GsEPWv8_5_MVC.Business.Implementation
         {
             return objRepository.getScanInDetailsByItemCode(cmpId, itm_code, itm_serial_num);
         }
+
+        public void DeleteScanInDetails(InboundInquiry objInboundInquiry)
+        {
+            objRepository.DeleteScanInDetails(objInboundInquiry);
+        }
+
+
+        public void EditScanInDetails(InboundInquiry objInboundInquiry)
+        {
+            objRepository.EditScanInDetails(objInboundInquiry);
+        }
     }
 }
 
