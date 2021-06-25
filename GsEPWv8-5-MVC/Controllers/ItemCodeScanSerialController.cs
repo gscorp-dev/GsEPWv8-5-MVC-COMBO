@@ -138,7 +138,7 @@ namespace GsEPWv8_4_MVC.Controllers
                 ServiceObject.InsertScanInDetails(objInboundInquiry);
             else if (itm_serial_num_exist.ToString() != string.Empty)
             {
-                if ((!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any()))
+                if ((!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any()) || itm_serial_num == itm_serial_num_exist)
                     ServiceObject.EditScanInDetails(objInboundInquiry);
                 else
                     return Json(false, JsonRequestBehavior.AllowGet);
