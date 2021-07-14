@@ -44,7 +44,7 @@ namespace GsEPWv8_4_MVC.Controllers
             objInboundInquiry.doc_entry_id = objInboundInquiry.doc_entry_id;
             objInboundInquiry.cmp_id = cmp_id;
             objInboundInquiry = ServiceObject.GetInboundDtl(objInboundInquiry);
-            
+                      
             Mapper.CreateMap<InboundInquiry, InboundInquiryModel>();
             InboundInquiryModel InboundInquiryModel = Mapper.Map<InboundInquiry, InboundInquiryModel>(objInboundInquiry);
             objInboundInquiry = ServiceObject.GetItmCode(objInboundInquiry);
@@ -117,34 +117,82 @@ namespace GsEPWv8_4_MVC.Controllers
             objInboundInquiry.doc_entry_id = objInboundInquiry.doc_entry_id;
             objInboundInquiry.cmp_id = cmp_id;
             objInboundInquiry = ServiceObject.GetInboundDtl(objInboundInquiry);
-            objInboundInquiry.ItemScanIN = new ItemScanIN();
-            objInboundInquiry.ItemScanIN.cmp_id = cmp_id;
-            objInboundInquiry.ItemScanIN.ib_doc_id = Id;
-            objInboundInquiry.ItemScanIN.itm_code = Itm_Code;
-            objInboundInquiry.ItemScanIN.itm_num = Style;
-            objInboundInquiry.ItemScanIN.itm_color = Color;
-            objInboundInquiry.ItemScanIN.itm_size = Size;
-            objInboundInquiry.ItemScanIN.itm_name = itm_name;
-            objInboundInquiry.ItemScanIN.ppk = ppk;
-            objInboundInquiry.ItemScanIN.ctn = ctn;
-            objInboundInquiry.ItemScanIN.TotalQty = TotalQty;
-            objInboundInquiry.ItemScanIN.itm_serial_num = itm_serial_num;
-            objInboundInquiry.ItemScanIN.ib_doc_dt = null;
-            objInboundInquiry.ItemScanIN.ob_doc_dt = null;
-            objInboundInquiry.ItemScanIN.itm_serial_num_exist = itm_serial_num_exist;
-
-            objInboundInquiry.ItemScanIN.itm_serial_num = itm_serial_num;
-            if (!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any() && itm_serial_num_exist.ToString() == string.Empty)
-                ServiceObject.InsertScanInDetails(objInboundInquiry);
-            else if (itm_serial_num_exist.ToString() != string.Empty)
+            if ((itm_serial_num.IndexOf(';') > -1) || (itm_serial_num.IndexOf(',') > -1))
             {
-                if ((!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any()) || itm_serial_num == itm_serial_num_exist)
-                    ServiceObject.EditScanInDetails(objInboundInquiry);
+                string[] Lst_itm_serial = itm_serial_num.IndexOf(';') > -1 ? itm_serial_num.Split(';') : itm_serial_num.Split(',');
+                List<string> exceptionList = new List<string>();
+                foreach (var item in Lst_itm_serial)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        objInboundInquiry.ItemScanIN = new ItemScanIN();
+                        objInboundInquiry.ItemScanIN.cmp_id = cmp_id;
+                        objInboundInquiry.ItemScanIN.ib_doc_id = Id;
+                        objInboundInquiry.ItemScanIN.itm_code = Itm_Code;
+                        objInboundInquiry.ItemScanIN.itm_num = Style;
+                        objInboundInquiry.ItemScanIN.itm_color = Color;
+                        objInboundInquiry.ItemScanIN.itm_size = Size;
+                        objInboundInquiry.ItemScanIN.itm_name = itm_name;
+                        objInboundInquiry.ItemScanIN.status = "Avail";
+                        objInboundInquiry.ItemScanIN.ppk = ppk;
+                        objInboundInquiry.ItemScanIN.ctn = ctn;
+                        objInboundInquiry.ItemScanIN.TotalQty = TotalQty;
+                        objInboundInquiry.ItemScanIN.itm_serial_num = item;
+                        objInboundInquiry.ItemScanIN.ib_doc_dt = null;
+                        objInboundInquiry.ItemScanIN.ob_doc_dt = null;
+                        objInboundInquiry.ItemScanIN.itm_serial_num_exist = itm_serial_num_exist;
+
+                        objInboundInquiry.ItemScanIN.itm_serial_num = item;
+                        if (!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, item).Any() && itm_serial_num_exist.ToString() == string.Empty)
+                            ServiceObject.InsertScanInDetails(objInboundInquiry);
+                        else if (itm_serial_num_exist.ToString() != string.Empty)
+                        {
+                            if ((!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, item).Any()) || item == itm_serial_num_exist)
+                                ServiceObject.EditScanInDetails(objInboundInquiry);
+                            else
+                                exceptionList.Add(item);
+                        }
+                        else
+                            exceptionList.Add(item);
+                    }
+                }
+               
+                if(exceptionList.Any())
+                    return Json(exceptionList, JsonRequestBehavior.AllowGet);
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                objInboundInquiry.ItemScanIN = new ItemScanIN();
+                objInboundInquiry.ItemScanIN.cmp_id = cmp_id;
+                objInboundInquiry.ItemScanIN.ib_doc_id = Id;
+                objInboundInquiry.ItemScanIN.itm_code = Itm_Code;
+                objInboundInquiry.ItemScanIN.itm_num = Style;
+                objInboundInquiry.ItemScanIN.itm_color = Color;
+                objInboundInquiry.ItemScanIN.itm_size = Size;
+                objInboundInquiry.ItemScanIN.itm_name = itm_name;
+                objInboundInquiry.ItemScanIN.status = "Avail";
+                objInboundInquiry.ItemScanIN.ppk = ppk;
+                objInboundInquiry.ItemScanIN.ctn = ctn;
+                objInboundInquiry.ItemScanIN.TotalQty = TotalQty;
+                objInboundInquiry.ItemScanIN.itm_serial_num = itm_serial_num;
+                objInboundInquiry.ItemScanIN.ib_doc_dt = null;
+                objInboundInquiry.ItemScanIN.ob_doc_dt = null;
+                objInboundInquiry.ItemScanIN.itm_serial_num_exist = itm_serial_num_exist;
+
+                objInboundInquiry.ItemScanIN.itm_serial_num = itm_serial_num;
+                if (!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any() && itm_serial_num_exist.ToString() == string.Empty)
+                    ServiceObject.InsertScanInDetails(objInboundInquiry);
+                else if (itm_serial_num_exist.ToString() != string.Empty)
+                {
+                    if ((!ServiceObject.getScanInDetailsByItemCode(cmp_id, Itm_Code, itm_serial_num).Any()) || itm_serial_num == itm_serial_num_exist)
+                        ServiceObject.EditScanInDetails(objInboundInquiry);
+                    else
+                        return Json(false, JsonRequestBehavior.AllowGet);
+                }
                 else
                     return Json(false, JsonRequestBehavior.AllowGet);
             }
-            else
-                return Json(false, JsonRequestBehavior.AllowGet);
             return Json(true, JsonRequestBehavior.AllowGet);
 
         }

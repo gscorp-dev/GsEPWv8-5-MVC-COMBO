@@ -163,7 +163,7 @@
                                 <label><b class="Lblmanual">Style</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.ItemScanIN.itm_num, new { @id = "itm_num", @readonly = true, @class = "form-control txtlbl", @maxlength = "50", })
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_num, new { @id = "itm_num", @readonly = true, @class = "form-control txtlbl", @maxlength = "300", })
                             </div>
                             <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
                                 <label><b class="Lblmanual">Color</b></label>
@@ -193,7 +193,7 @@
                                 <label><b class="Lblmanual"> Scan In</b></label>
                             </div>
                             <div class="col-xs-2" style="margin-left: -1%;">
-                                @Html.TextBoxFor(model => model.ItemScanIN.itm_serial_num, new { @id = "itm_serial_num", @class = "form-control txtlbl", @maxlength = "50", @onkeypress = "keypresshandle(event);" })
+                                @Html.TextBoxFor(model => model.ItemScanIN.itm_serial_num, new { @id = "itm_serial_num", @class = "form-control txtlbl", @maxlength = "300", @onkeypress = "keypresshandle(event);" })
                                 @Html.HiddenFor(model => model.ItemScanIN.itm_serial_num_exist)
                                 <input style="display:none;" id="itm_serial_num_exist" name="itm_serial_num_exist" value="" />
                             </div>
@@ -559,6 +559,12 @@
         var ctn = $("#ItemScanIN_ctn").val();
         var itm_name = $("#ItemScanIN_itm_name").val();
         var data_itm_serial_num_exist = $("#itm_serial_num_exist").val();
+        if (itm_serial_num.includes(' '))
+        {
+            while (itm_serial_num.includes(' ')) {
+                itm_serial_num = itm_serial_num.replace(" ", "");
+            }
+        }
         //alert('ibdocid:'+ibdocid);
         //alert('Itm_Code:' + Itm_Code);
         //alert('itm_color:' + itm_color);
@@ -644,11 +650,71 @@
                     });
 
                 }
-                else {
+                else if (e == false) {
                     sweetAlert("", "Scan Details are already Exist Please correct it", "");
                     $("#itm_serial_num").val('');
                     $("#itm_serial_num").focus();
                     $("#ajaxLoadingScanSerialDetails").hide();
+                }
+                else {
+                    debugger;
+                    //alert(e);
+                    //alert(e.length);
+                    var listOfVal = '';
+                    for (var i = 0; i < e.length; i++) {
+                        listOfVal += e[i] + ',';
+                        if (itm_serial_num_Addedd.includes(e[i] + ";"))
+                            itm_serial_num_Addedd = itm_serial_num_Addedd.replace(e[i] + ";", "");
+                        else if (itm_serial_num_Addedd.includes(e[i] + ","))
+                            itm_serial_num_Addedd = itm_serial_num_Addedd.replace(e[i] + ",", "");
+                        else
+                            itm_serial_num_Addedd = itm_serial_num_Addedd.replace(e[i], "");
+                    }
+                    
+                    sweetAlert("", "Items: " + listOfVal + "Scan Details are already Exist Please correct it", "");
+                    $("#itm_serial_num").val('');
+                    $("#itm_serial_num").focus();
+                    $("#ajaxLoadingScanSerialDetails").hide();
+
+                    var TeamDetailPostBackURL = '/ItemCodeScanSerial/LoadScanSerialDetails';
+                    var cmp_id = $("#cmp_id").val();
+                    var $buttonClicked = $(this);
+                    var $buttonClicked = $(this);
+                    var id = $("#ibdocid").val();
+
+                    var ibdocid = $("#ibdocid").val();
+                    var Itm_Code = $("#Itm_Code").val();
+                    var itm_num = $("#itm_num").val();
+                    var itm_color = $("#itm_color").val();
+                    var itm_size = $("#itm_size").val();
+                    var itm_serial_num = $("#itm_serial_num").val();
+                    var TotalQty = $("#ItemScanIN_TotalQty").val();
+                    var ppk = $("#ItemScanIN_ppk").val();
+                    var ctn = $("#ItemScanIN_ctn").val();
+                    var itm_name = $("#ItemScanIN_itm_name").val();
+                    var options = { "backdrop": "static", keyboard: true };
+                    $("#ajaxLoading").show();
+                    $.ajax({
+                        type: "GET",
+                        url: TeamDetailPostBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "Id": ibdocid, "cmp_id": cmp_id, "Itm_Code": Itm_Code, "Style": itm_num, "Color": itm_color, "Size": itm_size, "itm_name": itm_name, "ppk": ppk, "ctn": ctn, "TotalQty": TotalQty },
+                        datatype: "json",
+                        success: function (data) {
+                            $("#ajaxLoading").hide();
+                            $('#myModalContent').html(data);
+                            $('#myModal').modal(options);
+                            $('#myModal').modal('show');
+                            $("#itm_serial_num").focus();
+                            if (itm_serial_num_Addedd.length > 0)
+                                $("#LegendInformation").html(itm_serial_num_Addedd + " Serial Code Added ");
+                        },
+                        error: function () {
+                            $("#ajaxLoading").hide();         //CR_3PL_MVC_IB_2018_0228_002 Added By Meera 28-02-2018
+                            swal("Dynamic content load failed.");
+                        }
+                    });
+
                 }
             },
 
