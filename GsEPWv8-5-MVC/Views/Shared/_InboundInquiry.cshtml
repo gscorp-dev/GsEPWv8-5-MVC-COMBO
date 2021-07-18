@@ -57,7 +57,7 @@
 
                         <th class="grid_header_backcolor" style="font-family: Verdana;width:7%;">Recv</th>
                     }
-                  
+
 
                     <th class="grid_header_backcolor" style="width:5%;">Lot Id</th>
                     <th class="grid_header_backcolor" style="width:6%;">RcvdDt</th>
@@ -145,7 +145,7 @@
 
                         <td class="ordr_type" style="font-size:12px; color:black; font-weight:bold; ">@Model.ListInboundDocInquiry[i].ordr_type</td>
                         <td class="ordr_type" style="font-size:12px; color:black; font-weight:bold; ">@Model.ListInboundDocInquiry[i].cntr_id</td>
-             
+
 
                         @if (Model.is_company_user == "Y")
                         {
@@ -174,14 +174,14 @@
                             {
                                 if (@Model.ListInboundDocInquiry[i].is_scan_serial == "Y")
                                 {
-                                <td style="padding-top: 0px !important;">
-                                    <a href="javascript:void(0);" style="text-decoration:underline; color:#0094ff;font-size:12px;" class="InboundInqReceivingEntry" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt" ><span style="font-size: 18px;"></span><b>Recv</b></a>
-                                   <br/> <a href="javascript:void(0);" style="text-decoration:underline; color:cadetblue;font-size:13px;" class="anchorScanDetail" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id">SerialIn</a>
-                                </td>
+                                    <td>
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color:#0094ff;font-size:12px;" class="InboundInqReceivingEntry" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt"><span style="font-size: 18px;"></span><b>Recv</b></a>
+                                        @*<br/> <a href="javascript:void(0);" style="text-decoration:underline; color:cadetblue;font-size:13px;" class="anchorScanDetail" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id">SerialIn</a>*@
+                                    </td>
                                 }
                                 else
                                 {
-                                    <td >
+                                    <td>
                                         <a href="javascript:void(0);" style="text-decoration:underline; color:#0094ff;font-size:12px;" class="InboundInqReceivingEntry" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt"><span style="font-size: 18px;"></span><b>Recv</b></a>
                                     </td>
                                 }
@@ -194,40 +194,40 @@
                                         <tr>
                                             @if (Model.ListInboundDocInquiry[i].is_scan_serial == "Y")
                                             {
-                                            <td style="padding-top: 0px !important;">
-                                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].rcvd_dt"><span style="font-size: 18px;"></span><b>Post</b></a>
-                                                <br /><a href="javascript:void(0);" style="text-decoration:underline; color: cadetblue;font-size:13px;" class="anchorScanDetail" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id">SerialIn</a>
-                                               
-                                            </td>
-											<td style="padding-bottom: 3% !important; width:5%">
-                                               <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingView" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"></span><b></b></a>
-                                            </td>
-                                            <td style="padding-bottom: 3% !important; width:5%">
-                                               <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingEdit" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt" ><span class="glyphicon glyphicon-pencil" style="font-size: 15px;"></span><b></b></a>
-                                            </td>
-                                            <td style="padding-bottom: 3% !important; width:5%">
-                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="InboundRecvDelDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
-                                            </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].rcvd_dt"><span style="font-size: 18px;"></span><b>Post</b></a>
+                                                    @*<br /><a href="javascript:void(0);" style="text-decoration:underline; color: cadetblue;font-size:13px;" class="anchorScanDetail" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id">SerialIn</a>*@
+
+                                                </td>
+                                                <td style="padding-bottom: 3% !important; width:5%">
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingView" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"></span><b></b></a>
+                                                </td>
+                                                <td style="padding-bottom: 3% !important; width:5%">
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingEdit" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt"><span class="glyphicon glyphicon-pencil" style="font-size: 15px;"></span><b></b></a>
+                                                </td>
+                                                <td style="padding-bottom: 3% !important; width:5%">
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="InboundRecvDelDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                                </td>
                                             }
                                             else
                                             {
-                                            <td>
-                                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].rcvd_dt"><span style="font-size: 18px;"></span><b>Post</b></a>
-                                            </td>
-											<td>
-                                               <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingView" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"></span><b></b></a>
-                                            </td>
-                                            <td>
-                                               <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingEdit" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt" ><span class="glyphicon glyphicon-pencil" style="font-size: 15px;"></span><b></b></a>
-                                            </td>
-                                            <td>
-                                                <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="InboundRecvDelDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
-                                            </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].rcvd_dt"><span style="font-size: 18px;"></span><b>Post</b></a>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingView" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span class="glyphicon glyphicon-zoom-in icon-white" style="font-size: 15px;"></span><b></b></a>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingEdit" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data_ib_doc_dt="@Model.ListInboundDocInquiry[i].ib_doc_dt"><span class="glyphicon glyphicon-pencil" style="font-size: 15px;"></span><b></b></a>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" style="text-decoration:underline; color: red;" class="InboundRecvDelDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b></b></a>
+                                                </td>
                                             }
 
-                                           
-                                               
-                                           
+
+
+
                                         </tr>
                                     </table>
                                 </td>
@@ -236,21 +236,21 @@
                             else if (@l_str_staus == "POST")
                             {
                                 @*if (@l_str_transtaus.Trim() == "CHGD")
-                                {
-                                    <td></td>
-                                }
-                                else
-                                {*@
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {*@
                         if (@Model.ListInboundDocInquiry[i].is_scan_serial == "Y")
                         {
-                                    <td style="padding-top: 0px !important;">
-                                       <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingUnPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].inout_bill_status" data-id6="@Model.ListInboundDocInquiry[i].ib_doc_id"><span style="font-size: 18px;"></span><b>Unpost</b></a>
-                                        <br/> <a href="javascript:void(0);" style="text-decoration:underline; color: cadetblue;font-size:13px;" class="anchorScanDetail" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id">SerialIn</a>
-                                    </td>
+                            <td>
+                                <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingUnPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].inout_bill_status" data-id6="@Model.ListInboundDocInquiry[i].ib_doc_id"><span style="font-size: 18px;"></span><b>Unpost</b></a>
+                                @*<br/> <a href="javascript:void(0);" style="text-decoration:underline; color: cadetblue;font-size:13px;" class="anchorScanDetail" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id">SerialIn</a>*@
+                            </td>
                         }
                         else
                         {
-                            <td >
+                            <td>
                                 <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingUnPost" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status" data-id5="@Model.ListInboundDocInquiry[i].inout_bill_status" data-id6="@Model.ListInboundDocInquiry[i].ib_doc_id"><span style="font-size: 18px;"></span><b>Unpost</b></a>
                             </td>
                             }
@@ -261,12 +261,22 @@
                         }
                         else
                         {
-                                <td></td>
+                            <td></td>
                             }
                         }
-                        <td style="font-size:12px; color:black; font-weight:bold;">
-                            <a href="javascript:void(0);" class="anchorlotDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.ListInboundDocInquiry[i].lot_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id">@Model.ListInboundDocInquiry[i].lot_id</a>
-                        </td>
+                        @if (Model.ListInboundDocInquiry[i].is_scan_serial == "Y")
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">
+                                <a href="javascript:void(0);" class="anchorlotDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.ListInboundDocInquiry[i].lot_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id">@Model.ListInboundDocInquiry[i].lot_id</a>
+                                <br /> <a href="javascript:void(0);" style="text-decoration:underline; color:cadetblue;font-size:13px;" class="anchorScanDetail" data-id="@Model.ListInboundDocInquiry[i].ib_doc_id">SerialIn</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="font-size:12px; color:black; font-weight:bold;">
+                                <a href="javascript:void(0);" class="anchorlotDetail" style="text-decoration:underline; color:#034af3;" data-id="@Model.ListInboundDocInquiry[i].lot_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id">@Model.ListInboundDocInquiry[i].lot_id</a>
+                            </td>
+                        }
                         <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.ListInboundDocInquiry[i].rcvd_dt</td>
                         <td style="font-size:12px; color:black; font-weight:bold;  text-align:left">@Model.ListInboundDocInquiry[i].req_num</td>
                         <td style="font-size:12px; color:black; font-weight:bold;text-align:left">@Model.ListInboundDocInquiry[i].vend_name</td>
@@ -278,17 +288,17 @@
                             <td>
                                 @if (@l_str_staus == "POST")
                                 {
-                                if (l_str_bill_status == "BILL")
-                                {
-                                    if (Model.is_company_user == "Y")
+                                    if (l_str_bill_status == "BILL")
                                     {
+                                        if (Model.is_company_user == "Y")
+                                        {
                                             <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="InboundInqReceivingBillStatus" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].ib_doc_id" data-id2="@Model.ListInboundDocInquiry[i].cntr_id" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span style="font-size: 18px;"></span><b>@Model.ListInboundDocInquiry[i].inout_bill_status</b></a>
 
+                                        }
                                     }
-                                 }
                                     else if (l_str_bill_status == "TEMP")
                                     {
-                                        <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="BillDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].bill_doc_id" data-id2="@Model.ListInboundDocInquiry[i].ib_doc_dt" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span style="font-size: 18px;"></span><b>@Model.ListInboundDocInquiry[i].bill_doc_id</b></a>    
+                                        <a href="javascript:void(0);" style="text-decoration:underline; color: #59822c;font-size:12px;" class="BillDetail" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].bill_doc_id" data-id2="@Model.ListInboundDocInquiry[i].ib_doc_dt" data-id3="@Model.ListInboundDocInquiry[i].lot_id" data-id4="@Model.ListInboundDocInquiry[i].status"><span style="font-size: 18px;"></span><b>@Model.ListInboundDocInquiry[i].bill_doc_id</b></a>
                                         if (Model.is_company_user == "Y")
                                         {
                                             <a href="javascript:void(0);" style="font-size:15px; text-decoration:underline; color: red;" class="DeleteIOBillByIbDocId" data-id="@Model.ListInboundDocInquiry[i].cmp_id" data-id1="@Model.ListInboundDocInquiry[i].bill_doc_id" data-id2="@Model.ListInboundDocInquiry[i].lot_id"><span class="glyphicon glyphicon-trash" style="font-size: 18px;"></span><b>D</b></a>
@@ -299,7 +309,7 @@
                                     }
 
                                 }
-                                
+
                             </td>
                         }
 
@@ -308,7 +318,7 @@
             </tbody>
         </table>
     </div>
-    
+
     <div id='myModalLot' class='modal'>
         <div class="modal-dialog">
             <div class="modal-content" style="width: 238%; left: -319px;">
@@ -346,13 +356,13 @@
 
 
     @*<div id='myModalView' class='modal'>
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 300%; left:-610px;">
-                <div id='myModalContentView' style="width: 100%; height: 1000px;"></div>
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 300%; left:-610px;">
+                    <div id='myModalContentView' style="width: 100%; height: 1000px;"></div>
+                </div>
             </div>
-        </div>
 
-    </div>*@
+        </div>*@
 
 
 
@@ -365,7 +375,7 @@
 
     </div>
 
-   
+
 
     <div id='myModalDel' class='modal'>
         <div class="modal-dialog">
@@ -460,7 +470,7 @@
                 var status = $buttonClicked.attr('data-id3').trim();
                 var lstrIbDocDate =  $buttonClicked.attr('data_ib_doc_dt').trim();
 
-                    
+
 
                 var datefrom = $('#ib_doc_dt_fm').val();
                 var dateto = $('#ib_doc_dt_to').val();
@@ -519,27 +529,27 @@
                         datatype: "json",
 
                         success: function (data) {
-                            if (data == "IB DOC ALREADY RCVD")  
+                            if (data == "IB DOC ALREADY RCVD")
                             {
                                 $("#ajaxLoading").hide();
                                 swal("IB Doc Id Already Received.");
                             }
-                           else if (data == "STRG-RATE-NOT-FOUND")  
+                            else if (data == "STRG-RATE-NOT-FOUND")
                             {
                                 $("#ajaxLoading").hide();
                                 swal("Storage Rate Not Found for the selected Customer Storage Bill Type");
                             }
-                            else if (data == "INOUT-RATE-NOT-FOUND")   
+                            else if (data == "INOUT-RATE-NOT-FOUND")
                             {
                                 $("#ajaxLoading").hide();
                                 swal("INOUT Rate Not Found for the selected Customer Inout Bill Type");
                             }
                             else
-                                {
-                            $("#ajaxLoading").hide();
-                            $('#myModalContentRecvEntry').html(data);
-                            $('#myModalRecvEntry').modal(options);
-                            $('#myModalRecvEntry').modal('show');
+                            {
+                                $("#ajaxLoading").hide();
+                                $('#myModalContentRecvEntry').html(data);
+                                $('#myModalRecvEntry').modal(options);
+                                $('#myModalRecvEntry').modal('show');
                             }
                         },
                         error: function () {
@@ -722,7 +732,7 @@
         $(function () {
             //$(".InboundInqReceivingUnPost").click(function () {
             $('#IBPartialGridInq tbody').on('click', '.InboundInqReceivingUnPost',
-                function () { 
+                function () {
 
                     debugger
                     var $buttonClicked = $(this);
@@ -787,7 +797,7 @@
                                               var boxWidth = $('.modal').width();
                                               var boxContent = $('.modal-content').width();
                                               debugger
-                                             
+
                                               var p_str_cmp_id = $('#cmp_id').val();
                                               var p_str_cntr_id = $('#cntr_id').val();
                                               var p_str_status = $('#status').val();
@@ -940,7 +950,7 @@
                             }
 
                         }});
-             });
+                });
             var cmp_id = $("#cmp_id").val();
             var TeamDetailPostBackViewURL = '/InboundInquiry/Views';
             $(function () {

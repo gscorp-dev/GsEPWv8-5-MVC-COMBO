@@ -192,7 +192,7 @@
                             <div class="col-xs-1" style="text-align:right; margin-top:6px;font-size:10px;">
                                 <label><b class="Lblmanual"> Scan In</b></label>
                             </div>
-                            <div class="col-xs-2" style="margin-left: -1%;">
+                            <div class="col-xs-8" style="margin-left: -1%;">
                                 @Html.TextBoxFor(model => model.ItemScanIN.itm_serial_num, new { @id = "itm_serial_num", @class = "form-control txtlbl", @maxlength = "300", @onkeypress = "keypresshandle(event);" })
                                 @Html.HiddenFor(model => model.ItemScanIN.itm_serial_num_exist)
                                 <input style="display:none;" id="itm_serial_num_exist" name="itm_serial_num_exist" value="" />
