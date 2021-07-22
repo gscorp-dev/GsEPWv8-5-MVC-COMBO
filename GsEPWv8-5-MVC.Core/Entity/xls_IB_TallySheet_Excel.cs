@@ -176,6 +176,7 @@ namespace GsEPWv8_5_MVC.Core.Entity
                 l_dec_pcs = Convert.ToDecimal(dr["tot_ctn"]) * Convert.ToDecimal(dr["ctn_qty"]);
                 this.Names["__DATA_pcs"].Value = l_dec_pcs.ToString();
                 this.Names["__DATA_note"].Value = dr["note"];
+                this.Names["__DATA_serial"].Value = dr["itm_serial_numbers"];
                 rowIdx = this.InsertRowPaste(this.Names["__TEMPLATE_Data"], rowIdx);
             }
         }

@@ -183,6 +183,7 @@ namespace GsEPWv8_5_MVC.Core.Entity
                 this.Names["__Data_InbCube"].Value = dr["InbCube"];
                 l_dec_totcube += Convert.ToDecimal(dr["InbCube"]) * Convert.ToInt32(dr["tot_ctn"]);
                 this.Names["__Data_wgt"].Value = dr["wgt"];
+                this.Names["__DATA_serial"].Value = dr["itm_serial_numbers"];
                 l_dec_totwgt += Convert.ToDecimal(dr["wgt"]) * Convert.ToInt32(dr["tot_ctn"]);
                 rowIdx = this.InsertRowPaste(this.Names["__TEMPLATE_Data"], rowIdx);
 
